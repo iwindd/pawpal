@@ -11,6 +11,7 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
+    "@pawpal/icons": "workspace:*",
     "@pawpal/ui": "workspace:*",
     "next": "catalog:",
     "react": "catalog:",

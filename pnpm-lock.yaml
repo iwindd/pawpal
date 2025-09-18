@@ -42,6 +42,9 @@ catalogs:
     '@next/eslint-plugin-next':
       specifier: ^15.5.0
       version: 15.5.0
+    '@tabler/icons-react':
+      specifier: ^3.0.0
+      version: 3.35.0
     '@types/express':
       specifier: ^5.0.0
       version: 5.0.3
@@ -250,11 +253,14 @@ importers:
         specifier: 'catalog:'
         version: 5.9.2
       typescript-eslint:
-        specifier: 'catalog:'
+        specifier: ^8.40.0
         version: 8.40.0(eslint@9.34.0)(typescript@5.9.2)
 
   apps/web:
     dependencies:
+      '@pawpal/icons':
+        specifier: workspace:*
+        version: link:../../packages/icons
       '@pawpal/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -325,6 +331,40 @@ importers:
       typescript-eslint:
         specifier: 'catalog:'
         version: 8.40.0(eslint@9.34.0)(typescript@5.9.2)
+
+  packages/icons:
+    dependencies:
+      '@tabler/icons-react':
+        specifier: 'catalog:'
+        version: 3.35.0(react@19.1.0)
+      react:
+        specifier: 'catalog:'
+        version: 19.1.0
+      react-dom:
+        specifier: 'catalog:'
+        version: 19.1.0(react@19.1.0)
+    devDependencies:
+      '@pawpal/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@pawpal/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@types/node':
+        specifier: 'catalog:'
+        version: 22.15.3
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.1.0
+      '@types/react-dom':
+        specifier: 'catalog:'
+        version: 19.1.1(@types/react@19.1.0)
+      eslint:
+        specifier: 'catalog:'
+        version: 9.34.0
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.2
 
   packages/typescript-config: {}
 
@@ -1241,6 +1281,14 @@ packages:
 
   '@swc/helpers@0.5.15':
     resolution: {integrity: sha512-JQ5TuMi45Owi4/BIMAJBoSQoOJu12oOk/gADqlcUL9JEdHB8vyjUSsxqeNXnmXHjYKMi2WcYtezGEEhqUI/E2g==}
+
+  '@tabler/icons-react@3.35.0':
+    resolution: {integrity: sha512-XG7t2DYf3DyHT5jxFNp5xyLVbL4hMJYJhiSdHADzAjLRYfL7AnjlRfiHDHeXxkb2N103rEIvTsBRazxXtAUz2g==}
+    peerDependencies:
+      react: '>= 16'
+
+  '@tabler/icons@3.35.0':
+    resolution: {integrity: sha512-yYXe+gJ56xlZFiXwV9zVoe3FWCGuZ/D7/G4ZIlDtGxSx5CGQK110wrnT29gUj52kEZoxqF7oURTk97GQxELOFQ==}
 
   '@tokenizer/inflate@0.2.7':
     resolution: {integrity: sha512-MADQgmZT1eKjp06jpI2yozxaU9uVs4GzzgSL+uEq7bVcJ9V1ZXQkeGNql1fsSI0gMy1vhvNTNbUqrx+pZfJVmg==}
@@ -5193,6 +5241,13 @@ snapshots:
   '@swc/helpers@0.5.15':
     dependencies:
       tslib: 2.8.1
+
+  '@tabler/icons-react@3.35.0(react@19.1.0)':
+    dependencies:
+      '@tabler/icons': 3.35.0
+      react: 19.1.0
+
+  '@tabler/icons@3.35.0': {}
 
   '@tokenizer/inflate@0.2.7':
     dependencies:
