@@ -11,6 +11,34 @@ const configTheme: MantineThemeOverride = {
   /** font-family used in all components, system fonts by default */
   fontFamily: "Sarabun, sans-serif",
 
+  /** Object of colors, key is color name, value is an array of at least 10 strings (colors) */
+  colors: {
+    pawpink: [
+      "#ffecf7",
+      "#f7d9e8",
+      "#efc2d9",
+      "#de85b2",
+      "#d3619b",
+      "#cd4a8d",
+      "#cb3d85",
+      "#b42f73",
+      "#a12766",
+      "#8e1c59",
+    ],
+    pawblue: [
+      "#ebf3ff",
+      "#dbe4f7",
+      "#b7c5e5",
+      "#90a5d4",
+      "#7e96cb",
+      "#5a79bd",
+      "#4f70ba",
+      "#3f5fa4",
+      "#355594",
+      "#284985",
+    ],
+  },
+
   /** Index of theme.colors[color].
    *  Primary shade is used in all components to determine which color from theme.colors[color] should be used.
    *  Can be either a number (0–9) or an object to specify different color shades for light and dark color schemes.
@@ -22,7 +50,7 @@ const configTheme: MantineThemeOverride = {
    *  Determines which color will be used in all components by default.
    *  Default value – `blue`.
    * */
-  primaryColor: "pink",
+  primaryColor: "pawpink",
 };
 
 export default configTheme;
