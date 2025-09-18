@@ -1,7 +1,7 @@
+import configTheme from "@/config/theme";
 import ColorScheme from "@pawpal/ui/components/ColorScheme";
 import UIProvider, { uiProps } from "@pawpal/ui/providers/UIProvider";
 import type { Metadata } from "next";
-import configTheme from "./configs/theme";
 import "./globals.css";
 
 export const metadata: Metadata = {
