@@ -1,8 +1,6 @@
 "use client";
-import { type MantineThemeOverride, createTheme } from "@mantine/core";
+import { type MantineThemeOverride } from "@mantine/core";
 
-const themeOverride: MantineThemeOverride = {};
+const configTheme: MantineThemeOverride = {};
 
-export const Theme: ReturnType<typeof createTheme> = createTheme(themeOverride);
-
-export default Theme;
+export default configTheme;

@@ -1,6 +1,7 @@
 import ColorScheme from "@pawpal/ui/components/ColorScheme";
 import UIProvider, { uiProps } from "@pawpal/ui/providers/UIProvider";
 import type { Metadata } from "next";
+import configTheme from "./configs/theme";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -21,7 +22,7 @@ export default function RootLayout({
         <ColorScheme />
       </head>
       <body>
-        <UIProvider>{children}</UIProvider>
+        <UIProvider themeOverride={configTheme}>{children}</UIProvider>
       </body>
     </html>
   );
