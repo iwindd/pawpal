@@ -5,6 +5,13 @@ import UIProvider, { uiProps } from "@pawpal/ui/providers/UIProvider";
 import "@pawpal/ui/styles/global.css";
 import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
+import { Sarabun } from "next/font/google";
+
+const sarabun = Sarabun({
+  subsets: ["thai", "latin"],
+  weight: ["200", "300", "400", "500", "600", "700"],
+  variable: "--font-sarabun",
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -17,7 +24,12 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" {...uiProps} suppressHydrationWarning>
+    <html
+      lang="en"
+      {...uiProps}
+      suppressHydrationWarning
+      className={sarabun.className}
+    >
       <head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
