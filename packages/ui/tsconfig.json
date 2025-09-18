@@ -4,14 +4,7 @@
     "outDir": "dist",
     "baseUrl": "./src",
     "paths": {
-      "@/*": ["./*"],
-      "@/components/*": ["./components/*"],
-      "@/providers/*": ["./providers/*"],
-      "@/configs/*": ["./configs/*"],
-      "@/styles/*": ["./styles/*"],
-      "@/layouts/*": ["./layouts/*"],
-      "@/types/*": ["./types/*"],
-      "@/assets/*": ["./assets/*"]
+      "@/configs/*": ["./configs/*"]
     }
   },
   "include": ["src"],

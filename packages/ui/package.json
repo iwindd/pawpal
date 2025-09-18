@@ -3,13 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "exports": {
-    "./*": "./src/*.tsx",
-    "./components/*": "./src/components/*/index.tsx",
-    "./providers/*": "./src/providers/*.tsx",
-    "./configs/*": "./src/configs/*.tsx",
-    "./styles/*": "./src/styles/*",
-    "./layouts/*": "./src/layouts/*.tsx",
-    "./types": "./src/type.d.ts"
+    "./styles/global.css": "./src/styles/global.css",
+    "./providers/UIProvider": "./src/providers/UIProvider.tsx",
+    "./core": "./src/core.ts",
+    "./hooks": "./src/hooks.ts"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",

@@ -1,10 +1,9 @@
 import configTheme from "@/configs/theme";
-import ColorScheme from "@pawpal/ui/components/ColorScheme";
-import Navbar from "@pawpal/ui/components/Navbar";
+import { ColorSchemeScript } from "@pawpal/ui/core";
 import UIProvider, { uiProps } from "@pawpal/ui/providers/UIProvider";
 import "@pawpal/ui/styles/global.css";
 import type { Metadata } from "next";
-import navbarLinks from "./configs/navbar";
+import Navbar from "./components/Navbar";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -21,12 +20,11 @@ export default function RootLayout({
       <head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <ColorScheme />
+        <ColorSchemeScript />
       </head>
       <body>
         <UIProvider themeOverride={configTheme}>
-          <Navbar links={navbarLinks} active={"/"} />
-          {children}
+          <Navbar>{children}</Navbar>
         </UIProvider>
       </body>
     </html>
