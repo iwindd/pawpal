@@ -6,25 +6,10 @@
         "name": "next"
       }
     ],
-    "baseUrl": ".",
     "paths": {
-      "@/*": ["./app/*"],
-      "@/components/*": ["./app/components/*"],
-      "@/lib/*": ["./app/lib/*"],
-      "@/utils/*": ["./app/utils/*"],
-      "@/hooks/*": ["./app/hooks/*"],
-      "@/types/*": ["./app/types/*"],
-      "@/configs/*": ["./app/configs/*"],
-      "@/styles/*": ["./app/styles/*"],
-      "@/public/*": ["./public/*"]
+      "@/*": ["./src/*"]
     }
   },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    "next-env.d.ts",
-    "next.config.js",
-    ".next/types/**/*.ts"
-  ],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]
 }
