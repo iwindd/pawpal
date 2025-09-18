@@ -1,3 +1,4 @@
+import Image from "next/image";
 interface LogoProps {
   width?: number;
   height?: number;
@@ -15,11 +16,17 @@ const Logo = ({ width, height, size, alt }: Readonly<LogoProps>) => {
       style={{
         width,
         height,
-        backgroundColor: "gray",
+        position: "relative",
       }}
     >
-      {width}x{height}
-      {alt}
+      <Image
+        src={"/assets/images/logo.png"}
+        alt={alt}
+        fill
+        style={{
+          objectFit: "contain",
+        }}
+      />
     </div>
   );
 };
