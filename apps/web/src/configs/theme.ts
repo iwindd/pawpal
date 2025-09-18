@@ -2,14 +2,10 @@
 import { MantineThemeOverride } from "@pawpal/ui/core";
 
 const configTheme: MantineThemeOverride = {
-  /** Controls focus ring styles. Supports the following options:
-   *  - `auto` – focus ring is displayed only when the user navigates with keyboard (default value)
-   *  - `always` – focus ring is displayed when the user navigates with keyboard and mouse
-   *  - `never` – focus ring is always hidden (not recommended)
-   */
+  /** Controls focus ring styles. Supports the following options: `auto`, `always`, `never` */
   focusRing: "auto",
 
-  /** Determines whether `font-smoothing` property should be set on the body, `true` by default */
+  /** Determines whether `font-smoothing` property should be set on the body */
   fontSmoothing: true,
 
   /** font-family used in all components, system fonts by default */
