@@ -1,7 +1,9 @@
-import configTheme from "@/config/theme";
+import configTheme from "@/configs/theme";
 import ColorScheme from "@pawpal/ui/components/ColorScheme";
+import Navbar from "@pawpal/ui/components/Navbar";
 import UIProvider, { uiProps } from "@pawpal/ui/providers/UIProvider";
 import type { Metadata } from "next";
+import navbarLinks from "./configs/navbar";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -22,7 +24,10 @@ export default function RootLayout({
         <ColorScheme />
       </head>
       <body>
-        <UIProvider themeOverride={configTheme}>{children}</UIProvider>
+        <UIProvider themeOverride={configTheme}>
+          <Navbar links={navbarLinks} active={"/"} />
+          {children}
+        </UIProvider>
       </body>
     </html>
   );

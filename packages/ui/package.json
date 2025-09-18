@@ -4,7 +4,7 @@
   "private": true,
   "exports": {
     "./*": "./src/*.tsx",
-    "./components/*": "./src/components/*.tsx",
+    "./components/*": "./src/components/*/index.tsx",
     "./providers/*": "./src/providers/*.tsx",
     "./configs/*": "./src/configs/*.tsx",
     "./styles/*": "./src/styles/*.tsx",
