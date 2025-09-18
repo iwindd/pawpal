@@ -69,6 +69,9 @@ catalogs:
     clsx:
       specifier: ^2.1.1
       version: 2.1.1
+    embla-carousel-autoplay:
+      specifier: ^8.5.2
+      version: 8.6.0
     eslint:
       specifier: ^9.34.0
       version: 9.34.0
@@ -279,6 +282,9 @@ importers:
       clsx:
         specifier: 'catalog:'
         version: 2.1.1
+      embla-carousel-autoplay:
+        specifier: 'catalog:'
+        version: 8.6.0(embla-carousel@8.6.0)
       next:
         specifier: 'catalog:'
         version: 15.5.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -2244,6 +2250,11 @@ packages:
 
   electron-to-chromium@1.5.221:
     resolution: {integrity: sha512-/1hFJ39wkW01ogqSyYoA4goOXOtMRy6B+yvA1u42nnsEGtHzIzmk93aPISumVQeblj47JUHLC9coCjUxb1EvtQ==}
+
+  embla-carousel-autoplay@8.6.0:
+    resolution: {integrity: sha512-OBu5G3nwaSXkZCo1A6LTaFMZ8EpkYbwIaH+bPqdBnDGQ2fh4+NbzjXjs2SktoPNKCtflfVMc75njaDHOYXcrsA==}
+    peerDependencies:
+      embla-carousel: 8.6.0
 
   embla-carousel-react@8.6.0:
     resolution: {integrity: sha512-0/PjqU7geVmo6F734pmPqpyHqiM99olvyecY7zdweCw+6tKEXnrE90pBiBbMMU8s5tICemzpQ3hi5EpxzGW+JA==}
@@ -6477,6 +6488,10 @@ snapshots:
   ee-first@1.1.1: {}
 
   electron-to-chromium@1.5.221: {}
+
+  embla-carousel-autoplay@8.6.0(embla-carousel@8.6.0):
+    dependencies:
+      embla-carousel: 8.6.0
 
   embla-carousel-react@8.6.0(react@19.1.0):
     dependencies:

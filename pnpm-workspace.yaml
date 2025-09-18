@@ -52,3 +52,4 @@ catalog:
   postcss-simple-vars: ^7.0.1
   clsx: ^2.1.1
   next-intl: ^4.3.9
+  embla-carousel-autoplay: ^8.5.2

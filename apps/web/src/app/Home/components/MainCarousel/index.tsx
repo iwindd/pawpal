@@ -1,4 +1,6 @@
 import { Carousel } from "@pawpal/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
+import { useRef } from "react";
 import CardCarousel from "../CardCarousel";
 import classes from "./style.module.css";
 
@@ -34,6 +36,8 @@ const CAROUSEL_MOCKUP = [
 ];
 
 const MainCarousel = () => {
+  const autoplay = useRef(Autoplay({ delay: 7000 }));
+
   return (
     <Carousel
       classNames={classes}
@@ -42,6 +46,7 @@ const MainCarousel = () => {
       emblaOptions={{
         loop: true,
       }}
+      plugins={[autoplay.current]}
     >
       {CAROUSEL_MOCKUP.map((item) => (
         <Carousel.Slide key={item.id}>
