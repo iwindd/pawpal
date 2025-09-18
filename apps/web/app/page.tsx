@@ -1,3 +1,9 @@
+import Logo from "@pawpal/ui/components/Logo/index";
+
 export default function Home() {
-  return <div>Hello NextJS</div>;
+  return (
+    <div>
+      <Logo />
+    </div>
+  );
 }

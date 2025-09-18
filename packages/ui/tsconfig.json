@@ -10,7 +10,8 @@
       "@/configs/*": ["./configs/*"],
       "@/styles/*": ["./styles/*"],
       "@/layouts/*": ["./layouts/*"],
-      "@/types/*": ["./types/*"]
+      "@/types/*": ["./types/*"],
+      "@/assets/*": ["./assets/*"]
     }
   },
   "include": ["src"],
