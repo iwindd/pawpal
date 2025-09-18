@@ -2,6 +2,13 @@
   "extends": "@pawpal/typescript-config/nestjs.json",
   "compilerOptions": {
     "baseUrl": "./",
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "paths": {
+      "@/*": ["src/*"],
+      "@/modules/*": ["src/modules/*"],
+      "@/configs/*": ["src/configs/*"],
+      "@/utils/*": ["src/utils/*"],
+      "@/common/*": ["src/common/*"]
+    }
   }
 }
