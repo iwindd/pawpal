@@ -1,3 +1,4 @@
+"use client";
 import { IconThemeDark, IconThemeLight } from "@pawpal/icons";
 import { ActionIcon, useMantineColorScheme } from "@pawpal/ui/core";
 
