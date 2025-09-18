@@ -5,6 +5,7 @@ import { useDisclosure } from "@pawpal/ui/hooks";
 import Link from "next/link";
 import { useState } from "react";
 import Logo from "../Logo";
+import ThemeSwitcher from "./components/ThemeSwitcher";
 import UserMenu from "./components/UserMenu";
 import classes from "./style.module.css";
 
@@ -35,6 +36,7 @@ const Navbar = () => {
           <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
         </Group>
         <Group>
+          <ThemeSwitcher />
           <UserMenu />
         </Group>
       </Container>

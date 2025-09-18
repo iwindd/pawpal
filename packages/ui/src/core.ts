@@ -1,4 +1,5 @@
 export {
+  ActionIcon,
   Avatar,
   Box,
   Burger,
@@ -11,4 +12,6 @@ export {
   Stack,
   Text,
   UnstyledButton,
+  useComputedColorScheme,
+  useMantineColorScheme,
 } from "@mantine/core";

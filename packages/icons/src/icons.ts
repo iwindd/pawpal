@@ -9,4 +9,6 @@ export {
   IconHistory,
   IconLogout,
   IconSettings,
+  IconMoon as IconThemeDark,
+  IconSun as IconThemeLight,
 } from "@tabler/icons-react";
