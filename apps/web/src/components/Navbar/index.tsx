@@ -5,8 +5,8 @@ import { useDisclosure } from "@pawpal/ui/hooks";
 import Link from "next/link";
 import { useState } from "react";
 import Logo from "../Logo";
+import UserMenu from "./components/UserMenu";
 import classes from "./style.module.css";
-import UserMenu from "./UserMenu";
 
 const Navbar = () => {
   const [opened, { toggle }] = useDisclosure(false);
