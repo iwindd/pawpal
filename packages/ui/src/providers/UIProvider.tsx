@@ -1,11 +1,11 @@
 "use client";
+import configTheme from "@/configs/theme";
 import {
   createTheme,
   mantineHtmlProps,
   MantineProvider,
   MantineThemeOverride,
 } from "@mantine/core";
-import configTheme from "../configs/theme";
 
 export const uiProps = mantineHtmlProps;
 export type UIThemeOverride = MantineThemeOverride;

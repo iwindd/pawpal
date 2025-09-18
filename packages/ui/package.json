@@ -3,7 +3,13 @@
   "version": "0.0.0",
   "private": true,
   "exports": {
-    "./*": "./src/*.tsx"
+    "./*": "./src/*.tsx",
+    "./components/*": "./src/components/*.tsx",
+    "./providers/*": "./src/providers/*.tsx",
+    "./configs/*": "./src/configs/*.tsx",
+    "./styles/*": "./src/styles/*.tsx",
+    "./layouts/*": "./src/layouts/*.tsx",
+    "./types": "./src/type.d.ts"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",
