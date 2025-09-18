@@ -9,21 +9,19 @@ const ThemeSwitcher = () => {
   };
 
   return (
-    <div>
-      <ActionIcon
-        autoContrast
-        size={42}
-        variant="transparent"
-        color=""
-        onClick={toggleTheme}
-      >
-        {colorScheme === "light" ? (
-          <IconThemeLight size={24} />
-        ) : (
-          <IconThemeDark size={24} />
-        )}
-      </ActionIcon>
-    </div>
+    <ActionIcon
+      autoContrast
+      size={24}
+      variant="transparent"
+      color=""
+      onClick={toggleTheme}
+    >
+      {colorScheme === "light" ? (
+        <IconThemeLight size={24} />
+      ) : (
+        <IconThemeDark size={24} />
+      )}
+    </ActionIcon>
   );
 };
 

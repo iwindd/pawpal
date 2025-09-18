@@ -30,7 +30,7 @@ const LocaleSwitcher = () => {
       disabled={isLoading}
     >
       <Menu.Target>
-        <ActionIcon autoContrast size={42} variant="transparent">
+        <ActionIcon autoContrast size={24} variant="transparent">
           <IconLanguage size={24} stroke={1.5} />
         </ActionIcon>
       </Menu.Target>
