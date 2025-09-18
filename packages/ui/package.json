@@ -7,7 +7,7 @@
     "./components/*": "./src/components/*/index.tsx",
     "./providers/*": "./src/providers/*.tsx",
     "./configs/*": "./src/configs/*.tsx",
-    "./styles/*": "./src/styles/*.tsx",
+    "./styles/*": "./src/styles/*",
     "./layouts/*": "./src/layouts/*.tsx",
     "./types": "./src/type.d.ts"
   },
