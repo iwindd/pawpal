@@ -1,3 +1,4 @@
+import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import UIProvider from "@/providers/UIProvider";
 import { ColorSchemeScript, mantineHtmlProps } from "@pawpal/ui/core";
@@ -39,6 +40,7 @@ export default async function RootLayout({
           <UIProvider>
             <Navbar />
             {children}
+            <Footer />
           </UIProvider>
         </NextIntlClientProvider>
       </body>

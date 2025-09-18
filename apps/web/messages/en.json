@@ -20,5 +20,24 @@
       "activities": "Activities",
       "logout": "Logout"
     }
+  },
+  "Footer": {
+    "description": "Your trusted partner for all your pet needs. Quality products, excellent service, and unbeatable prices.",
+    "followUs": "Follow us",
+    "quickLinks": "Quick Links",
+    "home": "Home",
+    "products": "Products",
+    "topup": "Topup",
+    "help": "Help",
+    "customerService": "Customer Service",
+    "contactUs": "Contact Us",
+    "faq": "FAQ",
+    "shipping": "Shipping Info",
+    "returns": "Returns",
+    "legal": "Legal",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service",
+    "cookiePolicy": "Cookie Policy",
+    "copyright": "© 2024 PawPal. All rights reserved."
   }
 }
