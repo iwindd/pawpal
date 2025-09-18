@@ -1,9 +1,9 @@
 // Mockup : This is a mockup of the navbar links
 const navbarLinks = [
-  { link: "/", label: "หน้าหลัก" },
-  { link: "/products", label: "สินค้า" },
-  { link: "/topup", label: "เติมเงิน" },
-  { link: "/help", label: "ช่วยเหลือ" },
+  { link: "/", label: "home" },
+  { link: "/products", label: "products" },
+  { link: "/topup", label: "topup" },
+  { link: "/help", label: "help" },
 ];
 
 export default navbarLinks;

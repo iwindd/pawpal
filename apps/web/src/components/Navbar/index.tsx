@@ -2,6 +2,7 @@
 import navbarLinks from "@/configs/navbar";
 import { Burger, Container, Group } from "@pawpal/ui/core";
 import { useDisclosure } from "@pawpal/ui/hooks";
+import { useTranslations } from "next-intl";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useState } from "react";
@@ -17,6 +18,7 @@ const ThemeSwitcher = dynamic(() => import("./components/ThemeSwitcher"), {
 const Navbar = () => {
   const [opened, { toggle }] = useDisclosure(false);
   const [activeLink, setActiveLink] = useState("/");
+  const __ = useTranslations("Navbar.links");
 
   const items = navbarLinks.map((link) => (
     <Link
@@ -25,7 +27,7 @@ const Navbar = () => {
       className={classes.link}
       data-active={activeLink === link.link || undefined}
     >
-      {link.label}
+      {__(link.label)}
     </Link>
   ));
 
