@@ -1,6 +1,16 @@
 {
   "Home": {
-    "title": "Hello world! (en)"
+    "title": "Hello world! (en)",
+    "CardCarousel": {
+      "topup": "Topup"
+    },
+    "ProductRow": {
+      "showMore": "Show More",
+      "buyNow": "Buy Now"
+    },
+    "ProductSections": {
+      "title": "Products"
+    }
   },
   "Navbar": {
     "userMenu": {

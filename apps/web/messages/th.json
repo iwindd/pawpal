@@ -3,6 +3,14 @@
     "title": "Hello world! (th)",
     "CardCarousel": {
       "topup": "เติมทันที"
+    },
+    "ProductRow": {
+      "showMore": "ดูเพิ่มเติม",
+      "buyNow": "ซื้อเลย",
+      "flashsale": "Flashsale"
+    },
+    "ProductSections": {
+      "title": "สินค้า"
     }
   },
   "Navbar": {
