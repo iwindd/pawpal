@@ -6,7 +6,8 @@
     "./styles/global.css": "./src/styles/global.css",
     "./postcss.config": "./src/configs/postcss-config.ts",
     "./core": "./src/core.ts",
-    "./hooks": "./src/hooks.ts"
+    "./hooks": "./src/hooks.ts",
+    "./carousel": "./src/carousel.ts"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",
@@ -23,6 +24,7 @@
     "typescript": "catalog:"
   },
   "dependencies": {
+    "@mantine/carousel": "catalog:",
     "@mantine/core": "catalog:",
     "@mantine/hooks": "catalog:",
     "react": "catalog:",

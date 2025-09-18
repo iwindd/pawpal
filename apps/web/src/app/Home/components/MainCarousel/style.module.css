@@ -1,0 +1,15 @@
+.indicator {
+  width: 12px;
+  height: 4px;
+  transition: width 250ms ease;
+
+  background-color: light-dark(
+    var(--mantine-color-gray-5),
+    var(--mantine-color-dark-0)
+  );
+
+  &[data-active] {
+    background-color: var(--mantine-color-pink-light-color);
+    width: 40px;
+  }
+}

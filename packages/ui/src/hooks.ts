@@ -1,1 +1,1 @@
-export { useDisclosure } from "@mantine/hooks";
+export { useDisclosure, useMediaQuery } from "@mantine/hooks";

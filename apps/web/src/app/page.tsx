@@ -1,7 +1,3 @@
-import { useTranslations } from "next-intl";
+import HomePage from "./Home";
 
-export default function Home() {
-  const __ = useTranslations("Home");
-
-  return <div>{__("title")}</div>;
-}
+export default HomePage;
