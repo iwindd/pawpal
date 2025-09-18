@@ -2,12 +2,16 @@
 import navbarLinks from "@/configs/navbar";
 import { Burger, Container, Group } from "@pawpal/ui/core";
 import { useDisclosure } from "@pawpal/ui/hooks";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useState } from "react";
 import Logo from "../Logo";
-import ThemeSwitcher from "./components/ThemeSwitcher";
 import UserMenu from "./components/UserMenu";
 import classes from "./style.module.css";
+
+const ThemeSwitcher = dynamic(() => import("./components/ThemeSwitcher"), {
+  ssr: false,
+});
 
 const Navbar = () => {
   const [opened, { toggle }] = useDisclosure(false);
