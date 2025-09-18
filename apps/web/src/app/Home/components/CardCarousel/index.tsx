@@ -3,13 +3,14 @@ import {
   Button,
   Grid,
   Group,
+  Image,
   Paper,
   Stack,
   Text,
   Title,
 } from "@pawpal/ui/core";
 import { useTranslations } from "next-intl";
-import Image from "next/image";
+import NextImage from "next/image";
 import Link from "next/link";
 import classes from "./style.module.css";
 
@@ -32,16 +33,18 @@ const CardCarousel = ({
     <Paper shadow="md" p="xl" radius={0} className={classes.card}>
       <div className={classes.imageContainer}>
         <Image
-          src={`/assets/images/${image}`}
+          component={NextImage}
           alt={`${category}-${title}`}
           fill
           className={classes.image}
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           priority={true}
           unoptimized
+          fallbackSrc="/assets/images/fallback-carousel.jpg"
         />
         <div className={classes.overlay} />
       </div>
+      NextImage
       <Group className={classes.content}>
         <Box style={{ width: "100%" }}>
           <Grid p={0} w="100%">
