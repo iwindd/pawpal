@@ -3,11 +3,12 @@ import HREF from "./HREF"; /* CURSOR: This file is too large , don't read HREF.t
 interface LogoProps {
   width?: number;
   height?: number;
+  size?: number;
 }
 
-const Logo = ({ width, height }: LogoProps) => {
-  width = width || 128;
-  height = height || 128;
+const Logo = ({ width, height, size }: LogoProps) => {
+  width = width || size || 128;
+  height = height || size || 128;
 
   return (
     <div
