@@ -10,11 +10,12 @@ const locales: Locale[] = [
     shortName: "TH",
     value: "th",
   },
-  {
-    label: "English",
-    shortName: "EN",
-    value: "en",
-  },
+  // I don't want to support English for now
+  // {
+  //   label: "English",
+  //   shortName: "EN",
+  //   value: "en",
+  // },
 ];
 
 export type LocaleValue = (typeof locales)[number]["value"];
