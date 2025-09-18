@@ -1,7 +1,6 @@
 import Navbar from "@/components/Navbar";
-import configTheme from "@/configs/theme";
-import { ColorSchemeScript } from "@pawpal/ui/core";
-import UIProvider, { uiProps } from "@pawpal/ui/providers/UIProvider";
+import UIProvider from "@/providers/UIProvider";
+import { ColorSchemeScript, mantineHtmlProps } from "@pawpal/ui/core";
 import "@pawpal/ui/styles/global.css";
 import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
@@ -26,7 +25,7 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
-      {...uiProps}
+      {...mantineHtmlProps}
       suppressHydrationWarning
       className={sarabun.className}
     >
@@ -37,7 +36,7 @@ export default async function RootLayout({
       </head>
       <body>
         <NextIntlClientProvider>
-          <UIProvider themeOverride={configTheme}>
+          <UIProvider>
             <Navbar />
             {children}
           </UIProvider>
