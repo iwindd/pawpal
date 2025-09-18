@@ -24,13 +24,15 @@ const Navbar = () => {
 
   return (
     <header className={classes.header}>
-      <Container size="md" className={classes.inner}>
-        <Logo size={64} />
-        <Group gap={5} visibleFrom="xs">
-          {items}
-        </Group>
+      <Container size="xl" className={classes.inner}>
+        <Group>
+          <Logo size={64} />
+          <Group gap={5} visibleFrom="xs" ms={1}>
+            {items}
+          </Group>
 
-        <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
+          <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
+        </Group>
       </Container>
     </header>
   );
