@@ -1,15 +1,12 @@
 // Re-export icons from @tabler/icons-react
 export {
-  // Chevron
+  IconCheese as IconActivity,
   IconChevronDown,
   IconChevronLeft,
   IconChevronRight,
   IconChevronUp,
-  // Auth
+  IconPaw as IconCoin,
+  IconHistory,
   IconLogout,
-  // Actions
   IconSettings,
 } from "@tabler/icons-react";
-
-// Re-export types
-export type { IconComponent, IconProps } from "./types";

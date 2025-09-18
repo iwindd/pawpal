@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useState } from "react";
 import Logo from "../Logo";
 import classes from "./style.module.css";
+import UserMenu from "./UserMenu";
 
 const Navbar = () => {
   const [opened, { toggle }] = useDisclosure(false);
@@ -32,6 +33,9 @@ const Navbar = () => {
           </Group>
 
           <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
+        </Group>
+        <Group>
+          <UserMenu />
         </Group>
       </Container>
     </header>

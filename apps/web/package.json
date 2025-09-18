@@ -12,6 +12,7 @@
   "dependencies": {
     "@pawpal/icons": "workspace:*",
     "@pawpal/ui": "workspace:*",
+    "clsx": "catalog:",
     "next": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:"
