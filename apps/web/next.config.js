@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import path from "path";
 
 /** @type {import('next').NextConfig} */
