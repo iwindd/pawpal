@@ -8,6 +8,7 @@ import {
   Text,
   Title,
 } from "@pawpal/ui/core";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
 import classes from "./style.module.css";
@@ -25,6 +26,8 @@ const CardCarousel = ({
   title,
   href,
 }: Readonly<CardCarouselProps>) => {
+  const __ = useTranslations("Home.CardCarousel");
+
   return (
     <Paper shadow="md" p="xl" radius={0} className={classes.card}>
       <div className={classes.imageContainer}>
@@ -62,7 +65,7 @@ const CardCarousel = ({
                       className={classes.button}
                       href={href}
                     >
-                      เติมทันที
+                      {__("topup")}
                     </Button>
                   </Box>
                 </Group>

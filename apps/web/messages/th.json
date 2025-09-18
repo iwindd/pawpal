@@ -1,6 +1,9 @@
 {
   "Home": {
-    "title": "Hello world! (th)"
+    "title": "Hello world! (th)",
+    "CardCarousel": {
+      "topup": "เติมทันที"
+    }
   },
   "Navbar": {
     "userMenu": {
