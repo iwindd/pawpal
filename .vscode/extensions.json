@@ -13,6 +13,10 @@
     // to better integration with docker
     "ms-azuretools.vscode-docker",
     // to better experience using tailwindcss on frontend (default css library on NextJS)
-    "EditorConfig.EditorConfig"
+    "EditorConfig.EditorConfig",
+    // to better experience using CSS variables
+    "vunguyentuan.vscode-css-variables",
+    // to better experience using PostCSS
+    "vunguyentuan.vscode-postcss"
   ]
 }

@@ -50,5 +50,13 @@
     {
       "mode": "auto"
     }
+  ],
+  // css variables
+  "cssVariables.lookupFiles": [
+    "**/*.css",
+    "**/*.scss",
+    "**/*.sass",
+    "**/*.less",
+    "./apps/web/node_modules/@pawpal/ui/node_modules/@mantine/core/styles.css"
   ]
 }
