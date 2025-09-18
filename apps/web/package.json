@@ -25,6 +25,9 @@
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
+    "postcss": "catalog:",
+    "postcss-preset-mantine": "catalog:",
+    "postcss-simple-vars": "catalog:",
     "eslint": "catalog:",
     "eslint-config-next": "catalog:",
     "typescript": "catalog:"
