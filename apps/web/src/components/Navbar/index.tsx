@@ -6,6 +6,7 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useState } from "react";
 import Logo from "../Logo";
+import LocaleSwitcher from "./components/LocaleSwitcher";
 import UserMenu from "./components/UserMenu";
 import classes from "./style.module.css";
 
@@ -40,6 +41,7 @@ const Navbar = () => {
           <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
         </Group>
         <Group>
+          <LocaleSwitcher />
           <ThemeSwitcher />
           <UserMenu />
         </Group>
