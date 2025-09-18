@@ -23,6 +23,11 @@ const Logo = ({ width, height, size, alt }: Readonly<LogoProps>) => {
         src={"/assets/images/logo.png"}
         alt={alt}
         fill
+        quality={90}
+        priority={true}
+        loading={"eager"}
+        decoding={"async"}
+        unoptimized
         style={{
           objectFit: "contain",
         }}
