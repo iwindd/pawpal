@@ -7,28 +7,28 @@ import classes from "./style.module.css";
 const CAROUSEL_MOCKUP = [
   {
     id: 1,
-    image: "carousel-1.jpg",
+    image: "fallback-carousel.jpg",
     title: "Promotion 10%",
     category: "Valorant",
     href: "/products/valorant",
   },
   {
     id: 2,
-    image: "carousel-2.jpg",
+    image: "fallback-carousel.jpg",
     title: "Free Heirloom",
     category: "Apex Legends",
     href: "/products/apex-legends",
   },
   {
     id: 3,
-    image: "carousel-3.jpg",
+    image: "fallback-carousel.jpg",
     title: "Free 10% of your purchase",
     category: "Fortnite",
     href: "/products/fortnite",
   },
   {
     id: 4,
-    image: "carousel-4.jpg",
+    image: "fallback-carousel.jpg",
     title: "Get cashback 10%",
     category: null,
     href: null,

@@ -40,6 +40,7 @@ const CardCarousel = ({
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           priority={true}
           unoptimized
+          src={`/assets/images/carousel/${image}`}
           fallbackSrc="/assets/images/fallback-carousel.jpg"
         />
         <div className={classes.overlay} />
