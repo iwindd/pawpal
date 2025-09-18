@@ -1,5 +1,14 @@
 {
   "Home": {
     "title": "Hello world! (en)"
+  },
+  "Navbar": {
+    "userMenu": {
+      "topup": "Topup",
+      "accountSettings": "Account",
+      "orders": "Orders",
+      "activities": "Activities",
+      "logout": "Logout"
+    }
   }
 }

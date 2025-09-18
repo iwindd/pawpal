@@ -1,5 +1,14 @@
 {
   "Home": {
     "title": "Hello world! (th)"
+  },
+  "Navbar": {
+    "userMenu": {
+      "topup": "เติมเงิน",
+      "accountSettings": "บัญชี",
+      "orders": "คำสั่งซื้อ",
+      "activities": "กิจกรรม",
+      "logout": "ออกจากระบบ"
+    }
   }
 }

@@ -17,6 +17,7 @@ import {
   UnstyledButton,
 } from "@pawpal/ui/core";
 import clsx from "clsx";
+import { useFormatter, useTranslations } from "next-intl";
 import { useState } from "react";
 import classes from "./style.module.css";
 
@@ -25,10 +26,13 @@ const USER_MOCKUP = {
   email: "achiarwitkaewkhong@outlook.com",
   image:
     "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-5.png",
+  coins: 9999.999,
 };
 
 const UserMenu = () => {
   const [userMenuOpened, setUserMenuOpened] = useState(false);
+  const __ = useTranslations("Navbar.userMenu");
+  const format = useFormatter();
 
   return (
     <Menu
@@ -82,28 +86,33 @@ const UserMenu = () => {
             leftSection={<IconCoin size={16} stroke={1.5} />}
             rightSection={
               <Text c="blue" size="xs">
-                เติมเงิน
+                {__("topup")}
               </Text>
             }
           >
             <Group gap={3}>
-              <Text fw={500}>0.00</Text>
-              <Text>Coins</Text>
+              <Text fw={500}>
+                {format.number(USER_MOCKUP.coins, {
+                  style: "currency",
+                  currency: "THB",
+                  currencyDisplay: "code",
+                })}
+              </Text>
             </Group>
           </Menu.Item>
         </Stack>
         <Menu.Divider />
         <Menu.Item leftSection={<IconSettings size={16} stroke={1.5} />}>
-          Account settings
+          {__("accountSettings")}
         </Menu.Item>
         <Menu.Item leftSection={<IconHistory size={16} stroke={1.5} />}>
-          Orders
+          {__("orders")}
         </Menu.Item>
         <Menu.Item leftSection={<IconActivity size={16} stroke={1.5} />}>
-          Activities
+          {__("activities")}
         </Menu.Item>
         <Menu.Item leftSection={<IconLogout size={16} stroke={1.5} />}>
-          Logout
+          {__("logout")}
         </Menu.Item>
       </Menu.Dropdown>
     </Menu>
