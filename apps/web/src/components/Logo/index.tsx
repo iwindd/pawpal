@@ -19,6 +19,7 @@ const Logo = ({ width, height, size, alt }: Readonly<LogoProps>) => {
       }}
     >
       {width}x{height}
+      {alt}
     </div>
   );
 };

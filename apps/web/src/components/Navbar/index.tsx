@@ -1,10 +1,10 @@
 "use client";
-import Logo from "@/components/Logo";
-import navbarLinks from "@/configs/navbar";
 import { Burger, Container, Group } from "@pawpal/ui/core";
 import { useDisclosure } from "@pawpal/ui/hooks";
 import Link from "next/link";
 import { useState } from "react";
+import navbarLinks from "src/configs/navbar";
+import Logo from "../Logo";
 import classes from "./style.module.css";
 
 const Navbar = () => {

@@ -1,5 +1,4 @@
 "use client";
-import configTheme from "@/configs/theme";
 import {
   createTheme,
   mantineHtmlProps,
@@ -18,7 +17,6 @@ function UIProvider({
   themeOverride: UIThemeOverride;
 }>) {
   const Theme: ReturnType<typeof createTheme> = createTheme({
-    ...configTheme,
     ...themeOverride,
   });
 
