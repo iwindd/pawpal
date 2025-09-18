@@ -1,7 +1,7 @@
 "use client";
-import { UIThemeOverride } from "@pawpal/ui/providers/UIProvider";
+import { MantineThemeOverride } from "@pawpal/ui/core";
 
-const configTheme: UIThemeOverride = {
+const configTheme: MantineThemeOverride = {
   /** Controls focus ring styles. Supports the following options:
    *  - `auto` – focus ring is displayed only when the user navigates with keyboard (default value)
    *  - `always` – focus ring is displayed when the user navigates with keyboard and mouse

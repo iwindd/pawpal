@@ -19,4 +19,6 @@ export {
   UnstyledButton,
   useComputedColorScheme,
   useMantineColorScheme,
+  virtualColor,
+  type MantineThemeOverride,
 } from "@mantine/core";
