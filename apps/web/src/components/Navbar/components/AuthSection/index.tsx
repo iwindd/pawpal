@@ -1,21 +1,26 @@
 "use client";
+import LoginModal from "@/components/Modals/Auth/LoginModal";
+import RegisterModal from "@/components/Modals/Auth/RegisterModal";
 import { Button, Group } from "@pawpal/ui/core";
 import { useTranslations } from "next-intl";
 import { usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
 
 const AuthSection = () => {
   const __ = useTranslations("Navbar.auth");
   const router = useRouter();
   const pathname = usePathname();
+  const [modalType, setModalType] = useState<"login" | "register" | null>(null);
 
-  const handleLoginClick = () => {
-    if (pathname === "/login") return;
-    router.push("/login");
-  };
+  const handleLoginClick = () => setModalType("login");
+  const handleRegisterClick = () => setModalType("register");
+  const handleCloseModal = () => setModalType(null);
 
-  const handleRegisterClick = () => {
-    if (pathname === "/register") return;
-    router.push("/register");
+  const isRegisterModalOpen = modalType === "register";
+  const isLoginModalOpen = modalType === "login";
+
+  const switchModal = () => {
+    setModalType((prev) => (prev === "login" ? "register" : "login"));
   };
 
   return (
@@ -24,6 +29,16 @@ const AuthSection = () => {
         {__("login-btn")}
       </Button>
       <Button onClick={handleRegisterClick}>{__("register-btn")}</Button>
+      <LoginModal
+        opened={isLoginModalOpen}
+        onClose={handleCloseModal}
+        onSwitch={switchModal}
+      />
+      <RegisterModal
+        opened={isRegisterModalOpen}
+        onClose={handleCloseModal}
+        onSwitch={switchModal}
+      />
     </Group>
   );
 };
