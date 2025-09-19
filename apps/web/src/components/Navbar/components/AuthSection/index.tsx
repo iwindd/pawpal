@@ -3,13 +3,10 @@ import LoginModal from "@/components/Modals/Auth/LoginModal";
 import RegisterModal from "@/components/Modals/Auth/RegisterModal";
 import { Button, Group } from "@pawpal/ui/core";
 import { useTranslations } from "next-intl";
-import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 
 const AuthSection = () => {
   const __ = useTranslations("Navbar.auth");
-  const router = useRouter();
-  const pathname = usePathname();
   const [modalType, setModalType] = useState<"login" | "register" | null>(null);
 
   const handleLoginClick = () => setModalType("login");
