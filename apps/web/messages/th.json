@@ -41,8 +41,7 @@
       "rememberMe": "จดจำการเข้าสู่ระบบ",
       "forgotPassword": "ลืมรหัสผ่าน?",
       "loginButton": "เข้าสู่ระบบ",
-      "noAccount": "ยังไม่มีบัญชี?",
-      "signUp": "สมัครสมาชิก",
+      "noAccount": "<dimmed>ยังไม่มีบัญชี?</dimmed> <register>สมัครสมาชิก</register>",
       "emailPlaceholder": "กรอกอีเมลของคุณ",
       "passwordPlaceholder": "กรอกรหัสผ่านของคุณ",
       "label_or": "หรือ"

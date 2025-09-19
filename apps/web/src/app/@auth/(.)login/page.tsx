@@ -1,4 +1,5 @@
 "use client";
+import RichText from "@/components/RichText";
 import { useAuth } from "@/contexts/AuthContext";
 import { IconLogin } from "@pawpal/icons";
 import {
@@ -126,10 +127,7 @@ export default function LoginModal() {
             </Group>
 
             <Group justify="center" gap="xs">
-              <Text size="sm" c="dimmed">
-                {__("noAccount")}
-              </Text>
-              <Anchor href="#">{__("signUp")}</Anchor>
+              <RichText>{(tags) => __.rich("noAccount", tags)}</RichText>
             </Group>
           </Stack>
         </form>
