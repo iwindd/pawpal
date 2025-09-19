@@ -21,15 +21,16 @@ import { useFormatter, useTranslations } from "next-intl";
 import { useState } from "react";
 import classes from "./style.module.css";
 
-const USER_MOCKUP = {
-  name: "Achirawit Kaewkhong",
-  email: "achiarwitkaewkhong@outlook.com",
-  image:
-    "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-5.png",
-  coins: 9999.999,
-};
+interface UserMenuProps {
+  user: {
+    name: string;
+    email: string;
+    image: string;
+    coins: number;
+  };
+}
 
-const UserMenu = () => {
+const UserMenu = ({ user }: UserMenuProps) => {
   const [userMenuOpened, setUserMenuOpened] = useState(false);
   const __ = useTranslations("Navbar.userMenu");
   const format = useFormatter();
@@ -52,12 +53,7 @@ const UserMenu = () => {
         >
           <Group justify="center">
             <Space />
-            <Avatar
-              src={USER_MOCKUP.image}
-              alt={USER_MOCKUP.name}
-              radius="xl"
-              size={40}
-            />
+            <Avatar src={user.image} alt={user.name} radius="xl" size={40} />
           </Group>
         </UnstyledButton>
       </Menu.Target>
@@ -66,18 +62,13 @@ const UserMenu = () => {
           <Space />
           <Group>
             <Space />
-            <Avatar
-              src={USER_MOCKUP.image}
-              alt={USER_MOCKUP.name}
-              radius="xl"
-              size={40}
-            />
+            <Avatar src={user.image} alt={user.name} radius="xl" size={40} />
             <Box w={207} style={{ flex: 1 }}>
               <Text truncate="end" fw={500}>
-                {USER_MOCKUP.name}
+                {user.name}
               </Text>
               <Text truncate="end" c="dimmed" size="xs">
-                {USER_MOCKUP.email}
+                {user.email}
               </Text>
             </Box>
             <Space />
@@ -92,7 +83,7 @@ const UserMenu = () => {
           >
             <Group gap={3}>
               <Text fw={500}>
-                {format.number(USER_MOCKUP.coins, {
+                {format.number(user.coins, {
                   style: "currency",
                   currency: "THB",
                   currencyDisplay: "code",

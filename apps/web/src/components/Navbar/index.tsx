@@ -20,6 +20,14 @@ const Navbar = () => {
   const [activeLink, setActiveLink] = useState("/");
   const __ = useTranslations("Navbar.links");
 
+  const USER_MOCKUP = {
+    name: "Achirawit Kaewkhong",
+    email: "achiarwitkaewkhong@outlook.com",
+    image:
+      "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-5.png",
+    coins: 9999.999,
+  };
+
   const items = navbarLinks.map((link) => (
     <Link
       key={link.label}
@@ -46,7 +54,7 @@ const Navbar = () => {
           <LocaleSwitcher />
           <ThemeSwitcher />
           <Divider orientation="vertical" />
-          <UserMenu />
+          <UserMenu user={USER_MOCKUP} />
         </Group>
       </Container>
     </header>
