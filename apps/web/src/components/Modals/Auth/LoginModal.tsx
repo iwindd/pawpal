@@ -13,11 +13,9 @@ import {
   Stack,
   Text,
   TextInput,
-  Title,
 } from "@pawpal/ui/core";
 import { useTranslations } from "next-intl";
 import React, { useState } from "react";
-import modalClasses from "./modal.module.css";
 
 export default function LoginModal({
   opened,
@@ -59,13 +57,7 @@ export default function LoginModal({
       withinPortal
       zIndex={1000}
       size="md"
-      classNames={modalClasses}
-      title={
-        <Stack gap="xs">
-          <Title order={2}>{__("title")}</Title>
-          <Text size="sm">{__("subtitle")}</Text>
-        </Stack>
-      }
+      title={__("title")}
     >
       <Stack gap="md">
         <form onSubmit={handleSubmit}>
