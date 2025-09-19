@@ -45,6 +45,24 @@
       "emailPlaceholder": "กรอกอีเมลของคุณ",
       "passwordPlaceholder": "กรอกรหัสผ่านของคุณ",
       "label_or": "หรือ"
+    },
+    "register": {
+      "title": "สร้างบัญชี",
+      "subtitle": "สมัครสมาชิกเพื่อเริ่มต้น",
+      "displayName": "ชื่อแสดง",
+      "email": "อีเมล",
+      "password": "รหัสผ่าน",
+      "confirmPassword": "ยืนยันรหัสผ่าน",
+      "termsOfServiceAndPrivacyPolicy": "ฉันยอมรับ<terms>เงื่อนไขการใช้งาน</terms>และ<privacy>นโยบายความเป็นส่วนตัว</privacy>",
+      "registerButton": "สร้างบัญชี",
+      "hasAccount": "<dimmed>มีบัญชีอยู่แล้ว?</dimmed> <login>เข้าสู่ระบบ</login>",
+      "displayNamePlaceholder": "กรอกชื่อแสดงของคุณ",
+      "emailPlaceholder": "กรอกอีเมลของคุณ",
+      "passwordPlaceholder": "สร้างรหัสผ่าน",
+      "confirmPasswordPlaceholder": "ยืนยันรหัสผ่านของคุณ",
+      "label_or": "หรือ",
+      "passwordMismatch": "รหัสผ่านไม่ตรงกัน",
+      "requiredField": "ฟิลด์นี้จำเป็นต้องกรอก"
     }
   },
   "Footer": {

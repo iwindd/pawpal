@@ -8,9 +8,20 @@ interface User {
   coins: number;
 }
 
+interface RegisterProps {
+  inputs: {
+    displayName: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+    acceptConditions: boolean;
+  };
+}
+
 interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => Promise<void>;
+  register: (props: RegisterProps) => Promise<void>;
   logout: () => void;
   isLoading: boolean;
 }
@@ -56,13 +67,36 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
+  const register = async ({ inputs }: RegisterProps) => {
+    setIsLoading(true);
+
+    try {
+      // TODO: Implement actual registration API call
+      // For now, simulate a registration with mock data
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      setUser({
+        name: inputs.displayName,
+        email: inputs.email,
+        image:
+          "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-5.png",
+        coins: 0,
+      });
+    } catch (error) {
+      console.error("Registration failed:", error);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const logout = () => {
     setUser(null);
   };
 
   const value = useMemo(
-    () => ({ user, login, logout, isLoading }),
-    [user, login, logout, isLoading]
+    () => ({ user, login, register, logout, isLoading }),
+    [user, login, register, logout, isLoading]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

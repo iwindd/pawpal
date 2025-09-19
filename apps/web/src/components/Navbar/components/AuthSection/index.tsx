@@ -12,8 +12,7 @@ const AuthSection = () => {
   };
 
   const handleRegisterClick = () => {
-    // TODO: Implement register navigation
-    console.log("Register clicked");
+    router.push("/register");
   };
 
   return (

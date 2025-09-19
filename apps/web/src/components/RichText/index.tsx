@@ -1,3 +1,4 @@
+"use client";
 import { Anchor, Text } from "@pawpal/ui/core";
 import { ReactNode } from "react";
 
@@ -12,10 +13,21 @@ const RichTextComponents = {
   b: (chunks: ReactNode) => <Text fw={700}>{chunks}</Text>,
   i: (chunks: ReactNode) => <Text fs={"italic"}>{chunks}</Text>,
   register: (chunks: ReactNode) => <Anchor href={"/register"}>{chunks}</Anchor>,
+  login: (chunks: ReactNode) => <Anchor href={"/login"}>{chunks}dsadsa</Anchor>,
   dimmed: (chunks: ReactNode) => (
     <Text size="sm" c="dimmed">
       {chunks}
     </Text>
+  ),
+  terms: (chunks: ReactNode) => (
+    <Anchor inherit href={"/terms-of-service"}>
+      {chunks}
+    </Anchor>
+  ),
+  privacy: (chunks: ReactNode) => (
+    <Anchor inherit href={"/privacy-policy"}>
+      {chunks}
+    </Anchor>
   ),
 };
 

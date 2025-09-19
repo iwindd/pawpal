@@ -39,6 +39,24 @@
       "emailPlaceholder": "Enter your email",
       "passwordPlaceholder": "Enter your password",
       "label_or": "Or"
+    },
+    "register": {
+      "title": "Create Account",
+      "subtitle": "Sign up to get started",
+      "displayName": "Display Name",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "termsOfServiceAndPrivacyPolicy": "I agree to the <terms>terms of service</terms> and <privacy>privacy policy</privacy>",
+      "registerButton": "Create Account",
+      "hasAccount": "<dimmed>Already have an account?</dimmed> <login>Sign in</login>",
+      "displayNamePlaceholder": "Enter your display name",
+      "emailPlaceholder": "Enter your email",
+      "passwordPlaceholder": "Create a password",
+      "confirmPasswordPlaceholder": "Confirm your password",
+      "label_or": "Or",
+      "passwordMismatch": "Passwords do not match",
+      "requiredField": "This field is required"
     }
   },
   "Footer": {
