@@ -10,6 +10,7 @@ export {
   Container,
   createTheme,
   DEFAULT_THEME,
+  Divider,
   Grid,
   Group,
   Image,

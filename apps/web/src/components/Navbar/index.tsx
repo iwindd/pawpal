@@ -1,6 +1,6 @@
 "use client";
 import navbarLinks from "@/configs/navbar";
-import { Burger, Container, Group } from "@pawpal/ui/core";
+import { Burger, Container, Divider, Group } from "@pawpal/ui/core";
 import { useDisclosure } from "@pawpal/ui/hooks";
 import { useTranslations } from "next-intl";
 import dynamic from "next/dynamic";
@@ -45,6 +45,7 @@ const Navbar = () => {
         <Group>
           <LocaleSwitcher />
           <ThemeSwitcher />
+          <Divider orientation="vertical" />
           <UserMenu />
         </Group>
       </Container>
