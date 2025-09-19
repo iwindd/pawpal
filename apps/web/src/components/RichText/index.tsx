@@ -13,7 +13,7 @@ const RichTextComponents = {
   b: (chunks: ReactNode) => <Text fw={700}>{chunks}</Text>,
   i: (chunks: ReactNode) => <Text fs={"italic"}>{chunks}</Text>,
   register: (chunks: ReactNode) => <Anchor href={"/register"}>{chunks}</Anchor>,
-  login: (chunks: ReactNode) => <Anchor href={"/login"}>{chunks}dsadsa</Anchor>,
+  login: (chunks: ReactNode) => <Anchor href={"/login"}>{chunks}</Anchor>,
   dimmed: (chunks: ReactNode) => (
     <Text size="sm" c="dimmed">
       {chunks}
