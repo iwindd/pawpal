@@ -18,8 +18,8 @@ import {
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import ActionImage from "../components/ActionImage";
 import modalClasses from "../modal.module.css";
-import ActionImage from "./components/ActionImage";
 
 export default function LoginModal() {
   const router = useRouter();
