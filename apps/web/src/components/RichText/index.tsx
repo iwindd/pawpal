@@ -1,5 +1,6 @@
 "use client";
 import { Anchor, Text } from "@pawpal/ui/core";
+import Link from "next/link";
 import { ReactNode } from "react";
 
 type Tag =
@@ -20,8 +21,16 @@ const RichTextComponents = {
   p: (chunks: ReactNode) => <Text>{chunks}</Text>,
   b: (chunks: ReactNode) => <Text fw={700}>{chunks}</Text>,
   i: (chunks: ReactNode) => <Text fs={"italic"}>{chunks}</Text>,
-  register: (chunks: ReactNode) => <Anchor href={"/register"}>{chunks}</Anchor>,
-  login: (chunks: ReactNode) => <Anchor href={"/login"}>{chunks}</Anchor>,
+  register: (chunks: ReactNode) => (
+    <Anchor component={Link} href={"/register"}>
+      {chunks}
+    </Anchor>
+  ),
+  login: (chunks: ReactNode) => (
+    <Anchor component={Link} href={"/login"}>
+      {chunks}
+    </Anchor>
+  ),
   dimmed: (chunks: ReactNode) => (
     <Text size="sm" c="dimmed">
       {chunks}
