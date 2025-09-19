@@ -1,0 +1,18 @@
+.header {
+  background-color: var(--mantine-primary-color-filled);
+  color: var(--mantine-color-white);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  margin-bottom: var(--mantine-spacing-md);
+  border-radius: 0 !important;
+}
+
+.close {
+  color: var(--mantine-color-gray-2);
+
+  @mixin hover {
+    color: var(--mantine-color-gray-2);
+    background-color: transparent;
+  }
+}

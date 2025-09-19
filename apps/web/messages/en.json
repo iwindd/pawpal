@@ -19,6 +19,26 @@
       "orders": "Orders",
       "activities": "Activities",
       "logout": "Logout"
+    },
+    "auth": {
+      "login-btn": "Login",
+      "register-btn": "Register"
+    }
+  },
+  "Auth": {
+    "login": {
+      "title": "Welcome Back",
+      "subtitle": "Sign in to your account",
+      "email": "Email",
+      "password": "Password",
+      "rememberMe": "Remember me",
+      "forgotPassword": "Forgot password?",
+      "loginButton": "Sign In",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign up",
+      "emailPlaceholder": "Enter your email",
+      "passwordPlaceholder": "Enter your password",
+      "label_or": "Or"
     }
   },
   "Footer": {

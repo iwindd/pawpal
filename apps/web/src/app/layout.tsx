@@ -1,5 +1,6 @@
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
+import { AuthProvider } from "@/contexts/AuthContext";
 import UIProvider from "@/providers/UIProvider";
 import { ColorSchemeScript, mantineHtmlProps } from "@pawpal/ui/core";
 import "@pawpal/ui/styles/global.css";
@@ -20,8 +21,10 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({
   children,
+  auth,
 }: Readonly<{
   children: React.ReactNode;
+  auth: React.ReactNode;
 }>) {
   return (
     <html
@@ -38,9 +41,12 @@ export default async function RootLayout({
       <body>
         <NextIntlClientProvider>
           <UIProvider>
-            <Navbar />
-            {children}
-            <Footer />
+            <AuthProvider>
+              <Navbar />
+              {children}
+              <Footer />
+              {auth}
+            </AuthProvider>
           </UIProvider>
         </NextIntlClientProvider>
       </body>

@@ -1,5 +1,6 @@
 export {
   ActionIcon,
+  Anchor,
   Avatar,
   Badge,
   Box,
@@ -32,5 +33,6 @@ export {
   useMantineColorScheme,
   useMantineTheme,
   virtualColor,
+  type ActionIconProps,
   type MantineThemeOverride,
 } from "@mantine/core";

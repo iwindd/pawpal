@@ -1,5 +1,6 @@
 "use client";
 import navbarLinks from "@/configs/navbar";
+import { useAuth } from "@/contexts/AuthContext";
 import { Burger, Container, Divider, Group } from "@pawpal/ui/core";
 import { useDisclosure } from "@pawpal/ui/hooks";
 import { useTranslations } from "next-intl";
@@ -7,6 +8,7 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useState } from "react";
 import Logo from "../Logo";
+import AuthSection from "./components/AuthSection";
 import LocaleSwitcher from "./components/LocaleSwitcher";
 import UserMenu from "./components/UserMenu";
 import classes from "./style.module.css";
@@ -18,15 +20,8 @@ const ThemeSwitcher = dynamic(() => import("./components/ThemeSwitcher"), {
 const Navbar = () => {
   const [opened, { toggle }] = useDisclosure(false);
   const [activeLink, setActiveLink] = useState("/");
+  const { user } = useAuth();
   const __ = useTranslations("Navbar.links");
-
-  const USER_MOCKUP = {
-    name: "Achirawit Kaewkhong",
-    email: "achiarwitkaewkhong@outlook.com",
-    image:
-      "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-5.png",
-    coins: 9999.999,
-  };
 
   const items = navbarLinks.map((link) => (
     <Link
@@ -54,7 +49,7 @@ const Navbar = () => {
           <LocaleSwitcher />
           <ThemeSwitcher />
           <Divider orientation="vertical" />
-          <UserMenu user={USER_MOCKUP} />
+          {user ? <UserMenu user={user} /> : <AuthSection />}
         </Group>
       </Container>
     </header>

@@ -26,6 +26,26 @@
       "products": "สินค้า",
       "topup": "เติมเงิน",
       "help": "ช่วยเหลือ"
+    },
+    "auth": {
+      "login-btn": "เข้าสู่ระบบ",
+      "register-btn": "สมัครสมาชิก"
+    }
+  },
+  "Auth": {
+    "login": {
+      "title": "เข้าสู่ระบบ",
+      "subtitle": "ยินดีต้อนรับกลับมา",
+      "email": "อีเมล",
+      "password": "รหัสผ่าน",
+      "rememberMe": "จดจำการเข้าสู่ระบบ",
+      "forgotPassword": "ลืมรหัสผ่าน?",
+      "loginButton": "เข้าสู่ระบบ",
+      "noAccount": "ยังไม่มีบัญชี?",
+      "signUp": "สมัครสมาชิก",
+      "emailPlaceholder": "กรอกอีเมลของคุณ",
+      "passwordPlaceholder": "กรอกรหัสผ่านของคุณ",
+      "label_or": "หรือ"
     }
   },
   "Footer": {
