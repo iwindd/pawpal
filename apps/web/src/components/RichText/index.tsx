@@ -2,7 +2,15 @@
 import { Anchor, Text } from "@pawpal/ui/core";
 import { ReactNode } from "react";
 
-type Tag = "p" | "b" | "i";
+type Tag =
+  | "p"
+  | "b"
+  | "i"
+  | "register"
+  | "login"
+  | "dimmed"
+  | "terms"
+  | "privacy";
 
 type RichTextProps = {
   children(tags: Record<Tag, (chunks: ReactNode) => ReactNode>): ReactNode;
