@@ -1,4 +1,5 @@
 {
+  "_comment": "Updated to fix rich text rendering",
   "Home": {
     "title": "Hello world! (th)",
     "CardCarousel": {
