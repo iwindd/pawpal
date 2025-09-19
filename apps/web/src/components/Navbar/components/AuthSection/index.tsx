@@ -14,6 +14,7 @@ const AuthSection = () => {
   };
 
   const handleRegisterClick = () => {
+    if (pathname === "/register") return;
     router.push("/register");
   };
 

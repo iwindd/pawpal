@@ -8,7 +8,7 @@ interface User {
   coins: number;
 }
 
-interface RegisterProps {
+export interface RegisterProps {
   inputs: {
     displayName: string;
     email: string;
