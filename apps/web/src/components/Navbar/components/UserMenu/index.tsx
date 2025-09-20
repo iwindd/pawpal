@@ -6,6 +6,7 @@ import {
   IconLogout,
   IconSettings,
 } from "@pawpal/icons";
+import { Session } from "@pawpal/shared";
 import {
   Avatar,
   Box,
@@ -22,12 +23,7 @@ import { useState } from "react";
 import classes from "./style.module.css";
 
 interface UserMenuProps {
-  user: {
-    name: string;
-    email: string;
-    image: string;
-    coins: number;
-  };
+  user: Session;
 }
 
 const UserMenu = ({ user }: UserMenuProps) => {
@@ -53,7 +49,12 @@ const UserMenu = ({ user }: UserMenuProps) => {
         >
           <Group justify="center">
             <Space />
-            <Avatar src={user.image} alt={user.name} radius="xl" size={40} />
+            <Avatar
+              src={user.avatar}
+              alt={user.displayName}
+              radius="xl"
+              size={40}
+            />
           </Group>
         </UnstyledButton>
       </Menu.Target>
@@ -62,10 +63,15 @@ const UserMenu = ({ user }: UserMenuProps) => {
           <Space />
           <Group>
             <Space />
-            <Avatar src={user.image} alt={user.name} radius="xl" size={40} />
+            <Avatar
+              src={user.avatar}
+              alt={user.displayName}
+              radius="xl"
+              size={40}
+            />
             <Box w={207} style={{ flex: 1 }}>
               <Text truncate="end" fw={500}>
-                {user.name}
+                {user.displayName}
               </Text>
               <Text truncate="end" c="dimmed" size="xs">
                 {user.email}

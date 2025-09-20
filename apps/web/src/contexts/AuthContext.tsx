@@ -1,16 +1,13 @@
 "use client";
-import { RegisterInput, type LoginInput } from "@pawpal/shared";
+import loginAction from "@/server/actions/auths/login";
+import { RegisterInput, Session, type LoginInput } from "@pawpal/shared";
 import { createContext, ReactNode, useContext, useMemo, useState } from "react";
-interface User {
-  name: string;
-  email: string;
-  image: string;
-  coins: number;
-}
 
 interface AuthContextType {
-  user: User | null;
-  login: (props: { inputs: LoginInput }) => Promise<void>;
+  user: Session | null;
+  login: (props: {
+    inputs: LoginInput;
+  }) => Promise<"success" | "invalid_credentials" | "error">;
   register: (props: { inputs: RegisterInput }) => Promise<void>;
   logout: () => void;
   isLoading: boolean;
@@ -31,24 +28,20 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const login = async (props: { inputs: LoginInput }) => {
     setIsLoading(true);
 
     try {
-      // TODO: Implement actual login API call
-      // For now, simulate a login with mock data
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const response = await loginAction<Session>(props.inputs);
+      if (response.status === 401) return "invalid_credentials";
+      if (response.status !== 201) return "error";
 
-      setUser({
-        name: "Achirawit Kaewkhong",
-        email: props.inputs.email,
-        image:
-          "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-5.png",
-        coins: 9999.999,
-      });
+      console.log(response.data);
+      setUser(response.data);
+      return "success";
     } catch (error) {
       console.error("Login failed:", error);
       throw error;
@@ -65,13 +58,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       // For now, simulate a registration with mock data
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      setUser({
-        name: inputs.displayName,
-        email: inputs.email,
-        image:
-          "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-5.png",
-        coins: 0,
-      });
+      setUser(null);
     } catch (error) {
       console.error("Registration failed:", error);
       throw error;

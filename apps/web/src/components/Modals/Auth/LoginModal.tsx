@@ -27,6 +27,7 @@ export default function LoginModal({
   const { login } = useAuth();
   const __ = useTranslations("Auth.login");
   const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("error");
 
   const form = useFormValidate<LoginInput>({
     schema: loginSchema,
@@ -44,10 +45,25 @@ export default function LoginModal({
     setLoading(true);
 
     try {
-      await login({ inputs });
-      onClose();
+      const state = await login({ inputs });
+
+      switch (state) {
+        case "success":
+          onClose();
+          break;
+        case "invalid_credentials":
+          form.setErrors({
+            email: "invalid_credentials",
+          });
+          break;
+        case "error":
+          setMessage("error");
+          break;
+        default:
+          break;
+      }
     } catch (error) {
-      console.error("Login failed:", error);
+      console.error(error);
     } finally {
       setLoading(false);
     }
@@ -109,6 +125,12 @@ export default function LoginModal({
             >
               {__("loginButton")}
             </Button>
+
+            {message && (
+              <Text size="sm" c="red" ta="center">
+                {__(message)}
+              </Text>
+            )}
 
             <Divider label={__("label_or")} />
 

@@ -10,7 +10,7 @@ import {
   ResponseWithCookie,
   UseGuards,
 } from '@nestjs/common';
-import { RegisterInput, registerSchema } from '@pawpal/shared';
+import { RegisterInput, registerSchema, Session } from '@pawpal/shared';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { LocalAuthGuard } from './local-auth.guard';
@@ -32,7 +32,7 @@ export class AuthController {
   async login(
     @Request() req: RequestWithUser,
     @Res({ passthrough: true }) res: ResponseWithCookie,
-  ): Promise<{ access_token: string }> {
+  ): Promise<{ access_token: string; user: Session }> {
     const { access_token } = await this.authService.login(req.user);
 
     res.cookie('access_token', access_token, {
@@ -43,6 +43,7 @@ export class AuthController {
 
     return {
       access_token,
+      user: req.user,
     };
   }
 
