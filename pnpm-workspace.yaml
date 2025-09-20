@@ -64,3 +64,4 @@ catalog:
   "@types/passport-local": "^1.0.38"
   "cookie-parser": "^1.4.7"
   "@types/cookie-parser": "^1.4.9"
+  "zod": "^4.1.9"
