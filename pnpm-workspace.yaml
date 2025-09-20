@@ -55,3 +55,4 @@ catalog:
   embla-carousel-autoplay: ^8.5.2
   prisma: 6.16.2
   "@prisma/client": 6.16.2
+  "@nestjs/mapped-types": "*"

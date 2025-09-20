@@ -21,7 +21,7 @@
     "@pawpal/prisma": "workspace:*",
     "@nestjs/common": "catalog:",
     "@nestjs/config": "catalog:",
-    "@nestjs/mapped-types": "*",
+    "@nestjs/mapped-types": "catalog:",
     "@nestjs/core": "catalog:",
     "@nestjs/platform-express": "catalog:",
     "reflect-metadata": "catalog:",
