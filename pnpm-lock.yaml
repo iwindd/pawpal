@@ -12,13 +12,13 @@ catalogs:
     '@eslint/js':
       specifier: ^9.34.0
       version: 9.34.0
-    '@hookform/resolvers':
-      specifier: ^5.2.2
-      version: 5.2.2
     '@mantine/carousel':
       specifier: ^8.3.1
       version: 8.3.1
     '@mantine/core':
+      specifier: ^8.3.1
+      version: 8.3.1
+    '@mantine/form':
       specifier: ^8.3.1
       version: 8.3.1
     '@mantine/hooks':
@@ -129,6 +129,9 @@ catalogs:
     jest:
       specifier: ^30.0.0
       version: 30.1.3
+    mantine-form-zod-resolver:
+      specifier: ^1.3.0
+      version: 1.3.0
     next:
       specifier: ^15.5.3
       version: 15.5.3
@@ -162,9 +165,6 @@ catalogs:
     react-dom:
       specifier: ^19.1.0
       version: 19.1.0
-    react-hook-form:
-      specifier: ^7.63.0
-      version: 7.63.0
     reflect-metadata:
       specifier: ^0.2.2
       version: 0.2.2
@@ -242,6 +242,9 @@ importers:
       '@pawpal/prisma':
         specifier: workspace:*
         version: link:../../packages/prisma
+      '@pawpal/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
       cookie-parser:
         specifier: 'catalog:'
         version: 1.4.7
@@ -345,11 +348,8 @@ importers:
 
   apps/web:
     dependencies:
-      '@hookform/resolvers':
-        specifier: 'catalog:'
-        version: 5.2.2(react-hook-form@7.63.0(react@19.1.0))
       '@mantine/form':
-        specifier: ^8.3.1
+        specifier: 'catalog:'
         version: 8.3.1(react@19.1.0)
       '@pawpal/icons':
         specifier: workspace:*
@@ -367,7 +367,7 @@ importers:
         specifier: 'catalog:'
         version: 8.6.0(embla-carousel@8.6.0)
       mantine-form-zod-resolver:
-        specifier: ^1.3.0
+        specifier: 'catalog:'
         version: 1.3.0(@mantine/form@8.3.1(react@19.1.0))(zod@4.1.9)
       next:
         specifier: 'catalog:'
@@ -381,9 +381,6 @@ importers:
       react-dom:
         specifier: 'catalog:'
         version: 19.1.0(react@19.1.0)
-      react-hook-form:
-        specifier: 'catalog:'
-        version: 7.63.0(react@19.1.0)
     devDependencies:
       '@eslint/eslintrc':
         specifier: 'catalog:'
@@ -848,11 +845,6 @@ packages:
 
   '@formatjs/intl-localematcher@0.6.1':
     resolution: {integrity: sha512-ePEgLgVCqi2BBFnTMWPfIghu6FkbZnnBVhO2sSxvLfrdFw7wCHAHiDoM2h4NRgjbaY7+B7HgOLZGkK187pZTZg==}
-
-  '@hookform/resolvers@5.2.2':
-    resolution: {integrity: sha512-A/IxlMLShx3KjV/HeTcTfaMxdwy690+L/ZADoeaTltLx+CVuzkeVIPuybK3jrRfw7YZnmdKsVVHAlEPIAEUNlA==}
-    peerDependencies:
-      react-hook-form: ^7.55.0
 
   '@humanfs/core@0.19.1':
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
@@ -1538,9 +1530,6 @@ packages:
 
   '@standard-schema/spec@1.0.0':
     resolution: {integrity: sha512-m2bOd0f2RT9k8QJx1JN85cZYyH1RqFBdlwtkSlf4tBDYLCiiZnv1fIIwacK6cqwXavOydf0NPToMQgpKq+dVlA==}
-
-  '@standard-schema/utils@0.3.0':
-    resolution: {integrity: sha512-e7Mew686owMaPJVNNLs55PUvgz371nKgwsc4vxE49zsODpJEnxgxRo2y/OKrqueavXgZNMDVj3DdHFlaSAeU8g==}
 
   '@swc/helpers@0.5.15':
     resolution: {integrity: sha512-JQ5TuMi45Owi4/BIMAJBoSQoOJu12oOk/gADqlcUL9JEdHB8vyjUSsxqeNXnmXHjYKMi2WcYtezGEEhqUI/E2g==}
@@ -4040,12 +4029,6 @@ packages:
     peerDependencies:
       react: ^19.1.0
 
-  react-hook-form@7.63.0:
-    resolution: {integrity: sha512-ZwueDMvUeucovM2VjkCf7zIHcs1aAlDimZu2Hvel5C5907gUzMpm4xCrQXtRzCvsBqFjonB4m3x4LzCFI1ZKWA==}
-    engines: {node: '>=18.0.0'}
-    peerDependencies:
-      react: ^16.8.0 || ^17 || ^18 || ^19
-
   react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
 
@@ -5230,11 +5213,6 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  '@hookform/resolvers@5.2.2(react-hook-form@7.63.0(react@19.1.0))':
-    dependencies:
-      '@standard-schema/utils': 0.3.0
-      react-hook-form: 7.63.0(react@19.1.0)
-
   '@humanfs/core@0.19.1': {}
 
   '@humanfs/node@0.16.6':
@@ -5983,8 +5961,6 @@ snapshots:
       '@sinonjs/commons': 3.0.1
 
   '@standard-schema/spec@1.0.0': {}
-
-  '@standard-schema/utils@0.3.0': {}
 
   '@swc/helpers@0.5.15':
     dependencies:
@@ -8900,10 +8876,6 @@ snapshots:
     dependencies:
       react: 19.1.0
       scheduler: 0.26.0
-
-  react-hook-form@7.63.0(react@19.1.0):
-    dependencies:
-      react: 19.1.0
 
   react-is@16.13.1: {}
 
