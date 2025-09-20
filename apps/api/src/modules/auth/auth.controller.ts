@@ -1,4 +1,5 @@
 import { ZodValidationPipe } from '@/common/ZodValidationPipe';
+import sessionConfig from '@/config/session';
 import {
   Body,
   Controller,
@@ -38,7 +39,7 @@ export class AuthController {
     res.cookie('access_token', access_token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      maxAge: 1000 * 60 * 60 * 24 * 30,
+      maxAge: sessionConfig.maxAge,
     });
 
     return {
