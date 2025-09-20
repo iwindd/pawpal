@@ -34,6 +34,8 @@
     "rxjs": "catalog:"
   },
   "devDependencies": {
+    "@types/passport-jwt": "catalog:",
+    "@types/passport-local": "catalog:",
     "@eslint/eslintrc": "catalog:",
     "@eslint/js": "catalog:",
     "@nestjs/cli": "catalog:",
