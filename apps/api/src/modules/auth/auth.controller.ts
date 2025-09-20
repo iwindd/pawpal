@@ -18,8 +18,9 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
-  async profile(@Request() req: RequestWithUser): Promise<{ email: string }> {
-    console.log(req.user);
+  async profile(
+    @Request() req: RequestWithUser,
+  ): Promise<{ email: string; displayName: string; coins: number }> {
     return req.user;
   }
 

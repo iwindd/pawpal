@@ -3,7 +3,12 @@ import { CookieOptions } from 'express';
 
 declare module '@nestjs/common' {
   interface RequestWithUser extends NestRequest {
-    user?: { email: string; password: string };
+    user?: {
+      email: string;
+      password: string;
+      displayName: string;
+      coins: number;
+    };
   }
 
   interface ResponseWithCookie extends Response {
