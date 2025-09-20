@@ -1,1 +1,2 @@
+export { type ZodType } from "zod";
 export * from "./schemas/auth/login";

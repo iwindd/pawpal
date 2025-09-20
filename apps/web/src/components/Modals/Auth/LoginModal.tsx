@@ -1,7 +1,7 @@
 "use client";
 import ActionImage from "@/components/Modals/Auth/components/ActionImage";
 import { useAuth } from "@/contexts/AuthContext";
-import { useForm } from "@mantine/form";
+import useFormValidate from "@/hooks/useFormValidate";
 import { IconLogin } from "@pawpal/icons";
 import { LoginInput, loginSchema } from "@pawpal/shared";
 import {
@@ -16,7 +16,6 @@ import {
   Text,
   TextInput,
 } from "@pawpal/ui/core";
-import { zod4Resolver } from "mantine-form-zod-resolver";
 import { useTranslations } from "next-intl";
 import React, { useState } from "react";
 
@@ -29,13 +28,14 @@ export default function LoginModal({
   const __ = useTranslations("Auth.login");
   const [loading, setLoading] = useState(false);
 
-  const form = useForm<LoginInput>({
+  const form = useFormValidate<LoginInput>({
+    schema: loginSchema,
+    group: "login",
     mode: "uncontrolled",
     initialValues: {
       email: "",
       password: "",
     },
-    validate: zod4Resolver(loginSchema),
   });
 
   const [rememberMe, setRememberMe] = useState(false);

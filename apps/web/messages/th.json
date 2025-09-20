@@ -94,5 +94,12 @@
     "copyright": "© 2025 Pawpal Store, Inc. All rights reserved.",
     "privacyPolicy": "นโยบายความเป็นส่วนตัว",
     "termsOfService": "เงื่อนไขการใช้งาน"
+  },
+  "Errors": {
+    "login": {
+      "invalid_email_format": "อีเมลไม่ถูกต้อง",
+      "password_too_short": "รหัสผ่านต้องมีความยาวอย่างน้อย 6-30 ตัวอักษร",
+      "password_too_long": "รหัสผ่านต้องมีความยาวอย่างน้อย 6-30 ตัวอักษร"
+    }
   }
 }
