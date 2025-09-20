@@ -1,6 +1,6 @@
 const utils = {
   getHello: () => {
-    return 'Hello World!';
+    return 'Hello Pawpal API!';
   },
 };
 
