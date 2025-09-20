@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Request,
+  RequestWithUser,
+  Res,
+  ResponseWithCookie,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { LocalAuthGuard } from './local-auth.guard';
@@ -9,15 +18,25 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
-  async profile(@Request() req: Request): Promise<{ email: string }> {
+  async profile(@Request() req: RequestWithUser): Promise<{ email: string }> {
     console.log(req.user);
     return req.user;
   }
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@Request() req: Request): Promise<{ access_token: string }> {
+  async login(
+    @Request() req: RequestWithUser,
+    @Res({ passthrough: true }) res: ResponseWithCookie,
+  ): Promise<{ access_token: string }> {
     const { access_token } = await this.authService.login(req.user);
+
+    res.cookie('access_token', access_token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 1000 * 60 * 60 * 24 * 30,
+    });
+
     return {
       access_token,
     };
