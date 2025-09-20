@@ -1,7 +1,9 @@
 "use client";
 import ActionImage from "@/components/Modals/Auth/components/ActionImage";
 import { useAuth } from "@/contexts/AuthContext";
+import { useForm } from "@mantine/form";
 import { IconLogin } from "@pawpal/icons";
+import { LoginInput, loginSchema } from "@pawpal/shared";
 import {
   Anchor,
   Button,
@@ -14,6 +16,7 @@ import {
   Text,
   TextInput,
 } from "@pawpal/ui/core";
+import { zod4Resolver } from "mantine-form-zod-resolver";
 import { useTranslations } from "next-intl";
 import React, { useState } from "react";
 
@@ -26,16 +29,22 @@ export default function LoginModal({
   const __ = useTranslations("Auth.login");
   const [loading, setLoading] = useState(false);
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const form = useForm<LoginInput>({
+    mode: "uncontrolled",
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validate: zod4Resolver(loginSchema),
+  });
+
   const [rememberMe, setRememberMe] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = async (inputs: LoginInput) => {
     setLoading(true);
 
     try {
-      await login(email, password);
+      await login({ inputs });
       onClose();
     } catch (error) {
       console.error("Login failed:", error);
@@ -60,29 +69,23 @@ export default function LoginModal({
       title={__("title")}
     >
       <Stack gap="md">
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={form.onSubmit(onSubmit)}>
           <Stack gap="md">
             <TextInput
               label={__("email")}
               placeholder={__("emailPlaceholder")}
-              value={email}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setEmail(e.target.value)
-              }
-              required
-              type="email"
+              type="text"
               autoComplete="email"
+              key={form.key("email")}
+              {...form.getInputProps("email")}
             />
 
             <PasswordInput
               label={__("password")}
               placeholder={__("passwordPlaceholder")}
-              value={password}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setPassword(e.target.value)
-              }
-              required
               autoComplete="current-password"
+              key={form.key("password")}
+              {...form.getInputProps("password")}
             />
 
             <Group justify="space-between">
@@ -102,7 +105,6 @@ export default function LoginModal({
               type="submit"
               fullWidth
               loading={loading}
-              disabled={!email || !password}
               leftSection={<IconLogin />}
             >
               {__("loginButton")}

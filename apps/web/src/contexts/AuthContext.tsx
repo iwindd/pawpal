@@ -1,6 +1,6 @@
 "use client";
+import { type LoginInput } from "@pawpal/shared";
 import { createContext, ReactNode, useContext, useMemo, useState } from "react";
-
 interface User {
   name: string;
   email: string;
@@ -20,7 +20,7 @@ export interface RegisterProps {
 
 interface AuthContextType {
   user: User | null;
-  login: (email: string, password: string) => Promise<void>;
+  login: (props: { inputs: LoginInput }) => Promise<void>;
   register: (props: RegisterProps) => Promise<void>;
   logout: () => void;
   isLoading: boolean;
@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const login = async (email: string, password: string) => {
+  const login = async (props: { inputs: LoginInput }) => {
     setIsLoading(true);
 
     try {
@@ -54,7 +54,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
       setUser({
         name: "Achirawit Kaewkhong",
-        email: email,
+        email: props.inputs.email,
         image:
           "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-5.png",
         coins: 9999.999,

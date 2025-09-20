@@ -10,10 +10,14 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@hookform/resolvers": "catalog:",
+    "@mantine/form": "catalog:",
     "@pawpal/icons": "workspace:*",
+    "@pawpal/shared": "workspace:*",
     "@pawpal/ui": "workspace:*",
     "clsx": "catalog:",
     "embla-carousel-autoplay": "catalog:",
+    "mantine-form-zod-resolver": "catalog:",
     "next": "catalog:",
     "next-intl": "catalog:",
     "react": "catalog:",
