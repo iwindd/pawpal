@@ -1,0 +1,16 @@
+[
+  {
+    "email": "john@example.com",
+    "displayName": "John Doe",
+    "password": "password",
+    "coins": 100,
+    "avatar": null
+  },
+  {
+    "email": "jane@example.com",
+    "displayName": "Jane Smith",
+    "password": "password",
+    "coins": 0,
+    "avatar": null
+  }
+]

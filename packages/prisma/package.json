@@ -1,0 +1,30 @@
+{
+  "name": "@pawpal/prisma",
+  "version": "0.0.0",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "prisma": {
+    "seed": "ts-node src/seed.ts"
+  },
+  "scripts": {
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy",
+    "db:push": "prisma db push",
+    "db:seed": "prisma db seed"
+  },
+  "dependencies": {
+    "@prisma/client": "catalog:"
+  },
+  "devDependencies": {
+    "@pawpal/typescript-config": "workspace:*",
+    "@types/node": "catalog:",
+    "prisma": "catalog:"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "UNLICENSED",
+  "exports": {
+    ".": "./src/index.ts"
+  }
+}
