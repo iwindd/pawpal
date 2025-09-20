@@ -56,3 +56,9 @@ catalog:
   prisma: 6.16.2
   "@prisma/client": 6.16.2
   "@nestjs/mapped-types": "*"
+  "@nestjs/jwt": "^11.0.0"
+  "@nestjs/passport": "^11.0.5"
+  "passport-jwt": "^4.0.1"
+  "@types/passport-jwt": "^4.0.1"
+  "passport-local": "^1.0.0"
+  "@types/passport-local": "^1.0.38"
