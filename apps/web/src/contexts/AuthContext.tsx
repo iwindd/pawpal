@@ -1,15 +1,7 @@
 "use client";
-import { apiFetch } from "@/libs/api";
 import loginAction from "@/server/actions/auths/login";
 import { RegisterInput, Session, type LoginInput } from "@pawpal/shared";
-import {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { createContext, ReactNode, useContext, useMemo, useState } from "react";
 
 interface AuthContextType {
   user: Session | null;
@@ -33,10 +25,11 @@ export const useAuth = () => {
 
 interface AuthProviderProps {
   children: ReactNode;
+  session: Session | null;
 }
 
-export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [user, setUser] = useState<Session | null>(null);
+export const AuthProvider = ({ children, session }: AuthProviderProps) => {
+  const [user, setUser] = useState<Session | null>(session);
   const [isLoading, setIsLoading] = useState(false);
 
   const login = async (props: { inputs: LoginInput }) => {
@@ -75,12 +68,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
-  const getUser = async () => {
-    const response = await apiFetch<Session>("/auth/profile");
-    if (response.status !== 200) return;
-    setUser(response.data);
-  };
-
   const logout = () => {
     setUser(null);
   };
@@ -89,10 +76,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     () => ({ user, login, register, logout, isLoading }),
     [user, login, register, logout, isLoading]
   );
-
-  useEffect(() => {
-    getUser();
-  }, []);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
