@@ -2,7 +2,7 @@ import { Request as NestRequest } from '@nestjs/common';
 
 declare module '@nestjs/common' {
   interface Request extends NestRequest {
-    login?: {
+    user?: {
       email: string;
       password: string;
     };
