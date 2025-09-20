@@ -27,7 +27,7 @@ export default function LoginModal({
   const { login } = useAuth();
   const __ = useTranslations("Auth.login");
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState(null);
+  const [message, setMessage] = useState<string | null>(null);
 
   const form = useFormValidate<LoginInput>({
     schema: loginSchema,
