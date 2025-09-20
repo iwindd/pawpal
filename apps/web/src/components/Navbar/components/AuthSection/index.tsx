@@ -25,7 +25,9 @@ const AuthSection = () => {
       <Button variant="outline" onClick={handleLoginClick}>
         {__("login-btn")}
       </Button>
-      <Button onClick={handleRegisterClick}>{__("register-btn")}</Button>
+      <Button onClick={handleRegisterClick} visibleFrom="sm">
+        {__("register-btn")}
+      </Button>
       <LoginModal
         opened={isLoginModalOpen}
         onClose={handleCloseModal}
