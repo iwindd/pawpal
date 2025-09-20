@@ -48,7 +48,6 @@ const UserMenu = ({ user }: UserMenuProps) => {
           )}
         >
           <Group justify="center">
-            <Space />
             <Avatar
               src={user.avatar}
               alt={user.displayName}
