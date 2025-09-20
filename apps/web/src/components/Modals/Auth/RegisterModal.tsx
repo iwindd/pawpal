@@ -2,7 +2,9 @@
 import ActionImage from "@/components/Modals/Auth/components/ActionImage";
 import RichText from "@/components/RichText";
 import { useAuth } from "@/contexts/AuthContext";
+import useFormValidate from "@/hooks/useFormValidate";
 import { IconLogin } from "@pawpal/icons";
+import { RegisterInput, registerSchema } from "@pawpal/shared";
 import {
   Anchor,
   Button,
@@ -16,7 +18,7 @@ import {
   TextInput,
 } from "@pawpal/ui/core";
 import { useTranslations } from "next-intl";
-import React, { useState } from "react";
+import { useState } from "react";
 
 export default function RegisterModal({
   opened,
@@ -30,23 +32,23 @@ export default function RegisterModal({
   const { register } = useAuth();
   const __ = useTranslations("Auth.register");
   const [loading, setLoading] = useState(false);
-  const [displayName, setDisplayName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [acceptConditions, setAcceptConditions] = useState(false);
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+
+  const form = useFormValidate<RegisterInput>({
+    schema: registerSchema,
+    group: "register",
+    mode: "uncontrolled",
+    initialValues: {
+      displayName: "",
+      email: "",
+      password: "",
+      password_confirmation: "",
+      accept_conditions: false,
+    },
+  });
+
+  const handleSubmit = async (inputs: RegisterInput) => {
     try {
-      await register({
-        inputs: {
-          displayName,
-          email,
-          password,
-          confirmPassword,
-          acceptConditions,
-        },
-      });
+      await register({ inputs: inputs });
       onClose();
     } catch (error) {
       console.error("Registration failed:", error);
@@ -71,56 +73,39 @@ export default function RegisterModal({
       title={__("title")}
     >
       <Stack gap="md">
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={form.onSubmit(handleSubmit)}>
           <Stack gap="md">
             <TextInput
               label={__("displayName")}
               placeholder={__("displayNamePlaceholder")}
-              value={displayName}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setDisplayName(e.target.value)
-              }
-              required
               autoComplete="name"
+              key={form.key("displayName")}
+              {...form.getInputProps("displayName")}
             />
 
             <TextInput
               label={__("email")}
               placeholder={__("emailPlaceholder")}
-              value={email}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setEmail(e.target.value)
-              }
-              required
               type="email"
               autoComplete="email"
+              key={form.key("email")}
+              {...form.getInputProps("email")}
             />
 
             <PasswordInput
               label={__("password")}
               placeholder={__("passwordPlaceholder")}
-              value={password}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setPassword(e.target.value)
-              }
-              required
               autoComplete="new-password"
+              key={form.key("password")}
+              {...form.getInputProps("password")}
             />
 
             <PasswordInput
               label={__("confirmPassword")}
               placeholder={__("confirmPasswordPlaceholder")}
-              value={confirmPassword}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setConfirmPassword(e.target.value)
-              }
-              required
               autoComplete="new-password"
-              error={
-                password && confirmPassword && password !== confirmPassword
-                  ? __("passwordMismatch")
-                  : undefined
-              }
+              key={form.key("password_confirmation")}
+              {...form.getInputProps("password_confirmation")}
             />
 
             <Stack gap="xs">
@@ -130,11 +115,8 @@ export default function RegisterModal({
                     {(tags) => __.rich("termsOfServiceAndPrivacyPolicy", tags)}
                   </RichText>
                 }
-                checked={acceptConditions}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setAcceptConditions(e.currentTarget.checked)
-                }
-                required
+                key={form.key("accept_conditions")}
+                {...form.getInputProps("accept_conditions")}
               />
             </Stack>
 

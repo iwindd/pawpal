@@ -1,5 +1,5 @@
 "use client";
-import { type LoginInput } from "@pawpal/shared";
+import { RegisterInput, type LoginInput } from "@pawpal/shared";
 import { createContext, ReactNode, useContext, useMemo, useState } from "react";
 interface User {
   name: string;
@@ -8,20 +8,10 @@ interface User {
   coins: number;
 }
 
-export interface RegisterProps {
-  inputs: {
-    displayName: string;
-    email: string;
-    password: string;
-    confirmPassword: string;
-    acceptConditions: boolean;
-  };
-}
-
 interface AuthContextType {
   user: User | null;
   login: (props: { inputs: LoginInput }) => Promise<void>;
-  register: (props: RegisterProps) => Promise<void>;
+  register: (props: { inputs: RegisterInput }) => Promise<void>;
   logout: () => void;
   isLoading: boolean;
 }
@@ -67,7 +57,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
-  const register = async ({ inputs }: RegisterProps) => {
+  const register = async ({ inputs }: { inputs: RegisterInput }) => {
     setIsLoading(true);
 
     try {
