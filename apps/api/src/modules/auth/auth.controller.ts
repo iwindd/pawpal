@@ -1,4 +1,6 @@
+import { ZodValidationPipe } from '@/common/ZodValidationPipe';
 import {
+  Body,
   Controller,
   Get,
   Post,
@@ -8,6 +10,7 @@ import {
   ResponseWithCookie,
   UseGuards,
 } from '@nestjs/common';
+import { RegisterInput, registerSchema } from '@pawpal/shared';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { LocalAuthGuard } from './local-auth.guard';
@@ -41,5 +44,14 @@ export class AuthController {
     return {
       access_token,
     };
+  }
+
+  @Post('register')
+  async register(
+    @Body(new ZodValidationPipe(registerSchema)) body: RegisterInput,
+  ) {
+    const user = await this.authService.register(body);
+
+    return user;
   }
 }
