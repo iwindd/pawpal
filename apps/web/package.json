@@ -10,7 +10,6 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@hookform/resolvers": "catalog:",
     "@mantine/form": "catalog:",
     "@pawpal/icons": "workspace:*",
     "@pawpal/shared": "workspace:*",
