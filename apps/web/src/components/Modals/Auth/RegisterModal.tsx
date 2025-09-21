@@ -50,6 +50,7 @@ export default function RegisterModal({
 
   const handleSubmit = async (inputs: RegisterInput) => {
     try {
+      setLoading(true);
       const state = await register({ inputs: inputs });
 
       switch (state) {
