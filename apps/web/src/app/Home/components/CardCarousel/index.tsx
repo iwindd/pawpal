@@ -24,9 +24,9 @@ const CardCarousel = ({
         <Image
           component={NextImage}
           alt={`${category}-${title}`}
-          fill
+          height={530}
+          width={1920}
           className={classes.image}
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           priority={true}
           unoptimized
           src={`/assets/images/carousel/${image}`}
