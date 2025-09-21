@@ -2,6 +2,7 @@
   position: relative;
   overflow: hidden;
   width: 100%;
+  max-width: 1920px;
   margin: 0 auto;
 }
 
@@ -103,13 +104,15 @@
 .fader {
   --right-gradient: linear-gradient(
     to right,
-    var(--mantine-color-body),
-    transparent 10%
+    color-mix(in srgb, var(--mantine-color-body) 10%, transparent) 0%,
+    color-mix(in srgb, var(--mantine-color-body) 10%, transparent) 90%,
+    color-mix(in srgb, var(--mantine-color-body) 100%, transparent) 100%
   );
   --left-gradient: linear-gradient(
     to left,
-    var(--mantine-color-body),
-    transparent 0%
+    color-mix(in srgb, var(--mantine-color-body) 10%, transparent) 0%,
+    color-mix(in srgb, var(--mantine-color-body) 10%, transparent) 90%,
+    color-mix(in srgb, var(--mantine-color-body) 100%, transparent) 100%
   );
   --bottom-gradient: linear-gradient(
     to bottom,
