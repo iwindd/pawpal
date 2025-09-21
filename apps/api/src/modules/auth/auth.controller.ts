@@ -1,51 +1,42 @@
+import { AuthUser } from '@/common/decorators/user.decorator';
+import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { LocalAuthGuard } from '@/common/guards/local-auth.guard';
+import { SessionAuthGuard } from '@/common/guards/session-auth.guard';
+import { TokenInterceptor } from '@/common/interceptors/token.interceptor';
 import { ZodValidationPipe } from '@/common/ZodValidationPipe';
-import sessionConfig from '@/config/session';
 import {
   Body,
   Controller,
   Get,
+  HttpCode,
+  HttpStatus,
   Post,
-  Request,
-  RequestWithUser,
-  Res,
-  ResponseWithCookie,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
-import { RegisterInput, registerSchema, Session } from '@pawpal/shared';
+import {
+  type RegisterInput,
+  registerSchema,
+  type Session,
+} from '@pawpal/shared';
 import { AuthService } from './auth.service';
-import { JwtAuthGuard } from './jwt-auth.guard';
-import { LocalAuthGuard } from './local-auth.guard';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @UseGuards(JwtAuthGuard)
   @Get('profile')
-  async profile(
-    @Request() req: RequestWithUser,
-  ): Promise<{ email: string; displayName: string; coins: number }> {
-    return req.user;
+  @UseGuards(SessionAuthGuard, JwtAuthGuard)
+  profile(@AuthUser() user: Session): Session {
+    return user;
   }
 
-  @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(
-    @Request() req: RequestWithUser,
-    @Res({ passthrough: true }) res: ResponseWithCookie,
-  ): Promise<{ access_token: string; user: Session }> {
-    const { access_token } = await this.authService.login(req.user);
-
-    res.cookie('access_token', access_token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: sessionConfig.maxAge,
-    });
-
-    return {
-      access_token,
-      user: req.user,
-    };
+  @UseGuards(LocalAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  @UseInterceptors(TokenInterceptor)
+  async login(@AuthUser() user: Session) {
+    return user;
   }
 
   @Post('register')

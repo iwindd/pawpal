@@ -1,8 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@pawpal/prisma';
-import { RegisterInput } from '@pawpal/shared';
+import { RegisterInput, Session } from '@pawpal/shared';
+import { JwtPayload } from '../../common/interfaces/jwt-payload.interface';
 import { UserService } from '../user/user.service';
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -10,38 +12,48 @@ export class AuthService {
     private readonly userService: UserService,
   ) {}
 
-  async validateUser(
-    email: string,
-    password: string,
-  ): Promise<Omit<User, 'password'> | null> {
-    const user = await this.userService.findByEmail(email);
-    if (user && user.password === password) {
-      const { password: _, ...result } = user;
-      return result;
+  /**
+   * Verify the JWT payload
+   * @param payload - The JWT payload
+   * @returns The user
+   */
+  async verifyPayload(payload: JwtPayload): Promise<User> {
+    let user: User;
+
+    try {
+      user = await this.userService.findByEmail(payload.sub);
+    } catch (error) {
+      Logger.error('Verify payload failed : ', error);
+      throw new UnauthorizedException('invalid_credentials');
     }
-    return null;
+
+    return user;
   }
 
-  async login(user: {
-    email: string;
-    password: string;
-    displayName: string;
-    coins: number;
-  }): Promise<{ access_token: string }> {
-    const payload = {
-      email: user.email,
-      password: user.password,
-      displayName: user.displayName,
-      coins: user.coins,
-    };
+  async login(email: string, password: string): Promise<User> {
+    try {
+      const user = await this.userService.findByEmail(email);
+      if (!user) {
+        throw new UnauthorizedException(`invalid_credentials`);
+      }
 
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
+      // TODO:: Compare password
+
+      return user;
+    } catch (error) {
+      Logger.error('Login failed : ', error);
+      throw new UnauthorizedException(`error`);
+    }
   }
 
   async register(user: RegisterInput): Promise<{ user: User }> {
     const newUser = await this.userService.create(user);
     return { user: newUser };
+  }
+
+  signToken(user: Session): string {
+    return this.jwtService.sign({
+      sub: user.email,
+    });
   }
 }

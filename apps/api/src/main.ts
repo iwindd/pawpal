@@ -1,14 +1,38 @@
 import { AppModule } from '@/modules/app/app.module';
 import { NestFactory } from '@nestjs/core';
 import cookieParser from 'cookie-parser';
+import session from 'express-session';
+import passport from 'passport';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.use(cookieParser());
+  app.use(cookieParser(process.env.APP_SECRET));
+
+  app.use(
+    session({
+      secret: process.env.APP_SECRET,
+      resave: false,
+      saveUninitialized: false,
+      // TODO: Implement a database session store in the future
+      store: new session.MemoryStore(),
+      cookie: {
+        httpOnly: true,
+        signed: true,
+        sameSite: 'strict',
+        secure: process.env.NODE_ENV === 'production',
+      },
+    }),
+  );
+
+  app.use(passport.initialize());
+  app.use(passport.session());
+
   app.enableCors({
-    origin: process.env.FRONTEND_URL,
+    origin: process.env.ALLOWED_ORIGINS?.split(/\s*,\s*/) ?? '*',
     credentials: true,
+    exposedHeaders: ['Authorization'],
   });
+
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

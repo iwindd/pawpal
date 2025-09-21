@@ -18,7 +18,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@pawpal/shared": "workspace:*",
+    "@pawpal/typescript-config": "workspace:*",
     "@nestjs/common": "catalog:",
     "@nestjs/config": "catalog:",
     "@nestjs/core": "catalog:",
@@ -27,15 +27,16 @@
     "@nestjs/passport": "catalog:",
     "@nestjs/platform-express": "catalog:",
     "@pawpal/prisma": "workspace:*",
+    "@pawpal/shared": "workspace:*",
     "cookie-parser": "catalog:",
+    "express-session": "catalog:",
+    "passport": "catalog:",
     "passport-jwt": "catalog:",
     "passport-local": "catalog:",
     "reflect-metadata": "catalog:",
     "rxjs": "catalog:"
   },
   "devDependencies": {
-    "@types/passport-jwt": "catalog:",
-    "@types/passport-local": "catalog:",
     "@eslint/eslintrc": "catalog:",
     "@eslint/js": "catalog:",
     "@nestjs/cli": "catalog:",
@@ -45,8 +46,12 @@
     "@pawpal/typescript-config": "workspace:*",
     "@types/cookie-parser": "catalog:",
     "@types/express": "catalog:",
+    "@types/express-session": "catalog:",
     "@types/jest": "catalog:",
     "@types/node": "catalog:",
+    "@types/passport": "catalog:",
+    "@types/passport-jwt": "catalog:",
+    "@types/passport-local": "catalog:",
     "@types/supertest": "catalog:",
     "eslint": "catalog:",
     "eslint-config-prettier": "catalog:",
@@ -61,7 +66,7 @@
     "ts-node": "catalog:",
     "tsconfig-paths": "catalog:",
     "typescript": "catalog:",
-    "typescript-eslint": "^8.40.0"
+    "typescript-eslint": "catalog:"
   },
   "jest": {
     "moduleFileExtensions": [
