@@ -1,3 +1,4 @@
+import bcrypt from "bcrypt";
 import { PrismaClient } from "../generated/client";
 import users from "./seeds/users.json";
 
@@ -11,13 +12,18 @@ async function main() {
       await prisma.user.upsert({
         where: { email: user.email },
         update: {},
-        create: user,
+        create: {
+          ...user,
+          password: await bcrypt.hash(user.password, 12),
+        },
       });
     }
   });
 
   console.log("✅ Seed completed successfully!");
-  console.log(`Created ${await prisma.user.count()} users`);
+  console.log(
+    `Created ${await prisma.user.count()} users (hashed passwords: base on 12 rounds)`
+  );
 }
 
 main()

@@ -2,6 +2,7 @@ import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@pawpal/prisma';
 import { RegisterInput, Session } from '@pawpal/shared';
+import bcrypt from 'bcrypt';
 import { JwtPayload } from '../../common/interfaces/jwt-payload.interface';
 import { UserService } from '../user/user.service';
 
@@ -38,7 +39,10 @@ export class AuthService {
         throw new UnauthorizedException(`invalid_credentials`);
       }
 
-      // TODO:: Compare password
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+      if (!isPasswordValid) {
+        throw new UnauthorizedException(`invalid_credentials`);
+      }
 
       return user;
     } catch (error) {
