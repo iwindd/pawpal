@@ -45,7 +45,7 @@ const Navbar = () => {
   ));
 
   return (
-    <Box>
+    <Box className={classes.navbar}>
       <header className={classes.header}>
         <Container size="xl" className={classes.inner}>
           <Group h="100%" flex={1}>

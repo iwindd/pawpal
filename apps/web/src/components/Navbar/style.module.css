@@ -1,7 +1,11 @@
-.header {
+.navbar {
   position: sticky;
   top: 0;
   z-index: 50;
+}
+
+.header {
+  position: sticky;
   height: 64px;
   background-color: light-dark(rgba(255, 255, 255, 0.8), rgba(26, 27, 30, 0.8));
   backdrop-filter: blur(20px);
