@@ -4,7 +4,7 @@ import { Box, Button, Flex, Group, Stack, Text, Title } from "@pawpal/ui/core";
 import Autoplay from "embla-carousel-autoplay";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import CardCarousel from "../CardCarousel";
 import classes from "./style.module.css";
 
@@ -44,9 +44,6 @@ const MainCarousel = () => {
   const [items] = useState(CAROUSEL_MOCKUP);
   const [activeIndex, setActiveIndex] = useState(0);
   const __ = useTranslations("Home.CardCarousel");
-  useEffect(() => {
-    console.log(activeIndex);
-  }, [activeIndex]);
 
   const currentItem = items[activeIndex];
 
