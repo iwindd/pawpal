@@ -22,6 +22,7 @@ export class AuthService {
 
     try {
       user = await this.userService.findByEmail(payload.sub);
+      delete user.password;
     } catch (error) {
       Logger.error('Verify payload failed : ', error);
       throw new UnauthorizedException('invalid_credentials');
