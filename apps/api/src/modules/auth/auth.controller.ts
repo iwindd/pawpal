@@ -2,6 +2,7 @@ import { AuthUser } from '@/common/decorators/user.decorator';
 import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
 import { LocalAuthGuard } from '@/common/guards/local-auth.guard';
 import { SessionAuthGuard } from '@/common/guards/session-auth.guard';
+import { LogoutInterceptor } from '@/common/interceptors/logout.interceptor';
 import { TokenInterceptor } from '@/common/interceptors/token.interceptor';
 import { ZodValidationPipe } from '@/common/ZodValidationPipe';
 import {
@@ -37,6 +38,14 @@ export class AuthController {
   @UseInterceptors(TokenInterceptor)
   async login(@AuthUser() user: Session) {
     return user;
+  }
+
+  @Post('logout')
+  @UseGuards(SessionAuthGuard, JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  @UseInterceptors(LogoutInterceptor)
+  async logout(@AuthUser() user: Session) {
+    return null;
   }
 
   @Post('register')

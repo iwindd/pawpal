@@ -1,4 +1,5 @@
 "use client";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   IconActivity,
   IconCoin,
@@ -28,6 +29,7 @@ interface UserMenuProps {
 
 const UserMenu = ({ user }: UserMenuProps) => {
   const [userMenuOpened, setUserMenuOpened] = useState(false);
+  const { logout } = useAuth();
   const __ = useTranslations("Navbar.userMenu");
   const format = useFormatter();
 
@@ -107,7 +109,10 @@ const UserMenu = ({ user }: UserMenuProps) => {
         <Menu.Item leftSection={<IconActivity size={16} stroke={1.5} />}>
           {__("activities")}
         </Menu.Item>
-        <Menu.Item leftSection={<IconLogout size={16} stroke={1.5} />}>
+        <Menu.Item
+          leftSection={<IconLogout size={16} stroke={1.5} />}
+          onClick={logout}
+        >
           {__("logout")}
         </Menu.Item>
       </Menu.Dropdown>

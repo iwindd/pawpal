@@ -70,8 +70,19 @@ export const AuthProvider = ({ children, session }: AuthProviderProps) => {
     }
   };
 
-  const logout = () => {
-    setUser(null);
+  const logout = async () => {
+    setIsLoading(true);
+    try {
+      const { success } = await API.logout();
+      if (success) setUser(null);
+
+      return success;
+    } catch (error) {
+      console.error("Logout failed:", error);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const value = useMemo(
