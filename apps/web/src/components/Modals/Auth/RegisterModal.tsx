@@ -32,6 +32,7 @@ export default function RegisterModal({
   const { register } = useAuth();
   const __ = useTranslations("Auth.register");
   const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
 
   const form = useFormValidate<RegisterInput>({
     schema: registerSchema,
@@ -48,8 +49,23 @@ export default function RegisterModal({
 
   const handleSubmit = async (inputs: RegisterInput) => {
     try {
-      await register({ inputs: inputs });
-      onClose();
+      const state = await register({ inputs: inputs });
+
+      switch (state) {
+        case "success":
+          onClose();
+          break;
+        case "email_already_exists":
+          form.setErrors({
+            email: "email_already_exists",
+          });
+          break;
+        case "error":
+          setMessage("error");
+          break;
+        default:
+          break;
+      }
     } catch (error) {
       console.error("Registration failed:", error);
     } finally {
@@ -128,6 +144,12 @@ export default function RegisterModal({
             >
               {__("registerButton")}
             </Button>
+
+            {message && (
+              <Text size="sm" c="red" ta="center">
+                {__(message)}
+              </Text>
+            )}
 
             <Divider label={__("label_or")} />
 

@@ -8,7 +8,9 @@ interface AuthContextType {
   login: (props: {
     inputs: LoginInput;
   }) => Promise<"success" | "invalid_credentials" | "error">;
-  register: (props: { inputs: RegisterInput }) => Promise<void>;
+  register: (props: {
+    inputs: RegisterInput;
+  }) => Promise<"success" | "email_already_exists" | "error">;
   logout: () => void;
   isLoading: boolean;
 }
@@ -57,11 +59,14 @@ export const AuthProvider = ({ children, session }: AuthProviderProps) => {
     setIsLoading(true);
 
     try {
-      // TODO: Implement actual registration API call
-      // For now, simulate a registration with mock data
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const resp = await API.register(inputs);
+      if (resp.success) {
+        setUser(resp.data);
+        return "success";
+      }
 
-      setUser(null);
+      if (resp.data.response?.status === 409) return "email_already_exists";
+      return "error";
     } catch (error) {
       console.error("Registration failed:", error);
       throw error;

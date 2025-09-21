@@ -1,4 +1,9 @@
-import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  Logger,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@pawpal/prisma';
 import { RegisterInput, Session } from '@pawpal/shared';
@@ -51,9 +56,15 @@ export class AuthService {
     }
   }
 
-  async register(user: RegisterInput): Promise<{ user: User }> {
+  async register(user: RegisterInput): Promise<User> {
+    const existingUser = await this.userService.findByEmail(user.email);
+    if (existingUser) {
+      throw new ConflictException('email_already_exists');
+    }
+
     const newUser = await this.userService.create(user);
-    return { user: newUser };
+    delete newUser.password;
+    return newUser;
   }
 
   signToken(user: Session): string {

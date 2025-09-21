@@ -1,4 +1,4 @@
-import { LoginInput, Session } from "@pawpal/shared";
+import { LoginInput, RegisterInput, Session } from "@pawpal/shared";
 import axios, { AxiosError, AxiosInstance } from "axios";
 
 type PawApiResponse<T> =
@@ -43,6 +43,17 @@ class PawApi {
   public async logout(): Promise<PawApiResponse<null>> {
     try {
       const response = await this.client.post("/auth/logout");
+      return { success: true, data: response.data };
+    } catch (error) {
+      return { success: false, data: error as AxiosError };
+    }
+  }
+
+  public async register(
+    inputs: RegisterInput
+  ): Promise<PawApiResponse<Session>> {
+    try {
+      const response = await this.client.post("/auth/register", inputs);
       return { success: true, data: response.data };
     } catch (error) {
       return { success: false, data: error as AxiosError };

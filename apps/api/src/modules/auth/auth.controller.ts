@@ -15,6 +15,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { User } from '@pawpal/prisma';
 import {
   type RegisterInput,
   registerSchema,
@@ -49,11 +50,11 @@ export class AuthController {
   }
 
   @Post('register')
+  @HttpCode(HttpStatus.CREATED)
+  @UseInterceptors(TokenInterceptor)
   async register(
     @Body(new ZodValidationPipe(registerSchema)) body: RegisterInput,
-  ) {
-    const user = await this.authService.register(body);
-
-    return user;
+  ): Promise<User> {
+    return this.authService.register(body);
   }
 }
