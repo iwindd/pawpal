@@ -15,23 +15,36 @@
 }
 
 .link {
-  display: block;
+  display: flex;
+  align-items: center;
   line-height: 1;
   padding: 8px 12px;
-  border-radius: var(--mantine-radius-sm);
   text-decoration: none;
-  color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-0));
+  color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-1));
   font-size: var(--mantine-font-size-sm);
   font-weight: 500;
+  height: 100%;
+  padding-left: var(--mantine-spacing-md);
+  padding-right: var(--mantine-spacing-md);
+  transition: color 0.2s ease;
 
   @mixin hover {
-    background-color: light-dark(
-      var(--mantine-color-gray-0),
-      var(--mantine-color-dark-6)
-    );
+    color: light-dark(var(--mantine-color-gray-5), var(--mantine-color-dark-0));
+
+    @media (max-width: $mantine-breakpoint-sm) {
+      background-color: light-dark(
+        var(--mantine-color-gray-0),
+        var(--mantine-color-dark-6)
+      );
+    }
   }
 
   [data-mantine-color-scheme] &[data-active] {
     color: var(--mantine-color-pink-light-color);
+  }
+
+  @media (max-width: $mantine-breakpoint-sm) {
+    height: 42px;
+    width: 100%;
   }
 }
