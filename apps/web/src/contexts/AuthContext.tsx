@@ -1,5 +1,5 @@
 "use client";
-import loginAction from "@/server/actions/auths/login";
+import { API } from "@/libs/api";
 import { RegisterInput, Session, type LoginInput } from "@pawpal/shared";
 import { createContext, ReactNode, useContext, useMemo, useState } from "react";
 
@@ -36,13 +36,15 @@ export const AuthProvider = ({ children, session }: AuthProviderProps) => {
     setIsLoading(true);
 
     try {
-      const response = await loginAction<Session>(props.inputs);
-      if (response.status === 401) return "invalid_credentials";
-      if (response.status !== 201) return "error";
+      const resp = await API.login(props.inputs);
 
-      console.log(response.data);
-      setUser(response.data);
-      return "success";
+      if (resp.success) {
+        setUser(resp.data);
+        return "success";
+      }
+
+      if (resp.data.response?.status === 401) return "invalid_credentials";
+      return "error";
     } catch (error) {
       console.error("Login failed:", error);
       throw error;
