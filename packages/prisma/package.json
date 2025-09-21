@@ -1,14 +1,19 @@
 {
   "name": "@pawpal/prisma",
-  "version": "0.0.0",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "default": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "prisma": {
     "seed": "ts-node src/seed.ts"
   },
   "scripts": {
     "db:generate": "prisma generate",
-    "db:migrate": "prisma migrate dev",
+    "db:migrate": "prisma migrate dev --skip-generate",
     "db:deploy": "prisma migrate deploy",
     "db:push": "prisma db push",
     "db:seed": "prisma db seed"
@@ -20,11 +25,5 @@
     "@pawpal/typescript-config": "workspace:*",
     "@types/node": "catalog:",
     "prisma": "catalog:"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "UNLICENSED",
-  "exports": {
-    ".": "./dist/index.js"
   }
 }
