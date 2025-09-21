@@ -9,6 +9,7 @@ import {
   Drawer,
   Group,
   ScrollArea,
+  Stack,
 } from "@pawpal/ui/core";
 import { useDisclosure } from "@pawpal/ui/hooks";
 import { useTranslations } from "next-intl";
@@ -70,19 +71,29 @@ const Navbar = () => {
         </Container>
       </header>
 
-      <Drawer
+      <Drawer.Root
         opened={drawerOpened}
         onClose={closeDrawer}
-        padding="md"
-        title={<Logo size={64} />}
         hiddenFrom="sm"
         zIndex={1000000}
+        padding="md"
       >
-        <ScrollArea h="calc(100vh - 80px" mx="-md">
-          <Divider my="md" />
-          {items}
-        </ScrollArea>
-      </Drawer>
+        <Drawer.Overlay />
+        <Drawer.Content>
+          <Drawer.Header py={"xs"}>
+            <Stack>
+              <Logo size={64} />
+            </Stack>
+            <Drawer.CloseButton />
+          </Drawer.Header>
+          <Drawer.Body>
+            <Divider my="xs" mt={0} />
+            <ScrollArea h="calc(100vh - 80px" mx="-md">
+              {items}
+            </ScrollArea>
+          </Drawer.Body>
+        </Drawer.Content>
+      </Drawer.Root>
     </Box>
   );
 };
