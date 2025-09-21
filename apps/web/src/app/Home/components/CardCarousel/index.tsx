@@ -1,17 +1,6 @@
-import {
-  Box,
-  Button,
-  Grid,
-  Group,
-  Image,
-  Paper,
-  Stack,
-  Text,
-  Title,
-} from "@pawpal/ui/core";
+import { Image, Paper } from "@pawpal/ui/core";
 import { useTranslations } from "next-intl";
 import NextImage from "next/image";
-import Link from "next/link";
 import classes from "./style.module.css";
 
 interface CardCarouselProps {
@@ -45,50 +34,6 @@ const CardCarousel = ({
         />
         <div className={classes.overlay} />
       </div>
-      NextImage
-      <Group className={classes.content}>
-        <Box style={{ width: "100%" }}>
-          <Grid p={0} w="100%">
-            <Grid.Col
-              span={{
-                sm: 12,
-                md: 10,
-              }}
-            >
-              <Stack gap={0} className={classes.carouselMessage}>
-                <Text className={classes.category} size="xs">
-                  {category}
-                </Text>
-                <Title order={3} className={classes.title}>
-                  {title}
-                </Title>
-              </Stack>
-            </Grid.Col>
-            <Grid.Col
-              span={{
-                sm: 12,
-                md: 2,
-              }}
-            >
-              {href && (
-                <Group h="100%" className={classes.carouselButton}>
-                  <Box>
-                    <Button
-                      component={Link}
-                      variant="priamry"
-                      className={classes.button}
-                      href={href}
-                      px={"xl"}
-                    >
-                      {__("topup")}
-                    </Button>
-                  </Box>
-                </Group>
-              )}
-            </Grid.Col>
-          </Grid>
-        </Box>
-      </Group>
     </Paper>
   );
 };

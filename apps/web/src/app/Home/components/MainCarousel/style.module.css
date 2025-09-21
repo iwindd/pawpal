@@ -1,3 +1,17 @@
+.wrapper {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.root {
+  background-color: red;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 1920px;
+}
+
 .indicator {
   width: 12px;
   height: 4px;
@@ -11,5 +25,87 @@
   &[data-active] {
     background-color: var(--mantine-color-pink-light-color);
     width: 40px;
+  }
+
+  z-index: 10;
+}
+
+.content {
+  position: relative;
+  width: calc(82.5rem * var(--mantine-scale));
+  margin: 0 auto;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  padding: 3.2em 1em;
+}
+
+.carouselMessage {
+  align-items: flex-start;
+
+  @media (max-width: $mantine-breakpoint-sm) {
+    align-items: center;
+    text-align: center;
+  }
+}
+
+.carouselButton {
+  justify-content: right;
+}
+
+.title {
+  font-weight: 900;
+  color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-white));
+  line-height: 1.2;
+  font-size: 32px;
+  margin-top: var(--mantine-spacing-xs);
+  cursor: default;
+}
+
+.category {
+  color: light-dark(var(--mantine-color-dark-2), var(--mantine-color-dark-0));
+  opacity: 0.9;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: default;
+}
+
+.button {
+  pointer-events: auto;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1920px;
+  height: 100%;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.fader {
+  --right-gradient: linear-gradient(
+    to right,
+    var(--mantine-color-body),
+    transparent 10%
+  );
+  --left-gradient: linear-gradient(
+    to left,
+    var(--mantine-color-body),
+    transparent 10%
+  );
+  --bottom-gradient: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--mantine-color-body) 10%, transparent) 0%,
+    color-mix(in srgb, var(--mantine-color-body) 10%, transparent) 70%,
+    color-mix(in srgb, var(--mantine-color-body) 100%, transparent) 100%
+  );
+
+  background:
+    var(--right-gradient), var(--left-gradient), var(--bottom-gradient);
+  @media (max-width: 1920px) {
+    background: var(--bottom-gradient);
   }
 }

@@ -1,6 +1,10 @@
+"use client";
 import { Carousel } from "@pawpal/ui/carousel";
+import { Box, Button, Grid, Group, Stack, Text, Title } from "@pawpal/ui/core";
 import Autoplay from "embla-carousel-autoplay";
-import { useRef } from "react";
+import { useTranslations } from "next-intl";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 import CardCarousel from "../CardCarousel";
 import classes from "./style.module.css";
 
@@ -37,23 +41,77 @@ const CAROUSEL_MOCKUP = [
 
 const MainCarousel = () => {
   const autoplay = useRef(Autoplay({ delay: 7000 }));
+  const [items] = useState(CAROUSEL_MOCKUP);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const __ = useTranslations("Home.CardCarousel");
+  useEffect(() => {
+    console.log(activeIndex);
+  }, [activeIndex]);
+
+  const currentItem = items[activeIndex];
 
   return (
-    <Carousel
-      classNames={classes}
-      withControls={false}
-      withIndicators={true}
-      emblaOptions={{
-        loop: true,
-      }}
-      plugins={[autoplay.current]}
-    >
-      {CAROUSEL_MOCKUP.map((item) => (
-        <Carousel.Slide key={item.id} style={{ width: "100%" }}>
-          <CardCarousel {...item} />
-        </Carousel.Slide>
-      ))}
-    </Carousel>
+    <Group className={classes.wrapper}>
+      <Group className={`${classes.overlay} ${classes.fader}`}>
+        <Box className={`${classes.content} `}>
+          <Grid p={0} w="100%">
+            <Grid.Col
+              span={{
+                sm: 12,
+                md: 10,
+              }}
+            >
+              <Stack gap={0} className={classes.carouselMessage}>
+                <Text className={classes.category} size="xs">
+                  {currentItem?.category}
+                </Text>
+                <Title order={3} className={classes.title}>
+                  {currentItem?.title}
+                </Title>
+              </Stack>
+            </Grid.Col>
+            <Grid.Col
+              span={{
+                sm: 12,
+                md: 2,
+              }}
+            >
+              {currentItem?.href && (
+                <Group h="100%" className={classes.carouselButton}>
+                  <Box>
+                    <Button
+                      component={Link}
+                      variant="priamry"
+                      className={classes.button}
+                      href={currentItem?.href}
+                      px={"xl"}
+                    >
+                      {__("topup")}
+                    </Button>
+                  </Box>
+                </Group>
+              )}
+            </Grid.Col>
+          </Grid>
+        </Box>
+      </Group>
+      <Carousel
+        classNames={classes}
+        withControls={false}
+        withIndicators={true}
+        onSlideChange={setActiveIndex}
+        emblaOptions={{
+          loop: true,
+        }}
+        plugins={[autoplay.current]}
+      >
+        {items.map((item) => (
+          <Carousel.Slide key={item.id} style={{ width: "100%" }}>
+            <CardCarousel {...item} />
+          </Carousel.Slide>
+        ))}
+      </Carousel>
+    </Group>
   );
 };
 
