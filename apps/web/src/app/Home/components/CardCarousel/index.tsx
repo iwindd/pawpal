@@ -49,8 +49,13 @@ const CardCarousel = ({
       <Group className={classes.content}>
         <Box style={{ width: "100%" }}>
           <Grid p={0} w="100%">
-            <Grid.Col span={10}>
-              <Stack gap={0}>
+            <Grid.Col
+              span={{
+                sm: 12,
+                md: 10,
+              }}
+            >
+              <Stack gap={0} className={classes.carouselMessage}>
                 <Text className={classes.category} size="xs">
                   {category}
                 </Text>
@@ -59,15 +64,21 @@ const CardCarousel = ({
                 </Title>
               </Stack>
             </Grid.Col>
-            <Grid.Col span={2}>
+            <Grid.Col
+              span={{
+                sm: 12,
+                md: 2,
+              }}
+            >
               {href && (
-                <Group justify="flex-end" align="flex-end" h="100%">
+                <Group h="100%" className={classes.carouselButton}>
                   <Box>
                     <Button
                       component={Link}
                       variant="priamry"
                       className={classes.button}
                       href={href}
+                      px={"xl"}
                     >
                       {__("topup")}
                     </Button>

@@ -49,7 +49,7 @@ const MainCarousel = () => {
       plugins={[autoplay.current]}
     >
       {CAROUSEL_MOCKUP.map((item) => (
-        <Carousel.Slide key={item.id}>
+        <Carousel.Slide key={item.id} style={{ width: "100%" }}>
           <CardCarousel {...item} />
         </Carousel.Slide>
       ))}
