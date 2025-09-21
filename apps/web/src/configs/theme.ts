@@ -51,6 +51,17 @@ const configTheme: MantineThemeOverride = {
    *  Default value – `blue`.
    * */
   primaryColor: "pawpink",
+
+  components: {
+    Modal: {
+      defaultProps: {
+        overlayProps: {
+          backgroundOpacity: 0.55,
+          blur: 6,
+        },
+      },
+    },
+  },
 };
 
 export default configTheme;
