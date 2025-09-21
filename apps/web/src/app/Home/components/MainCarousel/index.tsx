@@ -1,6 +1,6 @@
 "use client";
 import { Carousel } from "@pawpal/ui/carousel";
-import { Box, Button, Grid, Group, Stack, Text, Title } from "@pawpal/ui/core";
+import { Box, Button, Flex, Group, Stack, Text, Title } from "@pawpal/ui/core";
 import Autoplay from "embla-carousel-autoplay";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
@@ -53,46 +53,31 @@ const MainCarousel = () => {
   return (
     <Group className={classes.wrapper}>
       <Group className={`${classes.overlay} ${classes.fader}`}>
-        <Box className={`${classes.content} `}>
-          <Grid p={0} w="100%">
-            <Grid.Col
-              span={{
-                sm: 12,
-                md: 10,
-              }}
-            >
-              <Stack gap={0} className={classes.carouselMessage}>
-                <Text className={classes.category} size="xs">
-                  {currentItem?.category}
-                </Text>
-                <Title order={3} className={classes.title}>
-                  {currentItem?.title}
-                </Title>
-              </Stack>
-            </Grid.Col>
-            <Grid.Col
-              span={{
-                sm: 12,
-                md: 2,
-              }}
-            >
+        <Box className={classes.content}>
+          <Flex className={classes.flex}>
+            <Stack gap={0} className={classes.carouselMessage} justify="end">
+              <Text className={classes.category} size="xs" m="0">
+                {currentItem?.category}
+              </Text>
+              <Title order={3} className={classes.title} m="0">
+                {currentItem?.title}
+              </Title>
+            </Stack>
+            <Box>
               {currentItem?.href && (
-                <Group h="100%" className={classes.carouselButton}>
-                  <Box>
-                    <Button
-                      component={Link}
-                      variant="priamry"
-                      className={classes.button}
-                      href={currentItem?.href}
-                      px={"xl"}
-                    >
-                      {__("topup")}
-                    </Button>
-                  </Box>
-                </Group>
+                <Button
+                  component={Link}
+                  variant="priamry"
+                  mt={"md"}
+                  className={classes.button}
+                  href={currentItem.href}
+                  px={"xl"}
+                >
+                  {__("topup")}
+                </Button>
               )}
-            </Grid.Col>
-          </Grid>
+            </Box>
+          </Flex>
         </Box>
       </Group>
       <Carousel

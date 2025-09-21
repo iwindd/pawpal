@@ -6,7 +6,6 @@
 }
 
 .root {
-  background-color: red;
   margin: 0 auto;
   width: 100%;
   max-width: 1920px;
@@ -51,6 +50,10 @@
 
 .carouselButton {
   justify-content: right;
+
+  @media (max-width: $mantine-breakpoint-sm) {
+    justify-content: center;
+  }
 }
 
 .title {
@@ -79,10 +82,22 @@
   top: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 1920px;
+  width: 100%;
   height: 100%;
   z-index: 5;
   pointer-events: none;
+}
+
+.flex {
+  width: 100%;
+
+  justify-content: space-between;
+  align-items: flex-end;
+
+  @media (max-width: $mantine-breakpoint-sm) {
+    flex-direction: column;
+    align-items: center;
+  }
 }
 
 .fader {
@@ -94,7 +109,7 @@
   --left-gradient: linear-gradient(
     to left,
     var(--mantine-color-body),
-    transparent 10%
+    transparent 0%
   );
   --bottom-gradient: linear-gradient(
     to bottom,
