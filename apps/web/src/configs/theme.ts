@@ -1,6 +1,7 @@
 "use client";
 import { MantineThemeOverride } from "@pawpal/ui/core";
 import postcssConfig from "@pawpal/ui/postcss.config";
+import { lamoonMultiplier } from "./fonts/lamoon";
 
 const postcssConfigBreakpoints =
   postcssConfig.plugins["postcss-simple-vars"].variables;
@@ -13,8 +14,23 @@ const configTheme: MantineThemeOverride = {
   fontSmoothing: true,
 
   /** font-family used in all components, system fonts by default */
-  fontFamily: "Sarabun, sans-serif",
+  fontFamily: "Lamoon, sans-serif",
 
+  /** Controls various styles of h1-h6 elements, used in Typography and Title components */
+  headings: {
+    fontFamily: "Sarabun, sans-serif",
+  },
+
+  /** font-family used in all components, system fonts by default */
+  fontSizes: {
+    xs: `${0.75 * lamoonMultiplier}rem`,
+    sm: `${0.875 * lamoonMultiplier}rem`,
+    md: `${1 * lamoonMultiplier}rem`,
+    lg: `${1.125 * lamoonMultiplier}rem`,
+    xl: `${1.25 * lamoonMultiplier}rem`,
+  },
+
+  // Object of values that are used to control breakpoints in all components
   breakpoints: {
     xs: postcssConfigBreakpoints["mantine-breakpoint-xs"],
     sm: postcssConfigBreakpoints["mantine-breakpoint-sm"],

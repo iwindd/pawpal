@@ -1,5 +1,7 @@
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
+import lamoon from "@/configs/fonts/lamoon";
+import sarabun from "@/configs/fonts/sarabun";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { APIWithToken } from "@/libs/api";
 import UIProvider from "@/providers/UIProvider";
@@ -7,14 +9,7 @@ import { ColorSchemeScript, mantineHtmlProps } from "@pawpal/ui/core";
 import "@pawpal/ui/styles/global.css";
 import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
-import { Sarabun } from "next/font/google";
 import { cookies } from "next/headers";
-
-const sarabun = Sarabun({
-  subsets: ["thai", "latin"],
-  weight: ["200", "300", "400", "500", "600", "700"],
-  variable: "--font-sarabun",
-});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -40,7 +35,7 @@ export default async function RootLayout({
       lang="en"
       {...mantineHtmlProps}
       suppressHydrationWarning
-      className={sarabun.className}
+      className={`${sarabun.className} ${lamoon.className}`}
     >
       <head>
         <meta charSet="UTF-8" />
