@@ -33,7 +33,11 @@ export const Backdrop = () => {
       <Center h="100vh">
         <Stack align="center">
           <Loader color="white" />
-          {loadingText && <Text ta="center">{loadingText}</Text>}
+          {loadingText && (
+            <Text ta="center" c="white">
+              {loadingText}
+            </Text>
+          )}
         </Stack>
       </Center>
     </Overlay>
