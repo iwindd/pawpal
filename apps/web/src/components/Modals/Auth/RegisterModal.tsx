@@ -83,7 +83,6 @@ export default function RegisterModal({
     <Modal
       opened={opened}
       onClose={onClose}
-      centered
       withCloseButton
       closeOnClickOutside={false}
       closeOnEscape

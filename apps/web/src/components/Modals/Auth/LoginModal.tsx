@@ -79,7 +79,6 @@ export default function LoginModal({
     <Modal
       opened={opened}
       onClose={onClose}
-      centered
       withCloseButton
       closeOnClickOutside={false}
       closeOnEscape
