@@ -1,7 +1,6 @@
 "use client";
-import { UseFormReturnType, useForm as useMantineForm } from "@mantine/form";
 import { ZodType } from "@pawpal/shared";
-import { zod4Resolver } from "mantine-form-zod-resolver";
+import { resolver, useForm, UseFormReturnType } from "@pawpal/ui/form";
 import { useTranslations } from "next-intl";
 
 interface UseFormValidateProps<T extends Record<string, any>> {
@@ -17,9 +16,9 @@ const useFormValidate = <T extends Record<string, any>>({
   ...props
 }: UseFormValidateProps<T>): UseFormReturnType<T, (values: T) => T> => {
   const __ = useTranslations();
-  const form = useMantineForm<T>({
+  const form = useForm<T>({
     ...props,
-    validate: zod4Resolver(schema),
+    validate: resolver(schema),
   });
 
   return {

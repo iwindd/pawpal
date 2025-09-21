@@ -8,7 +8,8 @@
     "./core": "./src/core.ts",
     "./hooks": "./src/hooks.ts",
     "./carousel": "./src/carousel.ts",
-    "./notifications": "./src/notifications.ts"
+    "./notifications": "./src/notifications.ts",
+    "./form": "./src/form.ts"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",
@@ -28,7 +29,9 @@
     "@mantine/carousel": "catalog:",
     "@mantine/core": "catalog:",
     "@mantine/hooks": "catalog:",
+    "@mantine/form": "catalog:",
     "@mantine/notifications": "catalog:",
+    "mantine-form-zod-resolver": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:"
   }

@@ -10,7 +10,6 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@mantine/form": "catalog:",
     "@pawpal/icons": "workspace:*",
     "@pawpal/shared": "workspace:*",
     "@pawpal/ui": "workspace:*",
@@ -18,7 +17,6 @@
     "axios": "catalog:",
     "clsx": "catalog:",
     "embla-carousel-autoplay": "catalog:",
-    "mantine-form-zod-resolver": "catalog:",
     "next": "catalog:",
     "next-intl": "catalog:",
     "react": "catalog:",
