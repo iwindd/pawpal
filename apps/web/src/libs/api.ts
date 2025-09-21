@@ -8,19 +8,27 @@ type PawApiResponse<T> =
 class PawApi {
   private readonly client: AxiosInstance;
 
-  constructor() {
+  constructor(withToken?: string) {
     this.client = axios.create({
       baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000",
       withCredentials: true,
       headers: {
         "Content-Type": "application/json",
+        ...(withToken && { Cookie: `token=${withToken}` }),
       },
     });
   }
 
   public async getProfile() {
-    const response = await this.client.get("/auth/profile");
-    return response.data;
+    try {
+      const response = await this.client.get("/auth/profile");
+      return { success: true, data: response.data };
+    } catch (error) {
+      if (error instanceof AxiosError && error.response?.status === 401)
+        return { success: false, data: null };
+
+      return { success: false, data: error as AxiosError };
+    }
   }
 
   public async login(inputs: LoginInput): Promise<PawApiResponse<Session>> {
@@ -34,3 +42,4 @@ class PawApi {
 }
 
 export const API = new PawApi();
+export const APIWithToken = (token: string): PawApi => new PawApi(token);
