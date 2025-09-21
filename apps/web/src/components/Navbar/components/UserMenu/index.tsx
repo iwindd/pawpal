@@ -18,6 +18,7 @@ import {
   Text,
   UnstyledButton,
 } from "@pawpal/ui/core";
+import { notify } from "@pawpal/ui/notifications";
 import clsx from "clsx";
 import { useFormatter, useTranslations } from "next-intl";
 import { useState } from "react";
@@ -32,6 +33,27 @@ const UserMenu = ({ user }: UserMenuProps) => {
   const { logout } = useAuth();
   const __ = useTranslations("Navbar.userMenu");
   const format = useFormatter();
+
+  const onLogout = async () => {
+    try {
+      const state = await logout();
+      if (!state) {
+        return notify.show({
+          title: __("notify.error.title"),
+          message: __("notify.error.message"),
+          color: "red",
+        });
+      }
+
+      notify.show({
+        title: __("notify.success.title"),
+        message: __("notify.success.message"),
+        color: "green",
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <Menu
@@ -111,7 +133,7 @@ const UserMenu = ({ user }: UserMenuProps) => {
         </Menu.Item>
         <Menu.Item
           leftSection={<IconLogout size={16} stroke={1.5} />}
-          onClick={logout}
+          onClick={onLogout}
         >
           {__("logout")}
         </Menu.Item>

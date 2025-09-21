@@ -16,6 +16,7 @@ import {
   Text,
   TextInput,
 } from "@pawpal/ui/core";
+import { notify } from "@pawpal/ui/notifications";
 import { useTranslations } from "next-intl";
 import React, { useState } from "react";
 
@@ -50,6 +51,11 @@ export default function LoginModal({
       switch (state) {
         case "success":
           onClose();
+          notify.show({
+            title: __("notify.success.title"),
+            message: __("notify.success.message"),
+            color: "green",
+          });
           break;
         case "invalid_credentials":
           form.setErrors({

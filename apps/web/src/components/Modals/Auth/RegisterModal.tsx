@@ -17,6 +17,7 @@ import {
   Text,
   TextInput,
 } from "@pawpal/ui/core";
+import { notify } from "@pawpal/ui/notifications";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 
@@ -54,6 +55,11 @@ export default function RegisterModal({
       switch (state) {
         case "success":
           onClose();
+          notify.show({
+            title: __("notify.success.title"),
+            message: __("notify.success.message"),
+            color: "green",
+          });
           break;
         case "email_already_exists":
           form.setErrors({

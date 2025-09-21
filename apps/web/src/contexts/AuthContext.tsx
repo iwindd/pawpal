@@ -11,7 +11,7 @@ interface AuthContextType {
   register: (props: {
     inputs: RegisterInput;
   }) => Promise<"success" | "email_already_exists" | "error">;
-  logout: () => void;
+  logout: () => Promise<boolean>;
   isLoading: boolean;
 }
 

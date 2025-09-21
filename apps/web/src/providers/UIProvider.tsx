@@ -5,6 +5,7 @@ import {
   localStorageColorSchemeManager,
   MantineProvider,
 } from "@pawpal/ui/core";
+import { Notifications } from "@pawpal/ui/notifications";
 
 const colorSchemeManager = localStorageColorSchemeManager({
   key: "pawpal-color-scheme",
@@ -21,6 +22,7 @@ const UIProvider = ({ children }: { children: React.ReactNode }) => {
       colorSchemeManager={colorSchemeManager}
       defaultColorScheme="dark"
     >
+      <Notifications />
       {children}
     </MantineProvider>
   );

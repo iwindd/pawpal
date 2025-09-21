@@ -7,7 +7,8 @@
     "./postcss.config": "./src/configs/postcss-config.ts",
     "./core": "./src/core.ts",
     "./hooks": "./src/hooks.ts",
-    "./carousel": "./src/carousel.ts"
+    "./carousel": "./src/carousel.ts",
+    "./notifications": "./src/notifications.ts"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",
@@ -27,6 +28,7 @@
     "@mantine/carousel": "catalog:",
     "@mantine/core": "catalog:",
     "@mantine/hooks": "catalog:",
+    "@mantine/notifications": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:"
   }
