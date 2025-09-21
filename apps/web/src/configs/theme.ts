@@ -1,5 +1,9 @@
 "use client";
 import { MantineThemeOverride } from "@pawpal/ui/core";
+import postcssConfig from "@pawpal/ui/postcss.config";
+
+const postcssConfigBreakpoints =
+  postcssConfig.plugins["postcss-simple-vars"].variables;
 
 const configTheme: MantineThemeOverride = {
   /** Controls focus ring styles. Supports the following options: `auto`, `always`, `never` */
@@ -10,6 +14,14 @@ const configTheme: MantineThemeOverride = {
 
   /** font-family used in all components, system fonts by default */
   fontFamily: "Sarabun, sans-serif",
+
+  breakpoints: {
+    xs: postcssConfigBreakpoints["mantine-breakpoint-xs"],
+    sm: postcssConfigBreakpoints["mantine-breakpoint-sm"],
+    md: postcssConfigBreakpoints["mantine-breakpoint-md"],
+    lg: postcssConfigBreakpoints["mantine-breakpoint-lg"],
+    xl: postcssConfigBreakpoints["mantine-breakpoint-xl"],
+  },
 
   /** Object of colors, key is color name, value is an array of at least 10 strings (colors) */
   colors: {

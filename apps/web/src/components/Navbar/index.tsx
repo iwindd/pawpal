@@ -48,20 +48,20 @@ const Navbar = () => {
     <Box>
       <header className={classes.header}>
         <Container size="xl" className={classes.inner}>
-          <Group>
+          <Group h="100%" flex={1}>
             <Logo size={64} />
-            <Group gap={5} visibleFrom="xs" ms={1}>
+            <Group h={"100%"} flex={1} gap={5} visibleFrom="sm" ms={1}>
               {items}
             </Group>
 
             <Burger
               opened={opened}
               onClick={toggleDrawer}
-              hiddenFrom="xs"
+              hiddenFrom="sm"
               size="sm"
             />
           </Group>
-          <Group>
+          <Group w="fit">
             <LocaleSwitcher />
             <ThemeSwitcher />
             <Divider orientation="vertical" />
@@ -73,14 +73,13 @@ const Navbar = () => {
       <Drawer
         opened={drawerOpened}
         onClose={closeDrawer}
-        size="100%"
         padding="md"
         title={<Logo size={64} />}
         hiddenFrom="sm"
         zIndex={1000000}
       >
         <ScrollArea h="calc(100vh - 80px" mx="-md">
-          <Divider my="sm" />
+          <Divider my="md" />
           {items}
         </ScrollArea>
       </Drawer>

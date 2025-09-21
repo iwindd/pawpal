@@ -12,13 +12,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  overflow: hidden;
 }
 
 .link {
   display: flex;
   align-items: center;
-  line-height: 1;
-  padding: 8px 12px;
   text-decoration: none;
   color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-1));
   font-size: var(--mantine-font-size-sm);
@@ -31,7 +30,7 @@
   @mixin hover {
     color: light-dark(var(--mantine-color-gray-5), var(--mantine-color-dark-0));
 
-    @media (max-width: $mantine-breakpoint-sm) {
+    @media (max-width: $mantine-breakpoint-md) {
       background-color: light-dark(
         var(--mantine-color-gray-0),
         var(--mantine-color-dark-6)
