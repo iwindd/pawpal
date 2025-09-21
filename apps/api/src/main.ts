@@ -3,10 +3,18 @@ import { NestFactory } from '@nestjs/core';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import passport from 'passport';
+import { DelayInterceptor } from './common/interceptors/delay.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(cookieParser(process.env.APP_SECRET));
+
+  if (
+    process.env.NODE_ENV === 'development' &&
+    process.env.ENABLE_DELAY === 'true'
+  ) {
+    app.useGlobalInterceptors(new DelayInterceptor());
+  }
 
   app.use(
     session({
