@@ -9,7 +9,8 @@
     "./hooks": "./src/hooks.ts",
     "./carousel": "./src/carousel.ts",
     "./notifications": "./src/notifications.ts",
-    "./form": "./src/form.ts"
+    "./form": "./src/form.ts",
+    "./backdrop": "./src/backdrop.ts"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",

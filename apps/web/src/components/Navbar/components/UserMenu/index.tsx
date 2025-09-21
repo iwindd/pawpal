@@ -8,6 +8,7 @@ import {
   IconSettings,
 } from "@pawpal/icons";
 import { Session } from "@pawpal/shared";
+import { backdrop } from "@pawpal/ui/backdrop";
 import {
   Avatar,
   Box,
@@ -36,6 +37,7 @@ const UserMenu = ({ user }: UserMenuProps) => {
 
   const onLogout = async () => {
     try {
+      backdrop.show({ text: "กำลังออกจากระบบ" });
       const state = await logout();
       if (!state) {
         return notify.show({
@@ -52,6 +54,8 @@ const UserMenu = ({ user }: UserMenuProps) => {
       });
     } catch (error) {
       console.error(error);
+    } finally {
+      backdrop.hide();
     }
   };
 

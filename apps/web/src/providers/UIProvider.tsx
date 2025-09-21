@@ -1,5 +1,6 @@
 "use client";
 import configTheme from "@/configs/theme";
+import { Backdrop } from "@pawpal/ui/backdrop";
 import {
   createTheme,
   localStorageColorSchemeManager,
@@ -23,6 +24,7 @@ const UIProvider = ({ children }: { children: React.ReactNode }) => {
       defaultColorScheme="dark"
     >
       <Notifications />
+      <Backdrop />
       {children}
     </MantineProvider>
   );
