@@ -601,9 +601,6 @@ importers:
       '@pawpal/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
-      '@pawpal/shared':
-        specifier: workspace:*
-        version: link:../shared
       '@pawpal/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
