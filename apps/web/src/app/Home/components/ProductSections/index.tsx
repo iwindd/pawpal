@@ -1,46 +1,31 @@
-"use client";
+import APISession from "@/libs/api/server";
 import { Box, Container, Stack } from "@pawpal/ui/core";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
-import { PRODUCT_SECTIONS, ProductSection } from "../../../../data/products";
 import ProductRow from "../ProductRow";
 import classes from "./style.module.css";
 
-const ProductSections = () => {
+const DEFAULT_PRODUCT_TAG_SECTIONS = ["latest"];
+
+const ProductSections = async () => {
   const __ = useTranslations("Home.ProductSections");
-  const [expandedSections, setExpandedSections] = useState<Set<string>>(
-    new Set()
+
+  const API = await APISession();
+  const { success, data: productTags } = await API.productTag.getProductByTags(
+    DEFAULT_PRODUCT_TAG_SECTIONS
   );
 
-  const handleShowMore = (sectionType: string) => {
-    setExpandedSections((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(sectionType)) {
-        newSet.delete(sectionType);
-      } else {
-        newSet.add(sectionType);
-      }
-      return newSet;
-    });
-  };
-
-  const getProductsForSection = (section: ProductSection) => {
-    const isExpanded = expandedSections.has(section.type);
-    return isExpanded ? section.products : section.products.slice(0, 4);
-  };
+  if (!success) return null;
 
   return (
     <Box className={classes.container}>
       <Container size="xl" px="md">
         <Stack gap="xl">
-          {PRODUCT_SECTIONS.map((section) => (
+          {productTags.map((tag) => (
             <ProductRow
-              key={section.type}
-              title={section.title}
-              type={section.type}
-              products={getProductsForSection(section)}
-              showMore={section.showMore}
-              onShowMore={() => handleShowMore(section.type)}
+              key={tag.slug}
+              title={tag.name}
+              slug={tag.slug}
+              products={tag.products}
             />
           ))}
         </Stack>

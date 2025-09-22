@@ -13,6 +13,7 @@
     "@pawpal/icons": "workspace:*",
     "@pawpal/shared": "workspace:*",
     "@pawpal/ui": "workspace:*",
+    "@pawpal/prisma": "workspace:*",
     "@types/axios": "catalog:",
     "axios": "catalog:",
     "clsx": "catalog:",

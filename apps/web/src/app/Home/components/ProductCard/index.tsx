@@ -1,6 +1,6 @@
 "use client";
+import { Product } from "@pawpal/prisma";
 import {
-  Badge,
   Button,
   Card,
   Group,
@@ -11,7 +11,6 @@ import {
 } from "@pawpal/ui/core";
 import { useFormatter, useTranslations } from "next-intl";
 import NextImage from "next/image";
-import { Product } from "../../types";
 import classes from "./style.module.css";
 
 interface ProductCardProps {
@@ -32,7 +31,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
   return (
     <Card
-      key={product.id}
+      key={product.slug}
       shadow="sm"
       padding="lg"
       radius="md"
@@ -42,7 +41,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
         <div className={classes.imageContainer}>
           <Image
             component={NextImage}
-            src={`/assets/images/products/${product.image}`}
+            src={`/assets/images/products/${product.slug}`}
             alt={product.name}
             height={200}
             width={200}
@@ -50,6 +49,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
             loading="lazy"
             fallbackSrc="/assets/images/fallback-product.jpg"
           />
+          {/*     TODO: Add discount and flashsale 
           {product.discount && (
             <Badge color="red" size="sm" className={classes.discountBadge}>
               -{product.discount}%
@@ -59,15 +59,11 @@ const ProductCard = ({ product }: ProductCardProps) => {
             <Badge color="orange" size="sm" className={classes.flashsaleBadge}>
               {__("flashsale")}
             </Badge>
-          )}
+          )} */}
         </div>
       </Card.Section>
 
       <Stack gap="xs" mt="md">
-        <Text size="xs" c="dimmed" tt="uppercase" fw={500}>
-          {product.category}
-        </Text>
-
         <Title order={4} lineClamp={2} className={classes.productTitle}>
           {product.name}
         </Title>
@@ -76,13 +72,8 @@ const ProductCard = ({ product }: ProductCardProps) => {
           <Stack gap={2}>
             <Group gap="xs" align="baseline">
               <Text size="lg" fw={700} c="blue">
-                {formatPrice(product.price)}
+                {/* TODO: Add price (range) */}
               </Text>
-              {product.originalPrice && (
-                <Text size="sm" td="line-through" c="dimmed">
-                  {formatPrice(product.originalPrice)}
-                </Text>
-              )}
             </Group>
           </Stack>
         </Group>

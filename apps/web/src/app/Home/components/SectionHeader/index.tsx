@@ -2,12 +2,11 @@
 import { getSectionIcon } from "@/utils/productUtils";
 import { Button, Group, Text } from "@pawpal/ui/core";
 import { useTranslations } from "next-intl";
-import { ProductType } from "../../types";
 import Countdown from "../Countdown";
 
 interface SectionHeaderProps {
   title: string;
-  type: ProductType;
+  slug: string;
   showMore?: boolean;
   onShowMore?: () => void;
   flashsaleEndTime?: string;
@@ -15,7 +14,7 @@ interface SectionHeaderProps {
 
 const SectionHeader = ({
   title,
-  type,
+  slug,
   showMore = false,
   onShowMore,
   flashsaleEndTime,
@@ -26,9 +25,9 @@ const SectionHeader = ({
     <Group justify="space-between" align="center" mb="md">
       <Group gap="sm">
         <Text size="xl" fw={700}>
-          {getSectionIcon(type)} {title}
+          {getSectionIcon(slug)} {title}
         </Text>
-        {type === "flashsale" && flashsaleEndTime && (
+        {slug === "flashsale" && flashsaleEndTime && (
           <Countdown endTime={flashsaleEndTime} />
         )}
       </Group>

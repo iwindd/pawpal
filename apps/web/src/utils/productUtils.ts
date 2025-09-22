@@ -1,7 +1,5 @@
-import { ProductType } from "@/app/Home/types";
-
-export const getSectionIcon = (type: ProductType) => {
-  switch (type) {
+export const getSectionIcon = (slug: string) => {
+  switch (slug) {
     case "flashsale":
       return "🔥";
     case "popular":
