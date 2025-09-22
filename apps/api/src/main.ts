@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import passport from 'passport';
 import { DelayInterceptor } from './common/interceptors/delay.interceptor';
+import { ProductTagUpdaterService } from './modules/productTags/product-tag-updater.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -40,6 +41,8 @@ async function bootstrap() {
     credentials: true,
     exposedHeaders: ['Authorization'],
   });
+
+  app.get(ProductTagUpdaterService).updateSystemTags();
 
   await app.listen(process.env.APP_PORT ?? 3000);
 }
