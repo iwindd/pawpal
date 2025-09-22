@@ -3,13 +3,12 @@ import Navbar from "@/components/Navbar";
 import lamoon from "@/configs/fonts/lamoon";
 import sarabun from "@/configs/fonts/sarabun";
 import { AuthProvider } from "@/contexts/AuthContext";
-import { APIWithToken } from "@/libs/api";
+import APISession from "@/libs/api/server";
 import UIProvider from "@/providers/UIProvider";
 import { ColorSchemeScript, mantineHtmlProps } from "@pawpal/ui/core";
 import "@pawpal/ui/styles/global.css";
 import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
-import { cookies } from "next/headers";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -23,10 +22,8 @@ export default async function RootLayout({
   children: React.ReactNode;
   auth: React.ReactNode;
 }>) {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("token")?.value;
-  const { data: session } = (token &&
-    (await APIWithToken(token).getProfile())) || {
+  const API = await APISession();
+  const { data: session } = (await API.auth.getProfile()) || {
     data: null,
   };
 

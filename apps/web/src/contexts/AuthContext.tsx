@@ -1,5 +1,5 @@
 "use client";
-import { API } from "@/libs/api";
+import API from "@/libs/api/client";
 import { RegisterInput, Session, type LoginInput } from "@pawpal/shared";
 import { createContext, ReactNode, useContext, useMemo, useState } from "react";
 
@@ -38,7 +38,7 @@ export const AuthProvider = ({ children, session }: AuthProviderProps) => {
     setIsLoading(true);
 
     try {
-      const resp = await API.login(props.inputs);
+      const resp = await API.auth.login(props.inputs);
 
       if (resp.success) {
         setUser(resp.data);
@@ -59,7 +59,7 @@ export const AuthProvider = ({ children, session }: AuthProviderProps) => {
     setIsLoading(true);
 
     try {
-      const resp = await API.register(inputs);
+      const resp = await API.auth.register(inputs);
       if (resp.success) {
         setUser(resp.data);
         return "success";
@@ -78,7 +78,7 @@ export const AuthProvider = ({ children, session }: AuthProviderProps) => {
   const logout = async () => {
     setIsLoading(true);
     try {
-      const { success } = await API.logout();
+      const { success } = await API.auth.logout();
       if (success) setUser(null);
 
       return success;
