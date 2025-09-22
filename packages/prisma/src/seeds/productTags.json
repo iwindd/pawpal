@@ -1,0 +1,18 @@
+[
+  {
+    "slug": "pc",
+    "name": "เกม PC"
+  },
+  {
+    "slug": "mobile",
+    "name": "เกม Mobile"
+  },
+  {
+    "slug": "fps",
+    "name": "เกม FPS"
+  },
+  {
+    "slug": "rpg",
+    "name": "เกม RPG"
+  }
+]

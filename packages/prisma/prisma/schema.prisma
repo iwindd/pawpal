@@ -20,3 +20,59 @@ model User {
 
   @@map("users")
 }
+
+model Category {
+  slug      String   @unique
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  products Product[] @relation("ProductCategory")
+
+  @@map("categories")
+}
+
+model ProductTags {
+  slug      String         @id @unique
+  name      String
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  type      ProductTagType @default(USER_DEFINED)
+
+  products Product[] @relation("ProductTags")
+
+  @@map("product_types")
+}
+
+model Product {
+  slug      String   @id @unique
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  category    Category @relation("ProductCategory", fields: [category_id], references: [slug])
+  category_id String
+
+  productTags ProductTags[] @relation("ProductTags")
+  packages    Package[]     @relation("ProductPackages")
+
+  @@map("products")
+}
+
+model Package {
+  id        String   @id @default(cuid())
+  name      String
+  price     Decimal
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  product    Product @relation("ProductPackages", fields: [product_id], references: [slug])
+  product_id String
+
+  @@map("packages")
+}
+
+enum ProductTagType {
+  USER_DEFINED
+  SYSTEM
+}

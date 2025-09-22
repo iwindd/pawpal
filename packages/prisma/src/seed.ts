@@ -1,5 +1,8 @@
 import bcrypt from "bcrypt";
 import { PrismaClient } from "../generated/client";
+import categories from "./seeds/categories.json";
+import products from "./seeds/products.json";
+import productTags from "./seeds/productTags.json";
 import users from "./seeds/users.json";
 
 const prisma = new PrismaClient();
@@ -7,6 +10,7 @@ const prisma = new PrismaClient();
 async function main() {
   console.log("🌱 Starting seed...");
 
+  // Seed users
   await prisma.$transaction(async () => {
     for (const user of users) {
       await prisma.user.upsert({
@@ -20,9 +24,63 @@ async function main() {
     }
   });
 
-  console.log("✅ Seed completed successfully!");
+  // Seed categories
+  await prisma.$transaction(async () => {
+    for (const category of categories) {
+      await prisma.category.upsert({
+        where: { slug: category.slug },
+        update: {},
+        create: {
+          ...category,
+        },
+      });
+    }
+  });
+
+  // Seed Product Tags
+  await prisma.$transaction(async () => {
+    for (const tag of productTags) {
+      await prisma.productTags.upsert({
+        where: { slug: tag.slug },
+        update: {},
+        create: {
+          ...tag,
+        },
+      });
+    }
+  });
+
+  // Seed products
+  await prisma.$transaction(async () => {
+    for (const product of products) {
+      await prisma.product.upsert({
+        where: { slug: product.slug },
+        update: {},
+        create: {
+          ...product,
+          category: {
+            connect: { slug: product.category },
+          },
+          productTags: {
+            connect: product.productTags.map((tag) => ({ slug: tag })),
+          },
+          packages: {
+            create: product.packages.map((pkg) => ({ ...pkg })),
+          },
+        },
+      });
+    }
+  });
+
   console.log(
-    `Created ${await prisma.user.count()} users (hashed passwords: base on 12 rounds)`
+    `✅ Seed completed successfully!\n`,
+    `--------------------------------\n`,
+    `Created ${await prisma.user.count()} users (hashed passwords: base on 12 rounds) \n`,
+    `Created ${await prisma.product.count()} products\n`,
+    `Created ${await prisma.category.count()} categories\n`,
+    `Created ${await prisma.productTags.count()} product tags\n`,
+    `Created ${await prisma.package.count()} packages\n`,
+    `--------------------------------\n`
   );
 }
 

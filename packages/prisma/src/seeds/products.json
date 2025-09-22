@@ -1,0 +1,114 @@
+[
+  {
+    "slug": "valorant",
+    "name": "Valorant",
+    "category": "games",
+    "productTags": ["fps", "rpg"],
+    "packages": [
+      {
+        "name": "Valorant 1000",
+        "price": 1000
+      },
+      {
+        "name": "Valorant 5000",
+        "price": 5000
+      }
+    ]
+  },
+  {
+    "slug": "apex-legends",
+    "name": "Apex Legends",
+    "category": "games",
+    "productTags": ["fps", "rpg"],
+    "packages": [
+      {
+        "name": "Apex Legends 1000",
+        "price": 1000
+      }
+    ]
+  },
+  {
+    "slug": "fortnite",
+    "name": "Fortnite",
+    "category": "games",
+    "productTags": ["fps", "rpg"],
+    "packages": [
+      {
+        "name": "Fortnite 1000",
+        "price": 1000
+      }
+    ]
+  },
+  {
+    "slug": "genshin-impact",
+    "name": "Genshin Impact",
+    "category": "games",
+    "productTags": ["rpg"],
+    "packages": [
+      {
+        "name": "Genshin Impact 1000",
+        "price": 1000
+      }
+    ]
+  },
+  {
+    "slug": "netflix",
+    "name": "Netflix",
+    "category": "streaming",
+    "productTags": [],
+    "packages": [
+      {
+        "name": "Netflix 1 Month",
+        "price": 1000
+      }
+    ]
+  },
+  {
+    "slug": "spotify",
+    "name": "Spotify",
+    "category": "streaming",
+    "productTags": [],
+    "packages": [
+      {
+        "name": "Spotify 1 Month",
+        "price": 1000
+      }
+    ]
+  },
+  {
+    "slug": "youtube",
+    "name": "YouTube",
+    "category": "streaming",
+    "productTags": [],
+    "packages": [
+      {
+        "name": "YouTube 1 Month",
+        "price": 1000
+      }
+    ]
+  },
+  {
+    "slug": "hulu",
+    "name": "Hulu",
+    "category": "streaming",
+    "productTags": [],
+    "packages": [
+      {
+        "name": "Hulu 1 Month",
+        "price": 1000
+      }
+    ]
+  },
+  {
+    "slug": "apple-music",
+    "name": "Apple Music",
+    "category": "streaming",
+    "productTags": [],
+    "packages": [
+      {
+        "name": "Apple Music 1 Month",
+        "price": 1000
+      }
+    ]
+  }
+]
