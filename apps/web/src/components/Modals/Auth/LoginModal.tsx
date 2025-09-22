@@ -1,4 +1,5 @@
 "use client";
+import ErrorMessage from "@/components/ErrorMessage";
 import ActionImage from "@/components/Modals/Auth/components/ActionImage";
 import { useAuth } from "@/contexts/AuthContext";
 import useFormValidate from "@/hooks/useFormValidate";
@@ -131,12 +132,7 @@ export default function LoginModal({
               {__("loginButton")}
             </Button>
 
-            {message && (
-              <Text size="sm" c="red" ta="center">
-                {__(message)}
-              </Text>
-            )}
-
+            <ErrorMessage message={message} />
             <Divider label={__("label_or")} />
 
             <Group justify="center" gap="sm">

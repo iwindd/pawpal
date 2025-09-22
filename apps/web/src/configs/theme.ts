@@ -1,5 +1,5 @@
 "use client";
-import { MantineThemeOverride } from "@pawpal/ui/core";
+import { DEFAULT_THEME, MantineThemeOverride } from "@pawpal/ui/core";
 import postcssConfig from "@pawpal/ui/postcss.config";
 import { lamoonMultiplier } from "./fonts/lamoon";
 
@@ -65,6 +65,7 @@ const configTheme: MantineThemeOverride = {
       "#355594",
       "#284985",
     ],
+    danger: DEFAULT_THEME.colors.red,
   },
 
   /** Index of theme.colors[color].

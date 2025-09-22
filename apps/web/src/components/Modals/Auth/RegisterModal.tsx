@@ -1,4 +1,5 @@
 "use client";
+import ErrorMessage from "@/components/ErrorMessage";
 import ActionImage from "@/components/Modals/Auth/components/ActionImage";
 import RichText from "@/components/RichText";
 import { useAuth } from "@/contexts/AuthContext";
@@ -151,12 +152,7 @@ export default function RegisterModal({
               {__("registerButton")}
             </Button>
 
-            {message && (
-              <Text size="sm" c="red" ta="center">
-                {__(message)}
-              </Text>
-            )}
-
+            <ErrorMessage message={message} />
             <Divider label={__("label_or")} />
 
             <Group justify="center" gap="sm">
