@@ -89,6 +89,11 @@ const configTheme: MantineThemeOverride = {
         },
       },
     },
+    Container: {
+      defaultProps: {
+        size: "xl",
+      },
+    },
   },
 };
 

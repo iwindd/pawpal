@@ -49,13 +49,13 @@ const Footer = () => {
             <Stack gap="md">
               <Title order={5}>{__("legal")}</Title>
               <Stack gap="xs">
-                <Link href="/privacy" className={classes.footerLink}>
+                <Link href="/privacy-policy" className={classes.footerLink}>
                   {__("legalLinks.privacyPolicy")}
                 </Link>
-                <Link href="/terms" className={classes.footerLink}>
+                <Link href="/terms-of-service" className={classes.footerLink}>
                   {__("legalLinks.termsOfService")}
                 </Link>
-                <Link href="/cookies" className={classes.footerLink}>
+                <Link href="/cookie-policy" className={classes.footerLink}>
                   {__("legalLinks.cookiePolicy")}
                 </Link>
               </Stack>
