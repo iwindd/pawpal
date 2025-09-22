@@ -12,6 +12,7 @@
       "cache": false
     },
     "db:push": {
+      "dependsOn": ["^db:generate"],
       "cache": false
     },
     "db:seed": {
