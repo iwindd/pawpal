@@ -6,6 +6,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { PrismaModule } from '../prisma/prisma.module';
+import { ProductModule } from '../product/product.module';
 import { ProductTagModule } from '../productTags/product-tag.module';
 import { SaleModule } from '../sale/sale.module';
 
@@ -19,6 +20,7 @@ import { SaleModule } from '../sale/sale.module';
     PrismaModule,
     AuthModule,
     UserModule,
+    ProductModule,
     ProductTagModule,
     SaleModule,
   ],
