@@ -10,8 +10,8 @@ export class ProductService {
     private readonly saleService: SaleService,
   ) {}
 
-  async getLatestProducts(limit?: number): Promise<ProductResponse[]> {
-    const latestProducts = await this.prisma.product.findMany({
+  async getNewProducts(limit?: number): Promise<ProductResponse[]> {
+    const newProducts = await this.prisma.product.findMany({
       orderBy: {
         createdAt: 'desc',
       },
@@ -23,7 +23,7 @@ export class ProductService {
     });
 
     return await Promise.all(
-      latestProducts.map(async (product) => {
+      newProducts.map(async (product) => {
         return {
           ...product,
           sales: await this.saleService.getMostDiscountedSaleByProduct(

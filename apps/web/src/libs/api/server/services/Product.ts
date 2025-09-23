@@ -5,8 +5,8 @@ import { PawApiResponse } from "../../api";
 class ProductApi {
   constructor(private readonly client: AxiosInstance) {}
 
-  async getLatestProducts(): Promise<PawApiResponse<ProductResponse[]>> {
-    const response = await this.client.get("/product/latest");
+  async getNewProducts(): Promise<PawApiResponse<ProductResponse[]>> {
+    const response = await this.client.get("/product/new");
     return { success: true, data: response.data };
   }
 }

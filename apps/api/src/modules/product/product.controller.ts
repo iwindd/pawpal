@@ -6,10 +6,10 @@ import { ProductService } from './product.service';
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
-  @Get('/latest')
-  async getLatestProducts(
+  @Get('/new')
+  async getNewProducts(
     @Query('limit') limit: number,
   ): Promise<ProductResponse[]> {
-    return this.productService.getLatestProducts(Number(limit));
+    return this.productService.getNewProducts(Number(limit));
   }
 }

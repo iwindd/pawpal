@@ -4,12 +4,12 @@ import { ProductResponse } from "@pawpal/shared";
 
 export const homeProductSections = [
   {
-    key: "latest",
-    label: "Latest",
-    icon: getSectionIcon("latest"),
+    key: "new",
+    label: "New",
+    icon: getSectionIcon("new"),
     onLoad: async (API: ServerApi): Promise<ProductResponse[]> => {
       try {
-        const { success, data } = await API.product.getLatestProducts();
+        const { success, data } = await API.product.getNewProducts();
         if (!success) return [];
         return data;
       } catch (error) {
