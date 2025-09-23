@@ -7,10 +7,36 @@ import {
 } from "@pawpal/ui/core";
 import postcssConfig from "@pawpal/ui/postcss.config";
 import { lamoonMultiplier } from "./fonts/lamoon";
-import CONTAINER_SIZES from "./theme/container";
+import CONTAINER_SIZES, { ContainerSizeKey } from "./theme/container";
 
 const postcssConfigBreakpoints =
   postcssConfig.plugins["postcss-simple-vars"].variables;
+
+/**
+ * Calculates the appropriate container size based on fluid mode and size parameter
+ * @param fluid - Whether the container should be fluid (100% width)
+ * @param size - The container size key or custom size value
+ * @returns The calculated container size as a CSS value
+ */
+const calculateContainerSize = (fluid?: boolean, size?: unknown): string => {
+  if (fluid) {
+    return "100%";
+  }
+
+  if (
+    size !== undefined &&
+    typeof size === "string" &&
+    size in CONTAINER_SIZES
+  ) {
+    return rem(CONTAINER_SIZES[size as ContainerSizeKey]);
+  }
+
+  if (typeof size === "number") {
+    return rem(size);
+  }
+
+  return "100%";
+};
 
 const configTheme: MantineThemeOverride = {
   /** Controls focus ring styles. Supports the following options: `auto`, `always`, `never` */
@@ -98,19 +124,9 @@ const configTheme: MantineThemeOverride = {
     },
     Container: Container.extend({
       vars: (_, { size, fluid }) => ({
-        root: (() => {
-          let containerSize;
-          if (fluid) {
-            containerSize = "100%";
-          } else if (size !== undefined && size in CONTAINER_SIZES) {
-            containerSize = rem(CONTAINER_SIZES[size]);
-          } else {
-            containerSize = rem(size);
-          }
-          return {
-            "--container-size": containerSize,
-          };
-        })(),
+        root: {
+          "--container-size": calculateContainerSize(fluid, size),
+        },
       }),
       defaultProps: {
         size: "xl",
