@@ -28,7 +28,28 @@ export class SaleService {
   async getPackagesHasSaleByProduct(productId: string): Promise<any> {
     return await this.prisma.package.findMany({
       where: {
-        sale: { some: { package: { some: { product: { slug: productId } } } } },
+        product: { slug: productId },
+        sale: {
+          some: {
+            startAt: { lte: new Date() },
+            endAt: { gte: new Date() },
+          },
+        },
+      },
+      select: {
+        id: true,
+        name: true,
+        price: true,
+        sale: {
+          where: {
+            startAt: { lte: new Date() },
+            endAt: { gte: new Date() },
+          },
+          select: {
+            discount: true,
+            discountType: true,
+          },
+        },
       },
     });
   }
@@ -39,6 +60,10 @@ export class SaleService {
         package: { some: { product: { slug: productId } } },
         startAt: { lte: new Date() },
         endAt: { gte: new Date() },
+        isActive: true,
+      },
+      orderBy: {
+        discount: 'desc',
       },
     });
 

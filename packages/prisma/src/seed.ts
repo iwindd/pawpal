@@ -41,7 +41,7 @@ async function main() {
   // Seed Product Tags
   await prisma.$transaction(async () => {
     for (const tag of productTags) {
-      await prisma.productTags.upsert({
+      await prisma.productTag.upsert({
         where: { slug: tag.slug },
         update: {},
         create: {
@@ -99,7 +99,7 @@ async function main() {
     `Created ${await prisma.user.count()} users (hashed passwords: base on 12 rounds) \n`,
     `Created ${await prisma.product.count()} products\n`,
     `Created ${await prisma.category.count()} categories\n`,
-    `Created ${await prisma.productTags.count()} product tags\n`,
+    `Created ${await prisma.productTag.count()} product tags\n`,
     `Created ${await prisma.package.count()} packages\n`,
     `Created ${await prisma.sale.count()} sales\n`,
     `--------------------------------\n`

@@ -1,4 +1,9 @@
-import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  OnModuleDestroy,
+  OnModuleInit,
+} from '@nestjs/common';
 import { PrismaClient } from '@pawpal/prisma';
 
 @Injectable()
@@ -6,11 +11,34 @@ export class PrismaService
   extends PrismaClient
   implements OnModuleInit, OnModuleDestroy
 {
-  async onModuleInit() {
-    await this.$connect();
+  private readonly logger = new Logger(PrismaService.name);
+
+  async onModuleInit(): Promise<void> {
+    try {
+      await this.$connect();
+      this.logger.log('Database connected successfully');
+    } catch (error) {
+      this.logger.error('Failed to connect to database:', error);
+      throw error;
+    }
   }
 
-  async onModuleDestroy() {
-    await this.$disconnect();
+  async onModuleDestroy(): Promise<void> {
+    try {
+      await this.$disconnect();
+      this.logger.log('Database disconnected successfully');
+    } catch (error) {
+      this.logger.error('Failed to disconnect from database:', error);
+    }
+  }
+
+  async healthCheck(): Promise<boolean> {
+    try {
+      await this.$queryRaw`SELECT 1`;
+      return true;
+    } catch (error) {
+      this.logger.error('Database health check failed:', error);
+      return false;
+    }
   }
 }

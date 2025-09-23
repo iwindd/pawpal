@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ProductResponse } from '@pawpal/shared';
+import { ProductResponse, ProductSaleValue } from '@pawpal/shared';
 import { PrismaService } from '../prisma/prisma.service';
 import { SaleService } from '../sale/sale.service';
 
@@ -11,6 +11,9 @@ export class ProductService {
   ) {}
 
   async getNewProducts(limit?: number): Promise<ProductResponse[]> {
+    const DEFAULT_LIMIT = 4;
+    const productLimit = limit || DEFAULT_LIMIT;
+
     const newProducts = await this.prisma.product.findMany({
       orderBy: {
         createdAt: 'desc',
@@ -18,23 +21,42 @@ export class ProductService {
       select: {
         slug: true,
         name: true,
+        packages: {
+          select: {
+            sale: {
+              where: {
+                startAt: { lte: new Date() },
+                endAt: { gte: new Date() },
+              },
+              select: {
+                discount: true,
+                discountType: true,
+                startAt: true,
+                endAt: true,
+              },
+            },
+          },
+        },
       },
-      take: limit || 4,
+      take: productLimit,
     });
 
-    return await Promise.all(
-      newProducts.map(async (product) => {
-        return {
-          ...product,
-          sales: await this.saleService.getMostDiscountedSaleByProduct(
-            product.slug,
-          ),
-        };
-      }),
-    );
+    return newProducts.map((product) => {
+      const sales = product.packages.flatMap((pkg) => pkg.sale);
+      const mostDiscountedSale = this.getMostDiscountedSale(sales);
+
+      return {
+        slug: product.slug,
+        name: product.name,
+        sales: mostDiscountedSale,
+      };
+    });
   }
 
   async getSaleProducts(limit?: number): Promise<ProductResponse[]> {
+    const DEFAULT_LIMIT = 4;
+    const productLimit = limit || DEFAULT_LIMIT;
+
     const currentSale = await this.prisma.product.findMany({
       where: {
         packages: {
@@ -51,25 +73,60 @@ export class ProductService {
       select: {
         slug: true,
         name: true,
+        packages: {
+          select: {
+            sale: {
+              where: {
+                startAt: { lte: new Date() },
+                endAt: { gte: new Date() },
+              },
+              select: {
+                discount: true,
+                discountType: true,
+                startAt: true,
+                endAt: true,
+              },
+            },
+          },
+        },
       },
       orderBy: {
         createdAt: 'desc',
       },
-      take: limit || 4,
+      take: productLimit,
     });
-    if (!currentSale) return [];
 
-    return await Promise.all(
-      currentSale.map(async (product) => {
-        return {
-          ...product,
-          sales: await this.saleService.getMostDiscountedSaleByProduct(
-            product.slug,
-          ),
-        };
-      }),
-    ).then((products) =>
-      products.slice().sort((a, b) => b.sales.percent - a.sales.percent),
-    );
+    if (!currentSale.length) return [];
+
+    const productsWithSales = currentSale.map((product) => {
+      const sales = product.packages.flatMap((pkg) => pkg.sale);
+      const mostDiscountedSale = this.getMostDiscountedSale(sales);
+
+      return {
+        slug: product.slug,
+        name: product.name,
+        sales: mostDiscountedSale,
+      };
+    });
+
+    return productsWithSales
+      .filter((product) => product.sales !== null)
+      .sort((a, b) => (b.sales?.percent || 0) - (a.sales?.percent || 0));
+  }
+
+  private getMostDiscountedSale(sales: any[]): ProductSaleValue | null {
+    if (sales.length === 0) return null;
+
+    const mostDiscountedSale = sales.reduce((max, sale) => {
+      const currentDiscount = Number(sale.discount);
+      const maxDiscount = Number(max.discount);
+      return currentDiscount > maxDiscount ? sale : max;
+    }, sales[0]);
+
+    return {
+      percent: Number(mostDiscountedSale.discount),
+      endAt: mostDiscountedSale.endAt.toISOString(),
+      startAt: mostDiscountedSale.startAt.toISOString(),
+    };
   }
 }

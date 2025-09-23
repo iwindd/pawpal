@@ -22,6 +22,7 @@ model User {
 }
 
 model Category {
+  id        String   @id @default(cuid())
   slug      String   @unique
   name      String
   createdAt DateTime @default(now())
@@ -29,11 +30,14 @@ model Category {
 
   products Product[] @relation("ProductCategory")
 
+  @@index([slug])
+  @@index([name])
   @@map("categories")
 }
 
-model ProductTags {
-  slug      String         @id @unique
+model ProductTag {
+  id        String         @id @default(cuid())
+  slug      String         @unique
   name      String
   createdAt DateTime       @default(now())
   updatedAt DateTime       @updatedAt
@@ -41,36 +45,46 @@ model ProductTags {
 
   products Product[] @relation("ProductTags")
 
-  @@map("product_types")
+  @@index([slug])
+  @@index([type])
+  @@map("product_tags")
 }
 
 model Product {
-  slug      String   @id @unique
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  category    Category @relation("ProductCategory", fields: [category_id], references: [slug])
+  category    Category @relation("ProductCategory", fields: [category_id], references: [id])
   category_id String
 
-  productTags ProductTags[] @relation("ProductTags")
-  packages    Package[]     @relation("ProductPackages")
+  productTags ProductTag[] @relation("ProductTags")
+  packages    Package[]    @relation("ProductPackages")
 
+  @@index([slug])
+  @@index([category_id])
+  @@index([createdAt])
   @@map("products")
 }
 
 model Package {
-  id        String   @id @default(cuid())
-  name      String
-  price     Decimal
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(cuid())
+  name        String
+  price       Decimal  @db.Decimal(10, 2)
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  product    Product @relation("ProductPackages", fields: [product_id], references: [slug])
+  product    Product @relation("ProductPackages", fields: [product_id], references: [id])
   product_id String
 
   sale Sale[] @relation("SalePackages")
 
+  @@index([product_id])
+  @@index([price])
   @@map("packages")
 }
 
@@ -78,14 +92,19 @@ model Sale {
   id           String       @id @default(cuid())
   name         String
   discountType DiscountType @default(PERCENT)
-  discount     Decimal
+  discount     Decimal      @db.Decimal(10, 2)
   startAt      DateTime
   endAt        DateTime
+  isActive     Boolean      @default(true)
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
 
   package Package[] @relation("SalePackages")
 
+  @@index([startAt])
+  @@index([endAt])
+  @@index([isActive])
+  @@index([discountType])
   @@map("sales")
 }
 
