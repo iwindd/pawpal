@@ -1,5 +1,5 @@
 import { IconFlashsale } from "@pawpal/icons";
-import { SaleValueResponse } from "@pawpal/shared";
+import { ProductSaleValue } from "@pawpal/shared";
 import dayjs from "dayjs";
 
 export const getSectionIcon = (slug: string) => {
@@ -17,7 +17,7 @@ export const getSectionIcon = (slug: string) => {
   }
 };
 
-export const isFlashsale = (sales: SaleValueResponse | null): boolean => {
+export const isFlashsale = (sales: ProductSaleValue | null): boolean => {
   if (!sales) return false;
   const startAt = dayjs(sales.startAt);
   const endAt = dayjs(sales.endAt);

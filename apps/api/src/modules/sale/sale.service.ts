@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DiscountType, Sale } from '@pawpal/prisma';
 import { Decimal } from '@pawpal/prisma/generated/client/runtime/library';
-import { SaleValueResponse } from '@pawpal/shared';
+import { ProductSaleValue } from '@pawpal/shared';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
@@ -10,22 +10,18 @@ export class SaleService {
 
   async getMostDiscountedSaleByProduct(
     productId: string,
-  ): Promise<SaleValueResponse | null> {
+  ): Promise<ProductSaleValue | null> {
     const sales = await this.getSalesByProduct(productId);
     if (sales.length === 0) return null;
-
-    sales.forEach((sale) => {
-      console.log(sale.discount, typeof sale.discount);
-    });
 
     const mostPercentDiscount = sales
       .slice()
       .sort((a, b) => Number(b.discount) - Number(a.discount))[0];
 
     return {
-      percent: mostPercentDiscount.discount,
-      endAt: mostPercentDiscount.endAt,
-      startAt: mostPercentDiscount.startAt,
+      percent: Number(mostPercentDiscount.discount),
+      endAt: mostPercentDiscount.endAt.toISOString(),
+      startAt: mostPercentDiscount.startAt.toISOString(),
     };
   }
 

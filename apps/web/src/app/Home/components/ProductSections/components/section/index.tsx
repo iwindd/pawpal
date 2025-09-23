@@ -1,14 +1,20 @@
 "use client";
-import { getSectionIcon, isFlashsale } from "@/utils/productUtils";
-import { ProductTagResponse } from "@pawpal/shared";
+import { isFlashsale } from "@/utils/productUtils";
+import { ProductResponse } from "@pawpal/shared";
 import { Box, Grid, Group, Text } from "@pawpal/ui/core";
 import dayjs from "dayjs";
 import Countdown from "../../../Countdown";
 import ProductCard from "../card";
 import classes from "./style.module.css";
 
-const Section = ({ tag }: { tag: ProductTagResponse }) => {
-  const closestToEndingFlashsale = [...tag.products]
+interface SectionProps {
+  label: string;
+  icon?: React.ReactNode;
+  products: ProductResponse[];
+}
+
+const Section = ({ label, icon, products }: SectionProps) => {
+  const closestToEndingFlashsale = [...products]
     .filter((product) => isFlashsale(product.sales))
     .sort((a, b) => {
       const endAtA = dayjs(a.sales?.endAt);
@@ -21,7 +27,7 @@ const Section = ({ tag }: { tag: ProductTagResponse }) => {
       <Group justify="space-between" align="center" mb="md">
         <Group gap="sm">
           <Text size="xl" fw={700}>
-            {getSectionIcon(tag.slug)} {tag.name}
+            {icon} {label}
           </Text>
           {closestToEndingFlashsale?.sales?.endAt && (
             <Countdown
@@ -33,7 +39,7 @@ const Section = ({ tag }: { tag: ProductTagResponse }) => {
         </Group>
       </Group>
       <Grid>
-        {tag.products.map((product: ProductTagResponse["products"][number]) => (
+        {products.map((product: ProductResponse) => (
           <Grid.Col
             span={{
               xs: 12,

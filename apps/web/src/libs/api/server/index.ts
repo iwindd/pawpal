@@ -1,16 +1,16 @@
 import { cookies } from "next/headers";
 import PawApi from "../api";
 import AuthApi from "./services/Auth";
-import ProductTagApi from "./services/ProductTag";
+import ProductApi from "./services/Product";
 
 export class ServerApi extends PawApi {
   public readonly auth: AuthApi;
-  public readonly productTag: ProductTagApi;
+  public readonly product: ProductApi;
 
   constructor(token?: string) {
     super(token);
     this.auth = new AuthApi(this.client);
-    this.productTag = new ProductTagApi(this.client);
+    this.product = new ProductApi(this.client);
   }
 }
 
