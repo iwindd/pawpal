@@ -21,11 +21,17 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
   auth: React.ReactNode;
-}>) {
-  const API = await APISession();
-  const { data: session } = (await API.auth.getProfile()) || {
-    data: null,
-  };
+}>): Promise<React.JSX.Element> {
+  let session = null;
+
+  try {
+    const API = await APISession();
+    const response = await API.auth.getProfile();
+    session = response?.data || null;
+  } catch (error) {
+    console.error("Failed to load user session:", error);
+    session = null;
+  }
 
   return (
     <html

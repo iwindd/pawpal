@@ -5,14 +5,20 @@ import session from 'express-session';
 import passport from 'passport';
 import { DelayInterceptor } from './common/interceptors/delay.interceptor';
 
-async function bootstrap() {
+// Constants
+const DEFAULT_PORT = 3000;
+const DEVELOPMENT_ENV = 'development';
+const PRODUCTION_ENV = 'production';
+const ENABLE_DELAY_FLAG = 'true';
+
+async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
   app.use(cookieParser(process.env.APP_SECRET));
 
-  if (
-    process.env.NODE_ENV === 'development' &&
-    process.env.ENABLE_DELAY === 'true'
-  ) {
+  const isDevelopment = process.env.NODE_ENV === DEVELOPMENT_ENV;
+  const isDelayEnabled = process.env.ENABLE_DELAY === ENABLE_DELAY_FLAG;
+
+  if (isDevelopment && isDelayEnabled) {
     app.useGlobalInterceptors(new DelayInterceptor());
   }
 
@@ -21,13 +27,12 @@ async function bootstrap() {
       secret: process.env.APP_SECRET,
       resave: false,
       saveUninitialized: false,
-      // TODO: Implement a database session store in the future
       store: new session.MemoryStore(),
       cookie: {
         httpOnly: true,
         signed: true,
         sameSite: 'strict',
-        secure: process.env.NODE_ENV === 'production',
+        secure: process.env.NODE_ENV === PRODUCTION_ENV,
       },
     }),
   );
@@ -41,6 +46,8 @@ async function bootstrap() {
     exposedHeaders: ['Authorization'],
   });
 
-  await app.listen(process.env.APP_PORT ?? 3000);
+  const port = process.env.APP_PORT ?? DEFAULT_PORT;
+  await app.listen(port);
 }
+
 bootstrap();

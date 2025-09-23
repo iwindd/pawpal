@@ -8,11 +8,19 @@ import {
 } from "@pawpal/ui/core";
 import { Notifications } from "@pawpal/ui/notifications";
 
+// Constants
+const COLOR_SCHEME_KEY = "pawpal-color-scheme";
+const DEFAULT_COLOR_SCHEME = "dark";
+
 const colorSchemeManager = localStorageColorSchemeManager({
-  key: "pawpal-color-scheme",
+  key: COLOR_SCHEME_KEY,
 });
 
-const UIProvider = ({ children }: { children: React.ReactNode }) => {
+interface UIProviderProps {
+  children: React.ReactNode;
+}
+
+const UIProvider = ({ children }: UIProviderProps): React.JSX.Element => {
   const theme = createTheme({
     ...configTheme,
   });
@@ -21,7 +29,7 @@ const UIProvider = ({ children }: { children: React.ReactNode }) => {
     <MantineProvider
       theme={theme}
       colorSchemeManager={colorSchemeManager}
-      defaultColorScheme="dark"
+      defaultColorScheme={DEFAULT_COLOR_SCHEME}
     >
       <Notifications />
       <Backdrop />

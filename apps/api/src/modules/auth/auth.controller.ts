@@ -23,6 +23,11 @@ import {
 } from '@pawpal/shared';
 import { AuthService } from './auth.service';
 
+interface TestResponse {
+  message: string;
+  status: string;
+}
+
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -59,7 +64,7 @@ export class AuthController {
   }
 
   @Get('admin/test')
-  test(): { message: string; status: string } {
+  test(): TestResponse {
     return {
       message: 'Auth service is working correctly',
       status: 'success',

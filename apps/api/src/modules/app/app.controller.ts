@@ -1,6 +1,11 @@
 import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
 
+interface TestResponse {
+  message: string;
+  status: string;
+}
+
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
@@ -11,7 +16,7 @@ export class AppController {
   }
 
   @Get('admin/test')
-  test(): { message: string; status: string } {
+  test(): TestResponse {
     return {
       message: 'App service is working correctly',
       status: 'success',

@@ -3,21 +3,29 @@ import API from "@/libs/api/client";
 import { RegisterInput, Session, type LoginInput } from "@pawpal/shared";
 import { createContext, ReactNode, useContext, useMemo, useState } from "react";
 
+// Types
+type LoginResult = "success" | "invalid_credentials" | "error";
+type RegisterResult = "success" | "email_already_exists" | "error";
+
+interface LoginProps {
+  inputs: LoginInput;
+}
+
+interface RegisterProps {
+  inputs: RegisterInput;
+}
+
 interface AuthContextType {
   user: Session | null;
-  login: (props: {
-    inputs: LoginInput;
-  }) => Promise<"success" | "invalid_credentials" | "error">;
-  register: (props: {
-    inputs: RegisterInput;
-  }) => Promise<"success" | "email_already_exists" | "error">;
+  login: (props: LoginProps) => Promise<LoginResult>;
+  register: (props: RegisterProps) => Promise<RegisterResult>;
   logout: () => Promise<boolean>;
   isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const useAuth = () => {
+export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (context === undefined) {
     throw new Error("useAuth must be used within an AuthProvider");
@@ -30,11 +38,14 @@ interface AuthProviderProps {
   session: Session | null;
 }
 
-export const AuthProvider = ({ children, session }: AuthProviderProps) => {
+export const AuthProvider = ({
+  children,
+  session,
+}: AuthProviderProps): React.JSX.Element => {
   const [user, setUser] = useState<Session | null>(session);
   const [isLoading, setIsLoading] = useState(false);
 
-  const login = async (props: { inputs: LoginInput }) => {
+  const login = async (props: LoginProps): Promise<LoginResult> => {
     setIsLoading(true);
 
     try {
@@ -55,11 +66,11 @@ export const AuthProvider = ({ children, session }: AuthProviderProps) => {
     }
   };
 
-  const register = async ({ inputs }: { inputs: RegisterInput }) => {
+  const register = async (props: RegisterProps): Promise<RegisterResult> => {
     setIsLoading(true);
 
     try {
-      const resp = await API.auth.register(inputs);
+      const resp = await API.auth.register(props.inputs);
       if (resp.success) {
         setUser(resp.data);
         return "success";
@@ -75,7 +86,7 @@ export const AuthProvider = ({ children, session }: AuthProviderProps) => {
     }
   };
 
-  const logout = async () => {
+  const logout = async (): Promise<boolean> => {
     setIsLoading(true);
     try {
       const { success } = await API.auth.logout();
