@@ -20,7 +20,7 @@ export class ProductTagService {
     });
   }
 
-  async getProductByTags(tags: string | string[]): Promise<any> {
+  async getProductByTags(tags: string | string[], limit: number): Promise<any> {
     const tagsArray = utils.splitTags(tags);
 
     if (tagsArray.length === 0) {
@@ -33,6 +33,10 @@ export class ProductTagService {
         slug: true,
         name: true,
         products: {
+          take: limit,
+          orderBy: {
+            createdAt: 'desc',
+          },
           select: {
             slug: true,
             name: true,

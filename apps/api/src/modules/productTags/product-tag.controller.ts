@@ -18,7 +18,8 @@ export class ProductTagController {
   @Get()
   async getProductByTags(
     @Query('tags') tags: string | string[],
+    @Query('limit') limit: number,
   ): Promise<ProductTagResponse[]> {
-    return this.productTagService.getProductByTags(tags);
+    return this.productTagService.getProductByTags(tags, Number(limit) || 4);
   }
 }
