@@ -57,4 +57,12 @@ export class AuthController {
   ): Promise<User> {
     return this.authService.register(body);
   }
+
+  @Get('admin/test')
+  test(): { message: string; status: string } {
+    return {
+      message: 'Auth service is working correctly',
+      status: 'success',
+    };
+  }
 }

@@ -19,4 +19,12 @@ export class ProductController {
   ): Promise<ProductResponse[]> {
     return this.productService.getSaleProducts(Number(limit));
   }
+
+  @Get('admin/test')
+  test(): { message: string; status: string } {
+    return {
+      message: 'Product service is working correctly',
+      status: 'success',
+    };
+  }
 }
