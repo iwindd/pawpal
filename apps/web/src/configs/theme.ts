@@ -1,7 +1,13 @@
 "use client";
-import { DEFAULT_THEME, MantineThemeOverride } from "@pawpal/ui/core";
+import {
+  Container,
+  DEFAULT_THEME,
+  MantineThemeOverride,
+  rem,
+} from "@pawpal/ui/core";
 import postcssConfig from "@pawpal/ui/postcss.config";
 import { lamoonMultiplier } from "./fonts/lamoon";
+import CONTAINER_SIZES from "./theme/container";
 
 const postcssConfigBreakpoints =
   postcssConfig.plugins["postcss-simple-vars"].variables;
@@ -90,11 +96,26 @@ const configTheme: MantineThemeOverride = {
         },
       },
     },
-    Container: {
+    Container: Container.extend({
+      vars: (_, { size, fluid }) => ({
+        root: (() => {
+          let containerSize;
+          if (fluid) {
+            containerSize = "100%";
+          } else if (size !== undefined && size in CONTAINER_SIZES) {
+            containerSize = rem(CONTAINER_SIZES[size]);
+          } else {
+            containerSize = rem(size);
+          }
+          return {
+            "--container-size": containerSize,
+          };
+        })(),
+      }),
       defaultProps: {
         size: "xl",
       },
-    },
+    }),
   },
 };
 

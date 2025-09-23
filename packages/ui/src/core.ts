@@ -29,6 +29,7 @@ export {
   Overlay,
   Paper,
   PasswordInput,
+  rem,
   ScrollArea,
   Space,
   Stack,
