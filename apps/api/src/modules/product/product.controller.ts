@@ -12,4 +12,11 @@ export class ProductController {
   ): Promise<ProductResponse[]> {
     return this.productService.getNewProducts(Number(limit));
   }
+
+  @Get('/sale')
+  async getSaleProducts(
+    @Query('limit') limit: number,
+  ): Promise<ProductResponse[]> {
+    return this.productService.getSaleProducts(Number(limit));
+  }
 }

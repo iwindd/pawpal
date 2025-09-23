@@ -9,6 +9,11 @@ class ProductApi {
     const response = await this.client.get("/product/new");
     return { success: true, data: response.data };
   }
+
+  async getSaleProducts(): Promise<PawApiResponse<ProductResponse[]>> {
+    const response = await this.client.get("/product/sale");
+    return { success: true, data: response.data };
+  }
 }
 
 export default ProductApi;

@@ -33,4 +33,43 @@ export class ProductService {
       }),
     );
   }
+
+  async getSaleProducts(limit?: number): Promise<ProductResponse[]> {
+    const currentSale = await this.prisma.product.findMany({
+      where: {
+        packages: {
+          some: {
+            sale: {
+              some: {
+                startAt: { lte: new Date() },
+                endAt: { gte: new Date() },
+              },
+            },
+          },
+        },
+      },
+      select: {
+        slug: true,
+        name: true,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      take: limit || 4,
+    });
+    if (!currentSale) return [];
+
+    return await Promise.all(
+      currentSale.map(async (product) => {
+        return {
+          ...product,
+          sales: await this.saleService.getMostDiscountedSaleByProduct(
+            product.slug,
+          ),
+        };
+      }),
+    ).then((products) =>
+      products.slice().sort((a, b) => b.sales.percent - a.sales.percent),
+    );
+  }
 }
