@@ -1,0 +1,29 @@
+[
+  {
+    "id": "flash-sale",
+    "name": "Flash Sale",
+    "discountType": "PERCENT",
+    "discount": 50,
+    "startAt": "2025-09-23T00:00:00Z",
+    "endAt": "2025-09-30T23:59:59Z",
+    "packages": ["package_1", "package_2", "package_3"]
+  },
+  {
+    "id": "sale-1",
+    "name": "Sale 1",
+    "discountType": "PERCENT",
+    "discount": 10,
+    "startAt": "2025-09-23T00:00:00Z",
+    "endAt": "2025-10-23T23:59:59Z",
+    "packages": ["package_4", "package_5", "package_6"]
+  },
+  {
+    "id": "sale-2",
+    "name": "Sale 2",
+    "discountType": "FIXED",
+    "discount": 10,
+    "startAt": "2025-09-23T00:00:00Z",
+    "endAt": "2026-09-23T23:59:59Z",
+    "packages": ["package_7", "package_8", "package_9"]
+  }
+]

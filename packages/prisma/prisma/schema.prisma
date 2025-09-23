@@ -69,10 +69,32 @@ model Package {
   product    Product @relation("ProductPackages", fields: [product_id], references: [slug])
   product_id String
 
+  sale Sale[] @relation("SalePackages")
+
   @@map("packages")
+}
+
+model Sale {
+  id           String       @id @default(cuid())
+  name         String
+  discountType DiscountType @default(PERCENT)
+  discount     Decimal
+  startAt      DateTime
+  endAt        DateTime
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  package Package[] @relation("SalePackages")
+
+  @@map("sales")
 }
 
 enum ProductTagType {
   USER_DEFINED
   SYSTEM
+}
+
+enum DiscountType {
+  PERCENT
+  FIXED
 }

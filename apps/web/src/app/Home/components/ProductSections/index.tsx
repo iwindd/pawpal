@@ -1,7 +1,8 @@
 import APISession from "@/libs/api/server";
+import { ProductTagResponse } from "@pawpal/shared";
 import { Box, Container, Stack } from "@pawpal/ui/core";
 import { useTranslations } from "next-intl";
-import ProductRow from "../ProductRow";
+import Section from "./components/section";
 import classes from "./style.module.css";
 
 const DEFAULT_PRODUCT_TAG_SECTIONS = ["latest"];
@@ -20,13 +21,8 @@ const ProductSections = async () => {
     <Box className={classes.container}>
       <Container size="xl" px="md">
         <Stack gap="xl">
-          {productTags.map((tag) => (
-            <ProductRow
-              key={tag.slug}
-              title={tag.name}
-              slug={tag.slug}
-              products={tag.products}
-            />
+          {productTags.map((tag: ProductTagResponse) => (
+            <Section key={tag.slug} tag={tag} />
           ))}
         </Stack>
       </Container>

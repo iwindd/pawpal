@@ -15,6 +15,7 @@
     "@pawpal/ui": "workspace:*",
     "@pawpal/prisma": "workspace:*",
     "@types/axios": "catalog:",
+    "dayjs": "catalog:",
     "axios": "catalog:",
     "clsx": "catalog:",
     "embla-carousel-autoplay": "catalog:",

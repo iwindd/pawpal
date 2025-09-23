@@ -12,6 +12,7 @@
     "build": "tsc -p tsconfig.json"
   },
   "dependencies": {
+    "@pawpal/prisma": "workspace:*",
     "@pawpal/typescript-config": "workspace:*",
     "zod": "catalog:"
   },

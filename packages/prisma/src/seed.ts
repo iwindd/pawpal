@@ -1,8 +1,9 @@
 import bcrypt from "bcrypt";
-import { PrismaClient } from "../generated/client";
+import { DiscountType, PrismaClient } from "../generated/client";
 import categories from "./seeds/categories.json";
 import products from "./seeds/products.json";
 import productTags from "./seeds/productTags.json";
+import sales from "./seeds/sales.json";
 import users from "./seeds/users.json";
 
 const prisma = new PrismaClient();
@@ -72,6 +73,26 @@ async function main() {
     }
   });
 
+  await prisma.$transaction(async () => {
+    for (const sale of sales) {
+      await prisma.sale.upsert({
+        where: { id: sale.id },
+        update: {},
+        create: {
+          id: sale.id,
+          name: sale.name,
+          discountType: sale.discountType as DiscountType,
+          discount: sale.discount,
+          startAt: new Date(sale.startAt),
+          endAt: new Date(sale.endAt),
+          package: {
+            connect: sale.packages.map((pkg: string) => ({ id: pkg })),
+          },
+        },
+      });
+    }
+  });
+
   console.log(
     `✅ Seed completed successfully!\n`,
     `--------------------------------\n`,
@@ -80,6 +101,7 @@ async function main() {
     `Created ${await prisma.category.count()} categories\n`,
     `Created ${await prisma.productTags.count()} product tags\n`,
     `Created ${await prisma.package.count()} packages\n`,
+    `Created ${await prisma.sale.count()} sales\n`,
     `--------------------------------\n`
   );
 }

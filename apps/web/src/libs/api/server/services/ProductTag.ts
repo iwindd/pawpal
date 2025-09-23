@@ -1,17 +1,13 @@
-import { Prisma } from "@pawpal/prisma";
+import { ProductTagResponse } from "@pawpal/shared";
 import { AxiosError, AxiosInstance } from "axios";
 import { PawApiResponse } from "../../api";
-
-type ProductTagWithProducts = Prisma.ProductTagsGetPayload<{
-  include: { products: true };
-}>;
 
 class ProductTagApi {
   constructor(private readonly client: AxiosInstance) {}
 
   async getProductByTags(
     tags: string[]
-  ): Promise<PawApiResponse<ProductTagWithProducts[]>> {
+  ): Promise<PawApiResponse<ProductTagResponse[]>> {
     try {
       const tagString = tags.join(",");
       const response = await this.client.get("/product-tag", {

@@ -1,4 +1,5 @@
 export { type ZodType } from "zod";
 export * from "./schemas/auth/login";
 export * from "./schemas/auth/register";
+export * from "./types/response/product-tag";
 export * from "./types/session";

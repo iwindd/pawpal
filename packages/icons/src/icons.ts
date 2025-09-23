@@ -10,6 +10,7 @@ export {
   IconChevronRight,
   IconChevronUp,
   IconPaw as IconCoin,
+  IconBolt as IconFlashsale,
   IconHistory,
   IconLanguage,
   IconLogin,

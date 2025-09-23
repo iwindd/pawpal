@@ -2,6 +2,7 @@ import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
 import { SessionAuthGuard } from '@/common/guards/session-auth.guard';
 import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
 import { ProductTags } from '@pawpal/prisma';
+import { ProductTagResponse } from '@pawpal/shared';
 import { ProductTagService } from './product-tag.service';
 
 @Controller('product-tag')
@@ -17,7 +18,7 @@ export class ProductTagController {
   @Get()
   async getProductByTags(
     @Query('tags') tags: string | string[],
-  ): Promise<ProductTags[]> {
+  ): Promise<ProductTagResponse[]> {
     return this.productTagService.getProductByTags(tags);
   }
 }

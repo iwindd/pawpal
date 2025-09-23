@@ -1,6 +1,8 @@
 "use client";
-import { Product } from "@pawpal/prisma";
+import { getSectionIcon, isFlashsale } from "@/utils/productUtils";
+import { ProductTagResponse } from "@pawpal/shared";
 import {
+  Badge,
   Button,
   Card,
   Group,
@@ -9,25 +11,16 @@ import {
   Text,
   Title,
 } from "@pawpal/ui/core";
-import { useFormatter, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import NextImage from "next/image";
 import classes from "./style.module.css";
 
 interface ProductCardProps {
-  product: Product;
+  product: ProductTagResponse["products"][number];
 }
 
 const ProductCard = ({ product }: ProductCardProps) => {
   const __ = useTranslations("Home.ProductRow");
-  const format = useFormatter();
-
-  const formatPrice = (price: number) => {
-    return format.number(price, {
-      style: "currency",
-      currency: "THB",
-      currencyDisplay: "code",
-    });
-  };
 
   return (
     <Card
@@ -49,17 +42,21 @@ const ProductCard = ({ product }: ProductCardProps) => {
             loading="lazy"
             fallbackSrc="/assets/images/fallback-product.jpg"
           />
-          {/*     TODO: Add discount and flashsale 
-          {product.discount && (
-            <Badge color="red" size="sm" className={classes.discountBadge}>
-              -{product.discount}%
-            </Badge>
+          {product.sales?.percent && (
+            <Group>
+              <Badge
+                color={isFlashsale(product.sales) ? "red" : "orange"}
+                size="md"
+                className={classes.discountBadge}
+                pl={(isFlashsale(product.sales) && 4) || "sm"}
+                leftSection={
+                  isFlashsale(product.sales) && getSectionIcon("flashsale")
+                }
+              >
+                -{product.sales.percent as number}%
+              </Badge>
+            </Group>
           )}
-          {product.isFlashsale && (
-            <Badge color="orange" size="sm" className={classes.flashsaleBadge}>
-              {__("flashsale")}
-            </Badge>
-          )} */}
         </div>
       </Card.Section>
 
