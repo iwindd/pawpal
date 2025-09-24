@@ -1,11 +1,17 @@
 "use client";
 import API from "@/libs/api/client";
-import { RegisterInput, Session, type LoginInput } from "@pawpal/shared";
+import {
+  ChangePasswordInput,
+  RegisterInput,
+  Session,
+  type LoginInput,
+} from "@pawpal/shared";
 import { createContext, ReactNode, useContext, useMemo, useState } from "react";
 
 // Types
 type LoginResult = "success" | "invalid_credentials" | "error";
 type RegisterResult = "success" | "email_already_exists" | "error";
+type ChangePasswordResult = "success" | "invalid_old_password" | "error";
 
 interface LoginProps {
   inputs: LoginInput;
@@ -15,10 +21,15 @@ interface RegisterProps {
   inputs: RegisterInput;
 }
 
+interface ChangePasswordProps {
+  inputs: ChangePasswordInput;
+}
+
 interface AuthContextType {
   user: Session | null;
   login: (props: LoginProps) => Promise<LoginResult>;
   register: (props: RegisterProps) => Promise<RegisterResult>;
+  changePassword: (props: ChangePasswordProps) => Promise<ChangePasswordResult>;
   logout: () => Promise<boolean>;
   isLoading: boolean;
 }
@@ -86,6 +97,32 @@ export const AuthProvider = ({
     }
   };
 
+  const changePassword = async (
+    props: ChangePasswordProps
+  ): Promise<ChangePasswordResult> => {
+    setIsLoading(true);
+
+    try {
+      const resp = await API.auth.changePassword(props.inputs);
+
+      if (resp.success) {
+        return "success";
+      }
+
+      if (resp.data.response?.status === 400) {
+        const errorData = resp.data.response?.data as { message?: string };
+        if (errorData?.message === "invalid_old_password")
+          return errorData.message;
+      }
+      return "error";
+    } catch (error) {
+      console.error("Change password failed:", error);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const logout = async (): Promise<boolean> => {
     setIsLoading(true);
     try {
@@ -102,8 +139,8 @@ export const AuthProvider = ({
   };
 
   const value = useMemo(
-    () => ({ user, login, register, logout, isLoading }),
-    [user, login, register, logout, isLoading]
+    () => ({ user, login, register, changePassword, logout, isLoading }),
+    [user, login, register, changePassword, logout, isLoading]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

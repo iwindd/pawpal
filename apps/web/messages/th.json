@@ -163,7 +163,8 @@
       "invalid_old_password": "รหัสผ่านปัจจุบันไม่ถูกต้อง",
       "password_too_short": "รหัสผ่านใหม่ต้องมีความยาวอย่างน้อย 6-30 ตัวอักษร",
       "password_too_long": "รหัสผ่านใหม่ต้องมีความยาวอย่างน้อย 6-30 ตัวอักษร",
-      "password_confirmation_mismatch": "รหัสผ่านใหม่ไม่ตรงกัน"
+      "password_confirmation_mismatch": "รหัสผ่านใหม่ไม่ตรงกัน",
+      "error": "กรุณาลองใหม่อีกครั้งภายหลัง!"
     }
   },
   "Time": {

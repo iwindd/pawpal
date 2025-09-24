@@ -1,5 +1,6 @@
 "use client";
 import ErrorMessage from "@/components/ErrorMessage";
+import { useAuth } from "@/contexts/AuthContext";
 import useFormValidate from "@/hooks/useFormValidate";
 import { IconKey } from "@pawpal/icons";
 import { ChangePasswordInput, changePasswordSchema } from "@pawpal/shared";
@@ -13,8 +14,9 @@ export default function ChangePasswordModal({
   onClose,
 }: Readonly<{ opened: boolean; onClose: () => void }>) {
   const __ = useTranslations("Auth.changePassword");
+  const { changePassword: changePasswordApi } = useAuth();
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | null>("error");
 
   const form = useFormValidate<ChangePasswordInput>({
     schema: changePasswordSchema,
@@ -32,19 +34,19 @@ export default function ChangePasswordModal({
     setMessage(null);
 
     try {
-      // Mock API call - replace with actual API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const result = await changePasswordApi({ inputs });
 
-      // Simulate success for now
-      const success = true;
-
-      if (success) {
+      if (result === "success") {
         onClose();
         form.reset();
         notify.show({
           title: __("notify.success.title"),
           message: __("notify.success.message"),
           color: "green",
+        });
+      } else if (result === "invalid_old_password") {
+        form.setErrors({
+          oldPassword: "invalid_old_password",
         });
       } else {
         setMessage("error");
@@ -122,7 +124,10 @@ export default function ChangePasswordModal({
               </Button>
             </Group>
 
-            <ErrorMessage message={message} />
+            <ErrorMessage
+              message={message && `Errors.changePassword.${message}`}
+              align="end"
+            />
           </Stack>
         </form>
       </Stack>

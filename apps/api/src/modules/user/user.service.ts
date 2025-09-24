@@ -1,7 +1,7 @@
 import authConfig from '@/config/auth';
 import { Injectable, Logger } from '@nestjs/common';
 import { User } from '@pawpal/prisma';
-import { RegisterInput } from '@pawpal/shared';
+import { ChangePasswordInput, RegisterInput } from '@pawpal/shared';
 import bcrypt from 'bcrypt';
 import { PrismaService } from '../prisma/prisma.service';
 
@@ -60,6 +60,47 @@ export class UserService {
       });
     } catch (error) {
       this.logger.error(`Failed to find user by id ${id}:`, error);
+      throw error;
+    }
+  }
+
+  async changePassword(
+    userId: string,
+    changePasswordData: ChangePasswordInput,
+  ): Promise<void> {
+    try {
+      // First, get the user with password to verify old password
+      const user = await this.prisma.user.findUnique({
+        where: { id: userId },
+        select: { id: true, password: true },
+      });
+
+      if (!user) {
+        throw new Error('User not found');
+      }
+
+      // Verify old password
+      const isOldPasswordValid = await bcrypt.compare(
+        changePasswordData.oldPassword,
+        user.password,
+      );
+      if (!isOldPasswordValid) {
+        throw new Error('invalid_old_password');
+      }
+
+      // Hash new password
+      const hashedNewPassword = await bcrypt.hash(
+        changePasswordData.newPassword,
+        authConfig.bcryptSaltRounds,
+      );
+
+      // Update password
+      await this.prisma.user.update({
+        where: { id: userId },
+        data: { password: hashedNewPassword },
+      });
+    } catch (error) {
+      this.logger.error(`Failed to change password for user ${userId}:`, error);
       throw error;
     }
   }

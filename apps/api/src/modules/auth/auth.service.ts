@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   Logger,
@@ -6,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@pawpal/prisma';
-import { RegisterInput, Session } from '@pawpal/shared';
+import { ChangePasswordInput, RegisterInput, Session } from '@pawpal/shared';
 import bcrypt from 'bcrypt';
 import { JwtPayload } from '../../common/interfaces/jwt-payload.interface';
 import { UserService } from '../user/user.service';
@@ -71,5 +72,23 @@ export class AuthService {
     return this.jwtService.sign({
       sub: user.email,
     });
+  }
+
+  async changePassword(
+    userId: string,
+    changePasswordData: ChangePasswordInput,
+  ): Promise<void> {
+    try {
+      await this.userService.changePassword(userId, changePasswordData);
+    } catch (error) {
+      if (error instanceof Error && error.message === 'invalid_old_password') {
+        throw new BadRequestException('invalid_old_password');
+      }
+      if (error instanceof Error && error.message === 'User not found') {
+        throw new UnauthorizedException('invalid_credentials');
+      }
+      Logger.error('Change password failed:', error);
+      throw new BadRequestException('error');
+    }
   }
 }
