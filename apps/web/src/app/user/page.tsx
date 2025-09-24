@@ -1,0 +1,91 @@
+"use client";
+import { useAuth } from "@/contexts/AuthContext";
+import {
+  Anchor,
+  Avatar,
+  Box,
+  Card,
+  Grid,
+  Group,
+  Stack,
+  Text,
+  Title,
+} from "@pawpal/ui/core";
+import { useFormatter, useTranslations } from "next-intl";
+
+const GridItem = ({ label, value }: { label: string; value: string }) => {
+  return (
+    <>
+      <Grid.Col span={{ base: 12, md: 6 }}>
+        <Text c="dimmed" size="sm">
+          {label}
+        </Text>
+      </Grid.Col>
+      <Grid.Col span={{ base: 12, md: 6 }}>
+        <Text c="white" size="sm">
+          {value}
+        </Text>
+      </Grid.Col>
+    </>
+  );
+};
+
+const AccountPage = () => {
+  const { user } = useAuth();
+  const __ = useTranslations("User.Account");
+  const format = useFormatter();
+
+  if (!user) throw new Error("User not found");
+
+  const createdAtFormatted = format.dateTime(new Date(user.createdAt), {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+  return (
+    <Stack gap="xl">
+      <Box>
+        <Title order={1} size="h2">
+          {__("title")}
+        </Title>
+        <Text c="dimmed" size="sm">
+          {__("subtitle")}
+        </Text>
+      </Box>
+      <Card shadow="sm" padding="xl" radius="md" title={"test"}>
+        <Stack gap="lg">
+          <Group justify="space-between" align="flex-start">
+            <Group gap={"lg"} align="flex-start">
+              <Avatar
+                src={user.avatar}
+                alt={user.displayName}
+                size={80}
+                radius="xl"
+              />
+              <Stack gap="0">
+                <Title order={3} size="h4">
+                  {user.displayName}
+                </Title>
+                <Text c="dimmed" size="sm">
+                  {__("memberSince")} {createdAtFormatted}
+                </Text>
+                <Grid gutter={0}>
+                  <GridItem label={__("id")} value={user.id} />
+                  <GridItem label={__("email")} value={user.email} />
+                  <Grid.Col span={12}>
+                    <Anchor href="#" size="sm">
+                      {__("password-change")}
+                    </Anchor>
+                  </Grid.Col>
+                </Grid>
+              </Stack>
+            </Group>
+          </Group>
+        </Stack>
+      </Card>
+    </Stack>
+  );
+};
+
+export default AccountPage;

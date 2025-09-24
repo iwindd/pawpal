@@ -1,6 +1,6 @@
 "use client";
 import { getSectionIcon, isFlashsale } from "@/utils/productUtils";
-import { ProductTagResponse } from "@pawpal/shared";
+import { ProductResponse } from "@pawpal/shared";
 import {
   Badge,
   Button,
@@ -16,7 +16,7 @@ import NextImage from "next/image";
 import classes from "./style.module.css";
 
 interface ProductCardProps {
-  product: ProductTagResponse["products"][number];
+  product: ProductResponse;
 }
 
 const ProductCard = ({ product }: ProductCardProps) => {

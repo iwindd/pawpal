@@ -22,6 +22,7 @@ import {
 import { notify } from "@pawpal/ui/notifications";
 import clsx from "clsx";
 import { useFormatter, useTranslations } from "next-intl";
+import Link from "next/link";
 import { useState } from "react";
 import classes from "./style.module.css";
 
@@ -126,13 +127,25 @@ const UserMenu = ({ user }: UserMenuProps) => {
           </Menu.Item>
         </Stack>
         <Menu.Divider />
-        <Menu.Item leftSection={<IconSettings size={16} stroke={1.5} />}>
+        <Menu.Item
+          leftSection={<IconSettings size={16} stroke={1.5} />}
+          component={Link}
+          href="/user/"
+        >
           {__("accountSettings")}
         </Menu.Item>
-        <Menu.Item leftSection={<IconHistory size={16} stroke={1.5} />}>
+        <Menu.Item
+          leftSection={<IconHistory size={16} stroke={1.5} />}
+          component={Link}
+          href="/user/order"
+        >
           {__("orders")}
         </Menu.Item>
-        <Menu.Item leftSection={<IconActivity size={16} stroke={1.5} />}>
+        <Menu.Item
+          leftSection={<IconActivity size={16} stroke={1.5} />}
+          component={Link}
+          href="/user/activity"
+        >
           {__("activities")}
         </Menu.Item>
         <Menu.Item

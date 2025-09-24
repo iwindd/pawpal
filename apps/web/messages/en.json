@@ -78,5 +78,58 @@
     "termsOfService": "Terms of Service",
     "cookiePolicy": "Cookie Policy",
     "copyright": "© 2024 PawPal. All rights reserved."
+  },
+  "User": {
+    "account": "Account",
+    "manageAccount": "Manage your account settings and preferences",
+    "profile": "Profile",
+    "orders": "Orders",
+    "activity": "Activity",
+    "Profile": {
+      "title": "Profile",
+      "subtitle": "Manage your personal information and preferences",
+      "memberSince": "Member since",
+      "coins": "coins",
+      "name": "Name",
+      "bio": "Bio",
+      "contact": "Contact",
+      "namePlaceholder": "Enter your name",
+      "bioPlaceholder": "Tell us about yourself",
+      "contactPlaceholder": "Enter your contact information",
+      "edit": "Edit",
+      "cancel": "Cancel",
+      "save": "Save"
+    },
+    "Orders": {
+      "title": "Order History",
+      "subtitle": "View your past and current orders",
+      "orderId": "Order ID",
+      "date": "Date",
+      "items": "Items",
+      "status": "Status",
+      "total": "Total",
+      "status": {
+        "delivered": "Delivered",
+        "shipped": "Shipped",
+        "processing": "Processing",
+        "cancelled": "Cancelled"
+      }
+    },
+    "Activity": {
+      "title": "Activity",
+      "subtitle": "Your recent account activity",
+      "activities": {
+        "login": "Logged In",
+        "loginDesc": "You successfully logged into your account",
+        "purchase": "Purchase Made",
+        "purchaseDesc": "You made a purchase (Order: {orderId})",
+        "review": "Product Reviewed",
+        "reviewDesc": "You reviewed {product}",
+        "profile": "Profile Updated",
+        "profileDesc": "You updated your profile information",
+        "orderComplete": "Order Completed",
+        "orderCompleteDesc": "Your order {orderId} has been completed"
+      }
+    }
   }
 }

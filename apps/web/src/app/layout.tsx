@@ -20,7 +20,7 @@ export default async function RootLayout({
   auth,
 }: Readonly<{
   children: React.ReactNode;
-  auth: React.ReactNode;
+  auth?: React.ReactNode;
 }>): Promise<React.JSX.Element> {
   let session = null;
 

@@ -144,5 +144,50 @@
       "minutes": "นาที",
       "seconds": "วินาที"
     }
+  },
+  "User": {
+    "account": "บัญชี",
+    "manageAccount": "จัดการการตั้งค่าบัญชีและความชอบของคุณ",
+    "orders": "คำสั่งซื้อ",
+    "activity": "กิจกรรม",
+    "Account": {
+      "title": "บัญชี",
+      "subtitle": "จัดการข้อมูลส่วนตัวและความชอบของคุณ",
+      "memberSince": "สมาชิกตั้งแต่",
+      "id": "รหัสผู้ใช้งาน",
+      "email": "อีเมล",
+      "password-change": "เปลี่ยนรหัสผ่าน"
+    },
+    "Orders": {
+      "title": "ประวัติคำสั่งซื้อ",
+      "subtitle": "ดูคำสั่งซื้อในอดีตและปัจจุบันของคุณ",
+      "orderId": "รหัสคำสั่งซื้อ",
+      "date": "วันที่",
+      "items": "รายการ",
+      "status_label": "สถานะ",
+      "total": "รวม",
+      "status": {
+        "delivered": "จัดส่งแล้ว",
+        "shipped": "กำลังจัดส่ง",
+        "processing": "กำลังดำเนินการ",
+        "cancelled": "ยกเลิก"
+      }
+    },
+    "Activity": {
+      "title": "กิจกรรม",
+      "subtitle": "กิจกรรมบัญชีล่าสุดของคุณ",
+      "activities": {
+        "login": "เข้าสู่ระบบ",
+        "loginDesc": "คุณเข้าสู่ระบบบัญชีสำเร็จ",
+        "purchase": "ทำการซื้อ",
+        "purchaseDesc": "คุณทำการซื้อ (คำสั่งซื้อ: {orderId})",
+        "review": "รีวิวสินค้า",
+        "reviewDesc": "คุณรีวิว {product}",
+        "profile": "อัปเดตโปรไฟล์",
+        "profileDesc": "คุณอัปเดตข้อมูลโปรไฟล์",
+        "orderComplete": "คำสั่งซื้อเสร็จสิ้น",
+        "orderCompleteDesc": "คำสั่งซื้อ {orderId} ของคุณเสร็จสิ้นแล้ว"
+      }
+    }
   }
 }
