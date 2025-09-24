@@ -3,7 +3,6 @@ description: Defines the recommended state management strategies for Next.js 15 
 globs: app/**/*
 ---
 
-- Use `useActionState` instead of deprecated `useFormState`.
-- Leverage enhanced `useFormStatus` with new properties (data, method, action).
+- Leverage new `useFormValidate`(custom hook) hook for form state management and validation message.
 - Implement URL state management with 'nuqs'.
 - Minimize client-side state.

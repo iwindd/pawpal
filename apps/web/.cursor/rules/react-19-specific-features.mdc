@@ -4,8 +4,7 @@ globs: apps/web/**/*
 ---
 
 - Use `use` hook for consuming Promises and Context directly in components.
-- Leverage new `useFormStatus` hook for form state management.
-- Use `useActionState` form actions and state management.
+- Leverage new `useFormValidate`(custom hook) hook for form state management and validation message.
 - Implement Document Metadata API for better SEO and social sharing.
 - Use Actions for client-side mutations with automatic loading states.
 - Leverage compiler optimizations like automatic memoization.
