@@ -154,7 +154,7 @@ export class UserService {
         where: { id: userId },
         data: {
           displayName: updateProfileData.displayName,
-          avatar: updateProfileData.avatar || null,
+          // TODO: Update avatar
         },
       });
 
