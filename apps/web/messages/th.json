@@ -89,6 +89,28 @@
           "message": "คุณได้สมัครสมาชิกสำเร็จ"
         }
       }
+    },
+    "changePassword": {
+      "title": "เปลี่ยนรหัสผ่าน",
+      "subtitle": "อัปเดตรหัสผ่านบัญชีของคุณ",
+      "oldPassword": "รหัสผ่านปัจจุบัน",
+      "newPassword": "รหัสผ่านใหม่",
+      "newPasswordConfirmation": "ยืนยันรหัสผ่านใหม่",
+      "oldPasswordPlaceholder": "กรอกรหัสผ่านปัจจุบันของคุณ",
+      "newPasswordPlaceholder": "กรอกรหัสผ่านใหม่ของคุณ",
+      "newPasswordConfirmationPlaceholder": "ยืนยันรหัสผ่านใหม่ของคุณ",
+      "changeButton": "เปลี่ยนรหัสผ่าน",
+      "cancelButton": "ยกเลิก",
+      "notify": {
+        "success": {
+          "title": "สำเร็จ",
+          "message": "เปลี่ยนรหัสผ่านสำเร็จ"
+        },
+        "error": {
+          "title": "ผิดพลาด",
+          "message": "ไม่สามารถเปลี่ยนรหัสผ่านได้ กรุณาลองใหม่อีกครั้ง"
+        }
+      }
     }
   },
   "Footer": {
@@ -135,6 +157,13 @@
       "password_confirmation_mismatch": "รหัสผ่านไม่ตรงกัน",
       "accept_conditions_required": "กรุณายอมรับเงื่อนไขการให้บริการและนโยบายความเป็นส่วนตัว",
       "email_already_exists": "อีเมลนี้ถูกใช้งานแล้ว"
+    },
+    "changePassword": {
+      "required_field": "รหัสผ่านใหม่ต้องมีความยาวอย่างน้อย 6-30 ตัวอักษร",
+      "invalid_old_password": "รหัสผ่านปัจจุบันไม่ถูกต้อง",
+      "password_too_short": "รหัสผ่านใหม่ต้องมีความยาวอย่างน้อย 6-30 ตัวอักษร",
+      "password_too_long": "รหัสผ่านใหม่ต้องมีความยาวอย่างน้อย 6-30 ตัวอักษร",
+      "password_confirmation_mismatch": "รหัสผ่านใหม่ไม่ตรงกัน"
     }
   },
   "Time": {

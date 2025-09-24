@@ -12,6 +12,7 @@ export {
   IconPaw as IconCoin,
   IconBolt as IconFlashsale,
   IconHistory,
+  IconKey,
   IconLanguage,
   IconLogin,
   IconLogout,

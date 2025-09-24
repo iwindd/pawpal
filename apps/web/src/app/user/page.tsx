@@ -1,4 +1,5 @@
 "use client";
+import ChangePasswordModal from "@/components/Modals/Auth/ChangePasswordModal";
 import { useAuth } from "@/contexts/AuthContext";
 import {
   Anchor,
@@ -12,6 +13,7 @@ import {
   Title,
 } from "@pawpal/ui/core";
 import { useFormatter, useTranslations } from "next-intl";
+import { useState } from "react";
 
 const GridItem = ({ label, value }: { label: string; value: string }) => {
   return (
@@ -34,7 +36,7 @@ const AccountPage = () => {
   const { user } = useAuth();
   const __ = useTranslations("User.Account");
   const format = useFormatter();
-
+  const [changePasswordOpened, setChangePasswordOpened] = useState(false);
   if (!user) throw new Error("User not found");
 
   const createdAtFormatted = format.dateTime(new Date(user.createdAt), {
@@ -74,9 +76,20 @@ const AccountPage = () => {
                   <GridItem label={__("id")} value={user.id} />
                   <GridItem label={__("email")} value={user.email} />
                   <Grid.Col span={12}>
-                    <Anchor href="#" size="sm">
+                    <Anchor
+                      size="sm"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setChangePasswordOpened(true);
+                      }}
+                    >
                       {__("password-change")}
                     </Anchor>
+
+                    <ChangePasswordModal
+                      opened={changePasswordOpened}
+                      onClose={() => setChangePasswordOpened(false)}
+                    />
                   </Grid.Col>
                 </Grid>
               </Stack>
