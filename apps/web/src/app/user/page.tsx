@@ -15,7 +15,18 @@ import {
 import { useFormatter, useTranslations } from "next-intl";
 import { useState } from "react";
 
-const GridItem = ({ label, value }: { label: string; value: string }) => {
+const GridItem = ({
+  label,
+  value,
+  editable,
+  onEdit,
+}: {
+  label: string;
+  value: string;
+  editable?: boolean;
+  onEdit?: () => void;
+}) => {
+  const __ = useTranslations("User.Account");
   return (
     <>
       <Grid.Col span={{ base: 12, md: 6 }}>
@@ -24,9 +35,23 @@ const GridItem = ({ label, value }: { label: string; value: string }) => {
         </Text>
       </Grid.Col>
       <Grid.Col span={{ base: 12, md: 6 }}>
-        <Text c="white" size="sm">
-          {value}
-        </Text>
+        <Group>
+          <Text c="white" size="sm">
+            {value}
+          </Text>
+          {editable && (
+            <Anchor
+              size="sm"
+              c="dimmed"
+              onClick={(e) => {
+                e.preventDefault();
+                onEdit?.();
+              }}
+            >
+              {__("edit")}
+            </Anchor>
+          )}
+        </Group>
       </Grid.Col>
     </>
   );
@@ -74,7 +99,7 @@ const AccountPage = () => {
                 </Text>
                 <Grid gutter={0}>
                   <GridItem label={__("id")} value={user.id} />
-                  <GridItem label={__("email")} value={user.email} />
+                  <GridItem label={__("email")} value={user.email} editable />
                   <Grid.Col span={12}>
                     <Anchor
                       size="sm"
