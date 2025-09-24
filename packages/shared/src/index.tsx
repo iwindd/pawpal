@@ -1,4 +1,5 @@
 export { type ZodType } from "zod";
+export * from "./schemas/auth/change-email";
 export * from "./schemas/auth/change-password";
 export * from "./schemas/auth/login";
 export * from "./schemas/auth/register";

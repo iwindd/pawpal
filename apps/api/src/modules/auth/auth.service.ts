@@ -7,7 +7,12 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@pawpal/prisma';
-import { ChangePasswordInput, RegisterInput, Session } from '@pawpal/shared';
+import {
+  ChangeEmailInput,
+  ChangePasswordInput,
+  RegisterInput,
+  Session,
+} from '@pawpal/shared';
 import bcrypt from 'bcrypt';
 import { JwtPayload } from '../../common/interfaces/jwt-payload.interface';
 import { UserService } from '../user/user.service';
@@ -28,7 +33,7 @@ export class AuthService {
     let user: User;
 
     try {
-      user = await this.userService.findByEmail(payload.sub);
+      user = await this.userService.findById(payload.sub);
       delete user.password;
     } catch (error) {
       Logger.error('Verify payload failed : ', error);
@@ -70,7 +75,7 @@ export class AuthService {
 
   signToken(user: Session): string {
     return this.jwtService.sign({
-      sub: user.email,
+      sub: user.id,
     });
   }
 
@@ -88,6 +93,27 @@ export class AuthService {
         throw new UnauthorizedException('invalid_credentials');
       }
       Logger.error('Change password failed:', error);
+      throw new BadRequestException('error');
+    }
+  }
+
+  async changeEmail(
+    userId: string,
+    changeEmailData: ChangeEmailInput,
+  ): Promise<void> {
+    try {
+      await this.userService.changeEmail(userId, changeEmailData);
+    } catch (error) {
+      if (error instanceof Error && error.message === 'invalid_password') {
+        throw new BadRequestException('invalid_password');
+      }
+      if (error instanceof Error && error.message === 'email_already_exists') {
+        throw new ConflictException('email_already_exists');
+      }
+      if (error instanceof Error && error.message === 'User not found') {
+        throw new UnauthorizedException('invalid_credentials');
+      }
+      Logger.error('Change email failed:', error);
       throw new BadRequestException('error');
     }
   }

@@ -1,4 +1,5 @@
 "use client";
+import ChangeEmailModal from "@/components/Modals/Auth/ChangeEmailModal";
 import ChangePasswordModal from "@/components/Modals/Auth/ChangePasswordModal";
 import { useAuth } from "@/contexts/AuthContext";
 import {
@@ -62,6 +63,7 @@ const AccountPage = () => {
   const __ = useTranslations("User.Account");
   const format = useFormatter();
   const [changePasswordOpened, setChangePasswordOpened] = useState(false);
+  const [changeEmailOpened, setChangeEmailOpened] = useState(false);
   if (!user) throw new Error("User not found");
 
   const createdAtFormatted = format.dateTime(new Date(user.createdAt), {
@@ -99,7 +101,12 @@ const AccountPage = () => {
                 </Text>
                 <Grid gutter={0}>
                   <GridItem label={__("id")} value={user.id} />
-                  <GridItem label={__("email")} value={user.email} editable />
+                  <GridItem
+                    label={__("email")}
+                    value={user.email}
+                    editable
+                    onEdit={() => setChangeEmailOpened(true)}
+                  />
                   <Grid.Col span={12}>
                     <Anchor
                       size="sm"
@@ -122,6 +129,11 @@ const AccountPage = () => {
           </Group>
         </Stack>
       </Card>
+
+      <ChangeEmailModal
+        opened={changeEmailOpened}
+        onClose={() => setChangeEmailOpened(false)}
+      />
     </Stack>
   );
 };

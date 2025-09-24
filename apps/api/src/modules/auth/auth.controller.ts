@@ -17,6 +17,8 @@ import {
 } from '@nestjs/common';
 import { User } from '@pawpal/prisma';
 import {
+  type ChangeEmailInput,
+  changeEmailSchema,
   type ChangePasswordInput,
   changePasswordSchema,
   type RegisterInput,
@@ -75,6 +77,18 @@ export class AuthController {
   ): Promise<{ message: string }> {
     await this.authService.changePassword(user.id, body);
     return { message: 'Password changed successfully' };
+  }
+
+  @Post('change-email')
+  @UseGuards(SessionAuthGuard, JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  async changeEmail(
+    @AuthUser() user: Session,
+    @Body(new ZodValidationPipe(changeEmailSchema))
+    body: ChangeEmailInput,
+  ): Promise<{ message: string }> {
+    await this.authService.changeEmail(user.id, body);
+    return { message: 'Email changed successfully' };
   }
 
   @Get('admin/test')

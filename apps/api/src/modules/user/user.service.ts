@@ -1,7 +1,11 @@
 import authConfig from '@/config/auth';
 import { Injectable, Logger } from '@nestjs/common';
 import { User } from '@pawpal/prisma';
-import { ChangePasswordInput, RegisterInput } from '@pawpal/shared';
+import {
+  ChangeEmailInput,
+  ChangePasswordInput,
+  RegisterInput,
+} from '@pawpal/shared';
 import bcrypt from 'bcrypt';
 import { PrismaService } from '../prisma/prisma.service';
 
@@ -10,6 +14,17 @@ export class UserService {
   private readonly logger = new Logger(UserService.name);
 
   constructor(private readonly prisma: PrismaService) {}
+
+  async findById(id: string): Promise<User | null> {
+    try {
+      return await this.prisma.user.findUnique({
+        where: { id },
+      });
+    } catch (error) {
+      this.logger.error(`Failed to find user by id or email ${id}:`, error);
+      throw error;
+    }
+  }
 
   async findByEmail(email: string): Promise<User | null> {
     try {
@@ -40,26 +55,6 @@ export class UserService {
       });
     } catch (error) {
       this.logger.error('Failed to create user:', error);
-      throw error;
-    }
-  }
-
-  async findById(id: string): Promise<Omit<User, 'password'> | null> {
-    try {
-      return await this.prisma.user.findUnique({
-        where: { id },
-        select: {
-          id: true,
-          email: true,
-          displayName: true,
-          coins: true,
-          avatar: true,
-          createdAt: true,
-          updatedAt: true,
-        },
-      });
-    } catch (error) {
-      this.logger.error(`Failed to find user by id ${id}:`, error);
       throw error;
     }
   }
@@ -101,6 +96,50 @@ export class UserService {
       });
     } catch (error) {
       this.logger.error(`Failed to change password for user ${userId}:`, error);
+      throw error;
+    }
+  }
+
+  async changeEmail(
+    userId: string,
+    changeEmailData: ChangeEmailInput,
+  ): Promise<void> {
+    try {
+      // First, get the user with password to verify current password
+      const user = await this.prisma.user.findUnique({
+        where: { id: userId },
+        select: { id: true, password: true, email: true },
+      });
+
+      if (!user) {
+        throw new Error('User not found');
+      }
+
+      // Verify current password
+      const isPasswordValid = await bcrypt.compare(
+        changeEmailData.password,
+        user.password,
+      );
+      if (!isPasswordValid) {
+        throw new Error('invalid_password');
+      }
+
+      // Check if new email already exists
+      const existingUser = await this.prisma.user.findUnique({
+        where: { email: changeEmailData.newEmail },
+      });
+
+      if (existingUser) {
+        throw new Error('email_already_exists');
+      }
+
+      // Update email
+      await this.prisma.user.update({
+        where: { id: userId },
+        data: { email: changeEmailData.newEmail },
+      });
+    } catch (error) {
+      this.logger.error(`Failed to change email for user ${userId}:`, error);
       throw error;
     }
   }
