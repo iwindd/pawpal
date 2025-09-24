@@ -152,7 +152,7 @@ export default function RegisterModal({
               {__("registerButton")}
             </Button>
 
-            <ErrorMessage message={message} />
+            <ErrorMessage message={message && `Errors.register.error`} />
             <Divider label={__("label_or")} />
 
             <Group justify="center" gap="sm">

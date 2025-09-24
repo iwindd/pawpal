@@ -125,7 +125,7 @@ export default function ChangePasswordModal({
             </Group>
 
             <ErrorMessage
-              message={message && `Errors.changePassword.${message}`}
+              message={message && `Errors.changePassword.error`}
               align="end"
             />
           </Stack>

@@ -128,7 +128,7 @@ export default function ChangeEmailModal({
             </Group>
 
             <ErrorMessage
-              message={message && `Errors.changeEmail.${message}`}
+              message={message && `Errors.changeEmail.error`}
               align="end"
             />
           </Stack>

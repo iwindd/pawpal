@@ -132,7 +132,7 @@ export default function LoginModal({
               {__("loginButton")}
             </Button>
 
-            <ErrorMessage message={message} />
+            <ErrorMessage message={message && `Errors.login.error`} />
             <Divider label={__("label_or")} />
 
             <Group justify="center" gap="sm">
