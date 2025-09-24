@@ -5,6 +5,7 @@ import {
   ChangeEmailInput,
   ChangePasswordInput,
   RegisterInput,
+  UpdateProfileInput,
 } from '@pawpal/shared';
 import bcrypt from 'bcrypt';
 import { PrismaService } from '../prisma/prisma.service';
@@ -140,6 +141,26 @@ export class UserService {
       });
     } catch (error) {
       this.logger.error(`Failed to change email for user ${userId}:`, error);
+      throw error;
+    }
+  }
+
+  async updateProfile(
+    userId: string,
+    updateProfileData: UpdateProfileInput,
+  ): Promise<User> {
+    try {
+      const updatedUser = await this.prisma.user.update({
+        where: { id: userId },
+        data: {
+          displayName: updateProfileData.displayName,
+          avatar: updateProfileData.avatar || null,
+        },
+      });
+
+      return updatedUser;
+    } catch (error) {
+      this.logger.error(`Failed to update profile for user ${userId}:`, error);
       throw error;
     }
   }

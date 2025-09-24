@@ -14,6 +14,7 @@ import {
   Title,
 } from "@pawpal/ui/core";
 import { useFormatter, useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const GridItem = ({
@@ -62,6 +63,7 @@ const AccountPage = () => {
   const { user } = useAuth();
   const __ = useTranslations("User.Account");
   const format = useFormatter();
+  const router = useRouter();
   const [changePasswordOpened, setChangePasswordOpened] = useState(false);
   const [changeEmailOpened, setChangeEmailOpened] = useState(false);
   if (!user) throw new Error("User not found");
@@ -126,6 +128,16 @@ const AccountPage = () => {
                 </Grid>
               </Stack>
             </Group>
+            <Anchor
+              size="sm"
+              c="dimmed"
+              onClick={(e) => {
+                e.preventDefault();
+                router.push("/user/profile");
+              }}
+            >
+              {__("editProfile")}
+            </Anchor>
           </Group>
         </Stack>
       </Card>

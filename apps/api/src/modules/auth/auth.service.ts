@@ -12,6 +12,7 @@ import {
   ChangePasswordInput,
   RegisterInput,
   Session,
+  UpdateProfileInput,
 } from '@pawpal/shared';
 import bcrypt from 'bcrypt';
 import { JwtPayload } from '../../common/interfaces/jwt-payload.interface';
@@ -114,6 +115,32 @@ export class AuthService {
         throw new UnauthorizedException('invalid_credentials');
       }
       Logger.error('Change email failed:', error);
+      throw new BadRequestException('error');
+    }
+  }
+
+  async updateProfile(
+    userId: string,
+    updateProfileData: UpdateProfileInput,
+  ): Promise<Session> {
+    try {
+      const updatedUser = await this.userService.updateProfile(
+        userId,
+        updateProfileData,
+      );
+      return {
+        id: updatedUser.id,
+        email: updatedUser.email,
+        displayName: updatedUser.displayName,
+        coins: Number(updatedUser.coins),
+        avatar: updatedUser.avatar,
+        createdAt: updatedUser.createdAt.toISOString(),
+      };
+    } catch (error) {
+      if (error instanceof Error && error.message === 'User not found') {
+        throw new UnauthorizedException('invalid_credentials');
+      }
+      Logger.error('Update profile failed:', error);
       throw new BadRequestException('error');
     }
   }

@@ -5,6 +5,7 @@ import {
   ChangePasswordInput,
   RegisterInput,
   Session,
+  UpdateProfileInput,
   type LoginInput,
 } from "@pawpal/shared";
 import { createContext, ReactNode, useContext, useMemo, useState } from "react";
@@ -18,6 +19,7 @@ type ChangeEmailResult =
   | "invalid_password"
   | "email_already_exists"
   | "error";
+type UpdateProfileResult = "success" | "error";
 
 interface LoginProps {
   inputs: LoginInput;
@@ -35,12 +37,17 @@ interface ChangeEmailProps {
   inputs: ChangeEmailInput;
 }
 
+interface UpdateProfileProps {
+  inputs: UpdateProfileInput;
+}
+
 interface AuthContextType {
   user: Session | null;
   login: (props: LoginProps) => Promise<LoginResult>;
   register: (props: RegisterProps) => Promise<RegisterResult>;
   changePassword: (props: ChangePasswordProps) => Promise<ChangePasswordResult>;
   changeEmail: (props: ChangeEmailProps) => Promise<ChangeEmailResult>;
+  updateProfile: (props: UpdateProfileProps) => Promise<UpdateProfileResult>;
   logout: () => Promise<boolean>;
   isLoading: boolean;
 }
@@ -181,6 +188,28 @@ export const AuthProvider = ({
     }
   };
 
+  const updateProfile = async (
+    props: UpdateProfileProps
+  ): Promise<UpdateProfileResult> => {
+    setIsLoading(true);
+
+    try {
+      const resp = await API.auth.updateProfile(props.inputs);
+
+      if (resp.success) {
+        setUser(resp.data);
+        return "success";
+      }
+
+      return "error";
+    } catch (error) {
+      console.error("Update profile failed:", error);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const logout = async (): Promise<boolean> => {
     setIsLoading(true);
     try {
@@ -203,10 +232,20 @@ export const AuthProvider = ({
       register,
       changePassword,
       changeEmail,
+      updateProfile,
       logout,
       isLoading,
     }),
-    [user, login, register, changePassword, changeEmail, logout, isLoading]
+    [
+      user,
+      login,
+      register,
+      changePassword,
+      changeEmail,
+      updateProfile,
+      logout,
+      isLoading,
+    ]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

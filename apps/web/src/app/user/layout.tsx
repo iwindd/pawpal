@@ -25,7 +25,7 @@ const UserLayout = ({ children }: UserLayoutProps) => {
   const navigationItems = [
     {
       label: __("account"),
-      href: "/user",
+      href: ["/user", "/user/profile"],
       icon: IconSettings,
     },
     {
@@ -54,13 +54,22 @@ const UserLayout = ({ children }: UserLayoutProps) => {
               <Stack gap={4}>
                 {navigationItems.map((item) => {
                   const Icon = item.icon;
-                  const isActive = pathname === item.href;
+                  const isActive = Array.isArray(item.href)
+                    ? item.href.includes(pathname)
+                    : pathname === item.href;
+
+                  const key = Array.isArray(item.href)
+                    ? item.href[0]
+                    : item.href;
+                  const href = Array.isArray(item.href)
+                    ? item.href[0]
+                    : item.href;
 
                   return (
                     <UnstyledButton
-                      key={item.href}
+                      key={key}
                       component={Link}
-                      href={item.href}
+                      href={href || "/"}
                       className={classes.link}
                       data-active={isActive || undefined}
                     >

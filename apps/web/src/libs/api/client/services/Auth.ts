@@ -4,6 +4,7 @@ import {
   LoginInput,
   RegisterInput,
   Session,
+  UpdateProfileInput,
 } from "@pawpal/shared";
 import { AxiosError, AxiosInstance } from "axios";
 import { PawApiResponse } from "../../api";
@@ -68,6 +69,17 @@ class AuthApi {
   ): Promise<PawApiResponse<{ message: string }>> {
     try {
       const response = await this.client.post("/auth/change-email", inputs);
+      return { success: true, data: response.data };
+    } catch (error) {
+      return { success: false, data: error as AxiosError };
+    }
+  }
+
+  public async updateProfile(
+    inputs: UpdateProfileInput
+  ): Promise<PawApiResponse<Session>> {
+    try {
+      const response = await this.client.post("/auth/update-profile", inputs);
       return { success: true, data: response.data };
     } catch (error) {
       return { success: false, data: error as AxiosError };

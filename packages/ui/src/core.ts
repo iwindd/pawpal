@@ -16,6 +16,7 @@ export {
   DEFAULT_THEME,
   Divider,
   Drawer,
+  FileInput,
   Flex,
   Grid,
   Group,

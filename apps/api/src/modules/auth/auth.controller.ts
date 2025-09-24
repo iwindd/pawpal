@@ -24,6 +24,8 @@ import {
   type RegisterInput,
   registerSchema,
   type Session,
+  type UpdateProfileInput,
+  updateProfileSchema,
 } from '@pawpal/shared';
 import { AuthService } from './auth.service';
 
@@ -89,6 +91,17 @@ export class AuthController {
   ): Promise<{ message: string }> {
     await this.authService.changeEmail(user.id, body);
     return { message: 'Email changed successfully' };
+  }
+
+  @Post('update-profile')
+  @UseGuards(SessionAuthGuard, JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  async updateProfile(
+    @AuthUser() user: Session,
+    @Body(new ZodValidationPipe(updateProfileSchema))
+    body: UpdateProfileInput,
+  ): Promise<Session> {
+    return this.authService.updateProfile(user.id, body);
   }
 
   @Get('admin/test')
