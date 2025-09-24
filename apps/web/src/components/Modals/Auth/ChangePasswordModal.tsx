@@ -16,7 +16,7 @@ export default function ChangePasswordModal({
   const __ = useTranslations("Auth.changePassword");
   const { changePassword: changePasswordApi } = useAuth();
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState<string | null>("error");
+  const [message, setMessage] = useState<string | null>(null);
 
   const form = useFormValidate<ChangePasswordInput>({
     schema: changePasswordSchema,
