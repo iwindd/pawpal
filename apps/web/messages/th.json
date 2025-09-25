@@ -267,5 +267,19 @@
         "orderCompleteDesc": "คำสั่งซื้อ {orderId} ของคุณเสร็จสิ้นแล้ว"
       }
     }
+  },
+  "Topup": {
+    "title": "เติมเงิน",
+    "subtitle": "เพิ่มเงินเข้าบัญชีของคุณ",
+    "amount": "จำนวนเงิน",
+    "amountPlaceholder": "กรอกจำนวนเงิน",
+    "paymentMethod": "วิธีการชำระเงิน",
+    "trueMoneyWallet": "True Money Wallet",
+    "trueMoneyDescription": "ชำระด้วย True Money Wallet",
+    "promptpay": "PromptPay",
+    "promptpayDescription": "ชำระด้วย QR Code PromptPay",
+    "topupButton": "เติมเงินเลย",
+    "infoTitle": "ข้อมูลสำคัญ",
+    "infoDescription": "กรุณาตรวจสอบให้แน่ใจว่าคุณมีเงินเพียงพอในวิธีการชำระเงินที่เลือก การทำรายการจะดำเนินการทันทีหลังจากยืนยัน"
   }
 }
