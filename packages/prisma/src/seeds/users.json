@@ -3,14 +3,24 @@
     "email": "john@example.com",
     "displayName": "John Doe",
     "password": "password",
-    "coins": 100,
-    "avatar": null
+    "avatar": null,
+    "userWallets": [
+      {
+        "walletType": "MAIN",
+        "balance": 0
+      }
+    ]
   },
   {
     "email": "jane@example.com",
     "displayName": "Jane Smith",
     "password": "password",
-    "coins": 0,
-    "avatar": null
+    "avatar": null,
+    "userWallets": [
+      {
+        "walletType": "MAIN",
+        "balance": 0
+      }
+    ]
   }
 ]

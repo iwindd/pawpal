@@ -1,4 +1,7 @@
 "use client";
+import { useAuth } from "@/contexts/AuthContext";
+import API from "@/libs/api/client";
+import { backdrop } from "@pawpal/ui/backdrop";
 import {
   Box,
   Button,
@@ -11,6 +14,7 @@ import {
   Text,
   Title,
 } from "@pawpal/ui/core";
+import { Notifications } from "@pawpal/ui/notifications";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import RadioMethod from "./components/RadioMethod";
@@ -19,12 +23,33 @@ const TopupPage = () => {
   const __ = useTranslations("Topup");
   const [amount, setAmount] = useState<number | "">("");
   const [paymentMethod, setPaymentMethod] = useState<string>("");
+  const { refreshProfile } = useAuth();
 
-  const handleTopup = () => {
+  const handleTopup = async () => {
     if (!amount || !paymentMethod) return;
 
-    // Here you would handle the topup logic
-    console.log("Topup amount:", amount, "Payment method:", paymentMethod);
+    try {
+      backdrop.show({
+        text: __("topupLoading"),
+      });
+      const response = await API.payment.topup(amount, paymentMethod);
+      if (!response.success) throw new Error("Topup failed");
+      refreshProfile();
+      Notifications.show({
+        title: __("notify.success.title"),
+        message: __("notify.success.message"),
+        color: "green",
+      });
+    } catch (error) {
+      Notifications.show({
+        title: __("notify.error.title"),
+        message: __("notify.error.message"),
+        color: "red",
+      });
+      console.error(error);
+    } finally {
+      backdrop.hide();
+    }
   };
 
   return (

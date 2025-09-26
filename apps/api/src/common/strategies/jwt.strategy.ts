@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
-import { User } from '@pawpal/prisma';
+import { Session } from '@pawpal/shared';
 import { ExtractJwt, JwtFromRequestFunction, Strategy } from 'passport-jwt';
 import { AuthService } from '../../modules/auth/auth.service';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
@@ -38,7 +38,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
    * @param payload - The JWT payload
    * @returns The user
    */
-  async validate(payload: JwtPayload): Promise<User> {
+  async validate(payload: JwtPayload): Promise<Session> {
     return this.authService.verifyPayload(payload);
   }
 }

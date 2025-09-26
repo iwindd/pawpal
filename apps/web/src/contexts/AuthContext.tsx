@@ -49,6 +49,7 @@ interface AuthContextType {
   changeEmail: (props: ChangeEmailProps) => Promise<ChangeEmailResult>;
   updateProfile: (props: UpdateProfileProps) => Promise<UpdateProfileResult>;
   logout: () => Promise<boolean>;
+  refreshProfile: () => Promise<Session | null>;
   isLoading: boolean;
 }
 
@@ -234,6 +235,7 @@ export const AuthProvider = ({
       changeEmail,
       updateProfile,
       logout,
+      refreshProfile,
       isLoading,
     }),
     [
@@ -244,6 +246,7 @@ export const AuthProvider = ({
       changeEmail,
       updateProfile,
       logout,
+      refreshProfile,
       isLoading,
     ]
   );

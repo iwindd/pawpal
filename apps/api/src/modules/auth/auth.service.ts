@@ -6,7 +6,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { User } from '@pawpal/prisma';
+import { User, WalletType } from '@pawpal/prisma';
 import {
   ChangeEmailInput,
   ChangePasswordInput,
@@ -30,21 +30,27 @@ export class AuthService {
    * @param payload - The JWT payload
    * @returns The user
    */
-  async verifyPayload(payload: JwtPayload): Promise<User> {
+  async verifyPayload(payload: JwtPayload): Promise<Session> {
     let user: User;
+    let wallet: Record<WalletType, number>;
 
     try {
       user = await this.userService.findById(payload.sub);
+      wallet = await this.userService.getUserWallets(user.id);
       delete user.password;
     } catch (error) {
       Logger.error('Verify payload failed : ', error);
       throw new UnauthorizedException('invalid_credentials');
     }
 
-    return user;
+    return {
+      ...user,
+      userWallet: wallet,
+      createdAt: user.createdAt.toISOString(),
+    };
   }
 
-  async login(email: string, password: string): Promise<User> {
+  async login(email: string, password: string): Promise<Session> {
     try {
       const user = await this.userService.findByEmail(email);
       if (!user) {
@@ -56,7 +62,11 @@ export class AuthService {
         throw new UnauthorizedException(`invalid_credentials`);
       }
 
-      return user;
+      return {
+        ...user,
+        userWallet: await this.userService.getUserWallets(user.id),
+        createdAt: user.createdAt.toISOString(),
+      };
     } catch (error) {
       Logger.error('Login failed : ', error);
       throw new UnauthorizedException(`error`);
@@ -132,9 +142,9 @@ export class AuthService {
         id: updatedUser.id,
         email: updatedUser.email,
         displayName: updatedUser.displayName,
-        coins: Number(updatedUser.coins),
         avatar: updatedUser.avatar,
         createdAt: updatedUser.createdAt.toISOString(),
+        userWallet: await this.userService.getUserWallets(userId),
       };
     } catch (error) {
       if (error instanceof Error && error.message === 'User not found') {

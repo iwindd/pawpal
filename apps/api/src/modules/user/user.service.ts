@@ -1,6 +1,6 @@
 import authConfig from '@/config/auth';
 import { Injectable, Logger } from '@nestjs/common';
-import { User } from '@pawpal/prisma';
+import { User, WalletType } from '@pawpal/prisma';
 import {
   ChangeEmailInput,
   ChangePasswordInput,
@@ -50,8 +50,13 @@ export class UserService {
           displayName: user.displayName,
           email: user.email,
           password: hashedPassword,
-          coins: 0,
           avatar: null,
+          userWallets: {
+            create: {
+              walletType: 'MAIN',
+              balance: 0,
+            },
+          },
         },
       });
     } catch (error) {
@@ -163,5 +168,23 @@ export class UserService {
       this.logger.error(`Failed to update profile for user ${userId}:`, error);
       throw error;
     }
+  }
+
+  async getUserWallets(userId: string): Promise<Record<WalletType, number>> {
+    const userWallets = await this.prisma.userWallet.findMany({
+      where: { user_id: userId },
+      select: {
+        walletType: true,
+        balance: true,
+      },
+    });
+
+    return userWallets.reduce(
+      (acc, wallet) => {
+        acc[wallet.walletType] = Number(wallet.balance);
+        return acc;
+      },
+      {} as Record<WalletType, number>,
+    );
   }
 }

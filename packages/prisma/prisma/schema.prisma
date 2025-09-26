@@ -13,12 +13,49 @@ model User {
   email       String   @unique
   displayName String
   password    String
-  coins       Decimal
   avatar      String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  userWallets UserWallet[] @relation("UserWallets")
+
   @@map("users")
+}
+
+model UserWallet {
+  id         String     @id @default(cuid())
+  user_id    String
+  user       User       @relation("UserWallets", fields: [user_id], references: [id])
+  walletType WalletType @default(MAIN)
+  balance    Decimal    @db.Decimal(10, 2)
+  currency   String     @default("THB")
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+
+  userWalletTransactions UserWalletTransaction[] @relation("UserWalletTransactions")
+
+  @@map("user_wallets")
+}
+
+model UserWalletTransaction {
+  id             String            @id @default(cuid())
+  type           TransactionType   @default(TOPUP)
+  wallet_id      String
+  wallet         UserWallet        @relation("UserWalletTransactions", fields: [wallet_id], references: [id])
+  amount         Decimal           @db.Decimal(10, 2)
+  balance_before Decimal           @db.Decimal(10, 2)
+  balance_after  Decimal           @db.Decimal(10, 2)
+  reference      String?
+  status         TransactionStatus @default(PENDING)
+  currency       String            @default("THB")
+  payment_method String            @default("unknown")
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  @@index([wallet_id])
+  @@index([type])
+  @@index([payment_method])
+  @@map("user_wallet_transactions")
 }
 
 model Category {
@@ -116,4 +153,18 @@ enum ProductTagType {
 enum DiscountType {
   PERCENT
   FIXED
+}
+
+enum WalletType {
+  MAIN
+}
+
+enum TransactionType {
+  TOPUP
+}
+
+enum TransactionStatus {
+  PENDING
+  SUCCESS
+  FAILED
 }

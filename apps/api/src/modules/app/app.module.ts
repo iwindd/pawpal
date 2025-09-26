@@ -5,10 +5,12 @@ import { UserModule } from '@/modules/user/user.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
+import { PaymentModule } from '../payment/payment.module';
 import { PrismaModule } from '../prisma/prisma.module';
 import { ProductModule } from '../product/product.module';
 import { ProductTagModule } from '../productTags/product-tag.module';
 import { SaleModule } from '../sale/sale.module';
+import { WalletModule } from '../wallet/wallet.module';
 
 @Module({
   imports: [
@@ -23,6 +25,8 @@ import { SaleModule } from '../sale/sale.module';
     ProductModule,
     ProductTagModule,
     SaleModule,
+    PaymentModule,
+    WalletModule,
   ],
   controllers: [AppController],
   providers: [AppService],

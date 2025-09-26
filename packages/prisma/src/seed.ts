@@ -18,8 +18,18 @@ async function main() {
         where: { email: user.email },
         update: {},
         create: {
-          ...user,
+          email: user.email,
           password: await bcrypt.hash(user.password, 12),
+          displayName: user.displayName,
+          avatar: user.avatar ?? null,
+          userWallets: user.userWallets
+            ? {
+                create: user.userWallets.map((wallet: any) => ({
+                  walletType: wallet.walletType,
+                  balance: wallet.balance,
+                })),
+              }
+            : undefined,
         },
       });
     }
