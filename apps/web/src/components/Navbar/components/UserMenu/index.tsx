@@ -117,11 +117,7 @@ const UserMenu = ({ user }: UserMenuProps) => {
           >
             <Group gap={3}>
               <Text fw={500}>
-                {format.number(user.userWallet.MAIN, {
-                  style: "currency",
-                  currency: "THB",
-                  currencyDisplay: "code",
-                })}
+                {format.number(user.userWallet.MAIN, "currency")}
               </Text>
             </Group>
           </Menu.Item>
