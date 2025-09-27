@@ -14,5 +14,49 @@
   {
     "slug": "rpg",
     "name": "เกม RPG"
+  },
+  {
+    "slug": "moba",
+    "name": "เกม MOBA"
+  },
+  {
+    "slug": "battle-royale",
+    "name": "เกม Battle Royale"
+  },
+  {
+    "slug": "gacha",
+    "name": "เกม Gacha"
+  },
+  {
+    "slug": "strategy",
+    "name": "เกม Strategy"
+  },
+  {
+    "slug": "horror",
+    "name": "เกม Horror"
+  },
+  {
+    "slug": "superhero",
+    "name": "เกม Superhero"
+  },
+  {
+    "slug": "party",
+    "name": "เกม Party"
+  },
+  {
+    "slug": "survival",
+    "name": "เกม Survival"
+  },
+  {
+    "slug": "social",
+    "name": "เกม Social"
+  },
+  {
+    "slug": "live-streaming",
+    "name": "Live Streaming"
+  },
+  {
+    "slug": "racing",
+    "name": "เกม Racing"
   }
 ]

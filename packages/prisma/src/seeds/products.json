@@ -18,13 +18,455 @@
     ]
   },
   {
-    "slug": "apex-legends",
-    "name": "Apex Legends",
+    "slug": "valorant-rapid-deliver",
+    "name": "Valorant Rapid Deliver (เข้าทันที)",
     "category": "games",
     "productTags": ["fps", "rpg"],
     "packages": [
       {
-        "id": "package_3",
+        "id": "valorant-rapid-deliver-1000",
+        "name": "Valorant Rapid Deliver 1000",
+        "price": 1000
+      }
+    ]
+  },
+  {
+    "slug": "valorant-nightfall",
+    "name": "Valorant Nightfall (ร้านค้ารายวัน)",
+    "category": "games",
+    "productTags": ["fps", "rpg"],
+    "packages": [
+      {
+        "id": "valorant-nightfall-1000",
+        "name": "Valorant Nightfall 1000",
+        "price": 1000
+      }
+    ]
+  },
+  {
+    "slug": "valorant-pre-order",
+    "name": "Valorant Pre-Order",
+    "category": "games",
+    "productTags": ["fps", "rpg"],
+    "packages": [
+      {
+        "id": "valorant-pre-order-1000",
+        "name": "Valorant Pre-Order 1000",
+        "price": 1000
+      }
+    ]
+  },
+  {
+    "slug": "lol-wildrift",
+    "name": "LOL WildRift",
+    "category": "games",
+    "productTags": ["moba"],
+    "packages": [
+      {
+        "id": "lol-wildrift-1000",
+        "name": "LOL WildRift 1000",
+        "price": 1000
+      }
+    ]
+  },
+  {
+    "slug": "lol-pc",
+    "name": "LOL PC",
+    "category": "games",
+    "productTags": ["moba"],
+    "packages": [
+      {
+        "id": "lol-pc-1000",
+        "name": "LOL PC 1000",
+        "price": 1000
+      }
+    ]
+  },
+  {
+    "slug": "team-fight-tactics-mobile",
+    "name": "Team Fight Tactics (Mobile)",
+    "category": "games",
+    "productTags": ["strategy", "mobile"],
+    "packages": [
+      {
+        "id": "tft-mobile-1000",
+        "name": "Team Fight Tactics Mobile 1000",
+        "price": 1000
+      }
+    ]
+  },
+  {
+    "slug": "pubg-id-thai",
+    "name": "PUBG (ID ไทย)",
+    "category": "games",
+    "productTags": ["battle-royale", "fps"],
+    "packages": [
+      {
+        "id": "pubg-id-thai-1000",
+        "name": "PUBG ID Thai 1000",
+        "price": 1000
+      }
+    ]
+  },
+  {
+    "slug": "rov",
+    "name": "ROV",
+    "category": "games",
+    "productTags": ["moba", "mobile"],
+    "packages": [
+      {
+        "id": "rov-1000",
+        "name": "ROV 1000",
+        "price": 1000
+      }
+    ]
+  },
+  {
+    "slug": "free-fire",
+    "name": "FREE FIRE",
+    "category": "games",
+    "productTags": ["battle-royale", "mobile"],
+    "packages": [
+      {
+        "id": "free-fire-1000",
+        "name": "FREE FIRE 1000",
+        "price": 1000
+      }
+    ]
+  },
+  {
+    "slug": "seven-knights-rebirth",
+    "name": "Seven Knights Re:BIRTH",
+    "category": "games",
+    "productTags": ["rpg", "mobile"],
+    "packages": [
+      {
+        "id": "seven-knights-rebirth-1000",
+        "name": "Seven Knights Re:BIRTH 1000",
+        "price": 1000
+      }
+    ]
+  },
+  {
+    "slug": "honkai-star-rail",
+    "name": "Honkai StarRail",
+    "category": "games",
+    "productTags": ["rpg", "gacha"],
+    "packages": [
+      {
+        "id": "honkai-star-rail-1000",
+        "name": "Honkai StarRail 1000",
+        "price": 1000
+      }
+    ]
+  },
+  {
+    "slug": "genshin-impact",
+    "name": "Genshin Impact",
+    "category": "games",
+    "productTags": ["rpg", "gacha"],
+    "packages": [
+      {
+        "id": "genshin-impact-1000",
+        "name": "Genshin Impact 1000",
+        "price": 1000
+      }
+    ]
+  },
+  {
+    "slug": "wuthering-waves",
+    "name": "Wuthering Waves",
+    "category": "games",
+    "productTags": ["rpg", "gacha"],
+    "packages": [
+      {
+        "id": "wuthering-waves-1000",
+        "name": "Wuthering Waves 1000",
+        "price": 1000
+      }
+    ]
+  },
+  {
+    "slug": "dragon-nest-m-classic",
+    "name": "Dragon Nest M Classic",
+    "category": "games",
+    "productTags": ["rpg", "mobile"],
+    "packages": [
+      {
+        "id": "dragon-nest-m-classic-1000",
+        "name": "Dragon Nest M Classic 1000",
+        "price": 1000
+      }
+    ]
+  },
+  {
+    "slug": "zenless-zone-zero",
+    "name": "Zenless Zone Zero",
+    "category": "games",
+    "productTags": ["rpg", "gacha"],
+    "packages": [
+      {
+        "id": "zenless-zone-zero-1000",
+        "name": "Zenless Zone Zero 1000",
+        "price": 1000
+      }
+    ]
+  },
+  {
+    "slug": "delta-force-pc-steam",
+    "name": "Delta Force PC (Steam)",
+    "category": "games",
+    "productTags": ["fps", "pc"],
+    "packages": [
+      {
+        "id": "delta-force-pc-steam-1000",
+        "name": "Delta Force PC Steam 1000",
+        "price": 1000
+      }
+    ]
+  },
+  {
+    "slug": "miniworld-royale",
+    "name": "Miniworld Royale",
+    "category": "games",
+    "productTags": ["battle-royale", "mobile"],
+    "packages": [
+      {
+        "id": "miniworld-royale-1000",
+        "name": "Miniworld Royale 1000",
+        "price": 1000
+      }
+    ]
+  },
+  {
+    "slug": "lineage-2-mobile",
+    "name": "Lineage 2 Mobile",
+    "category": "games",
+    "productTags": ["rpg", "mobile"],
+    "packages": [
+      {
+        "id": "lineage-2-mobile-1000",
+        "name": "Lineage 2 Mobile 1000",
+        "price": 1000
+      }
+    ]
+  },
+  {
+    "slug": "crystal-of-atlan",
+    "name": "Crystal Of Atlan",
+    "category": "games",
+    "productTags": ["rpg", "mobile"],
+    "packages": [
+      {
+        "id": "crystal-of-atlan-1000",
+        "name": "Crystal Of Atlan 1000",
+        "price": 1000
+      }
+    ]
+  },
+  {
+    "slug": "racing-master",
+    "name": "Racing Master",
+    "category": "games",
+    "productTags": ["racing", "mobile"],
+    "packages": [
+      {
+        "id": "racing-master-1000",
+        "name": "Racing Master 1000",
+        "price": 1000
+      }
+    ]
+  },
+  {
+    "slug": "identity-v",
+    "name": "Identity V",
+    "category": "games",
+    "productTags": ["horror", "mobile"],
+    "packages": [
+      {
+        "id": "identity-v-1000",
+        "name": "Identity V 1000",
+        "price": 1000
+      }
+    ]
+  },
+  {
+    "slug": "marvel-rivals",
+    "name": "Marvel Rivals",
+    "category": "games",
+    "productTags": ["fps", "superhero"],
+    "packages": [
+      {
+        "id": "marvel-rivals-1000",
+        "name": "Marvel Rivals 1000",
+        "price": 1000
+      }
+    ]
+  },
+  {
+    "slug": "etheria-restart",
+    "name": "Etheria Restart",
+    "category": "games",
+    "productTags": ["rpg", "mobile"],
+    "packages": [
+      {
+        "id": "etheria-restart-1000",
+        "name": "Etheria Restart 1000",
+        "price": 1000
+      }
+    ]
+  },
+  {
+    "slug": "eggy-party",
+    "name": "Eggy Party",
+    "category": "games",
+    "productTags": ["party", "mobile"],
+    "packages": [
+      {
+        "id": "eggy-party-1000",
+        "name": "Eggy Party 1000",
+        "price": 1000
+      }
+    ]
+  },
+  {
+    "slug": "ro-m-classic",
+    "name": "RO M Classic",
+    "category": "games",
+    "productTags": ["rpg", "mobile"],
+    "packages": [
+      {
+        "id": "ro-m-classic-1000",
+        "name": "RO M Classic 1000",
+        "price": 1000
+      }
+    ]
+  },
+  {
+    "slug": "ro-origin",
+    "name": "RO Origin",
+    "category": "games",
+    "productTags": ["rpg", "mobile"],
+    "packages": [
+      {
+        "id": "ro-origin-1000",
+        "name": "RO Origin 1000",
+        "price": 1000
+      }
+    ]
+  },
+  {
+    "slug": "ro-x-next-generation",
+    "name": "RO X: Next Generation",
+    "category": "games",
+    "productTags": ["rpg", "mobile"],
+    "packages": [
+      {
+        "id": "ro-x-next-generation-1000",
+        "name": "RO X Next Generation 1000",
+        "price": 1000
+      }
+    ]
+  },
+  {
+    "slug": "call-of-duty-mobile",
+    "name": "Call of Duty Mobile",
+    "category": "games",
+    "productTags": ["fps", "mobile"],
+    "packages": [
+      {
+        "id": "call-of-duty-mobile-1000",
+        "name": "Call of Duty Mobile 1000",
+        "price": 1000
+      }
+    ]
+  },
+  {
+    "slug": "love-and-deepspace",
+    "name": "Love And Deepspace",
+    "category": "games",
+    "productTags": ["rpg", "mobile"],
+    "packages": [
+      {
+        "id": "love-and-deepspace-1000",
+        "name": "Love And Deepspace 1000",
+        "price": 1000
+      }
+    ]
+  },
+  {
+    "slug": "arena-breakout",
+    "name": "Arena Breakout",
+    "category": "games",
+    "productTags": ["fps", "mobile"],
+    "packages": [
+      {
+        "id": "arena-breakout-1000",
+        "name": "Arena Breakout 1000",
+        "price": 1000
+      }
+    ]
+  },
+  {
+    "slug": "mu-origin-3",
+    "name": "MU Origin 3",
+    "category": "games",
+    "productTags": ["rpg", "mobile"],
+    "packages": [
+      {
+        "id": "mu-origin-3-1000",
+        "name": "MU Origin 3 1000",
+        "price": 1000
+      }
+    ]
+  },
+  {
+    "slug": "once-human",
+    "name": "Once Human",
+    "category": "games",
+    "productTags": ["survival", "rpg"],
+    "packages": [
+      {
+        "id": "once-human-1000",
+        "name": "Once Human 1000",
+        "price": 1000
+      }
+    ]
+  },
+  {
+    "slug": "zepeto",
+    "name": "Zepeto",
+    "category": "games",
+    "productTags": ["social", "mobile"],
+    "packages": [
+      {
+        "id": "zepeto-1000",
+        "name": "Zepeto 1000",
+        "price": 1000
+      }
+    ]
+  },
+  {
+    "slug": "bigo-live",
+    "name": "Bigo Live",
+    "category": "streaming",
+    "productTags": ["live-streaming"],
+    "packages": [
+      {
+        "id": "bigo-live-1000",
+        "name": "Bigo Live 1000",
+        "price": 1000
+      }
+    ]
+  },
+  {
+    "slug": "apex-legends",
+    "name": "Apex Legends",
+    "category": "games",
+    "productTags": ["fps", "battle-royale"],
+    "packages": [
+      {
+        "id": "apex-legends-1000",
         "name": "Apex Legends 1000",
         "price": 1000
       }
@@ -34,24 +476,11 @@
     "slug": "fortnite",
     "name": "Fortnite",
     "category": "games",
-    "productTags": ["fps", "rpg"],
+    "productTags": ["battle-royale", "fps"],
     "packages": [
       {
-        "id": "package_4",
+        "id": "fortnite-1000",
         "name": "Fortnite 1000",
-        "price": 1000
-      }
-    ]
-  },
-  {
-    "slug": "genshin-impact",
-    "name": "Genshin Impact",
-    "category": "games",
-    "productTags": ["rpg"],
-    "packages": [
-      {
-        "id": "package_5",
-        "name": "Genshin Impact 1000",
         "price": 1000
       }
     ]
@@ -63,7 +492,7 @@
     "productTags": [],
     "packages": [
       {
-        "id": "package_6",
+        "id": "netflix-1000",
         "name": "Netflix 1 Month",
         "price": 1000
       }
@@ -76,7 +505,7 @@
     "productTags": [],
     "packages": [
       {
-        "id": "package_7",
+        "id": "spotify-1000",
         "name": "Spotify 1 Month",
         "price": 1000
       }
@@ -89,7 +518,7 @@
     "productTags": [],
     "packages": [
       {
-        "id": "package_8",
+        "id": "youtube-1000",
         "name": "YouTube 1 Month",
         "price": 1000
       }
@@ -102,7 +531,7 @@
     "productTags": [],
     "packages": [
       {
-        "id": "package_9",
+        "id": "hulu-1000",
         "name": "Hulu 1 Month",
         "price": 1000
       }
@@ -115,7 +544,7 @@
     "productTags": [],
     "packages": [
       {
-        "id": "package_10",
+        "id": "apple-music-1000",
         "name": "Apple Music 1 Month",
         "price": 1000
       }
