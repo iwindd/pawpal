@@ -68,7 +68,8 @@ async function main() {
         where: { slug: product.slug },
         update: {},
         create: {
-          ...product,
+          slug: product.slug,
+          name: product.name,
           category: {
             connect: { slug: product.category },
           },

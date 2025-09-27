@@ -6,7 +6,7 @@
     "discount": 50,
     "startAt": "2025-09-23T00:00:00Z",
     "endAt": "2025-09-30T23:59:59Z",
-    "packages": ["package_1", "package_2", "package_3"]
+    "packages": ["package_1", "package_2", "valorant-rapid-deliver-1000"]
   },
   {
     "id": "sale-1",
@@ -15,7 +15,11 @@
     "discount": 10,
     "startAt": "2025-09-23T00:00:00Z",
     "endAt": "2025-10-23T23:59:59Z",
-    "packages": ["package_4", "package_5", "package_6"]
+    "packages": [
+      "valorant-nightfall-1000",
+      "valorant-pre-order-1000",
+      "lol-wildrift-1000"
+    ]
   },
   {
     "id": "sale-2",
@@ -24,6 +28,6 @@
     "discount": 10,
     "startAt": "2025-09-23T00:00:00Z",
     "endAt": "2026-09-23T23:59:59Z",
-    "packages": ["package_7", "package_8", "package_9"]
+    "packages": ["lol-pc-1000", "tft-mobile-1000", "pubg-id-thai-1000"]
   }
 ]
