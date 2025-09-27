@@ -1,32 +1,84 @@
 [
   {
     "slug": "valorant",
-    "name": "Valorant",
+    "name": "Valorant (เข้าทันที)",
     "category": "games",
     "productTags": ["fps", "rpg"],
     "packages": [
       {
-        "id": "package_1",
-        "name": "Valorant 1000",
-        "price": 1000
+        "id": "valorant-1",
+        "name": "Valorant 475",
+        "price": 123
       },
       {
-        "id": "package_2",
-        "name": "Valorant 5000",
-        "price": 5000
-      }
-    ]
-  },
-  {
-    "slug": "valorant-rapid-deliver",
-    "name": "Valorant Rapid Deliver (เข้าทันที)",
-    "category": "games",
-    "productTags": ["fps", "rpg"],
-    "packages": [
+        "id": "valorant-2",
+        "name": "Valorant 1000",
+        "price": 245
+      },
       {
-        "id": "valorant-rapid-deliver-1000",
-        "name": "Valorant Rapid Deliver 1000",
-        "price": 1000
+        "id": "valorant-3",
+        "name": "Valorant 1475",
+        "price": 368
+      },
+      {
+        "id": "valorant-4",
+        "name": "Valorant 2050",
+        "price": 488
+      },
+      {
+        "id": "valorant-5",
+        "name": "Valorant 2525",
+        "price": 611
+      },
+      {
+        "id": "valorant-6",
+        "name": "Valorant 3050",
+        "price": 733
+      },
+      {
+        "id": "valorant-7",
+        "name": "Valorant 3650",
+        "price": 865
+      },
+      {
+        "id": "valorant-8",
+        "name": "Valorant 4125",
+        "price": 988
+      },
+      {
+        "id": "valorant-9",
+        "name": "Valorant 4650",
+        "price": 1110
+      },
+      {
+        "id": "valorant-10",
+        "name": "Valorant 5350",
+        "price": 1239
+      },
+      {
+        "id": "valorant-11",
+        "name": "Valorant 6150",
+        "price": 1464
+      },
+      {
+        "id": "valorant-12",
+        "name": "Valorant 6700",
+        "price": 1587
+      },
+      {
+        "id": "valorant-13",
+        "name": "Valorant 7150",
+        "price": 1709
+      },
+      {
+        "id": "valorant-14",
+        "name": "Valorant 8750",
+        "price": 2086
+      },
+      {
+        "id": "valorant-15",
+        "name": "Valorant 9800",
+        "price": 2329
       }
     ]
   },

@@ -1,6 +1,6 @@
 "use client";
 import { getSectionIcon, isFlashsale } from "@/utils/productUtils";
-import { ProductResponse } from "@pawpal/shared";
+import { ProductListItem } from "@pawpal/shared";
 import {
   Badge,
   Button,
@@ -13,10 +13,11 @@ import {
 } from "@pawpal/ui/core";
 import { useTranslations } from "next-intl";
 import NextImage from "next/image";
+import Link from "next/link";
 import classes from "./style.module.css";
 
 interface ProductCardProps {
-  product: ProductResponse;
+  product: ProductListItem;
 }
 
 const ProductCard = ({ product }: ProductCardProps) => {
@@ -53,7 +54,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
                   isFlashsale(product.sales) && getSectionIcon("flashsale")
                 }
               >
-                -{product.sales.percent as number}%
+                -{product.sales.percent}%
               </Badge>
             </Group>
           )}
@@ -69,13 +70,15 @@ const ProductCard = ({ product }: ProductCardProps) => {
           <Stack gap={2}>
             <Group gap="xs" align="baseline">
               <Text size="lg" fw={700} c="blue">
-                {/* TODO: Add price (range) */}
+                {/* Price will be displayed when package data is available */}
               </Text>
             </Group>
           </Stack>
         </Group>
 
         <Button
+          component={Link}
+          href={`/products/${product.slug}`}
           fullWidth
           variant="filled"
           size="sm"

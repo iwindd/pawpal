@@ -6,7 +6,7 @@
     "discount": 50,
     "startAt": "2025-09-23T00:00:00Z",
     "endAt": "2025-09-30T23:59:59Z",
-    "packages": ["package_1", "package_2", "valorant-rapid-deliver-1000"]
+    "packages": ["valorant-1", "valorant-2", "valorant-3"]
   },
   {
     "id": "sale-1",

@@ -1,5 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { ProductResponse, ProductSaleValue } from '@pawpal/shared';
+import {
+  ProductListItem,
+  ProductResponse,
+  ProductSaleValue,
+} from '@pawpal/shared';
 import { PrismaService } from '../prisma/prisma.service';
 import { SaleService } from '../sale/sale.service';
 
@@ -17,7 +21,7 @@ export class ProductService {
     private readonly saleService: SaleService,
   ) {}
 
-  async getNewProducts(limit?: number): Promise<ProductResponse[]> {
+  async getNewProducts(limit?: number): Promise<ProductListItem[]> {
     const DEFAULT_LIMIT = 4;
     const productLimit = limit || DEFAULT_LIMIT;
 
@@ -60,7 +64,7 @@ export class ProductService {
     });
   }
 
-  async getSaleProducts(limit?: number): Promise<ProductResponse[]> {
+  async getSaleProducts(limit?: number): Promise<ProductListItem[]> {
     const DEFAULT_LIMIT = 4;
     const productLimit = limit || DEFAULT_LIMIT;
 
@@ -121,8 +125,81 @@ export class ProductService {
       .sort((a, b) => (b.sales?.percent || 0) - (a.sales?.percent || 0));
   }
 
+  async getProductBySlug(slug: string): Promise<ProductResponse | null> {
+    const product = await this.prisma.product.findUnique({
+      where: { slug },
+      select: {
+        slug: true,
+        name: true,
+        description: true,
+        createdAt: true,
+        category: {
+          select: {
+            name: true,
+            slug: true,
+          },
+        },
+        productTags: {
+          select: {
+            slug: true,
+            name: true,
+          },
+        },
+        packages: {
+          select: {
+            id: true,
+            name: true,
+            price: true,
+            description: true,
+            sale: {
+              where: {
+                startAt: { lte: new Date() },
+                endAt: { gte: new Date() },
+              },
+              select: {
+                discount: true,
+                discountType: true,
+                startAt: true,
+                endAt: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!product) return null;
+
+    const sales = product.packages.flatMap((pkg) => pkg.sale);
+    const mostDiscountedSale = this.getMostDiscountedSale(sales);
+
+    return {
+      slug: product.slug,
+      name: product.name,
+      description: product.description,
+      createdAt: product.createdAt.toISOString(),
+      category: product.category,
+      productTags: product.productTags,
+      packages: product.packages.map((pkg) => ({
+        id: pkg.id,
+        name: pkg.name,
+        price: Number(pkg.price),
+        description: pkg.description,
+        sale:
+          pkg.sale.length > 0
+            ? {
+                percent: Number(pkg.sale[0].discount),
+                endAt: pkg.sale[0].endAt.toISOString(),
+                startAt: pkg.sale[0].startAt.toISOString(),
+              }
+            : undefined,
+      })),
+      sales: mostDiscountedSale,
+    };
+  }
+
   async getAllProducts(params: GetAllProductsParams): Promise<{
-    products: ProductResponse[];
+    products: ProductListItem[];
     total: number;
     hasMore: boolean;
   }> {
@@ -139,7 +216,7 @@ export class ProductService {
       };
     }
 
-    // TODO: Add category filter
+    // Category filter will be implemented when category filtering is needed
 
     let orderBy: any = { createdAt: 'desc' };
     const total = await this.prisma.product.count({ where });

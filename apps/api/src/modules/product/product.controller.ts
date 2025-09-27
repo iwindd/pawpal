@@ -1,5 +1,5 @@
-import { Controller, Get, Query } from '@nestjs/common';
-import { ProductResponse } from '@pawpal/shared';
+import { Controller, Get, Param, Query } from '@nestjs/common';
+import { ProductListItem, ProductResponse } from '@pawpal/shared';
 import { ProductService } from './product.service';
 
 @Controller('product')
@@ -9,14 +9,14 @@ export class ProductController {
   @Get('/new')
   async getNewProducts(
     @Query('limit') limit: number,
-  ): Promise<ProductResponse[]> {
+  ): Promise<ProductListItem[]> {
     return this.productService.getNewProducts(Number(limit));
   }
 
   @Get('/sale')
   async getSaleProducts(
     @Query('limit') limit: number,
-  ): Promise<ProductResponse[]> {
+  ): Promise<ProductListItem[]> {
     return this.productService.getSaleProducts(Number(limit));
   }
 
@@ -26,13 +26,20 @@ export class ProductController {
     @Query('limit') limit: number = 12,
     @Query('search') search?: string,
     @Query('category') category?: string,
-  ): Promise<{ products: ProductResponse[]; total: number; hasMore: boolean }> {
+  ): Promise<{ products: ProductListItem[]; total: number; hasMore: boolean }> {
     return this.productService.getAllProducts({
       page: Number(page),
       limit: Number(limit),
       search,
       category,
     });
+  }
+
+  @Get(':slug')
+  async getProductBySlug(
+    @Param('slug') slug: string,
+  ): Promise<ProductResponse | null> {
+    return this.productService.getProductBySlug(slug);
   }
 
   @Get('admin/test')

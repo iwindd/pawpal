@@ -303,5 +303,22 @@
     },
     "loadMore": "ดูเพิ่มเติม",
     "error": "กรุณาลองใหม่อีกครั้งภายหลัง!"
+  },
+  "ProductDetail": {
+    "selectPackage": "เลือกแพ็กเกจ",
+    "gameAccount": "บัญชีเกม",
+    "userId": "รหัสผู้เล่น",
+    "userIdPlaceholder": "กรอกรหัสผู้เล่นของคุณ",
+    "paymentMethod": "วิธีการชำระเงิน",
+    "creditCard": "บัตรเครดิต",
+    "wallet": "กระเป๋าเงิน",
+    "trueMoneyWallet": "True Money Wallet",
+    "promptpay": "PromptPay",
+    "code": "รหัส",
+    "codeLabel": "รหัสสินค้า (ถ้ามี)",
+    "codePlaceholder": "ใส่โค้ดส่วนลด",
+    "useCode": "ใช้โค้ด",
+    "purchase": "ซื้อเลย",
+    "amount": "จำนวน"
   }
 }
