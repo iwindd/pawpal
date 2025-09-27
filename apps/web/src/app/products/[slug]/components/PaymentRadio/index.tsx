@@ -1,5 +1,6 @@
 import { PaymentData } from "@/configs/payment";
 import { Box, Group, Image, Radio, Stack, Text, Title } from "@pawpal/ui/core";
+import { useFormatter } from "next-intl";
 import NextImage from "next/image";
 import classes from "./style.module.css";
 
@@ -9,6 +10,7 @@ interface PaymentRadioProps {
 }
 
 const PaymentRadio = ({ data, totalPrice }: PaymentRadioProps) => {
+  const format = useFormatter();
   return (
     <Radio.Card className={classes.root} radius="md" value={data.value}>
       <Group wrap="nowrap" align="center" justify="space-between" w="100%">
@@ -32,8 +34,8 @@ const PaymentRadio = ({ data, totalPrice }: PaymentRadioProps) => {
           </div>
         </Group>
         <Stack>
-          <Text size="xs" className={classes.price}>
-            {totalPrice}
+          <Text size="sm" className={classes.price}>
+            {format.number(totalPrice, "currency")}
           </Text>
         </Stack>
       </Group>

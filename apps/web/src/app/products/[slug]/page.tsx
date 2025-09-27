@@ -21,7 +21,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import NextImage from "next/image";
-import { use, useEffect, useState } from "react";
+import { use, useEffect, useMemo, useState } from "react";
 import AmountIndicator from "./components/AmountIndicator";
 import PackageRadio from "./components/PackageRadio";
 import PaymentRadio from "./components/PaymentRadio";
@@ -61,6 +61,17 @@ export default function ProductDetailPage({
       setSelectedPackage(product.packages[0]?.id || "");
     }
   }, [product]);
+
+  const totalPriceWithDiscount = useMemo(() => {
+    if (!product) return 0;
+    const pkg = product.packages.find((p) => p.id === selectedPackage);
+    if (!pkg) return 0;
+    const priceWithDiscount = pkg.sale
+      ? pkg.price * (1 - pkg.sale.percent / 100)
+      : pkg.price;
+
+    return priceWithDiscount * amount;
+  }, [product, selectedPackage, amount]);
 
   if (isLoading) {
     return (
@@ -190,7 +201,7 @@ export default function ProductDetailPage({
                     <PaymentRadio
                       key={method.value}
                       data={method}
-                      totalPrice={0}
+                      totalPrice={totalPriceWithDiscount}
                     />
                   ))}
                 </Stack>
