@@ -19,6 +19,10 @@ export default getRequestConfig(async () => {
           currency: "THB",
           currencyDisplay: "narrowSymbol",
         },
+        amount: {
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        },
       },
     },
   };

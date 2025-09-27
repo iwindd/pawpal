@@ -1,5 +1,6 @@
 "use client";
 
+import PurchaseConfirmationModal from "@/components/Modals/PurchaseConfirmationModal";
 import paymentMethods from "@/configs/payment";
 import API from "@/libs/api/client";
 import {
@@ -38,8 +39,10 @@ export default function ProductDetailPage({
   const [selectedPackage, setSelectedPackage] = useState<string>("");
   const [userId, setUserId] = useState<string>("");
   const [paymentMethod, setPaymentMethod] = useState<string>("");
-  const [code, setCode] = useState<string>("");
   const [amount, setAmount] = useState<number>(1);
+  const [showConfirmationModal, setShowConfirmationModal] =
+    useState<boolean>(false);
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
 
   const {
     data: product,
@@ -97,15 +100,48 @@ export default function ProductDetailPage({
     if (!selectedPackage || !userId || !paymentMethod) {
       return;
     }
-    // Purchase logic will be implemented when payment integration is ready
-    console.log({
-      product: product.slug,
-      package: selectedPackage,
-      userId,
-      paymentMethod,
-      code,
-    });
+    setShowConfirmationModal(true);
   };
+
+  const handleConfirmPurchase = async () => {
+    setIsProcessing(true);
+    try {
+      // Purchase logic will be implemented when payment integration is ready
+      console.log({
+        product: product?.slug,
+        package: selectedPackage,
+        userId,
+        paymentMethod,
+        amount,
+      });
+
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      // Close modal and reset form
+      setShowConfirmationModal(false);
+      // You might want to show a success notification here
+    } catch (error) {
+      console.error("Purchase failed:", error);
+      // Handle error - show error notification
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const handleCloseModal = () => {
+    if (!isProcessing) {
+      setShowConfirmationModal(false);
+    }
+  };
+
+  // Get selected package and payment method data
+  const selectedPackageData = product?.packages.find(
+    (pkg) => pkg.id === selectedPackage
+  );
+  const selectedPaymentMethodData = paymentMethods.find(
+    (method) => method.value === paymentMethod
+  );
 
   return (
     <Container py="xl">
@@ -180,7 +216,7 @@ export default function ProductDetailPage({
               </Group>
             </Card>
 
-            {/* Code Field*/}
+            {/* Code Field - TODO: Implement discount code functionality */}
             <Card shadow="sm">
               <Group justify="space-between" align="center">
                 <TextInput placeholder={__("codePlaceholder")} flex={1} m={0} />
@@ -209,17 +245,27 @@ export default function ProductDetailPage({
             </Card>
 
             {/* Purchase Button */}
-            <Button
-              size="lg"
-              fullWidth
-              disabled={!selectedPackage || !userId || !paymentMethod}
-              onClick={handlePurchase}
-            >
+            <Button size="lg" fullWidth onClick={handlePurchase}>
               {__("purchase")}
             </Button>
           </Stack>
         </Grid.Col>
       </Grid>
+
+      {/* Purchase Confirmation Modal */}
+      {product && selectedPackageData && selectedPaymentMethodData && (
+        <PurchaseConfirmationModal
+          opened={showConfirmationModal}
+          onClose={handleCloseModal}
+          onConfirm={handleConfirmPurchase}
+          product={product}
+          selectedPackage={selectedPackageData}
+          paymentMethod={selectedPaymentMethodData}
+          amount={amount}
+          userId={userId}
+          loading={isProcessing}
+        />
+      )}
     </Container>
   );
 }

@@ -46,5 +46,7 @@ export {
   useMantineTheme,
   virtualColor,
   type ActionIconProps,
+  type GroupProps,
   type MantineThemeOverride,
+  type TextProps,
 } from "@mantine/core";

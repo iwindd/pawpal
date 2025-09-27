@@ -320,5 +320,17 @@
     "useCode": "ใช้โค้ด",
     "purchase": "ซื้อเลย",
     "amount": "จำนวน"
+  },
+  "PurchaseConfirmation": {
+    "title": "ยืนยันการซื้อ",
+    "package": "แพ็กเกจ",
+    "amount": "จำนวน",
+    "originalPrice": "ราคาเดิม",
+    "saleDiscount": "ส่วนลด",
+    "totalPrice": "ราคารวม",
+    "paymentMethod": "วิธีการชำระเงิน",
+    "gameAccount": "บัญชีเกม",
+    "cancel": "ยกเลิก",
+    "confirm": "ยืนยันการซื้อ"
   }
 }
