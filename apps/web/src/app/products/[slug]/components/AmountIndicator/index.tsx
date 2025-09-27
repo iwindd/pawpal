@@ -1,6 +1,9 @@
 import { IconMinus, IconPlus } from "@pawpal/icons";
 import { Button } from "@pawpal/ui/core";
 
+const MIN_AMOUNT = 1;
+const MAX_AMOUNT = 99;
+
 interface AmountIndicatorProps {
   readonly amount: number;
   readonly setAmount: (amount: number) => void;
@@ -8,11 +11,11 @@ interface AmountIndicatorProps {
 
 const AmountIndicator = ({ amount, setAmount }: AmountIndicatorProps) => {
   const onIncrease = () => {
-    setAmount(amount + 1);
+    setAmount(Math.min(MAX_AMOUNT, amount + 1));
   };
 
   const onDecrease = () => {
-    setAmount(amount - 1);
+    setAmount(Math.max(MIN_AMOUNT, amount - 1));
   };
 
   return (
