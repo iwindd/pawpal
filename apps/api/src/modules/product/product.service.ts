@@ -3,6 +3,13 @@ import { ProductResponse, ProductSaleValue } from '@pawpal/shared';
 import { PrismaService } from '../prisma/prisma.service';
 import { SaleService } from '../sale/sale.service';
 
+interface GetAllProductsParams {
+  page: number;
+  limit: number;
+  search?: string;
+  category?: string;
+}
+
 @Injectable()
 export class ProductService {
   constructor(
@@ -112,6 +119,93 @@ export class ProductService {
     return productsWithSales
       .filter((product) => product.sales !== null)
       .sort((a, b) => (b.sales?.percent || 0) - (a.sales?.percent || 0));
+  }
+
+  async getAllProducts(params: GetAllProductsParams): Promise<{
+    products: ProductResponse[];
+    total: number;
+    hasMore: boolean;
+  }> {
+    const { page, limit, search } = params;
+    const skip = (page - 1) * limit;
+
+    // Build where clause
+    const where: any = {};
+
+    if (search) {
+      where.name = {
+        contains: search,
+        mode: 'insensitive',
+      };
+    }
+
+    // TODO: Add category filter
+
+    let orderBy: any = { createdAt: 'desc' };
+    const total = await this.prisma.product.count({ where });
+    const products = await this.prisma.product.findMany({
+      where,
+      orderBy,
+      skip,
+      take: limit,
+      select: {
+        slug: true,
+        name: true,
+        description: true,
+        createdAt: true,
+        category: {
+          select: {
+            name: true,
+            slug: true,
+          },
+        },
+        productTags: {
+          select: {
+            slug: true,
+            name: true,
+          },
+        },
+        packages: {
+          select: {
+            id: true,
+            name: true,
+            price: true,
+            description: true,
+            sale: {
+              where: {
+                startAt: { lte: new Date() },
+                endAt: { gte: new Date() },
+              },
+              select: {
+                discount: true,
+                discountType: true,
+                startAt: true,
+                endAt: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    const productsWithSales = products.map((product) => {
+      const sales = product.packages.flatMap((pkg) => pkg.sale);
+      const mostDiscountedSale = this.getMostDiscountedSale(sales);
+
+      return {
+        slug: product.slug,
+        name: product.name,
+        sales: mostDiscountedSale,
+      };
+    });
+
+    const hasMore = skip + limit < total;
+
+    return {
+      products: productsWithSales,
+      total,
+      hasMore,
+    };
   }
 
   private getMostDiscountedSale(sales: any[]): ProductSaleValue | null {

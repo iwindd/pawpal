@@ -4,6 +4,7 @@ import lamoon from "@/configs/fonts/lamoon";
 import sarabun from "@/configs/fonts/sarabun";
 import { AuthProvider } from "@/contexts/AuthContext";
 import APISession from "@/libs/api/server";
+import QueryProvider from "@/providers/QueryProvider";
 import UIProvider from "@/providers/UIProvider";
 import { ColorSchemeScript, mantineHtmlProps } from "@pawpal/ui/core";
 import "@pawpal/ui/styles/global.css";
@@ -47,14 +48,16 @@ export default async function RootLayout({
       </head>
       <body>
         <NextIntlClientProvider>
-          <UIProvider>
-            <AuthProvider session={session}>
-              <Navbar />
-              {children}
-              <Footer />
-              {auth}
-            </AuthProvider>
-          </UIProvider>
+          <QueryProvider>
+            <UIProvider>
+              <AuthProvider session={session}>
+                <Navbar />
+                {children}
+                <Footer />
+                {auth}
+              </AuthProvider>
+            </UIProvider>
+          </QueryProvider>
         </NextIntlClientProvider>
       </body>
     </html>

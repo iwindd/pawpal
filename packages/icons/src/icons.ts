@@ -1,6 +1,7 @@
 // Re-export icons from @tabler/icons-react
 export {
   IconCheese as IconActivity,
+  IconList as IconAll,
   IconBrandApple,
   IconBrandGoogle,
   IconBrandSteam,
@@ -11,12 +12,16 @@ export {
   IconChevronUp,
   IconPaw as IconCoin,
   IconBolt as IconFlashsale,
+  IconPacman as IconGames,
   IconHistory,
   IconKey,
   IconLanguage,
   IconLogin,
   IconLogout,
+  IconBasket as IconOther,
+  IconSearch,
   IconSettings,
+  IconBrandSoundcloud as IconStreaming,
   IconMoon as IconThemeDark,
   IconSun as IconThemeLight,
 } from "@tabler/icons-react";

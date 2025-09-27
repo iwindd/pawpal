@@ -20,6 +20,21 @@ export class ProductController {
     return this.productService.getSaleProducts(Number(limit));
   }
 
+  @Get()
+  async getAllProducts(
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 12,
+    @Query('search') search?: string,
+    @Query('category') category?: string,
+  ): Promise<{ products: ProductResponse[]; total: number; hasMore: boolean }> {
+    return this.productService.getAllProducts({
+      page: Number(page),
+      limit: Number(limit),
+      search,
+      category,
+    });
+  }
+
   @Get('admin/test')
   test(): { message: string; status: string } {
     return {
