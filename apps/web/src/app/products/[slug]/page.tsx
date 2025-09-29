@@ -1,8 +1,12 @@
 "use client";
 
+import ErrorMessage from "@/components/ErrorMessage";
 import PurchaseConfirmationModal from "@/components/Modals/PurchaseConfirmationModal";
-import paymentMethods from "@/configs/payment";
+import paymentMethods, { defaultPaymentMethod } from "@/configs/payment";
+import useFormValidate from "@/hooks/useFormValidate";
 import API from "@/libs/api/client";
+import { DiscountType } from "@pawpal/prisma";
+import { PurchaseInput, purchaseSchema } from "@pawpal/shared";
 import {
   Box,
   Button,
@@ -19,10 +23,11 @@ import {
   TextInput,
   Title,
 } from "@pawpal/ui/core";
+import { useDisclosure } from "@pawpal/ui/hooks";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import NextImage from "next/image";
-import { use, useEffect, useMemo, useState } from "react";
+import { use, useEffect, useState } from "react";
 import AmountIndicator from "./components/AmountIndicator";
 import PackageRadio from "./components/PackageRadio";
 import PaymentRadio from "./components/PaymentRadio";
@@ -36,13 +41,11 @@ export default function ProductDetailPage({
 }: Readonly<ProductDetailPageProps>) {
   const __ = useTranslations("ProductDetail");
   const resolvedParams = use(params);
-  const [selectedPackage, setSelectedPackage] = useState<string>("");
-  const [userId, setUserId] = useState<string>("");
-  const [paymentMethod, setPaymentMethod] = useState<string>("");
-  const [amount, setAmount] = useState<number>(1);
-  const [showConfirmationModal, setShowConfirmationModal] =
-    useState<boolean>(false);
-  const [isProcessing, setIsProcessing] = useState<boolean>(false);
+  const [totalPrice, setTotalPrice] = useState<number>(0);
+  const [showConfirmationModal, { open, close }] = useDisclosure(false);
+  const [submittedValues, setSubmittedValues] = useState<PurchaseInput | null>(
+    null
+  );
 
   const {
     data: product,
@@ -59,22 +62,32 @@ export default function ProductDetailPage({
     },
   });
 
+  const form = useFormValidate<PurchaseInput>({
+    schema: purchaseSchema,
+    group: "purchase",
+    mode: "controlled",
+    initialValues: {
+      packageId: "",
+      userId: "",
+      amount: 1,
+      paymentMethod: defaultPaymentMethod,
+    },
+    onValuesChange: ({ packageId, amount }) => {
+      if (!packageId || !product) return;
+      const pkg = product.packages.find((p) => p.id === packageId);
+      if (!pkg) return;
+      const priceWithDiscount = pkg.sale
+        ? pkg.price * (1 - pkg.sale.percent / 100)
+        : pkg.price;
+      setTotalPrice(priceWithDiscount * amount);
+    },
+  });
+
   useEffect(() => {
     if (product?.packages?.length && product.packages.length > 0) {
-      setSelectedPackage(product.packages[0]?.id || "");
+      form.setFieldValue("packageId", product.packages[0]?.id || "");
     }
   }, [product]);
-
-  const totalPriceWithDiscount = useMemo(() => {
-    if (!product) return 0;
-    const pkg = product.packages.find((p) => p.id === selectedPackage);
-    if (!pkg) return 0;
-    const priceWithDiscount = pkg.sale
-      ? pkg.price * (1 - pkg.sale.percent / 100)
-      : pkg.price;
-
-    return priceWithDiscount * amount;
-  }, [product, selectedPackage, amount]);
 
   if (isLoading) {
     return (
@@ -96,176 +109,163 @@ export default function ProductDetailPage({
     );
   }
 
-  const handlePurchase = () => {
-    if (!selectedPackage || !userId || !paymentMethod) {
-      return;
-    }
-    setShowConfirmationModal(true);
+  const onPurchase = () => {
+    if (!submittedValues) return;
   };
 
-  const handleConfirmPurchase = async () => {
-    setIsProcessing(true);
-    try {
-      // Purchase logic will be implemented when payment integration is ready
-      console.log({
-        product: product?.slug,
-        package: selectedPackage,
-        userId,
-        paymentMethod,
-        amount,
-      });
-
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      // Close modal and reset form
-      setShowConfirmationModal(false);
-      // You might want to show a success notification here
-    } catch (error) {
-      console.error("Purchase failed:", error);
-      // Handle error - show error notification
-    } finally {
-      setIsProcessing(false);
-    }
-  };
-
-  const handleCloseModal = () => {
-    if (!isProcessing) {
-      setShowConfirmationModal(false);
-    }
-  };
-
-  // Get selected package and payment method data
-  const selectedPackageData = product?.packages.find(
-    (pkg) => pkg.id === selectedPackage
-  );
-  const selectedPaymentMethodData = paymentMethods.find(
-    (method) => method.value === paymentMethod
+  const selectedPackage = product.packages.find(
+    (p) => p.id === submittedValues?.packageId
   );
 
   return (
     <Container py="xl">
-      <Grid gutter="lg">
-        {/* Product Image */}
-        <Grid.Col span={{ base: 12 }}>
-          <Group>
+      <form
+        onSubmit={form.onSubmit((values) => {
+          setSubmittedValues(values);
+          open();
+        })}
+      >
+        <Grid gutter="lg">
+          {/* Product Image */}
+          <Grid.Col span={{ base: 12 }}>
             <Group>
-              <Box h={150} w={150}>
-                <Image
-                  component={NextImage}
-                  src={`/assets/images/products/${product.slug}`}
-                  alt={product.name}
-                  height={150}
-                  width={150}
-                  fit="cover"
-                  fallbackSrc="/assets/images/fallback-product.jpg"
-                />
-              </Box>
-              <Stack gap="xs">
-                <Title order={1}>{product.name}</Title>
-                <Text c="dimmed" size="sm">
-                  {product.category.name}
-                </Text>
-              </Stack>
-            </Group>
-            <Group>{/* TODO: Add download platform */}</Group>
-          </Group>
-        </Grid.Col>
-
-        <Grid.Col span={{ base: 8 }}>
-          <Card shadow="sm">
-            <Title order={6} mb="md">
-              {__("selectPackage")}
-            </Title>
-            <Radio.Group value={selectedPackage} onChange={setSelectedPackage}>
-              <Grid gutter="sm">
-                {product.packages.map((pkg) => (
-                  <Grid.Col span={{ base: 12, md: 6 }} key={pkg.id}>
-                    <PackageRadio package={pkg} />
-                  </Grid.Col>
-                ))}
-              </Grid>
-            </Radio.Group>
-          </Card>
-        </Grid.Col>
-
-        {/* Product Details */}
-        <Grid.Col span={{ base: 4 }}>
-          <Stack gap="lg">
-            {/* Package Selection */}
-
-            {/* User ID Field */}
-            <Card shadow="sm">
-              <Title order={6} mb="md">
-                {__("gameAccount")}
-              </Title>
-              <TextInput
-                label={__("userId")}
-                placeholder={__("userIdPlaceholder")}
-                value={userId}
-                onChange={(e) => setUserId(e.target.value)}
-                required
-              />
-            </Card>
-
-            {/* Amount indicator */}
-            <Card shadow="sm">
-              <Group justify="space-between" align="center">
-                <Title order={6}>{__("amount")}</Title>
-                <AmountIndicator amount={amount} setAmount={setAmount} />
-              </Group>
-            </Card>
-
-            {/* Code Field - TODO: Implement discount code functionality */}
-            <Card shadow="sm">
-              <Group justify="space-between" align="center">
-                <TextInput placeholder={__("codePlaceholder")} flex={1} m={0} />
-                <Button variant="default" w="fit-content" m={0}>
-                  {__("useCode")}
-                </Button>
-              </Group>
-            </Card>
-
-            {/* Payment Method */}
-            <Card shadow="sm">
-              <Title order={6} mb="md">
-                {__("paymentMethod")}
-              </Title>
-              <Radio.Group value={paymentMethod} onChange={setPaymentMethod}>
-                <Stack gap="sm">
-                  {paymentMethods.map((method) => (
-                    <PaymentRadio
-                      key={method.value}
-                      data={method}
-                      totalPrice={totalPriceWithDiscount}
-                    />
-                  ))}
+              <Group>
+                <Box h={150} w={150}>
+                  <Image
+                    component={NextImage}
+                    src={`/assets/images/products/${product.slug}`}
+                    alt={product.name}
+                    height={150}
+                    width={150}
+                    fit="cover"
+                    fallbackSrc="/assets/images/fallback-product.jpg"
+                  />
+                </Box>
+                <Stack gap="xs">
+                  <Title order={1}>{product.name}</Title>
+                  <Text c="dimmed" size="sm">
+                    {product.category.name}
+                  </Text>
                 </Stack>
+              </Group>
+              <Group>{/* TODO: Add download platform */}</Group>
+            </Group>
+          </Grid.Col>
+
+          <Grid.Col span={{ base: 8 }}>
+            <Card shadow="sm">
+              <Title order={6} mb="md">
+                {__("selectPackage")}
+              </Title>
+              <Radio.Group
+                key={form.key("packageId")}
+                {...form.getInputProps("packageId")}
+              >
+                <Grid gutter="sm">
+                  {product.packages.map((pkg) => (
+                    <Grid.Col span={{ base: 12, md: 6 }} key={pkg.id}>
+                      <PackageRadio package={pkg} />
+                    </Grid.Col>
+                  ))}
+                </Grid>
               </Radio.Group>
             </Card>
+          </Grid.Col>
 
-            {/* Purchase Button */}
-            <Button size="lg" fullWidth onClick={handlePurchase}>
-              {__("purchase")}
-            </Button>
-          </Stack>
-        </Grid.Col>
-      </Grid>
+          {/* Product Details */}
+          <Grid.Col span={{ base: 4 }}>
+            <Stack gap="lg">
+              {/* Package Selection */}
 
-      {/* Purchase Confirmation Modal */}
-      {product && selectedPackageData && selectedPaymentMethodData && (
-        <PurchaseConfirmationModal
-          opened={showConfirmationModal}
-          onClose={handleCloseModal}
-          onConfirm={handleConfirmPurchase}
-          product={product}
-          selectedPackage={selectedPackageData}
-          paymentMethod={selectedPaymentMethodData}
-          amount={amount}
-          userId={userId}
-          loading={isProcessing}
-        />
-      )}
+              {/* User ID Field */}
+              <Card shadow="sm">
+                <Title order={6} mb="md">
+                  {__("gameAccount")}
+                </Title>
+                <TextInput
+                  label={__("userId")}
+                  placeholder={__("userIdPlaceholder")}
+                  key={form.key("userId")}
+                  {...form.getInputProps("userId")}
+                />
+              </Card>
+
+              {/* Amount indicator */}
+              <Card shadow="sm">
+                <Group justify="space-between" align="center">
+                  <Title order={6}>{__("amount")}</Title>
+                  <AmountIndicator form={form} />
+                </Group>
+                <ErrorMessage
+                  align="start"
+                  size="xs"
+                  formatGroup="Errors.purchase"
+                  message={form.errors.amount as string}
+                />
+              </Card>
+
+              {/* Code Field - TODO: Implement discount code functionality */}
+              <Card shadow="sm">
+                <Group justify="space-between" align="center">
+                  <TextInput
+                    placeholder={__("codePlaceholder")}
+                    flex={1}
+                    m={0}
+                  />
+                  <Button variant="default" w="fit-content" m={0}>
+                    {__("useCode")}
+                  </Button>
+                </Group>
+              </Card>
+
+              {/* Payment Method */}
+              <Card shadow="sm">
+                <Title order={6} mb="md">
+                  {__("paymentMethod")}
+                </Title>
+                <Radio.Group
+                  key={form.key("paymentMethod")}
+                  {...form.getInputProps("paymentMethod")}
+                >
+                  <Stack gap="sm">
+                    {paymentMethods.map((method) => (
+                      <PaymentRadio
+                        key={method.value}
+                        data={method}
+                        totalPrice={totalPrice}
+                      />
+                    ))}
+                  </Stack>
+                </Radio.Group>
+              </Card>
+
+              {/* Purchase Button */}
+              <Button size="lg" fullWidth type="submit">
+                {__("purchase")}
+              </Button>
+            </Stack>
+          </Grid.Col>
+        </Grid>
+      </form>
+
+      <PurchaseConfirmationModal
+        opened={showConfirmationModal}
+        onConfirm={onPurchase}
+        onClose={close}
+        loading={false}
+        title={product.name}
+        package={selectedPackage?.name || ""}
+        amount={submittedValues?.amount || 0}
+        price={(selectedPackage?.price || 0) * (submittedValues?.amount || 0)}
+        paymentMethod={submittedValues?.paymentMethod}
+        userInfo={submittedValues?.userId}
+        sale={
+          selectedPackage?.sale && {
+            type: DiscountType.PERCENT,
+            value: selectedPackage.sale.percent,
+          }
+        }
+      />
     </Container>
   );
 }

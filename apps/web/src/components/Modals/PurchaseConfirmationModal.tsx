@@ -1,7 +1,11 @@
 "use client";
 
-import { PaymentData } from "@/configs/payment";
-import { ProductPackage, ProductResponse } from "@pawpal/shared";
+import paymentMethods, { PaymentMethod } from "@/configs/payment";
+import {
+  getDiscountValue,
+  getPriceWithSale,
+  PricingSale,
+} from "@/libs/pricing";
 import {
   Button,
   Divider,
@@ -14,7 +18,6 @@ import {
   Title,
 } from "@pawpal/ui/core";
 import { useFormatter, useTranslations } from "next-intl";
-import { useMemo } from "react";
 
 const Text = (props: TextProps & { children: React.ReactNode }) => {
   return <TextBase inline size="sm" c="dimmed" {...props} />;
@@ -28,43 +31,27 @@ interface PurchaseConfirmationModalProps {
   opened: boolean;
   onClose: () => void;
   onConfirm: () => void;
-  product: ProductResponse;
-  selectedPackage: ProductPackage;
-  paymentMethod: PaymentData;
+  loading: boolean;
+  title: string;
+  package: string;
   amount: number;
-  userId: string;
-  loading?: boolean;
+  price: number;
+  paymentMethod?: PaymentMethod;
+  userInfo?: string;
+  sale?: PricingSale;
 }
 
 export default function PurchaseConfirmationModal({
   opened,
   onClose,
   onConfirm,
-  product,
-  selectedPackage,
-  paymentMethod,
-  amount,
-  userId,
-  loading = false,
+  ...props
 }: Readonly<PurchaseConfirmationModalProps>) {
   const format = useFormatter();
   const __ = useTranslations("PurchaseConfirmation");
-
-  const pricing = useMemo(() => {
-    const originalPrice = selectedPackage.price * amount;
-    const discountPercent = selectedPackage.sale?.percent || 0;
-    const discountAmount = originalPrice * (discountPercent / 100);
-    const finalPrice = originalPrice - discountAmount;
-    const isSale = discountAmount > 0;
-
-    return {
-      originalPrice,
-      discountAmount,
-      finalPrice,
-      discountPercent,
-      isSale,
-    };
-  }, [selectedPackage, amount]);
+  const paymentMethod = paymentMethods.find(
+    (p) => p.value === props.paymentMethod
+  );
 
   return (
     <Modal
@@ -78,48 +65,55 @@ export default function PurchaseConfirmationModal({
       withinPortal
       zIndex={1000}
       size="md"
-      title={product.name}
+      title={props.title}
     >
       <Stack gap="xs">
         {/* Product Information */}
         <Group>
           <Text>{__("package")}</Text>
-          <Text>{selectedPackage.name}</Text>
+          <Text>{props.package}</Text>
         </Group>
         <Group>
           <Text>{__("amount")}</Text>
-          <Text>{format.number(amount, "amount")}</Text>
+          <Text>{format.number(props.amount, "amount")}</Text>
         </Group>
 
         {/* Payment Method */}
-        <Group>
-          <Text>{__("paymentMethod")}</Text>
-          <Stack>
-            <Text>{paymentMethod.label}</Text>
-          </Stack>
-        </Group>
+        {paymentMethod && (
+          <Group>
+            <Text>{__("paymentMethod")}</Text>
+            <Stack>
+              <Text>{paymentMethod.label}</Text>
+            </Stack>
+          </Group>
+        )}
 
         {/* Game Account */}
-        <Group>
-          <Text>{__("gameAccount")}</Text>
-          <Stack>
-            <Text>{userId}</Text>
-          </Stack>
-        </Group>
+        {props.userInfo && (
+          <Group>
+            <Text>{__("gameAccount")}</Text>
+            <Stack>
+              <Text>{props.userInfo}</Text>
+            </Stack>
+          </Group>
+        )}
 
         {/* Pricing Summary */}
-        {pricing.isSale && (
+        {props.sale && (
           <Stack gap="0">
             <Group>
               <Text size="sm">{__("originalPrice")}</Text>
               <Text size="sm" td="line-through" c="dimmed">
-                {format.number(pricing.originalPrice, "currency")}
+                {format.number(props.price, "currency")}
               </Text>
             </Group>
             <Group>
               <Text size="xs">- {__("saleDiscount")}</Text>
               <Text size="xs" c="green">
-                {format.number(pricing.discountAmount, "currency")}
+                {format.number(
+                  getDiscountValue(props.price, props.sale),
+                  "currency"
+                )}
               </Text>
             </Group>
           </Stack>
@@ -130,16 +124,24 @@ export default function PurchaseConfirmationModal({
         <Group>
           <Title order={4}>{__("totalPrice")}</Title>
           <Text size="lg" c="green">
-            {format.number(pricing.finalPrice, "currency")}
+            {format.number(
+              (props.sale && getPriceWithSale(props.price, props.sale)) ||
+                props.price,
+              "currency"
+            )}
           </Text>
         </Group>
 
         {/* Action Buttons */}
         <Group justify="flex-end" gap="sm" mt="md">
-          <Button variant="outline" onClick={onClose} disabled={loading}>
+          <Button variant="outline" onClick={onClose} disabled={props.loading}>
             {__("cancel")}
           </Button>
-          <Button onClick={onConfirm} loading={loading} disabled={loading}>
+          <Button
+            onClick={onConfirm}
+            loading={props.loading}
+            disabled={props.loading}
+          >
             {__("confirm")}
           </Button>
         </Group>

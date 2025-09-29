@@ -4,5 +4,6 @@ export * from "./schemas/auth/change-password";
 export * from "./schemas/auth/login";
 export * from "./schemas/auth/register";
 export * from "./schemas/auth/updateProfile";
+export * from "./schemas/order/purchase";
 export * from "./types/response/product";
 export * from "./types/session";

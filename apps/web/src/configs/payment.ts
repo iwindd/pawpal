@@ -4,6 +4,7 @@ export type PaymentData = {
   value: string;
   disabledTopup?: boolean;
   description?: string;
+  default?: boolean;
 };
 
 const paymentMethods: PaymentData[] = [
@@ -25,9 +26,15 @@ const paymentMethods: PaymentData[] = [
     label: "PromptPay",
     description: undefined,
     value: "promptpay",
+    default: true,
   },
 ];
 
 export type PaymentMethod = (typeof paymentMethods)[number]["value"];
+
+export const defaultPaymentMethod =
+  paymentMethods.find((method) => method.default)?.value ||
+  paymentMethods[0]?.value ||
+  "";
 
 export default paymentMethods;
