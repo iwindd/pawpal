@@ -1,40 +1,9 @@
-export type PaymentData = {
-  image: string;
-  label: string;
-  value: string;
-  disabledTopup?: boolean;
-  description?: string;
-  default?: boolean;
-};
+import { paymentMethods } from "@pawpal/shared";
 
-const paymentMethods: PaymentData[] = [
-  {
-    image: "assets/images/fallback-product.jpg",
-    label: "Pawpal Wallet",
-    value: "pawpal-wallet",
-    disabledTopup: true,
-    description: undefined,
-  },
-  {
-    image: "assets/images/fallback-product.jpg",
-    label: "True Money Wallet",
-    value: "true-money-wallet",
-    description: undefined,
-  },
-  {
-    image: "assets/images/fallback-product.jpg",
-    label: "PromptPay",
-    description: undefined,
-    value: "promptpay",
-    default: true,
-  },
-];
-
-export type PaymentMethod = (typeof paymentMethods)[number]["value"];
-
-export const defaultPaymentMethod =
-  paymentMethods.find((method) => method.default)?.value ||
-  paymentMethods[0]?.value ||
-  "";
+export {
+  defaultPaymentMethod,
+  type PaymentData,
+  type PaymentMethod,
+} from "@pawpal/shared";
 
 export default paymentMethods;
