@@ -1,20 +1,23 @@
 "use client";
 import { ZodType } from "@pawpal/shared";
-import { resolver, useForm, UseFormReturnType } from "@pawpal/ui/form";
+import {
+  resolver,
+  useForm,
+  UseFormInput,
+  UseFormReturnType,
+} from "@pawpal/ui/form";
 import { useTranslations } from "next-intl";
 
-interface UseFormValidateProps<T extends Record<string, any>> {
+interface ExtraOptions {
   schema: ZodType;
   group?: string;
-  mode?: "uncontrolled" | "controlled";
-  initialValues?: T;
 }
 
 const useFormValidate = <T extends Record<string, any>>({
   schema,
   group,
   ...props
-}: UseFormValidateProps<T>): UseFormReturnType<T, (values: T) => T> => {
+}: UseFormInput<T> & ExtraOptions): UseFormReturnType<T> => {
   const __ = useTranslations();
   const form = useForm<T>({
     ...props,
@@ -23,7 +26,7 @@ const useFormValidate = <T extends Record<string, any>>({
 
   return {
     ...form,
-    getInputProps: (path: keyof T) => {
+    getInputProps: (path) => {
       const props = form.getInputProps(path as any);
       return {
         ...props,
