@@ -10,7 +10,10 @@
     "./carousel": "./src/carousel.ts",
     "./notifications": "./src/notifications.ts",
     "./form": "./src/form.ts",
-    "./backdrop": "./src/backdrop.ts"
+    "./backdrop": "./src/backdrop.ts",
+    "./provider": "./src/provider.ts",
+    "./fonts/lamoon": "./src/fonts/lamoon.ts",
+    "./fonts/sarabun": "./src/fonts/sarabun.ts"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",
@@ -35,5 +38,8 @@
     "mantine-form-zod-resolver": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:"
+  },
+  "peerDependencies": {
+    "next": "catalog:"
   }
 }

@@ -1,3 +1,8 @@
+import { ColorSchemeScript, mantineHtmlProps } from "@pawpal/ui/core";
+import lamoon from "@pawpal/ui/fonts/lamoon";
+import sarabun from "@pawpal/ui/fonts/sarabun";
+import { UIProvider } from "@pawpal/ui/provider";
+import "@pawpal/ui/styles/global.css";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -11,8 +16,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html
+      lang="en"
+      {...mantineHtmlProps}
+      suppressHydrationWarning
+      className={`${sarabun.className} ${lamoon.className}`}
+    >
+      <head>
+        <meta charSet="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <ColorSchemeScript />
+      </head>
+      <body>
+        <UIProvider>{children}</UIProvider>
+      </body>
     </html>
   );
 }

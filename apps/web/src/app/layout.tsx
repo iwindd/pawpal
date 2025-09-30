@@ -1,12 +1,12 @@
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
-import lamoon from "@/configs/fonts/lamoon";
-import sarabun from "@/configs/fonts/sarabun";
 import { AuthProvider } from "@/contexts/AuthContext";
 import APISession from "@/libs/api/server";
 import QueryProvider from "@/providers/QueryProvider";
-import UIProvider from "@/providers/UIProvider";
 import { ColorSchemeScript, mantineHtmlProps } from "@pawpal/ui/core";
+import lamoon from "@pawpal/ui/fonts/lamoon";
+import sarabun from "@pawpal/ui/fonts/sarabun";
+import { UIProvider } from "@pawpal/ui/provider";
 import "@pawpal/ui/styles/global.css";
 import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";

@@ -1,5 +1,4 @@
 "use client";
-import configTheme from "@/configs/theme";
 import { Backdrop } from "@pawpal/ui/backdrop";
 import {
   createTheme,
@@ -7,6 +6,7 @@ import {
   MantineProvider,
 } from "@pawpal/ui/core";
 import { Notifications } from "@pawpal/ui/notifications";
+import configTheme from "./theme/theme";
 
 // Constants
 const COLOR_SCHEME_KEY = "pawpal-color-scheme";
@@ -20,7 +20,9 @@ interface UIProviderProps {
   children: React.ReactNode;
 }
 
-const UIProvider = ({ children }: UIProviderProps): React.JSX.Element => {
+export const UIProvider = ({
+  children,
+}: UIProviderProps): React.JSX.Element => {
   const theme = createTheme({
     ...configTheme,
   });
@@ -37,5 +39,3 @@ const UIProvider = ({ children }: UIProviderProps): React.JSX.Element => {
     </MantineProvider>
   );
 };
-
-export default UIProvider;

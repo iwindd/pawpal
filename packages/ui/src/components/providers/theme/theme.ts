@@ -6,7 +6,7 @@ import {
   rem,
 } from "@pawpal/ui/core";
 import postcssConfig from "@pawpal/ui/postcss.config";
-import { lamoonMultiplier } from "./fonts/lamoon";
+import { lamoonMultiplier } from "../../../fonts/lamoon";
 import CONTAINER_SIZES, { ContainerSizeKey } from "./theme/container";
 
 const postcssConfigBreakpoints =
