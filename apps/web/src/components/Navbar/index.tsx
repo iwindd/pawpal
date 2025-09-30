@@ -33,8 +33,6 @@ const Navbar = () => {
   const { user } = useAuth();
   const __ = useTranslations("Routes");
 
-  console.log(activeRoute);
-
   const items = navbarLinks.map((link) => {
     const path = typeof link.path === "string" ? link.path : link.path();
     return (
