@@ -1,3 +1,33 @@
 {
-  "title": "Pawpal Admin"
+  "title": "Pawpal Admin",
+  "Auth": {
+    "login": {
+      "title": "ยินดีต้อนรับกลับ",
+      "email": "อีเมล",
+      "password": "รหัสผ่าน",
+      "emailPlaceholder": "กรอกอีเมลของคุณ",
+      "passwordPlaceholder": "กรอกรหัสผ่านของคุณ",
+      "loginButton": "เข้าสู่ระบบ",
+      "rememberMe": "จดจำฉัน",
+      "forgotPassword": "ลืมรหัสผ่าน?",
+      "noAccount": "ไม่มีบัญชี?",
+      "register": "สมัครสมาชิก",
+      "label_or": "หรือ",
+      "notify": {
+        "success": {
+          "title": "เข้าสู่ระบบสำเร็จ",
+          "message": "ยินดีต้อนรับสู่ Pawpal Admin"
+        }
+      }
+    }
+  },
+  "Errors": {
+    "login": {
+      "invalid_email_format": "อีเมลไม่ถูกต้อง",
+      "password_too_short": "รหัสผ่านต้องมีความยาวอย่างน้อย 6-30 ตัวอักษร",
+      "password_too_long": "รหัสผ่านต้องมีความยาวอย่างน้อย 6-30 ตัวอักษร",
+      "invalid_credentials": "อีเมลหรือรหัสผ่านไม่ถูกต้อง",
+      "error": "กรุณาลองใหม่อีกครั้งภายหลัง!"
+    }
+  }
 }
