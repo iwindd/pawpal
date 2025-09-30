@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@pawpal/icons": "workspace:*",
+    "@pawpal/nextjs-middleware": "workspace:*",
     "@pawpal/shared": "workspace:*",
     "@pawpal/ui": "workspace:*",
     "@pawpal/prisma": "workspace:*",
