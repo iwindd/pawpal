@@ -18,10 +18,8 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({
   children,
-  auth,
 }: Readonly<{
   children: React.ReactNode;
-  auth?: React.ReactNode;
 }>): Promise<React.JSX.Element> {
   let session = null;
 
@@ -54,7 +52,6 @@ export default async function RootLayout({
                 <Navbar />
                 {children}
                 <Footer />
-                {auth}
               </AuthProvider>
             </UIProvider>
           </QueryProvider>
