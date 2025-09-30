@@ -4,6 +4,7 @@ import sarabun from "@pawpal/ui/fonts/sarabun";
 import { UIProvider } from "@pawpal/ui/provider";
 import "@pawpal/ui/styles/global.css";
 import type { Metadata } from "next";
+import { NextIntlClientProvider } from "next-intl";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -28,7 +29,9 @@ export default function RootLayout({
         <ColorSchemeScript />
       </head>
       <body>
-        <UIProvider>{children}</UIProvider>
+        <NextIntlClientProvider>
+          <UIProvider>{children}</UIProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

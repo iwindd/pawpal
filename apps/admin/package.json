@@ -21,7 +21,8 @@
     "dayjs": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "next": "catalog:"
+    "next": "catalog:",
+    "next-intl": "catalog:"
   },
   "devDependencies": {
     "@eslint/eslintrc": "catalog:",

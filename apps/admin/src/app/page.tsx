@@ -1,3 +1,8 @@
+"use client";
+
+import { useTranslations } from "next-intl";
+
 export default function Home() {
-  return <div>Home</div>;
+  const t = useTranslations();
+  return <div>{t("title")}</div>;
 }
