@@ -1,0 +1,6 @@
+---
+globs: packages/ui/**.*
+alwaysApply: false
+---
+
+- The project uses Mantine UI.
