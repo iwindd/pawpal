@@ -326,7 +326,17 @@
     "codePlaceholder": "ใส่โค้ดส่วนลด",
     "useCode": "ใช้โค้ด",
     "purchase": "ซื้อเลย",
-    "amount": "จำนวน"
+    "amount": "จำนวน",
+    "notify": {
+      "success": {
+        "title": "สำเร็จ",
+        "message": "คุณได้ทำการซื้อสำเร็จ"
+      },
+      "error": {
+        "title": "ผิดพลาด",
+        "message": "กรุณาลองใหม่อีกครั้งภายหลัง!"
+      }
+    }
   },
   "PurchaseConfirmation": {
     "title": "ยืนยันการซื้อ",

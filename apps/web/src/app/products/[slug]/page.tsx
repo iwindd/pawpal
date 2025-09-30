@@ -24,6 +24,7 @@ import {
   Title,
 } from "@pawpal/ui/core";
 import { useDisclosure } from "@pawpal/ui/hooks";
+import { Notifications } from "@pawpal/ui/notifications";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import NextImage from "next/image";
@@ -43,6 +44,7 @@ export default function ProductDetailPage({
   const resolvedParams = use(params);
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [showConfirmationModal, { open, close }] = useDisclosure(false);
+  const [loading, setLoading] = useState(false);
   const [submittedValues, setSubmittedValues] = useState<PurchaseInput | null>(
     null
   );
@@ -109,8 +111,29 @@ export default function ProductDetailPage({
     );
   }
 
-  const onPurchase = () => {
+  const onPurchase = async () => {
     if (!submittedValues) return;
+    setLoading(true);
+
+    try {
+      const response = await API.order.createOrder(submittedValues);
+      if (!response.success) throw new Error("Failed to create order");
+      Notifications.show({
+        title: __("notify.success.title"),
+        message: __("notify.success.message"),
+        color: "green",
+      });
+    } catch (error) {
+      console.error(error);
+      Notifications.show({
+        title: __("notify.error.title"),
+        message: __("notify.error.message"),
+        color: "red",
+      });
+    } finally {
+      setLoading(false);
+      close();
+    }
   };
 
   const selectedPackage = product.packages.find(
@@ -252,7 +275,7 @@ export default function ProductDetailPage({
         opened={showConfirmationModal}
         onConfirm={onPurchase}
         onClose={close}
-        loading={false}
+        loading={loading}
         title={product.name}
         package={selectedPackage?.name || ""}
         amount={submittedValues?.amount || 0}

@@ -18,6 +18,7 @@ model User {
   updatedAt   DateTime @updatedAt
 
   userWallets UserWallet[] @relation("UserWallets")
+  orders      Order[]      @relation("OrderUser")
 
   @@map("users")
 }
@@ -118,7 +119,8 @@ model Package {
   product    Product @relation("ProductPackages", fields: [product_id], references: [id])
   product_id String
 
-  sale Sale[] @relation("SalePackages")
+  sale         Sale[]         @relation("SalePackages")
+  orderPackage OrderPackage[] @relation("OrderPackages")
 
   @@index([product_id])
   @@index([price])
@@ -145,6 +147,34 @@ model Sale {
   @@map("sales")
 }
 
+model Order {
+  id        String      @id @default(cuid())
+  user      User        @relation("OrderUser", fields: [user_id], references: [id])
+  user_id   String
+  total     Decimal     @db.Decimal(10, 2)
+  status    OrderStatus @default(PENDING_PAYMENT)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  orderPackages OrderPackage[] @relation("OrderPackages")
+
+  @@map("orders")
+}
+
+model OrderPackage {
+  id         String   @id @default(cuid())
+  order      Order    @relation("OrderPackages", fields: [order_id], references: [id])
+  order_id   String
+  package    Package  @relation("OrderPackages", fields: [package_id], references: [id])
+  package_id String
+  amount     Int
+  price      Decimal  @db.Decimal(10, 2)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("order_packages")
+}
+
 enum ProductTagType {
   USER_DEFINED
   SYSTEM
@@ -167,4 +197,12 @@ enum TransactionStatus {
   PENDING
   SUCCESS
   FAILED
+}
+
+enum OrderStatus {
+  PENDING_PAYMENT
+  PAID
+  PROCESSING
+  COMPLETED
+  CANCELLED
 }
