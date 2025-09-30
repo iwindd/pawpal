@@ -51,3 +51,5 @@ export {
   type MantineThemeOverride,
   type TextProps,
 } from "@mantine/core";
+
+export { default as ErrorMessage } from "./components/ErrorMessage";
