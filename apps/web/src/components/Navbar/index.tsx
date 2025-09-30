@@ -1,6 +1,7 @@
 "use client";
 import navbarLinks from "@/configs/navbar";
 import { useAuth } from "@/contexts/AuthContext";
+import { useActiveRouteConfig } from "@/hooks/useActiveRouteConfig";
 import {
   Box,
   Burger,
@@ -15,7 +16,6 @@ import { useDisclosure } from "@pawpal/ui/hooks";
 import { useTranslations } from "next-intl";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { useState } from "react";
 import Logo from "../Logo";
 import AuthSection from "./components/AuthSection";
 import LocaleSwitcher from "./components/LocaleSwitcher";
@@ -27,23 +27,27 @@ const ThemeSwitcher = dynamic(() => import("./components/ThemeSwitcher"), {
 });
 
 const Navbar = () => {
-  const [opened, { toggle }] = useDisclosure(false);
-  const [activeLink, setActiveLink] = useState("/");
+  const activeRoute = useActiveRouteConfig();
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
     useDisclosure(false);
   const { user } = useAuth();
-  const __ = useTranslations("Navbar.links");
+  const __ = useTranslations("Routes");
 
-  const items = navbarLinks.map((link) => (
-    <Link
-      key={link.label}
-      href={link.link}
-      className={classes.link}
-      data-active={activeLink === link.link || undefined}
-    >
-      {__(link.label)}
-    </Link>
-  ));
+  console.log(activeRoute);
+
+  const items = navbarLinks.map((link) => {
+    const path = typeof link.path === "string" ? link.path : link.path();
+    return (
+      <Link
+        key={link.label}
+        href={path}
+        className={classes.link}
+        data-active={activeRoute?.path === path ? "true" : undefined}
+      >
+        {__(link.label)}
+      </Link>
+    );
+  });
 
   return (
     <Box className={classes.navbar}>
@@ -56,7 +60,7 @@ const Navbar = () => {
             </Group>
 
             <Burger
-              opened={opened}
+              opened={drawerOpened}
               onClick={toggleDrawer}
               hiddenFrom="sm"
               size="sm"

@@ -1,5 +1,6 @@
 "use client";
-import { IconActivity, IconHistory, IconSettings } from "@pawpal/icons";
+import { RouteItem, ROUTES } from "@/configs/route";
+import { useActiveRouteTrail } from "@/hooks/useActiveRouteTrail";
 import {
   Box,
   Container,
@@ -10,7 +11,6 @@ import {
 } from "@pawpal/ui/core";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
 import classes from "./style.module.css";
 
@@ -19,26 +19,15 @@ interface UserLayoutProps {
 }
 
 const UserLayout = ({ children }: UserLayoutProps) => {
-  const pathname = usePathname();
-  const __ = useTranslations("User");
-
+  const __ = useTranslations("Routes");
+  const trail = useActiveRouteTrail();
   const navigationItems = [
-    {
-      label: __("account"),
-      href: ["/user", "/user/profile"],
-      icon: IconSettings,
-    },
-    {
-      label: __("orders"),
-      href: "/user/order",
-      icon: IconHistory,
-    },
-    {
-      label: __("activity"),
-      href: "/user/activity",
-      icon: IconActivity,
-    },
+    ROUTES.user as RouteItem,
+    ROUTES.user?.children?.profile as RouteItem,
+    ROUTES.user?.children?.order as RouteItem,
+    ROUTES.user?.children?.activity as RouteItem,
   ];
+  const activeRoute = trail.at(-1);
 
   return (
     <Container size="xl" py="xl">
@@ -52,29 +41,22 @@ const UserLayout = ({ children }: UserLayoutProps) => {
           <Stack gap="xs">
             <ScrollArea>
               <Stack gap={4}>
-                {navigationItems.map((item) => {
+                {navigationItems.map((item: RouteItem) => {
                   const Icon = item.icon;
-                  const isActive = Array.isArray(item.href)
-                    ? item.href.includes(pathname)
-                    : pathname === item.href;
-
-                  const key = Array.isArray(item.href)
-                    ? item.href[0]
-                    : item.href;
-                  const href = Array.isArray(item.href)
-                    ? item.href[0]
-                    : item.href;
+                  const path =
+                    typeof item.path === "string" ? item.path : item.path();
+                  const isActive = activeRoute?.path === path;
 
                   return (
                     <UnstyledButton
-                      key={key}
+                      key={path}
                       component={Link}
-                      href={href || "/"}
+                      href={path || "/"}
                       className={classes.link}
                       data-active={isActive || undefined}
                     >
-                      <Icon size={16} stroke={1.5} />
-                      {item.label}
+                      {Icon && <Icon size={16} stroke={1.5} />}
+                      {__(item.label)}
                     </UnstyledButton>
                   );
                 })}

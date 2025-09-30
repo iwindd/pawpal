@@ -17,13 +17,11 @@ import {
 } from "@pawpal/ui/core";
 import { notify } from "@pawpal/ui/notifications";
 import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const ProfilePage = () => {
   const { user, updateProfile } = useAuth();
   const __ = useTranslations("User.Profile");
-  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
@@ -49,7 +47,6 @@ const ProfilePage = () => {
           message: __("notify.success.message"),
           color: "green",
         });
-        router.push("/user");
       } else {
         setMessage("error");
       }
@@ -58,10 +55,6 @@ const ProfilePage = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleCancel = () => {
-    router.push("/user");
   };
 
   return (
@@ -100,9 +93,6 @@ const ProfilePage = () => {
           </Group>
 
           <Group justify="flex-end" gap="sm" mt="md">
-            <Button variant="outline" onClick={handleCancel} disabled={loading}>
-              {__("cancel")}
-            </Button>
             <Button type="submit" loading={loading}>
               {__("save")}
             </Button>
