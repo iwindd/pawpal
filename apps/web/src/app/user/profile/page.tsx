@@ -30,11 +30,9 @@ const ProfilePage = () => {
     group: "updateProfile",
     mode: "uncontrolled",
     initialValues: {
-      displayName: user?.displayName || "",
+      displayName: user?.displayName ?? "",
     },
   });
-
-  if (!user) throw new Error("User not found");
 
   const handleSave = async (inputs: UpdateProfileInput) => {
     setLoading(true);
@@ -72,8 +70,8 @@ const ProfilePage = () => {
         <form onSubmit={form.onSubmit(handleSave)}>
           <Group gap="lg" align="flex-start">
             <Avatar
-              src={user.avatar}
-              alt={user.displayName}
+              src={user?.avatar}
+              alt={user?.displayName}
               size={80}
               radius="xl"
             />

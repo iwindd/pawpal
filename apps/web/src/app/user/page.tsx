@@ -66,9 +66,8 @@ const AccountPage = () => {
   const router = useRouter();
   const [changePasswordOpened, setChangePasswordOpened] = useState(false);
   const [changeEmailOpened, setChangeEmailOpened] = useState(false);
-  if (!user) throw new Error("User not found");
 
-  const createdAtFormatted = format.dateTime(new Date(user.createdAt), {
+  const createdAtFormatted = format.dateTime(new Date(user?.createdAt ?? ""), {
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -89,23 +88,23 @@ const AccountPage = () => {
           <Group justify="space-between" align="flex-start">
             <Group gap={"lg"} align="flex-start">
               <Avatar
-                src={user.avatar}
-                alt={user.displayName}
+                src={user?.avatar}
+                alt={user?.displayName ?? ""}
                 size={80}
                 radius="xl"
               />
               <Stack gap="0">
                 <Title order={3} size="h4">
-                  {user.displayName}
+                  {user?.displayName}
                 </Title>
                 <Text c="dimmed" size="sm">
                   {__("memberSince")} {createdAtFormatted}
                 </Text>
                 <Grid gutter={0}>
-                  <GridItem label={__("id")} value={user.id} />
+                  <GridItem label={__("id")} value={user?.id ?? ""} />
                   <GridItem
                     label={__("email")}
-                    value={user.email}
+                    value={user?.email ?? ""}
                     editable
                     onEdit={() => setChangeEmailOpened(true)}
                   />
