@@ -1,5 +1,6 @@
+import { cookies } from "next/headers";
 import PawApi from "../api";
-import AuthApi from "../services/Auth";
+import AuthApi from "./services/Auth";
 
 export class ServerApi extends PawApi {
   public readonly auth: AuthApi;
@@ -10,9 +11,11 @@ export class ServerApi extends PawApi {
   }
 }
 
-export async function APISession() {
-  const { cookies } = await import("next/headers");
+const APISession = async () => {
   const cookieStore = await cookies();
-  const token = cookieStore.get("token")?.value;
+  const token = cookieStore.get("token")?.value || "";
+
   return new ServerApi(token);
-}
+};
+
+export default APISession;

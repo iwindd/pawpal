@@ -1,5 +1,5 @@
 import { AuthProvider } from "@/contexts/AuthContext";
-import { APISession } from "@/libs/api/server";
+import APISession from "@/libs/api/server";
 import { ColorSchemeScript, mantineHtmlProps } from "@pawpal/ui/core";
 import lamoon from "@pawpal/ui/fonts/lamoon";
 import sarabun from "@pawpal/ui/fonts/sarabun";

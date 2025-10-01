@@ -8,6 +8,7 @@ import {
   Button,
   Checkbox,
   Container,
+  ErrorMessage,
   Group,
   Paper,
   PasswordInput,
@@ -25,6 +26,7 @@ export default function LoginPage() {
   const router = useRouter();
   const __ = useTranslations("Auth.login");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const form = useFormValidate<LoginInput>({
     schema: loginSchema,
@@ -38,8 +40,10 @@ export default function LoginPage() {
 
   // Redirect if already logged in
   useEffect(() => {
-    if (user) {
+    if (user?.roles.includes("Admin")) {
       router.push("/");
+    } else if (user) {
+      setError("user_not_admin");
     }
   }, [user, router]);
 
@@ -131,6 +135,7 @@ export default function LoginPage() {
         >
           {__("loginButton")}
         </Button>
+        <ErrorMessage message={error} formatGroup="Errors.login" />
       </Paper>
     </Container>
   );

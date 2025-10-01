@@ -6,7 +6,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { User, WalletType } from '@pawpal/prisma';
+import { Role, User, WalletType } from '@pawpal/prisma';
 import {
   ChangeEmailInput,
   ChangePasswordInput,
@@ -33,10 +33,11 @@ export class AuthService {
   async verifyPayload(payload: JwtPayload): Promise<Session> {
     let user: User;
     let wallet: Record<WalletType, number>;
-
+    let roles: Role['name'][];
     try {
       user = await this.userService.findById(payload.sub);
       wallet = await this.userService.getUserWallets(user.id);
+      roles = await this.userService.getUserRoles(user.id);
       delete user.password;
     } catch (error) {
       Logger.error('Verify payload failed : ', error);
@@ -46,6 +47,7 @@ export class AuthService {
     return {
       ...user,
       userWallet: wallet,
+      roles: roles,
       createdAt: user.createdAt.toISOString(),
     };
   }
@@ -65,6 +67,7 @@ export class AuthService {
       return {
         ...user,
         userWallet: await this.userService.getUserWallets(user.id),
+        roles: await this.userService.getUserRoles(user.id),
         createdAt: user.createdAt.toISOString(),
       };
     } catch (error) {
@@ -145,6 +148,7 @@ export class AuthService {
         avatar: updatedUser.avatar,
         createdAt: updatedUser.createdAt.toISOString(),
         userWallet: await this.userService.getUserWallets(userId),
+        roles: await this.userService.getUserRoles(userId),
       };
     } catch (error) {
       if (error instanceof Error && error.message === 'User not found') {

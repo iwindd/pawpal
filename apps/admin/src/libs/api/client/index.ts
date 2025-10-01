@@ -1,5 +1,5 @@
 import PawApi from "../api";
-import AuthApi from "../services/Auth";
+import AuthApi from "./services/Auth";
 
 class ClientApi extends PawApi {
   public readonly auth: AuthApi;

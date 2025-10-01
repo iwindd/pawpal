@@ -1,6 +1,6 @@
 import authConfig from '@/config/auth';
 import { Injectable, Logger } from '@nestjs/common';
-import { User, WalletType } from '@pawpal/prisma';
+import { Role, User, WalletType } from '@pawpal/prisma';
 import {
   ChangeEmailInput,
   ChangePasswordInput,
@@ -186,5 +186,13 @@ export class UserService {
       },
       {} as Record<WalletType, number>,
     );
+  }
+
+  async getUserRoles(userId: string): Promise<Role['name'][]> {
+    const roles = await this.prisma.role.findMany({
+      where: { users: { some: { id: userId } } },
+      select: { name: true },
+    });
+    return roles.map((role) => role.name);
   }
 }
