@@ -1,4 +1,6 @@
 {
+  // explorer
+  "explorer.compactFolders": false,
   // editor
   "editor.formatOnPaste": true,
   "editor.formatOnSave": true,
