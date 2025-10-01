@@ -18,11 +18,11 @@ import {
 import { notify } from "@pawpal/ui/notifications";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import classes from "./style.module.css";
 
 export default function LoginPage() {
-  const { login, user } = useAuth();
+  const { login } = useAuth();
   const router = useRouter();
   const __ = useTranslations("Auth.login");
   const [loading, setLoading] = useState(false);
@@ -38,17 +38,9 @@ export default function LoginPage() {
     },
   });
 
-  // Redirect if already logged in
-  useEffect(() => {
-    if (user?.roles.includes("Admin")) {
-      router.push("/");
-    } else if (user) {
-      setError("user_not_admin");
-    }
-  }, [user, router]);
-
   const onSubmit = async (values: LoginInput) => {
     setLoading(true);
+    setError(null);
 
     try {
       const state = await login({ inputs: values });
@@ -60,17 +52,13 @@ export default function LoginPage() {
             message: __("notify.success.message"),
             color: "green",
           });
-          router.push("/");
+          router.refresh();
           break;
         case "invalid_credentials":
           form.setFieldError("email", "invalid_credentials");
           break;
         case "error":
-          notify.show({
-            title: __("errors.login.error"),
-            message: __("errors.login.error"),
-            color: "red",
-          });
+          setError("error");
           break;
         default:
           break;

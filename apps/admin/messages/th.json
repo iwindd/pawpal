@@ -21,6 +21,22 @@
       }
     }
   },
+  "Navbar": {
+    "userMenu": {
+      "accountSettings": "บัญชี",
+      "logout": "ออกจากระบบ",
+      "notify": {
+        "success": {
+          "title": "สำเร็จ",
+          "message": "คุณได้ออกจากระบบสำเร็จ"
+        },
+        "error": {
+          "title": "ผิดพลาด",
+          "message": "กรุณาลองใหม่อีกครั้งภายหลัง!"
+        }
+      }
+    }
+  },
   "Errors": {
     "login": {
       "invalid_email_format": "อีเมลไม่ถูกต้อง",

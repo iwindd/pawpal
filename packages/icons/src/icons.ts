@@ -12,6 +12,7 @@ export {
   IconChevronUp,
   IconPaw as IconCoin,
   IconCreditCard,
+  IconDashboard,
   IconBolt as IconFlashsale,
   IconPacman as IconGames,
   IconHelp,
