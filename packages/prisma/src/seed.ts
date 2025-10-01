@@ -3,6 +3,7 @@ import { DiscountType, PrismaClient } from "../generated/client";
 import categories from "./seeds/categories.json";
 import products from "./seeds/products.json";
 import productTags from "./seeds/productTags.json";
+import roles from "./seeds/roles.json";
 import sales from "./seeds/sales.json";
 import users from "./seeds/users.json";
 
@@ -10,6 +11,35 @@ const prisma = new PrismaClient();
 
 async function main() {
   console.log("🌱 Starting seed...");
+
+  // Seed permissions
+  await prisma.$transaction(async () => {
+    for (const permission of roles.permissions) {
+      await prisma.permission.upsert({
+        where: { name: permission.name },
+        update: {},
+        create: { ...permission },
+      });
+    }
+  });
+
+  // Seed roles
+  await prisma.$transaction(async () => {
+    for (const role of roles.roles) {
+      await prisma.role.upsert({
+        where: { name: role.name },
+        update: {},
+        create: {
+          ...role,
+          permissions: {
+            connect: role.permissions.map((permission) => ({
+              name: permission,
+            })),
+          },
+        },
+      });
+    }
+  });
 
   // Seed users
   await prisma.$transaction(async () => {
@@ -30,6 +60,9 @@ async function main() {
                 })),
               }
             : undefined,
+          roles: {
+            connect: user.roles.map((role) => ({ name: role.name })),
+          },
         },
       });
     }
@@ -107,6 +140,8 @@ async function main() {
   console.log(
     `✅ Seed completed successfully!\n`,
     `--------------------------------\n`,
+    `Created ${await prisma.permission.count()} permissions\n`,
+    `Created ${await prisma.role.count()} roles\n`,
     `Created ${await prisma.user.count()} users (hashed passwords: base on 12 rounds) \n`,
     `Created ${await prisma.product.count()} products\n`,
     `Created ${await prisma.category.count()} categories\n`,

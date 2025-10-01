@@ -1,0 +1,13 @@
+{
+  "permissions": [{ "name": "*.*" }],
+  "roles": [
+    {
+      "name": "Admin",
+      "permissions": ["*.*"]
+    },
+    {
+      "name": "User",
+      "permissions": []
+    }
+  ]
+}

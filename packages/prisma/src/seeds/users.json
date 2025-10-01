@@ -1,7 +1,7 @@
 [
   {
-    "email": "john@example.com",
-    "displayName": "John Doe",
+    "email": "admin@example.com",
+    "displayName": "Admin Example",
     "password": "password",
     "avatar": null,
     "userWallets": [
@@ -9,17 +9,27 @@
         "walletType": "MAIN",
         "balance": 0
       }
+    ],
+    "roles": [
+      {
+        "name": "Admin"
+      }
     ]
   },
   {
-    "email": "jane@example.com",
-    "displayName": "Jane Smith",
+    "email": "user@example.com",
+    "displayName": "User Example",
     "password": "password",
     "avatar": null,
     "userWallets": [
       {
         "walletType": "MAIN",
         "balance": 0
+      }
+    ],
+    "roles": [
+      {
+        "name": "User"
       }
     ]
   }
