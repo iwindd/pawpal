@@ -25,7 +25,7 @@ class AuthApi {
 
   public async login(inputs: LoginInput): Promise<PawApiResponse<Session>> {
     try {
-      const response = await this.client.post("/auth/login", inputs);
+      const response = await this.client.post("/auth/admin/login", inputs);
       return { success: true, data: response.data };
     } catch (error) {
       return { success: false, data: error as AxiosError };

@@ -12,6 +12,7 @@ import {
   HttpCode,
   HttpStatus,
   Post,
+  UnauthorizedException,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -49,6 +50,17 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @UseInterceptors(TokenInterceptor)
   async login(@AuthUser() user: Session) {
+    return user;
+  }
+
+  @Post('admin/login')
+  @UseGuards(LocalAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  @UseInterceptors(TokenInterceptor)
+  async adminLogin(@AuthUser() user: Session) {
+    if (!user.roles.includes('Admin'))
+      throw new UnauthorizedException('user_not_admin');
+
     return user;
   }
 
