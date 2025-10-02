@@ -3,6 +3,7 @@ export {
   IconCheese as IconActivity,
   IconList as IconAll,
   IconBrandApple,
+  IconBrandFacebook,
   IconBrandGoogle,
   IconBrandSteam,
   IconCheck,
@@ -32,4 +33,5 @@ export {
   IconMoon as IconThemeDark,
   IconSun as IconThemeLight,
   IconUser,
+  IconPaw as IconWork,
 } from "@tabler/icons-react";

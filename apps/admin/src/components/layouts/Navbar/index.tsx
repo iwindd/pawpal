@@ -1,4 +1,5 @@
-import { IconDashboard, IconHome, IconMinus, IconPlus } from "@pawpal/icons";
+import { NavLink, navlinks, othersNavlinks } from "@/configs/navbar";
+import { IconMinus, IconPlus } from "@pawpal/icons";
 import {
   Badge,
   Burger,
@@ -12,6 +13,7 @@ import {
   UnstyledButton,
 } from "@pawpal/ui/core";
 import { useDisclosure } from "@pawpal/ui/hooks";
+import { useFormatter, useTranslations } from "next-intl";
 import Link from "next/link";
 import classes from "./style.module.css";
 
@@ -35,7 +37,7 @@ export default function Navbar({ opened, toggle }: Readonly<Props>) {
               <Folder key={navlink.id} {...navlink} />
             ) : (
               <Flex w="100%" direction="column" align="start" key={navlink.id}>
-                <NavLink {...navlink} />
+                <LinkItem {...navlink} />
                 {navlink.hasBorderBottom && <Divider my={10} w="100%" />}
               </Flex>
             );
@@ -44,20 +46,21 @@ export default function Navbar({ opened, toggle }: Readonly<Props>) {
       </ScrollArea>
 
       <Flex w="100%" direction="column" align="start" gap={6}>
-        {others.map((otherLink) => (
-          <NavLink key={otherLink.id} {...otherLink} />
+        {othersNavlinks.map((otherLink) => (
+          <LinkItem key={otherLink.id} {...otherLink} />
         ))}
       </Flex>
     </Stack>
   );
 }
 
-const NavLink = ({ title, icon: Icon, link }: NavLink) => {
+const LinkItem = ({ title, icon: Icon, link }: NavLink) => {
+  const __ = useTranslations("Navbar.links");
   return (
     <Link data-active={false} className={classes.navlink} href={link}>
       <Icon size={20} />
       <Text className={classes.title} lts={-0.5}>
-        {title}
+        {__(title)}
       </Text>
     </Link>
   );
@@ -65,6 +68,9 @@ const NavLink = ({ title, icon: Icon, link }: NavLink) => {
 
 const Folder = ({ title, icon: Icon, files }: NavLink) => {
   const [opened, { toggle }] = useDisclosure(true);
+  const __ = useTranslations("Navbar.links");
+  const format = useFormatter();
+
   return (
     <Flex direction="column" align="start" w="100%">
       <UnstyledButton
@@ -80,7 +86,7 @@ const Folder = ({ title, icon: Icon, files }: NavLink) => {
         <Flex align="center" gap={10}>
           <Icon size={20} />
           <Text className={classes.title} lts={-0.5}>
-            {title}
+            {__(title)}
           </Text>
         </Flex>
         {opened && <IconMinus size={17} />}
@@ -90,9 +96,9 @@ const Folder = ({ title, icon: Icon, files }: NavLink) => {
         <Flex w="100%" py={14} direction="column" align="start" gap={10}>
           {files.map((file) => (
             <Link key={file.id} className={classes.subNavLink} href={file.link}>
-              <Text lts={-0.5}>{file.name}</Text>
+              <Text lts={-0.5}>{__(file.name)}</Text>
               <Badge radius={6} className={classes.noti} px={6}>
-                {file.noti}
+                {format.number(file.noti)}
               </Badge>
             </Link>
           ))}
@@ -101,58 +107,3 @@ const Folder = ({ title, icon: Icon, files }: NavLink) => {
     </Flex>
   );
 };
-
-interface NavLink {
-  id: number;
-  icon: React.ComponentType<any>;
-  title: string;
-  link: string;
-  files: {
-    id: number;
-    name: string;
-    link: string;
-    noti: number;
-  }[];
-  hasBorderBottom?: boolean;
-}
-
-const navlinks: NavLink[] = [
-  {
-    id: 1,
-    icon: IconDashboard,
-    title: "ภาพรวม",
-    link: "/",
-    files: [],
-    hasBorderBottom: true,
-  },
-  {
-    id: 3,
-    icon: IconHome,
-    title: "งานหลัก",
-    link: "/",
-    files: [
-      {
-        id: 1,
-        name: "คำสั่งซื้อ",
-        link: "/",
-        noti: 48,
-      },
-      {
-        id: 2,
-        name: "เติมเงิน",
-        link: "/",
-        noti: 6,
-      },
-    ],
-  },
-];
-
-const others: NavLink[] = [
-  {
-    id: 11,
-    title: "Fanpage",
-    link: "/",
-    files: [],
-    icon: IconHome,
-  },
-];
