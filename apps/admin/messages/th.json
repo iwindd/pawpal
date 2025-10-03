@@ -43,6 +43,7 @@
         "order": "คำสั่งซื้อ",
         "topup": "เติมเงิน"
       },
+      "products": "สินค้า",
       "fanpage": "Fanpage"
     }
   },
@@ -54,6 +55,16 @@
       "invalid_credentials": "อีเมลหรือรหัสผ่านไม่ถูกต้อง",
       "error": "กรุณาลองใหม่อีกครั้งภายหลัง!",
       "user_not_admin": "คุณไม่มีสิทธิ์เข้าถึงระบบนี้"
+    }
+  },
+  "Datatable": {
+    "product": {
+      "name": "ขื่อสินค้า",
+      "category": "หมวดหมู่",
+      "productTags": "ป้ายกำกับ",
+      "packages": "แพ็คเกจ",
+      "packageFormat": "{count} แพ็คเกจ",
+      "createdAt": "วันที่สร้าง"
     }
   }
 }

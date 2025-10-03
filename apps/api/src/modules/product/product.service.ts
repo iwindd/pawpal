@@ -1,5 +1,9 @@
+import datatableUtils from '@/utils/datatable';
 import { Injectable } from '@nestjs/common';
 import {
+  AdminProductResponse,
+  DatatableQueryDto,
+  DatatableResponse,
   ProductListItem,
   ProductResponse,
   ProductSaleValue,
@@ -282,6 +286,52 @@ export class ProductService {
       products: productsWithSales,
       total,
       hasMore,
+    };
+  }
+
+  async getProducts(
+    queryParams: DatatableQueryDto,
+  ): Promise<DatatableResponse<AdminProductResponse>> {
+    const { page, limit, sort } = queryParams;
+    const skip = (page - 1) * limit;
+
+    const total = await this.prisma.product.count();
+    const products = await this.prisma.product.findMany({
+      skip,
+      take: limit,
+      orderBy: datatableUtils.buildOrderBy(sort),
+      select: {
+        slug: true,
+        name: true,
+        createdAt: true,
+        _count: {
+          select: { packages: true },
+        },
+        category: {
+          select: {
+            name: true,
+            slug: true,
+          },
+        },
+        productTags: {
+          select: {
+            slug: true,
+            name: true,
+          },
+        },
+      },
+    });
+
+    return {
+      data: products.map((product) => ({
+        slug: product.slug,
+        name: product.name,
+        createdAt: product.createdAt.toISOString(),
+        packageCount: product._count.packages,
+        category: product.category,
+        productTags: product.productTags,
+      })),
+      total,
     };
   }
 

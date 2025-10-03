@@ -1,4 +1,4 @@
-import { IconHome, IconLogin } from "@pawpal/icons";
+import { IconHome, IconLogin, IconWork } from "@pawpal/icons";
 
 export type RouteItem = {
   path: string | ((...args: any[]) => string);
@@ -17,5 +17,22 @@ export const ROUTES: Record<string, RouteItem> = {
     path: "/login",
     label: "login",
     icon: IconLogin,
+  },
+  products: {
+    path: "/products",
+    label: "products",
+    icon: IconWork,
+    children: {
+      create: {
+        path: "/products/create",
+        label: "products.create",
+        icon: IconWork,
+      },
+      edit: {
+        path: "/products/:slug/edit",
+        label: "products.edit",
+        icon: IconWork,
+      },
+    },
   },
 };

@@ -1,4 +1,9 @@
-import { IconBrandFacebook, IconDashboard, IconWork } from "@pawpal/icons";
+import {
+  IconBrandFacebook,
+  IconDashboard,
+  IconShoppingBag,
+  IconWork,
+} from "@pawpal/icons";
 import { ROUTES } from "./route";
 
 export interface NavLink {
@@ -43,6 +48,13 @@ export const navlinks: NavLink[] = [
         noti: 0,
       },
     ],
+  },
+  {
+    id: 4,
+    icon: IconShoppingBag,
+    title: "products",
+    link: ROUTES["products"]?.path as string,
+    files: [],
   },
 ];
 

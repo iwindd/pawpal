@@ -38,3 +38,12 @@ export interface ProductResponse {
   packages: ProductPackage[];
   sales: ProductSaleValue | null;
 }
+
+export interface AdminProductResponse {
+  slug: string;
+  name: string;
+  createdAt: string;
+  category: ProductCategory;
+  productTags: ProductTag[];
+  packageCount: number;
+}
