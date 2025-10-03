@@ -9,6 +9,7 @@ import {
 } from "@pawpal/icons";
 import { Session } from "@pawpal/shared";
 import { backdrop } from "@pawpal/ui/backdrop";
+import { clsx } from "@pawpal/ui/clsx";
 import {
   Avatar,
   Box,
@@ -20,7 +21,6 @@ import {
   UnstyledButton,
 } from "@pawpal/ui/core";
 import { notify } from "@pawpal/ui/notifications";
-import clsx from "clsx";
 import { useFormatter, useTranslations } from "next-intl";
 import Link from "next/link";
 import { useState } from "react";

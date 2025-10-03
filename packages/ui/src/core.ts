@@ -50,8 +50,15 @@ export {
   virtualColor,
   type ActionIconProps,
   type GroupProps,
+  type MantineTheme,
   type MantineThemeOverride,
   type TextProps,
 } from "@mantine/core";
 
+export {
+  DataTable,
+  type DataTableColumn,
+  type DataTableProps,
+  type DataTableSortStatus,
+} from "mantine-datatable";
 export { default as ErrorMessage } from "./components/ErrorMessage";

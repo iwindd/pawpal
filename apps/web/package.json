@@ -20,7 +20,6 @@
     "@types/axios": "catalog:",
     "dayjs": "catalog:",
     "axios": "catalog:",
-    "clsx": "catalog:",
     "embla-carousel-autoplay": "catalog:",
     "next": "catalog:",
     "next-intl": "catalog:",

@@ -12,6 +12,7 @@
     "./form": "./src/form.ts",
     "./backdrop": "./src/backdrop.ts",
     "./provider": "./src/provider.ts",
+    "./clsx": "./src/clsx.ts",
     "./fonts/lamoon": "./src/fonts/lamoon.ts",
     "./fonts/sarabun": "./src/fonts/sarabun.ts"
   },
@@ -32,9 +33,11 @@
   "dependencies": {
     "@mantine/carousel": "catalog:",
     "@mantine/core": "catalog:",
-    "@mantine/hooks": "catalog:",
     "@mantine/form": "catalog:",
+    "@mantine/hooks": "catalog:",
     "@mantine/notifications": "catalog:",
+    "clsx": "catalog:",
+    "mantine-datatable": "catalog:",
     "mantine-form-zod-resolver": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:"
