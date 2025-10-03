@@ -33,6 +33,7 @@ export {
   IconBrandSoundcloud as IconStreaming,
   IconMoon as IconThemeDark,
   IconSun as IconThemeLight,
+  IconUpload,
   IconUser,
   IconPaw as IconWork,
 } from "@tabler/icons-react";

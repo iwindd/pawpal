@@ -38,7 +38,7 @@ export class ResourceService {
     file: Express.Multer.File,
     user_id: string,
   ): Promise<ResourceResponse> {
-    const { key } = await this.storage.uploadFile(file.buffer, file.mimetype);
+    const { key } = await this.storage.uploadFile(file);
     const resource = await this.prisma.resource.create({
       data: {
         url: key,

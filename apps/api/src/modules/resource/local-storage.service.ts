@@ -17,10 +17,10 @@ export class LocalStorageService {
     fs.mkdir(this.storagePath, { recursive: true }).catch(() => {});
   }
 
-  async uploadFile(buffer: Buffer, mimeType: string) {
-    const key = `${uuidv4()}.${mimeType.split('/')[1]}`;
+  async uploadFile(file: Express.Multer.File) {
+    const key = `${uuidv4()}.${file.mimetype.split('/')[1]}`;
     const filePath = join(this.storagePath, key);
-    await fs.writeFile(filePath, buffer);
+    await fs.writeFile(filePath, file.buffer);
 
     this.logger.log(`Uploaded file "${key}"`);
 

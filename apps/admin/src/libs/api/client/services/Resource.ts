@@ -7,6 +7,16 @@ class ResourceApi {
   public async list(): Promise<AxiosResponse<ResourceResponse[]>> {
     return await this.client.get("/admin/resource");
   }
+
+  public async upload(
+    formData: FormData
+  ): Promise<AxiosResponse<ResourceResponse>> {
+    return await this.client.post("/admin/resource", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+  }
 }
 
 export default ResourceApi;

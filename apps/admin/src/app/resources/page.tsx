@@ -1,4 +1,5 @@
 "use client";
+import UploadImageModal from "@/components/Modals/UploadImageModal";
 import ResourceImage from "@/components/ResourceImage";
 import API from "@/libs/api/client";
 import {
@@ -13,6 +14,7 @@ import {
   Text,
   Title,
 } from "@pawpal/ui/core";
+import { useDisclosure } from "@pawpal/ui/hooks";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
@@ -26,6 +28,7 @@ const COL_SPAN = {
 
 const ResourcePage = () => {
   const __ = useTranslations("Resources");
+  const [opened, { open, close }] = useDisclosure(false);
   const { data, isFetching } = useQuery({
     queryKey: ["resources"],
     queryFn: () => API.resource.list(),
@@ -37,7 +40,7 @@ const ResourcePage = () => {
         <Stack gap="0">
           <Group>
             <Title order={2}>{__("title")}</Title>
-            <Button size="xs" variant="outline">
+            <Button size="xs" variant="outline" onClick={open}>
               {__("upload")}
             </Button>
           </Group>
@@ -70,6 +73,8 @@ const ResourcePage = () => {
             ))}
         </Grid>
       </Paper>
+
+      <UploadImageModal opened={opened} onClose={close} />
     </div>
   );
 };
