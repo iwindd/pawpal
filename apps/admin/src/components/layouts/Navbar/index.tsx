@@ -1,4 +1,5 @@
 import { NavLink, navlinks, othersNavlinks } from "@/configs/navbar";
+import { useActiveRouteConfig } from "@/hooks/useActiveRouteConfig";
 import { IconMinus, IconPlus } from "@pawpal/icons";
 import {
   Badge,
@@ -23,6 +24,8 @@ interface Props {
 }
 
 export default function Navbar({ opened, toggle }: Readonly<Props>) {
+  const activeRoute = useActiveRouteConfig();
+
   return (
     <Stack h="100%" gap={20} px="md" py="lg">
       <Group gap={8} w="100%" align="center">
@@ -33,11 +36,15 @@ export default function Navbar({ opened, toggle }: Readonly<Props>) {
       <ScrollArea h="100%">
         <Flex h="100%" gap={4} direction="column" align="start">
           {navlinks.map((navlink) => {
+            const path =
+              typeof navlink.link === "string" ? navlink.link : navlink.link();
+            const isActive = activeRoute?.path === path;
+
             return navlink.files.length > 0 ? (
               <Folder key={navlink.id} {...navlink} />
             ) : (
               <Flex w="100%" direction="column" align="start" key={navlink.id}>
-                <LinkItem {...navlink} />
+                <LinkItem {...navlink} link={path} isActive={isActive} />
                 {navlink.hasBorderBottom && <Divider my={10} w="100%" />}
               </Flex>
             );
@@ -47,17 +54,33 @@ export default function Navbar({ opened, toggle }: Readonly<Props>) {
 
       <Flex w="100%" direction="column" align="start" gap={6}>
         {othersNavlinks.map((otherLink) => (
-          <LinkItem key={otherLink.id} {...otherLink} />
+          <LinkItem
+            key={otherLink.id}
+            {...otherLink}
+            isActive={false}
+            link={otherLink.link as string}
+          />
         ))}
       </Flex>
     </Stack>
   );
 }
 
-const LinkItem = ({ title, icon: Icon, link }: NavLink) => {
+const LinkItem = ({
+  title,
+  icon: Icon,
+  link,
+  isActive,
+}: {
+  title: string;
+  icon: React.ComponentType<any>;
+  link: string;
+  isActive: boolean;
+}) => {
   const __ = useTranslations("Navbar.links");
+
   return (
-    <Link data-active={false} className={classes.navlink} href={link}>
+    <Link data-active={isActive} className={classes.navlink} href={link}>
       <Icon size={20} />
       <Text className={classes.title} lts={-0.5}>
         {__(title)}

@@ -10,7 +10,7 @@ export interface NavLink {
   id: number;
   icon: React.ComponentType<any>;
   title: string;
-  link: string;
+  link: string | ((...args: any[]) => string);
   files: {
     id: number;
     name: string;
