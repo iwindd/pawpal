@@ -1,10 +1,11 @@
 import { AppModule } from '@/modules/app/app.module';
 import { NestFactory } from '@nestjs/core';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import passport from 'passport';
+import { join } from 'path';
 import { DelayInterceptor } from './common/interceptors/delay.interceptor';
-
 // Constants
 const DEFAULT_PORT = 3000;
 const DEVELOPMENT_ENV = 'development';
@@ -12,7 +13,7 @@ const PRODUCTION_ENV = 'production';
 const ENABLE_DELAY_FLAG = 'true';
 
 async function bootstrap(): Promise<void> {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.use(cookieParser(process.env.APP_SECRET));
 
   const isDevelopment = process.env.NODE_ENV === DEVELOPMENT_ENV;
@@ -47,6 +48,10 @@ async function bootstrap(): Promise<void> {
   });
 
   const port = process.env.APP_PORT ?? DEFAULT_PORT;
+
+  app.useStaticAssets(join(process.cwd(), 'uploads'), {
+    prefix: '/storage/',
+  });
   await app.listen(port);
 }
 

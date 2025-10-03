@@ -15,6 +15,7 @@ export {
   IconCreditCard,
   IconDashboard,
   IconBolt as IconFlashsale,
+  IconFolder,
   IconPacman as IconGames,
   IconHelp,
   IconHistory,

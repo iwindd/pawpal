@@ -1,4 +1,4 @@
-import { IconHome, IconLogin, IconWork } from "@pawpal/icons";
+import { IconFolder, IconHome, IconLogin, IconWork } from "@pawpal/icons";
 
 export type RouteItem = {
   path: string | ((...args: any[]) => string);
@@ -34,5 +34,10 @@ export const ROUTES: Record<string, RouteItem> = {
         icon: IconWork,
       },
     },
+  },
+  resources: {
+    path: "/resources",
+    label: "resources",
+    icon: IconFolder,
   },
 };

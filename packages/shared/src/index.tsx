@@ -9,4 +9,5 @@ export * from "./schemas/order/purchase";
 export * from "./types/dto/DatatableQueryParam";
 export * from "./types/response/datatable";
 export * from "./types/response/product";
+export * from "./types/response/resource";
 export * from "./types/session";

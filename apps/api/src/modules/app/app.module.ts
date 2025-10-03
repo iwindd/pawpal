@@ -11,6 +11,7 @@ import { PaymentModule } from '../payment/payment.module';
 import { PrismaModule } from '../prisma/prisma.module';
 import { ProductModule } from '../product/product.module';
 import { ProductTagModule } from '../productTags/product-tag.module';
+import { ResourceModule } from '../resource/resource.module';
 import { SaleModule } from '../sale/sale.module';
 import { WalletModule } from '../wallet/wallet.module';
 @Module({
@@ -30,6 +31,7 @@ import { WalletModule } from '../wallet/wallet.module';
     WalletModule,
     OrderModule,
     PackageModule,
+    ResourceModule,
   ],
   controllers: [AppController],
   providers: [AppService],

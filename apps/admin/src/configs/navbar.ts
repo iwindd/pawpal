@@ -1,6 +1,7 @@
 import {
   IconBrandFacebook,
   IconDashboard,
+  IconFolder,
   IconShoppingBag,
   IconWork,
 } from "@pawpal/icons";
@@ -54,6 +55,13 @@ export const navlinks: NavLink[] = [
     icon: IconShoppingBag,
     title: "products",
     link: ROUTES["products"]?.path as string,
+    files: [],
+  },
+  {
+    id: 5,
+    icon: IconFolder,
+    title: "resources",
+    link: ROUTES["resources"]?.path as string,
     files: [],
   },
 ];

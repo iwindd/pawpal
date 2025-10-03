@@ -44,6 +44,7 @@
         "topup": "เติมเงิน"
       },
       "products": "สินค้า",
+      "resources": "ทรัพยากร",
       "fanpage": "Fanpage"
     }
   },
@@ -66,5 +67,13 @@
       "packageFormat": "{count} แพ็คเกจ",
       "createdAt": "วันที่สร้าง"
     }
+  },
+  "Resources": {
+    "title": "ทรัพยากร",
+    "subtitle": "ทรัพยากรที่อัพโหลดโดยผู้ใช้งาน",
+    "sortBy": "จัดเรียงตาม",
+    "fileType": "ประเภทไฟล์",
+    "uploadedBy": "อัพโหลดโดย",
+    "upload": "อัพโหลด"
   }
 }

@@ -20,6 +20,7 @@ model User {
   userWallets UserWallet[] @relation("UserWallets")
   orders      Order[]      @relation("OrderUser")
   roles       Role[]       @relation("UserRoles")
+  Resource    Resource[]   @relation("ResourceUser")
 
   @@map("users")
 }
@@ -199,6 +200,19 @@ model OrderPackage {
   @@map("order_packages")
 }
 
+model Resource {
+  id        String       @id @default(cuid())
+  url       String
+  type      ResourceType @default(IMAGE)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  user    User   @relation("ResourceUser", fields: [user_id], references: [id])
+  user_id String
+
+  @@map("resources")
+}
+
 enum ProductTagType {
   USER_DEFINED
   SYSTEM
@@ -229,4 +243,8 @@ enum OrderStatus {
   PROCESSING
   COMPLETED
   CANCELLED
+}
+
+enum ResourceType {
+  IMAGE
 }

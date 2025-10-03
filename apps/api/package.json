@@ -33,11 +33,13 @@
     "cookie-parser": "catalog:",
     "dayjs": "catalog:",
     "express-session": "catalog:",
+    "multer": "catalog:",
     "passport": "catalog:",
     "passport-jwt": "catalog:",
     "passport-local": "catalog:",
     "reflect-metadata": "catalog:",
-    "rxjs": "catalog:"
+    "rxjs": "catalog:",
+    "uuid": "catalog:"
   },
   "devDependencies": {
     "@eslint/eslintrc": "catalog:",
@@ -52,6 +54,7 @@
     "@types/express": "catalog:",
     "@types/express-session": "catalog:",
     "@types/jest": "catalog:",
+    "@types/multer": "catalog:",
     "@types/node": "catalog:",
     "@types/passport": "catalog:",
     "@types/passport-jwt": "catalog:",
