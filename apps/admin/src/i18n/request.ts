@@ -23,6 +23,17 @@ export default getRequestConfig(async () => {
           minimumFractionDigits: 0,
           maximumFractionDigits: 0,
         },
+        count: {
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        },
+      },
+      dateTime: {
+        date: {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        },
       },
     },
   };
