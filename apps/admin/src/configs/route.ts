@@ -40,4 +40,15 @@ export const ROUTES: Record<string, RouteItem> = {
     label: "resources",
     icon: IconFolder,
   },
+  website: {
+    path: "/website",
+    label: "website",
+    icon: IconWork,
+    children: {
+      carousel: {
+        path: "/website/carousel",
+        label: "website.carousel",
+      },
+    },
+  },
 };

@@ -2,6 +2,7 @@
 export {
   IconCheese as IconActivity,
   IconList as IconAll,
+  IconAppWindow,
   IconBrandApple,
   IconBrandFacebook,
   IconBrandGoogle,

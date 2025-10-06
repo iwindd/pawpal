@@ -45,6 +45,10 @@
       },
       "products": "สินค้า",
       "resources": "ทรัพยากร",
+      "website": {
+        "main": "เว็บไซต์",
+        "carousel": "สไลด์โชว์"
+      },
       "fanpage": "Fanpage"
     }
   },

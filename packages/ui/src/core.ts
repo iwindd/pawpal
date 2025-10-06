@@ -3,6 +3,7 @@ export {
   ActionIcon,
   Anchor,
   AppShell,
+  AspectRatio,
   Avatar,
   Badge,
   Box,

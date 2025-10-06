@@ -1,4 +1,5 @@
 import {
+  IconAppWindow,
   IconBrandFacebook,
   IconDashboard,
   IconFolder,
@@ -56,6 +57,20 @@ export const navlinks: NavLink[] = [
     title: "products",
     link: ROUTES["products"]?.path as string,
     files: [],
+  },
+  {
+    id: 6,
+    icon: IconAppWindow,
+    title: "website.main",
+    link: ROUTES["website"]?.path as string,
+    files: [
+      {
+        id: 1,
+        name: "website.carousel",
+        link: "/website/carousel",
+        noti: 0,
+      },
+    ],
   },
   {
     id: 5,
