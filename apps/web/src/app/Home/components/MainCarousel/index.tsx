@@ -1,7 +1,6 @@
 "use client";
-import { Carousel } from "@pawpal/ui/carousel";
+import { Autoplay, Carousel } from "@pawpal/ui/carousel";
 import { Box, Button, Flex, Group, Stack, Text, Title } from "@pawpal/ui/core";
-import Autoplay from "embla-carousel-autoplay";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useRef, useState } from "react";

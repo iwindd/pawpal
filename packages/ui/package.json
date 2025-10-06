@@ -36,6 +36,7 @@
     "@mantine/form": "catalog:",
     "@mantine/hooks": "catalog:",
     "@mantine/notifications": "catalog:",
+    "embla-carousel-autoplay": "catalog:",
     "clsx": "catalog:",
     "mantine-datatable": "catalog:",
     "mantine-form-zod-resolver": "catalog:",
