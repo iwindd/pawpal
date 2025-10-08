@@ -7,12 +7,18 @@ import {
   Get,
   HttpCode,
   Post,
+  Query,
   UploadedFile,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { MulterFileSchema, ResourceResponse, Session } from '@pawpal/shared';
+import {
+  DatatableResponse,
+  MulterFileSchema,
+  ResourceResponse,
+  Session,
+} from '@pawpal/shared';
 import { ResourceService } from './resource.service';
 
 @Controller('admin/resource')
@@ -21,8 +27,14 @@ export class ResourcesController {
   constructor(private readonly resourceService: ResourceService) {}
 
   @Get()
-  async getResources(): Promise<ResourceResponse[]> {
-    return await this.resourceService.getResources();
+  async findAllResources(
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 12,
+  ): Promise<DatatableResponse<ResourceResponse>> {
+    return await this.resourceService.findAllResources({
+      page: Number(page),
+      limit: Number(limit),
+    });
   }
 
   @Post()

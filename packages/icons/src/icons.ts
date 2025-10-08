@@ -7,6 +7,7 @@ export {
   IconBrandFacebook,
   IconBrandGoogle,
   IconBrandSteam,
+  IconSwitch2 as IconChange,
   IconCheck,
   IconChevronDown,
   IconChevronLeft,
@@ -27,6 +28,7 @@ export {
   IconLogout,
   IconMinus,
   IconBasket as IconOther,
+  IconPhoto,
   IconPlus,
   IconSearch,
   IconSettings,
@@ -37,4 +39,5 @@ export {
   IconUpload,
   IconUser,
   IconPaw as IconWork,
+  IconX,
 } from "@tabler/icons-react";

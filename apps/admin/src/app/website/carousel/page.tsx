@@ -1,9 +1,9 @@
 "use client";
 
-import ArchiveDatatable from "@/components/Datatables/Carousel/archive";
-import PublishDatatable from "@/components/Datatables/Carousel/publish";
+import CreateCarouselModal from "@/components/Modals/CreateCarouselModal";
 import useDatatable from "@/hooks/useDatatable";
 import { Button, Grid, Group } from "@pawpal/ui/core";
+import { useDisclosure } from "@pawpal/ui/hooks";
 import { PreviewCarousel } from "./components/PreviewCarousel";
 
 const MOCKUP = [
@@ -52,6 +52,7 @@ const MOCKUP = [
 
 const CarouselPage = () => {
   const datatable = useDatatable<any>();
+  const [opened, { open, close }] = useDisclosure(false);
 
   return (
     <div>
@@ -60,29 +61,31 @@ const CarouselPage = () => {
           <PreviewCarousel />
         </Grid.Col>
         <Grid.Col span={4}>
-          <PublishDatatable
+          {/*        <PublishDatatable
             records={MOCKUP}
             totalRecords={MOCKUP.length}
             {...datatable}
-          />
+          /> */}
         </Grid.Col>
         <Grid.Col span={12}>
           <Group justify="space-between" py="md">
             <Group>
-              <Button>Add</Button>
+              <Button onClick={open}>Add</Button>
             </Group>
             <Group>
               <Button>Publish</Button>
               <Button>Archive</Button>
             </Group>
           </Group>
-          <ArchiveDatatable
+          {/*           <ArchiveDatatable
             records={MOCKUP}
             totalRecords={MOCKUP.length}
             {...datatable}
-          />
+          /> */}
         </Grid.Col>
       </Grid>
+
+      <CreateCarouselModal opened={opened} onClose={close} />
     </div>
   );
 };

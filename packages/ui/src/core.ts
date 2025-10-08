@@ -41,6 +41,8 @@ export {
   Select,
   Space,
   Stack,
+  Table,
+  Tabs,
   Text,
   TextInput,
   ThemeIcon,
