@@ -1,18 +1,27 @@
 "use client";
 
-import { Center, Loader } from "@pawpal/ui/core";
+import { Anchor, Box, BoxProps, Center } from "@mantine/core";
 import { useEffect, useRef } from "react";
+
+export interface LoadingTriggerProps extends BoxProps {
+  onLoadMore: () => void;
+  hasNextPage: boolean;
+  isFetchingNextPage: boolean;
+  manualFallbackText?: string;
+  noManualFallback?: boolean;
+  children?: React.ReactNode;
+}
 
 // Loading trigger component for intersection observer
 export const LoadingTrigger = ({
   onLoadMore,
   hasNextPage,
   isFetchingNextPage,
-}: Readonly<{
-  onLoadMore: () => void;
-  hasNextPage: boolean;
-  isFetchingNextPage: boolean;
-}>) => {
+  manualFallbackText,
+  noManualFallback,
+  children,
+  ...props
+}: LoadingTriggerProps) => {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -33,13 +42,16 @@ export const LoadingTrigger = ({
   }, [hasNextPage, isFetchingNextPage, onLoadMore]);
 
   return (
-    <div ref={ref} style={{ height: "20px", width: "100%" }}>
-      {isFetchingNextPage && (
+    <Box {...props} ref={ref}>
+      {isFetchingNextPage && children}
+      {hasNextPage && !isFetchingNextPage && !noManualFallback && (
         <Center>
-          <Loader size="sm" />
+          <Anchor onClick={onLoadMore}>
+            {manualFallbackText || "Load more"}
+          </Anchor>
         </Center>
       )}
-    </div>
+    </Box>
   );
 };
 

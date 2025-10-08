@@ -65,3 +65,7 @@ export {
   type DataTableSortStatus,
 } from "mantine-datatable";
 export { default as ErrorMessage } from "./components/ErrorMessage";
+export {
+  default as LoadingTrigger,
+  type LoadingTriggerProps,
+} from "./components/LoadingTrigger";

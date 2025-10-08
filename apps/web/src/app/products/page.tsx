@@ -3,13 +3,13 @@
 import API from "@/libs/api/client";
 import { IconSearch } from "@pawpal/icons";
 import {
-  Anchor,
   Center,
   Container,
   Divider,
   Grid,
   Group,
   Loader,
+  LoadingTrigger,
   Stack,
   Text,
   TextInput,
@@ -20,7 +20,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useMemo, useState } from "react";
 import ProductCard from "../Home/components/ProductSections/components/card";
 import Categories, { CategoryKey } from "./components/Categories";
-import LoadingTrigger from "./components/LoadingTrigger";
 
 interface ProductsPageState {
   search: string;
@@ -168,14 +167,14 @@ export default function ProductsPage() {
             onLoadMore={handleEndReached}
             hasNextPage={hasNextPage}
             isFetchingNextPage={isFetchingNextPage}
-          />
-
-          {/* Manual load more button as fallback */}
-          {hasNextPage && !isFetchingNextPage && (
+            manualFallbackText={__("loadMore")}
+            h="20"
+            w="100%"
+          >
             <Center>
-              <Anchor onClick={handleEndReached}>{__("loadMore")}</Anchor>
+              <Loader size="sm" />
             </Center>
-          )}
+          </LoadingTrigger>
         </Stack>
       </Stack>
     </Container>
