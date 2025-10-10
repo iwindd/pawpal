@@ -1,19 +1,16 @@
 "use client";
+import ComboboxProduct from "@/components/Combobox/Product";
 import useFormValidate from "@/hooks/useFormValidate";
 import DropzoneTrigger from "@/hooks/useResource/triggers/DropzoneTriggger";
 import API from "@/libs/api/client";
 import { CarouselInput, carouselSchema } from "@pawpal/shared";
-import { Button, Group, Modal, Stack, TextInput } from "@pawpal/ui/core";
+import { Button, Group, Paper, Stack, TextInput } from "@pawpal/ui/core";
 import { notify } from "@pawpal/ui/notifications";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import ComboboxProduct from "../Combobox/Product";
 
-const CreateCarouselModal = ({
-  opened,
-  onClose,
-}: Readonly<{ opened: boolean; onClose: () => void }>) => {
+const CarouselCreatePage = () => {
   const __ = useTranslations("Carousel.create");
   const [message, setMessage] = useState<string | null>(null);
   const queryClient = useQueryClient();
@@ -35,7 +32,6 @@ const CreateCarouselModal = ({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["resources"] });
-      onClose();
       notify.show({
         title: __("notify.success.title"),
         message: __("notify.success.message"),
@@ -50,42 +46,44 @@ const CreateCarouselModal = ({
   };
 
   return (
-    <Modal opened={opened} onClose={onClose} title={__("title")} size="xl">
+    <div>
       <form onSubmit={form.onSubmit(onSubmit)}>
-        <Stack gap="md">
-          <DropzoneTrigger
-            label={__("form.resource.label")}
-            hint={__("form.resource.hint")}
-            key={form.key("resource_id")}
-            {...form.getInputProps("resource_id")}
-          />
+        <Stack maw="1920">
+          <Paper p="md">
+            <DropzoneTrigger
+              placeholder={__("form.resource.placeholder")}
+              hint={__("form.resource.hint")}
+              key={form.key("resource_id")}
+              h="400"
+              {...form.getInputProps("resource_id")}
+            />
+          </Paper>
 
-          <TextInput
-            label={__("form.title.label")}
-            placeholder={__("form.title.placeholder")}
-            key={form.key("title")}
-            {...form.getInputProps("title")}
-          />
+          <Paper component={Stack} gap="md" p="md">
+            <TextInput
+              label={__("form.title.label")}
+              placeholder={__("form.title.placeholder")}
+              key={form.key("title")}
+              {...form.getInputProps("title")}
+            />
 
-          <ComboboxProduct
-            label={__("form.product.label")}
-            placeholder={__("form.product.placeholder")}
-            key={form.key("product_id")}
-            {...form.getInputProps("product_id")}
-          />
+            <ComboboxProduct
+              label={__("form.product.label")}
+              placeholder={__("form.product.placeholder")}
+              key={form.key("product_id")}
+              {...form.getInputProps("product_id")}
+            />
+          </Paper>
+
+          <Paper component={Group} gap="md" p="md" justify="flex-end">
+            <Button type="submit" loading={isPending}>
+              {__("actions.create")}
+            </Button>
+          </Paper>
         </Stack>
-
-        <Group mt="md" justify="flex-end">
-          <Button onClick={onClose} variant="outline" disabled={isPending}>
-            {__("actions.cancel")}
-          </Button>
-          <Button type="submit" loading={isPending}>
-            {__("actions.create")}
-          </Button>
-        </Group>
       </form>
-    </Modal>
+    </div>
   );
 };
 
-export default CreateCarouselModal;
+export default CarouselCreatePage;

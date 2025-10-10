@@ -15,12 +15,14 @@ const HasImage = ({
   selectedResource,
   onOpen,
   error,
+  h,
 }: DropzoneTriggerHasImageProps) => {
   const __ = useTranslations("Resources.modal");
 
   return (
     <Paper
       radius={"sm"}
+      h={h}
       style={{
         overflow: "hidden",
         border: error ? "1px solid var(--mantine-color-error)" : undefined,
@@ -30,7 +32,7 @@ const HasImage = ({
       <AspectRatio
         ratio={1920 / 530}
         maw={1920}
-        mih={260}
+        h={"100%"}
         mx="auto"
         style={{
           position: "relative",
@@ -55,10 +57,11 @@ const HasImage = ({
 };
 
 const NoImage = ({
-  label,
+  placeholder,
   hint,
   onOpen,
   error,
+  h,
 }: DropzoneTriggerNoImageProps) => {
   const __ = useTranslations("Resources.modal");
 
@@ -66,16 +69,21 @@ const NoImage = ({
   return (
     <Dropzone
       m={0}
+      h={h}
       onDrop={(files) => console.log("accepted files", files)}
       maxSize={5 * 1024 ** 2}
       onClick={onOpen}
       accept={IMAGE_MIME_TYPE}
       style={{
         borderColor: error ? "var(--mantine-color-error)" : undefined,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
       }}
     >
       <Group
         justify="center"
+        align="center"
         gap="xl"
         mih={220}
         style={{ pointerEvents: "none" }}
@@ -100,7 +108,7 @@ const NoImage = ({
 
         <div>
           <Text size="xl" inline>
-            {label}
+            {placeholder}
           </Text>
           <Text size="sm" c="dimmed" inline mt={7}>
             {hint}
@@ -113,9 +121,11 @@ const NoImage = ({
 
 const DropzoneTrigger = ({
   label,
+  placeholder,
   hint,
   onChange,
   error,
+  h,
 }: DropzoneTriggerProps) => {
   const __ = useTranslations("Resources.modal");
   const resource = useResource({
@@ -128,19 +138,21 @@ const DropzoneTrigger = ({
 
   return (
     <Stack gap={"xs"}>
-      <Input.Label required>{label}</Input.Label>
+      <Input.Label>{label}</Input.Label>
 
       {resource.selectedResource ? (
         <HasImage
           selectedResource={resource.selectedResource}
           onOpen={resource.open}
+          h={h}
           error={error}
         />
       ) : (
         <NoImage
-          label={label}
+          placeholder={placeholder}
           hint={hint}
           onOpen={resource.open}
+          h={h}
           error={error}
         />
       )}

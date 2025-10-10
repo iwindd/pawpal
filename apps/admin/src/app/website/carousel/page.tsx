@@ -1,9 +1,9 @@
 "use client";
 
-import CreateCarouselModal from "@/components/Modals/CreateCarouselModal";
 import useDatatable from "@/hooks/useDatatable";
 import { Button, Grid, Group } from "@pawpal/ui/core";
 import { useDisclosure } from "@pawpal/ui/hooks";
+import Link from "next/link";
 import { PreviewCarousel } from "./components/PreviewCarousel";
 
 const MOCKUP = [
@@ -70,7 +70,9 @@ const CarouselPage = () => {
         <Grid.Col span={12}>
           <Group justify="space-between" py="md">
             <Group>
-              <Button onClick={open}>Add</Button>
+              <Button component={Link} href={"carousel/create"}>
+                Add
+              </Button>
             </Group>
             <Group>
               <Button>Publish</Button>
@@ -84,8 +86,6 @@ const CarouselPage = () => {
           /> */}
         </Grid.Col>
       </Grid>
-
-      <CreateCarouselModal opened={opened} onClose={close} />
     </div>
   );
 };
