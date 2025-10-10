@@ -119,5 +119,13 @@
         "confirm": "เลือก"
       }
     }
+  },
+  "Combobox": {
+    "product": {
+      "noOptions": "ไม่พบสินค้า",
+      "placeholder": "เลือกสินค้า...",
+      "label": "สินค้า",
+      "loading": "กำลังโหลด..."
+    }
   }
 }

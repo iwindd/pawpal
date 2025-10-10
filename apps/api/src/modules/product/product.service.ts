@@ -295,8 +295,19 @@ export class ProductService {
     const { page, limit, sort } = queryParams;
     const skip = (page - 1) * limit;
 
-    const total = await this.prisma.product.count();
+    const search = queryParams.search;
+    const where: any = {};
+
+    if (search) {
+      where.name = {
+        contains: search,
+        mode: 'insensitive',
+      };
+    }
+
+    const total = await this.prisma.product.count({ where });
     const products = await this.prisma.product.findMany({
+      where,
       skip,
       take: limit,
       orderBy: datatableUtils.buildOrderBy(sort),

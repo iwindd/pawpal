@@ -23,6 +23,7 @@ class ProductApi {
     page?: number;
     limit?: number;
     sort?: DataTableSortStatus<AdminProductResponse>;
+    search?: string;
   }): Promise<AxiosResponse<DatatableResponse<AdminProductResponse>>> {
     return await this.client.get("/admin/product", { params });
   }

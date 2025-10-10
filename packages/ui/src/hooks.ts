@@ -1,1 +1,5 @@
-export { useDisclosure, useMediaQuery } from "@mantine/hooks";
+export {
+  useDebouncedValue,
+  useDisclosure,
+  useMediaQuery,
+} from "@mantine/hooks";

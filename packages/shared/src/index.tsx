@@ -7,6 +7,7 @@ export * from "./schemas/auth/register";
 export * from "./schemas/auth/updateProfile";
 export * from "./schemas/order/purchase";
 export * from "./schemas/resource/resource";
+export * from "./schemas/website/carousel";
 export * from "./types/dto/DatatableQueryParam";
 export * from "./types/response/datatable";
 export * from "./types/response/product";
