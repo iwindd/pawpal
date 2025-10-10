@@ -40,6 +40,7 @@ export interface ProductResponse {
 }
 
 export interface AdminProductResponse {
+  id: string;
   slug: string;
   name: string;
   createdAt: string;

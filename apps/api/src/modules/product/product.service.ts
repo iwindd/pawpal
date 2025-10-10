@@ -312,6 +312,7 @@ export class ProductService {
       take: limit,
       orderBy: datatableUtils.buildOrderBy(sort),
       select: {
+        id: true,
         slug: true,
         name: true,
         createdAt: true,
@@ -335,6 +336,7 @@ export class ProductService {
 
     return {
       data: products.map((product) => ({
+        id: product.id,
         slug: product.slug,
         name: product.name,
         createdAt: product.createdAt.toISOString(),

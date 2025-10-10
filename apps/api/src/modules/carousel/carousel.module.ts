@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
+import { AdminCarouselController } from './admin-carousel.controller';
 import { CarouselService } from './carousel.service';
-import { CarouselController } from './carousel.controller';
 
 @Module({
-  controllers: [CarouselController],
+  controllers: [AdminCarouselController],
   providers: [CarouselService],
 })
 export class CarouselModule {}

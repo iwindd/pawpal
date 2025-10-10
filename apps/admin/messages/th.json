@@ -64,6 +64,12 @@
     "resource": {
       "file_type_not_accepted": "ประเภทไฟล์ไม่ถูกต้อง",
       "file_size_too_large": "ขนาดไฟล์ต้องไม่เกิน 16 MB"
+    },
+    "carousel": {
+      "invalid_resource": "รูปภาพสไลด์โชว์ไม่ถูกต้อง",
+      "title_too_long": "ชื่อสไลด์โชว์ต้องมีความยาวอย่างน้อย 6-30 ตัวอักษร",
+      "title_too_short": "ชื่อสไลด์โชว์ต้องมีความยาวอย่างน้อย 6-30 ตัวอักษร",
+      "invalid_product": "สินค้าที่เกี่ยวข้องไม่ถูกต้อง"
     }
   },
   "Datatable": {
@@ -79,9 +85,29 @@
   "Carousel": {
     "create": {
       "title": "สร้างสไลด์โชว์",
+      "form": {
+        "resource": {
+          "label": "รูปภาพสไลด์โชว์",
+          "hint": "รองรับไฟล์ .jpg, .png ขนาดไม่เกิน 16mb"
+        },
+        "title": {
+          "label": "ชื่อสไลด์โชว์",
+          "placeholder": "กรอกชื่อสไลด์โชว์"
+        },
+        "product": {
+          "label": "สินค้าที่เกี่ยวข้อง",
+          "placeholder": "เลือกสินค้า..."
+        }
+      },
       "actions": {
         "cancel": "ยกเลิก",
         "create": "สร้าง"
+      },
+      "notify": {
+        "success": {
+          "title": "สำเร็จ",
+          "message": "สร้างสไลด์โชว์แล้ว"
+        }
       }
     }
   },

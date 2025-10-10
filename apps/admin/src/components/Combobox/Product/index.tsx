@@ -77,14 +77,14 @@ const ComboboxProduct = forwardRef<HTMLInputElement, ComboboxProductProps>(
     const products = data?.data?.data || [];
 
     const selectedProduct = products.find((p) =>
-      [internalValue, value].includes(p.slug.toString())
+      [internalValue, value].includes(p.id.toString())
     );
     const displayValue = selectedProduct?.name || internalValue || value || "";
 
     const options = products.map((product) => (
       <Combobox.Option
-        value={product.slug.toString()}
-        key={product.slug.toString()}
+        value={product.id.toString()}
+        key={product.id.toString()}
       >
         {product.name}
       </Combobox.Option>
