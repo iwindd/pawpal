@@ -95,11 +95,12 @@ const ComboboxProduct = forwardRef<HTMLInputElement, ComboboxProductProps>(
         return <Loader size={18} />;
       }
 
-      if (clearable && value) {
+      if (clearable && (value || internalValue)) {
         return (
           <Combobox.ClearButton
             onClear={() => {
               onChange?.(null);
+              setInternalValue(null);
               setSearchTerm("");
             }}
           />
