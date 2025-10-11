@@ -1,5 +1,7 @@
 "use client";
 import ComboboxProduct from "@/components/Combobox/Product";
+import SelectCarouselStatus from "@/components/Select/CarouselStatus";
+import { DEFAULT_CAROUSEL_STATUS } from "@/configs/carousel";
 import useFormValidate from "@/hooks/useFormValidate";
 import DropzoneTrigger from "@/hooks/useResource/triggers/DropzoneTriggger";
 import API from "@/libs/api/client";
@@ -23,6 +25,7 @@ const CarouselCreatePage = () => {
       title: "",
       resource_id: "",
       product_id: "",
+      status: DEFAULT_CAROUSEL_STATUS,
     },
   });
 
@@ -76,6 +79,10 @@ const CarouselCreatePage = () => {
           </Paper>
 
           <Paper component={Group} gap="md" p="md" justify="flex-end">
+            <SelectCarouselStatus
+              key={form.key("status")}
+              {...form.getInputProps("status")}
+            />
             <Button type="submit" loading={isPending}>
               {__("actions.create")}
             </Button>

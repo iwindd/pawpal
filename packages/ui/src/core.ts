@@ -61,6 +61,7 @@ export {
   type ImageProps,
   type MantineTheme,
   type MantineThemeOverride,
+  type SelectProps,
   type TextProps,
 } from "@mantine/core";
 

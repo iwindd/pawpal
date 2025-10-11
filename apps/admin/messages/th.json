@@ -109,6 +109,11 @@
           "message": "สร้างสไลด์โชว์แล้ว"
         }
       }
+    },
+    "status": {
+      "draft": "แบบร่าง",
+      "archived": "จัดเก็บ",
+      "published": "เผยแพร่"
     }
   },
   "Resources": {

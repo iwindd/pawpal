@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { CarouselStatus } from '@pawpal/prisma';
 import { CarouselInput, CarouselResponse } from '@pawpal/shared';
 import { PrismaService } from '../prisma/prisma.service';
 
@@ -10,7 +9,7 @@ export class CarouselService {
     const carousel = await this.prisma.carousel.create({
       data: {
         title: payload.title,
-        status: CarouselStatus.DRAFT,
+        status: payload.status,
         resource_id: payload.resource_id,
         product_id: payload.product_id,
       },
