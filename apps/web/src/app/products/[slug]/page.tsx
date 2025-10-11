@@ -5,8 +5,11 @@ import PurchaseConfirmationModal from "@/components/Modals/PurchaseConfirmationM
 import paymentMethods, { defaultPaymentMethod } from "@/configs/payment";
 import useFormValidate from "@/hooks/useFormValidate";
 import API from "@/libs/api/client";
-import { DiscountType } from "@pawpal/prisma";
-import { PurchaseInput, purchaseSchema } from "@pawpal/shared";
+import {
+  ENUM_DISCOUNT_TYPE,
+  PurchaseInput,
+  purchaseSchema,
+} from "@pawpal/shared";
 import {
   Box,
   Button,
@@ -284,7 +287,7 @@ export default function ProductDetailPage({
         userInfo={submittedValues?.userId}
         sale={
           selectedPackage?.sale && {
-            type: DiscountType.PERCENT,
+            type: ENUM_DISCOUNT_TYPE.PERCENT,
             value: selectedPackage.sale.percent,
           }
         }

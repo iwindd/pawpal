@@ -14,7 +14,6 @@
     "@pawpal/nextjs-middleware": "workspace:*",
     "@pawpal/shared": "workspace:*",
     "@pawpal/ui": "workspace:*",
-    "@pawpal/prisma": "workspace:*",
     "@tanstack/react-query": "catalog:",
     "@tanstack/react-query-devtools": "catalog:",
     "@types/axios": "catalog:",

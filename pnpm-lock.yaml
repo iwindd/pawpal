@@ -281,9 +281,6 @@ importers:
       '@pawpal/nextjs-middleware':
         specifier: workspace:*
         version: link:../../packages/nextjs-middleware
-      '@pawpal/prisma':
-        specifier: workspace:*
-        version: link:../../packages/prisma
       '@pawpal/shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -526,9 +523,6 @@ importers:
       '@pawpal/nextjs-middleware':
         specifier: workspace:*
         version: link:../../packages/nextjs-middleware
-      '@pawpal/prisma':
-        specifier: workspace:*
-        version: link:../../packages/prisma
       '@pawpal/shared':
         specifier: workspace:*
         version: link:../../packages/shared
