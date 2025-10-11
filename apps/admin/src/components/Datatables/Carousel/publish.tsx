@@ -40,6 +40,9 @@ const PublishDatatable = () => {
     },
   ];
 
+  if (isFetching && !data) return null;
+  if (!data || data.data.data.length === 0) return null;
+
   return (
     <DataTable
       withTableBorder

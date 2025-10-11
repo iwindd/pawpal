@@ -5,6 +5,7 @@ import { CarouselResponse } from "@pawpal/shared";
 import { Autoplay, Carousel } from "@pawpal/ui/carousel";
 import { Box, Button, Paper, Stack, Text, Title } from "@pawpal/ui/core";
 import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 import classes from "./style.module.css";
 
@@ -99,6 +100,7 @@ const data = [
 
 export function PreviewCarousel() {
   const autoplay = useRef(Autoplay({ delay: 7000 }));
+  const __ = useTranslations("Carousel.main");
   const [slides, setSlides] = useState<CarouselResponse[]>([]);
   const { data } = useQuery({
     queryKey: ["carousels", "published"],
@@ -110,6 +112,13 @@ export function PreviewCarousel() {
       setSlides(data.data.data);
     }
   }, [data]);
+
+  if (slides.length === 0)
+    return (
+      <Text size="xs" c="dimmed" fs="italic">
+        {__("no-published-carousels")}
+      </Text>
+    );
 
   return (
     <Paper h="100%" radius={0}>

@@ -2,14 +2,46 @@
 
 import CarouselDatatable from "@/components/Datatables/Carousel/carousel";
 import PublishDatatable from "@/components/Datatables/Carousel/publish";
-import { Button, Grid, Group, Paper } from "@pawpal/ui/core";
+import { IconPlus } from "@pawpal/icons";
+import {
+  Button,
+  Grid,
+  Group,
+  Paper,
+  Stack,
+  Text,
+  Title,
+} from "@pawpal/ui/core";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { PreviewCarousel } from "./components/PreviewCarousel";
 
 const CarouselPage = () => {
+  const __ = useTranslations("Carousel.main");
+
   return (
     <div>
       <Grid gutter={0}>
+        <Grid.Col span={12}>
+          <Group pb={"md"} justify="space-between">
+            <Stack gap="0">
+              <Group>
+                <Title order={2}>{__("title")}</Title>
+              </Group>
+              <Text size="sm" c="dimmed">
+                {__("subtitle")}
+              </Text>
+            </Stack>
+            <Button
+              variant="outline"
+              leftSection={<IconPlus />}
+              component={Link}
+              href="/website/carousel/create"
+            >
+              {__("add-btn")}
+            </Button>
+          </Group>
+        </Grid.Col>
         <Grid.Col span={8}>
           <PreviewCarousel />
         </Grid.Col>
@@ -17,18 +49,7 @@ const CarouselPage = () => {
           <PublishDatatable />
         </Grid.Col>
         <Grid.Col span={12}>
-          <Group justify="space-between" py="md">
-            <Group>
-              <Button component={Link} href={"carousel/create"}>
-                Add
-              </Button>
-            </Group>
-            <Group>
-              <Button>Publish</Button>
-              <Button>Archive</Button>
-            </Group>
-          </Group>
-          <Paper p={"lg"}>
+          <Paper p={"lg"} mt={"md"}>
             <CarouselDatatable />
           </Paper>
         </Grid.Col>
