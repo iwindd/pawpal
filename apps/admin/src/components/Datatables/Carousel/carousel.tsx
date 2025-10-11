@@ -15,11 +15,8 @@ import { useQuery } from "@tanstack/react-query";
 import { useFormatter, useTranslations } from "next-intl";
 import { useState } from "react";
 import TableAction from "../action";
-import { BaseDatatableProps } from "../datatable";
 import TableSearch from "../search";
 import ColumnImage from "./components/ColumnImage";
-
-interface Props extends BaseDatatableProps<any> {}
 
 const CarouselDatatable = () => {
   const formatter = useFormatter();
@@ -27,8 +24,7 @@ const CarouselDatatable = () => {
   const [search, setSearch] = useState<string>("");
   const { above, ...datatable } = useDatatable<CarouselResponse>({
     sortStatus: API.carousel.DEFAULT_SORT,
-    limit: 6,
-    searchable: true,
+    limit: 10,
   });
 
   const { data, isFetching } = useQuery({
@@ -82,6 +78,7 @@ const CarouselDatatable = () => {
       sortable: true,
       title: __("status"),
       render: ({ status }) => <CarouselStatusBadge status={status} />,
+      visibleMediaQuery: above.sm,
     },
     {
       accessor: "updatedAt",
@@ -90,12 +87,14 @@ const CarouselDatatable = () => {
       title: __("updatedAt"),
       render: (value) =>
         formatter.dateTime(new Date(value.updatedAt), "dateTime"),
+      visibleMediaQuery: above.md,
     },
     {
       accessor: "creator.displayName",
       noWrap: true,
       sortable: true,
       title: __("creator"),
+      visibleMediaQuery: above.md,
     },
     {
       accessor: "actions",
@@ -134,7 +133,8 @@ const CarouselDatatable = () => {
       <DataTable
         striped
         highlightOnHover
-        height={572}
+        height={670}
+        scrollAreaProps={{ type: "never" }}
         columns={columns}
         fetching={isFetching}
         records={data?.data.data || []}
