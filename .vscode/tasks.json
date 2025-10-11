@@ -1,0 +1,19 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Create Shared Schema",
+      "type": "shell",
+      "command": "node",
+      "args": ["scripts/create-shared-schema.js"],
+      "problemMatcher": []
+    },
+    {
+      "label": "Create Shared Type",
+      "type": "shell",
+      "command": "node",
+      "args": ["scripts/create-shared-type.js"],
+      "problemMatcher": []
+    }
+  ]
+}
