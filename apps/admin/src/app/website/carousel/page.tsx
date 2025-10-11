@@ -1,7 +1,8 @@
 "use client";
 
+import CarouselDatatable from "@/components/Datatables/Carousel/carousel";
 import PublishDatatable from "@/components/Datatables/Carousel/publish";
-import { Button, Grid, Group } from "@pawpal/ui/core";
+import { Button, Grid, Group, Paper } from "@pawpal/ui/core";
 import Link from "next/link";
 import { PreviewCarousel } from "./components/PreviewCarousel";
 
@@ -27,11 +28,9 @@ const CarouselPage = () => {
               <Button>Archive</Button>
             </Group>
           </Group>
-          {/*           <ArchiveDatatable
-            records={MOCKUP}
-            totalRecords={MOCKUP.length}
-            {...datatable}
-          /> */}
+          <Paper p={"lg"}>
+            <CarouselDatatable />
+          </Paper>
         </Grid.Col>
       </Grid>
     </div>

@@ -1,6 +1,7 @@
 export {
   Accordion,
   ActionIcon,
+  alpha,
   Anchor,
   AppShell,
   AspectRatio,
@@ -56,11 +57,13 @@ export {
   useMantineTheme,
   virtualColor,
   type ActionIconProps,
+  type BadgeProps,
   type ComboboxProps,
   type GroupProps,
   type ImageProps,
   type MantineTheme,
   type MantineThemeOverride,
+  type MenuItemProps,
   type SelectProps,
   type TextProps,
 } from "@mantine/core";

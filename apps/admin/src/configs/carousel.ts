@@ -1,21 +1,26 @@
 "use client";
 
-import { ENUM_CAROUSEL_STATUS } from "@pawpal/shared";
+import { IconArchive, IconDraft, IconPublish } from "@pawpal/icons";
+import { CarouselStatus, ENUM_CAROUSEL_STATUS } from "@pawpal/shared";
 
-export const CAROUSEL_STATUS = [
+export const CAROUSEL_STATUS: {
+  value: CarouselStatus;
+  icon: React.ComponentType<any>;
+  label: string;
+}[] = [
   {
     value: ENUM_CAROUSEL_STATUS.DRAFT,
-    icon: null,
+    icon: IconDraft,
     label: "draft",
   },
   {
     value: ENUM_CAROUSEL_STATUS.ARCHIVED,
-    icon: null,
+    icon: IconArchive,
     label: "archived",
   },
   {
     value: ENUM_CAROUSEL_STATUS.PUBLISHED,
-    icon: null,
+    icon: IconPublish,
     label: "published",
   },
 ];

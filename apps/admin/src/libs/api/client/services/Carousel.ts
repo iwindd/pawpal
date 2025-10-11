@@ -8,6 +8,11 @@ import { AxiosInstance, AxiosResponse } from "axios";
 import { PawApiResponseDataTable } from "../../api";
 
 class CarouselApi {
+  public readonly DEFAULT_SORT: DataTableSortStatus<CarouselResponse> = {
+    columnAccessor: "status",
+    direction: "asc",
+  };
+
   constructor(private readonly client: AxiosInstance) {}
 
   public async create(
@@ -16,15 +21,27 @@ class CarouselApi {
     return await this.client.post("/admin/carousel", payload);
   }
 
+  public async findAll(params?: {
+    sort?: DataTableSortStatus<CarouselResponse>;
+    page?: number;
+    limit?: number;
+  }): Promise<PawApiResponseDataTable<CarouselResponse>> {
+    return await this.client.get("/admin/carousel", {
+      params: {
+        sort: this.DEFAULT_SORT,
+        ...(params?.sort && { sort: params.sort }),
+        ...(params?.page && { page: params.page }),
+        ...(params?.limit && { limit: params.limit }),
+      },
+    });
+  }
+
   public async getPublished(params?: {
     sort?: DataTableSortStatus<CarouselResponse>;
   }): Promise<PawApiResponseDataTable<CarouselResponse>> {
     return await this.client.get("/admin/carousel/published", {
       params: {
-        sort: {
-          columnAccessor: "createdAt",
-          direction: "desc",
-        },
+        sort: this.DEFAULT_SORT,
         ...(params?.sort && { sort: params.sort }),
       },
     });

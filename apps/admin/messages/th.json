@@ -73,6 +73,12 @@
     }
   },
   "Datatable": {
+    "Action": {
+      "view": "เพิ่มเติม",
+      "edit": "แก้ไข",
+      "delete": "ลบ",
+      "archive": "จัดเก็บ"
+    },
     "product": {
       "name": "ขื่อสินค้า",
       "category": "หมวดหมู่",
@@ -80,6 +86,15 @@
       "packages": "แพ็คเกจ",
       "packageFormat": "{count} แพ็คเกจ",
       "createdAt": "วันที่สร้าง"
+    },
+    "carousel": {
+      "image": "สไลด์โชว์",
+      "title": "ชื่อสไลด์โชว์",
+      "status": "สถานะ",
+      "creator": "ผู้สร้าง",
+      "actions": "เครื่องมือ",
+      "createdAt": "วันที่สร้าง",
+      "updatedAt": "อัพเดทล่าสุด"
     }
   },
   "Carousel": {

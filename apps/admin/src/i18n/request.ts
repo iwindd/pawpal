@@ -34,6 +34,13 @@ export default getRequestConfig(async () => {
           month: "short",
           day: "numeric",
         },
+        dateTime: {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        },
       },
     },
   };

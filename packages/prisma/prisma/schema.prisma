@@ -21,6 +21,7 @@ model User {
   orders      Order[]      @relation("OrderUser")
   roles       Role[]       @relation("UserRoles")
   Resource    Resource[]   @relation("ResourceUser")
+  carousels   Carousel[]   @relation("CarouselCreatedBy")
 
   @@map("users")
 }
@@ -224,6 +225,9 @@ model Carousel {
   resource_id String
   product     Product?       @relation("CarouselProduct", fields: [product_id], references: [id])
   product_id  String?
+
+  creator    User   @relation("CarouselCreatedBy", fields: [creator_id], references: [id])
+  creator_id String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
