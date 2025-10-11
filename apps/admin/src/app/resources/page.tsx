@@ -30,8 +30,12 @@ const ResourcePage = () => {
   const __ = useTranslations("Resources");
   const [opened, { open, close }] = useDisclosure(false);
   const { data, isFetching } = useQuery({
-    queryKey: ["resources"],
-    queryFn: () => API.resource.list(),
+    queryKey: ["resources", "list"],
+    queryFn: () =>
+      API.resource.list({
+        page: 1,
+        limit: 1000, // TODO:: implement pagination
+      }),
   });
 
   return (
@@ -59,7 +63,7 @@ const ResourcePage = () => {
       <Paper p={5}>
         <Grid gutter={"xs"}>
           {!isFetching &&
-            data?.data.map((resource) => (
+            data?.data.data.map((resource) => (
               <Grid.Col key={resource.id} span={COL_SPAN.xs} p={1}>
                 <Box>
                   <ResourceImage
