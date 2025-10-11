@@ -4,12 +4,13 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "default": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
     }
   },
   "scripts": {
-    "build": "tsc -p tsconfig.json"
+    "build": "tsup src/index.ts --format esm,cjs --dts",
+    "dev": "tsup src/index.ts --watch --format esm,cjs --dts"
   },
   "dependencies": {
     "@pawpal/prisma": "workspace:*",
@@ -17,6 +18,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
+    "tsup": "catalog:",
     "typescript": "catalog:"
   }
 }

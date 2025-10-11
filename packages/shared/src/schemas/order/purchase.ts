@@ -14,3 +14,5 @@ export const purchaseSchema = z.object({
 });
 
 export type PurchaseInput = z.infer<typeof purchaseSchema>;
+
+export type TestVariablePurchase = {};
