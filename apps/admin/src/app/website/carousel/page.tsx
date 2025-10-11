@@ -2,57 +2,10 @@
 
 import PublishDatatable from "@/components/Datatables/Carousel/publish";
 import { Button, Grid, Group } from "@pawpal/ui/core";
-import { useDisclosure } from "@pawpal/ui/hooks";
 import Link from "next/link";
 import { PreviewCarousel } from "./components/PreviewCarousel";
 
-const MOCKUP = [
-  {
-    id: 1,
-    image: "fallback-carousel.jpg",
-    title: "Title",
-    product: {
-      name: "Product",
-    },
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: 2,
-    image: "fallback-carousel.jpg",
-    title: "Title",
-    product: {
-      name: "Product",
-    },
-  },
-  {
-    id: 3,
-    image: "fallback-carousel.jpg",
-    title: "Title",
-    product: {
-      name: "Product",
-    },
-  },
-  {
-    id: 4,
-    image: "fallback-carousel.jpg",
-    title: "Title",
-    product: {
-      name: "Product",
-    },
-  },
-  {
-    id: 5,
-    image: "fallback-carousel.jpg",
-    title: "Title",
-    product: {
-      name: "Product",
-    },
-  },
-];
-
 const CarouselPage = () => {
-  const [opened, { open, close }] = useDisclosure(false);
-
   return (
     <div>
       <Grid gutter={0}>

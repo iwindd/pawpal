@@ -17,9 +17,17 @@ class CarouselApi {
   }
 
   public async getPublished(params?: {
-    sort?: DataTableSortStatus<any>;
+    sort?: DataTableSortStatus<CarouselResponse>;
   }): Promise<PawApiResponseDataTable<CarouselResponse>> {
-    return await this.client.get("/admin/carousel/published", { params });
+    return await this.client.get("/admin/carousel/published", {
+      params: {
+        sort: {
+          columnAccessor: "createdAt",
+          direction: "desc",
+        },
+        ...(params?.sort && { sort: params.sort }),
+      },
+    });
   }
 }
 

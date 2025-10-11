@@ -1,8 +1,11 @@
 "use client";
+import ResourceImage from "@/components/ResourceImage";
+import API from "@/libs/api/client";
+import { CarouselResponse } from "@pawpal/shared";
 import { Autoplay, Carousel } from "@pawpal/ui/carousel";
-import { Box, Button, Image, Paper, Stack, Text, Title } from "@pawpal/ui/core";
-import NextImage from "next/image";
-import { useRef } from "react";
+import { Box, Button, Paper, Stack, Text, Title } from "@pawpal/ui/core";
+import { useQuery } from "@tanstack/react-query";
+import { useEffect, useRef, useState } from "react";
 import classes from "./style.module.css";
 
 interface CardProps {
@@ -21,16 +24,13 @@ function Card({ image, title, category, href }: Readonly<CardProps>) {
   return (
     <Paper shadow="md" p="xl" radius={0} className={classes.card}>
       <div className={classes.imageContainer}>
-        <Image
-          component={NextImage}
-          alt={`${category}-${title}`}
+        <ResourceImage
+          src={image}
+          alt={title}
+          fallbackSrc="/assets/images/fallback-carousel.jpg"
           height={530}
           width={1920}
           className={classes.image}
-          priority={true}
-          unoptimized
-          src={`/assets/images/carousel/${image}`}
-          fallbackSrc="/assets/images/fallback-carousel.jpg"
         />
         <div className={classes.overlay}>
           <Stack gap={0} className={classes.carouselMessage} justify="end">
@@ -99,23 +99,44 @@ const data = [
 
 export function PreviewCarousel() {
   const autoplay = useRef(Autoplay({ delay: 7000 }));
-  const slides = data.map((item) => (
-    <Carousel.Slide key={item.title}>
-      <Card {...item} />
-    </Carousel.Slide>
-  ));
+  const [slides, setSlides] = useState<CarouselResponse[]>([]);
+  const { data } = useQuery({
+    queryKey: ["carousels", "published"],
+    queryFn: () => API.carousel.getPublished(),
+  });
+
+  useEffect(() => {
+    if (data?.data.data) {
+      setSlides(data.data.data);
+    }
+  }, [data]);
 
   return (
-    <Carousel
-      slideSize={{ base: "100%" }}
-      withControls={false}
-      withIndicators={true}
-      emblaOptions={{
-        loop: true,
-      }}
-      plugins={[autoplay.current]}
-    >
-      {slides}
-    </Carousel>
+    <Paper h="100%" radius={0}>
+      <Carousel
+        slideSize={{ base: "100%" }}
+        withControls={false}
+        withIndicators={true}
+        emblaOptions={{
+          loop: true,
+        }}
+        plugins={[autoplay.current]}
+      >
+        {slides.map((carousel: CarouselResponse) => (
+          <Carousel.Slide key={carousel.id}>
+            <Card
+              image={carousel.image.url}
+              title={carousel.title}
+              category={carousel.product?.name || "No Product"}
+              href={
+                carousel.product
+                  ? `/products/${carousel.product.id}`
+                  : undefined
+              }
+            />
+          </Carousel.Slide>
+        ))}
+      </Carousel>
+    </Paper>
   );
 }

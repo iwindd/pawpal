@@ -1,7 +1,7 @@
 import ResourceImage from "@/components/ResourceImage";
 import { Box } from "@pawpal/ui/core";
 
-const ColumnImage = (props: any) => {
+const ColumnImage = (props: { image: string; title: string }) => {
   return (
     <Box w={64} h={64}>
       <ResourceImage

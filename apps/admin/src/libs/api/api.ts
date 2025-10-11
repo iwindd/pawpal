@@ -1,4 +1,5 @@
-import axios, { AxiosError, AxiosInstance } from "axios";
+import { DatatableResponse } from "@pawpal/shared";
+import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios";
 
 // Constants
 const DEFAULT_API_URL = "http://localhost:8000";
@@ -8,6 +9,8 @@ const TOKEN_COOKIE_PREFIX = "token=";
 export type PawApiResponse<T> =
   | { success: true; data: T }
   | { success: false; data: AxiosError };
+
+export type PawApiResponseDataTable<T> = AxiosResponse<DatatableResponse<T>>;
 
 class PawApi {
   public readonly client: AxiosInstance;

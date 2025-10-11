@@ -1,4 +1,3 @@
-import useDatatable from "@/hooks/useDatatable";
 import API from "@/libs/api/client";
 import { CarouselResponse } from "@pawpal/shared";
 import { DataTable, DataTableProps, Stack, Text, Title } from "@pawpal/ui/core";
@@ -6,32 +5,20 @@ import { useQuery } from "@tanstack/react-query";
 import ColumnImage from "./components/ColumnImage";
 
 const PublishDatatable = () => {
-  const { above, ...datatable } = useDatatable<CarouselResponse[]>({
-    sortStatus: {
-      columnAccessor: "createdAt",
-      direction: "desc",
-    },
-  });
-
   const { data, isFetching } = useQuery({
-    queryKey: [
-      "carousels:published",
-      datatable.sortStatus.columnAccessor,
-      datatable.sortStatus.direction,
-    ],
-    queryFn: () =>
-      API.carousel.getPublished({
-        sort: datatable.sortStatus,
-      }),
+    queryKey: ["carousels", "published"],
+    queryFn: () => API.carousel.getPublished(),
   });
 
   const columns: DataTableProps<CarouselResponse>["columns"] = [
     {
-      accessor: "image",
+      accessor: "image.url",
       noWrap: true,
       sortable: false,
       title: "image",
-      render: (value) => <ColumnImage {...value} />,
+      render: (value) => (
+        <ColumnImage image={value.image.url} title={value.title} />
+      ),
       width: 100,
     },
     {

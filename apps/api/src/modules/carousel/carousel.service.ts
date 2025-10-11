@@ -31,12 +31,14 @@ export class CarouselService {
 
   constructor(private readonly prisma: PrismaService) {}
   async create(payload: CarouselInput): Promise<CarouselResponse> {
+    console.log(payload.product_id || 'No product id');
+
     const carousel = await this.prisma.carousel.create({
       data: {
         title: payload.title,
         status: payload.status,
         resource_id: payload.resource_id,
-        product_id: payload.product_id,
+        product_id: payload.product_id || null,
       },
       select: {
         ...this.carouselResponseSelect,

@@ -34,7 +34,7 @@ const CarouselCreatePage = () => {
       return await API.carousel.create(payload);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["resources"] });
+      queryClient.invalidateQueries({ queryKey: ["carousels"] });
       notify.show({
         title: __("notify.success.title"),
         message: __("notify.success.message"),
