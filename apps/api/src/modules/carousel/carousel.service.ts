@@ -1,9 +1,34 @@
+import datatableUtils from '@/utils/datatable';
 import { Injectable } from '@nestjs/common';
-import { CarouselInput, CarouselResponse } from '@pawpal/shared';
+import { CarouselStatus } from '@pawpal/prisma';
+import {
+  CarouselInput,
+  CarouselResponse,
+  DatatableQueryDto,
+  DatatableResponse,
+} from '@pawpal/shared';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class CarouselService {
+  private readonly carouselResponseSelect = {
+    id: true,
+    title: true,
+    createdAt: true,
+    product: {
+      select: {
+        id: true,
+        name: true,
+      },
+    },
+    image: {
+      select: {
+        id: true,
+        url: true,
+      },
+    },
+  };
+
   constructor(private readonly prisma: PrismaService) {}
   async create(payload: CarouselInput): Promise<CarouselResponse> {
     const carousel = await this.prisma.carousel.create({
@@ -14,25 +39,31 @@ export class CarouselService {
         product_id: payload.product_id,
       },
       select: {
-        id: true,
-        title: true,
-        createdAt: true,
-        product: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-        image: {
-          select: {
-            id: true,
-            url: true,
-          },
-        },
+        ...this.carouselResponseSelect,
       },
     });
+
     return {
       ...carousel,
+    };
+  }
+
+  async getPublished(
+    params: DatatableQueryDto,
+  ): Promise<DatatableResponse<CarouselResponse>> {
+    const carousels = await this.prisma.carousel.findMany({
+      where: {
+        status: CarouselStatus.PUBLISHED,
+      },
+      orderBy: datatableUtils.buildOrderBy(params.sort),
+      select: {
+        ...this.carouselResponseSelect,
+      },
+    });
+
+    return {
+      data: carousels,
+      total: carousels.length,
     };
   }
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import useDatatable from "@/hooks/useDatatable";
+import PublishDatatable from "@/components/Datatables/Carousel/publish";
 import { Button, Grid, Group } from "@pawpal/ui/core";
 import { useDisclosure } from "@pawpal/ui/hooks";
 import Link from "next/link";
@@ -51,7 +51,6 @@ const MOCKUP = [
 ];
 
 const CarouselPage = () => {
-  const datatable = useDatatable<any>();
   const [opened, { open, close }] = useDisclosure(false);
 
   return (
@@ -61,11 +60,7 @@ const CarouselPage = () => {
           <PreviewCarousel />
         </Grid.Col>
         <Grid.Col span={4}>
-          {/*        <PublishDatatable
-            records={MOCKUP}
-            totalRecords={MOCKUP.length}
-            {...datatable}
-          /> */}
+          <PublishDatatable />
         </Grid.Col>
         <Grid.Col span={12}>
           <Group justify="space-between" py="md">

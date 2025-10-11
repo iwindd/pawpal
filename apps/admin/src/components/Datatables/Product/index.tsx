@@ -1,3 +1,4 @@
+"use client";
 import { AdminProductResponse } from "@pawpal/shared";
 import { DataTable, DataTableProps } from "@pawpal/ui/core";
 import { useFormatter, useTranslations } from "next-intl";
