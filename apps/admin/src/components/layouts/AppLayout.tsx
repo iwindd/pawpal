@@ -4,6 +4,7 @@ import { AppShell } from "@pawpal/ui/core";
 import { useDisclosure, useMediaQuery } from "@pawpal/ui/hooks";
 import { useEffect } from "react";
 import Navbar from "./Navbar";
+import classes from "./style.module.css";
 
 export default function AppLayout({
   children,
@@ -33,7 +34,7 @@ export default function AppLayout({
       <AppShell.Navbar>
         <Navbar opened={opened} toggle={toggle} />
       </AppShell.Navbar>
-      <AppShell.Main>{children}</AppShell.Main>
+      <AppShell.Main className={classes.main}>{children}</AppShell.Main>
     </AppShell>
   );
 }
