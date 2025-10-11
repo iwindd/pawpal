@@ -39,7 +39,6 @@ export class AdminCarouselController {
   async get(
     @Query() params: DatatableQueryDto,
   ): Promise<DatatableResponse<CarouselResponse>> {
-    console.warn(params);
     return await this.carouselService.findAll(params);
   }
 

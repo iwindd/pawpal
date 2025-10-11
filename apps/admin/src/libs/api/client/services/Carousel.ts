@@ -25,6 +25,7 @@ class CarouselApi {
     sort?: DataTableSortStatus<CarouselResponse>;
     page?: number;
     limit?: number;
+    search?: string;
   }): Promise<PawApiResponseDataTable<CarouselResponse>> {
     return await this.client.get("/admin/carousel", {
       params: {
@@ -32,6 +33,7 @@ class CarouselApi {
         ...(params?.sort && { sort: params.sort }),
         ...(params?.page && { page: params.page }),
         ...(params?.limit && { limit: params.limit }),
+        ...(params?.search && { search: params.search }),
       },
     });
   }

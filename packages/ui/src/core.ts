@@ -65,6 +65,7 @@ export {
   type MantineThemeOverride,
   type MenuItemProps,
   type SelectProps,
+  type TextInputProps,
   type TextProps,
 } from "@mantine/core";
 

@@ -3,11 +3,20 @@ import useDatatable from "@/hooks/useDatatable";
 import API from "@/libs/api/client";
 import { IconArchive, IconEdit } from "@pawpal/icons";
 import { CarouselResponse } from "@pawpal/shared";
-import { DataTable, DataTableProps, Stack, Text, Title } from "@pawpal/ui/core";
+import {
+  DataTable,
+  DataTableProps,
+  Group,
+  Stack,
+  Text,
+  Title,
+} from "@pawpal/ui/core";
 import { useQuery } from "@tanstack/react-query";
 import { useFormatter, useTranslations } from "next-intl";
+import { useState } from "react";
 import TableAction from "../action";
 import { BaseDatatableProps } from "../datatable";
+import TableSearch from "../search";
 import ColumnImage from "./components/ColumnImage";
 
 interface Props extends BaseDatatableProps<any> {}
@@ -15,9 +24,11 @@ interface Props extends BaseDatatableProps<any> {}
 const CarouselDatatable = () => {
   const formatter = useFormatter();
   const __ = useTranslations("Datatable.carousel");
+  const [search, setSearch] = useState<string>("");
   const { above, ...datatable } = useDatatable<CarouselResponse>({
     sortStatus: API.carousel.DEFAULT_SORT,
     limit: 6,
+    searchable: true,
   });
 
   const { data, isFetching } = useQuery({
@@ -26,12 +37,14 @@ const CarouselDatatable = () => {
       datatable.page,
       datatable.limit,
       datatable.sortStatus,
+      search,
     ],
     queryFn: () =>
       API.carousel.findAll({
         page: datatable.page,
         limit: datatable.limit,
         sort: datatable.sortStatus,
+        search,
       }),
   });
 
@@ -112,20 +125,27 @@ const CarouselDatatable = () => {
   ];
 
   return (
-    <DataTable
-      striped
-      highlightOnHover
-      height={572}
-      columns={columns}
-      fetching={isFetching}
-      records={data?.data.data || []}
-      totalRecords={data?.data.total || 0}
-      recordsPerPage={datatable.limit}
-      onPageChange={datatable.setPage}
-      page={datatable.page}
-      sortStatus={datatable.sortStatus}
-      onSortStatusChange={datatable.setSortStatus}
-    />
+    <>
+      <Group>
+        <div>
+          <TableSearch onSearch={setSearch} />
+        </div>
+      </Group>
+      <DataTable
+        striped
+        highlightOnHover
+        height={572}
+        columns={columns}
+        fetching={isFetching}
+        records={data?.data.data || []}
+        totalRecords={data?.data.total || 0}
+        recordsPerPage={datatable.limit}
+        onPageChange={datatable.setPage}
+        page={datatable.page}
+        sortStatus={datatable.sortStatus}
+        onSortStatusChange={datatable.setSortStatus}
+      />
+    </>
   );
 };
 

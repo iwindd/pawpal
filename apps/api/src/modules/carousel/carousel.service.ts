@@ -72,15 +72,11 @@ export class CarouselService {
     };
 
     if (search) {
-      where.title = {
-        contains: search,
-        mode: 'insensitive',
-      };
-
-      where.product.name = {
-        contains: search,
-        mode: 'insensitive',
-      };
+      where.OR = [
+        { title: { contains: search, mode: 'insensitive' } },
+        { product: { name: { contains: search, mode: 'insensitive' } } },
+        { creator: { displayName: { contains: search, mode: 'insensitive' } } },
+      ];
     }
 
     const total = await this.prisma.carousel.count({ where });

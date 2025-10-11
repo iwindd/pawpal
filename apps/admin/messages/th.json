@@ -73,6 +73,9 @@
     }
   },
   "Datatable": {
+    "Search": {
+      "placeholder": "ค้นหา..."
+    },
     "Action": {
       "view": "เพิ่มเติม",
       "edit": "แก้ไข",
