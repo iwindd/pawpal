@@ -1,6 +1,7 @@
 interface DropzoneTriggerBase {
   error?: string | null;
   h?: number | string;
+  disabled?: boolean;
 }
 
 export interface DropzoneTriggerProps extends DropzoneTriggerBase {

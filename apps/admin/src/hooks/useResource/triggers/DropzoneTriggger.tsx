@@ -16,6 +16,7 @@ const HasImage = ({
   onOpen,
   error,
   h,
+  disabled,
 }: DropzoneTriggerHasImageProps) => {
   const __ = useTranslations("Resources.modal");
 
@@ -38,12 +39,14 @@ const HasImage = ({
           position: "relative",
         }}
       >
-        <button type="button" className={classes.overlay} onClick={onOpen}>
-          <Stack align="center" gap={8} justify="center">
-            <IconChange size={42} />
-            <Text>{__("change_image")}</Text>
-          </Stack>
-        </button>
+        {!disabled && (
+          <button type="button" className={classes.overlay} onClick={onOpen}>
+            <Stack align="center" gap={8} justify="center">
+              <IconChange size={42} />
+              <Text>{__("change_image")}</Text>
+            </Stack>
+          </button>
+        )}
 
         <ResourceImage
           alt={"Selected Resource"}
@@ -62,9 +65,8 @@ const NoImage = ({
   onOpen,
   error,
   h,
+  disabled,
 }: DropzoneTriggerNoImageProps) => {
-  const __ = useTranslations("Resources.modal");
-
   /* TODO:: Upload drag and drop */
   return (
     <Dropzone
@@ -74,6 +76,7 @@ const NoImage = ({
       maxSize={5 * 1024 ** 2}
       onClick={onOpen}
       accept={IMAGE_MIME_TYPE}
+      disabled={disabled}
       style={{
         borderColor: error ? "var(--mantine-color-error)" : undefined,
         display: "flex",
@@ -128,8 +131,8 @@ const DropzoneTrigger = ({
   h,
   defaultValue,
   value,
+  disabled,
 }: DropzoneTriggerProps) => {
-  const __ = useTranslations("Resources.modal");
   const resource = useResource({
     onResourceSelect: (resource) => {
       if (onChange) {
@@ -150,6 +153,7 @@ const DropzoneTrigger = ({
           onOpen={resource.open}
           h={h}
           error={error}
+          disabled={disabled}
         />
       ) : (
         <NoImage
@@ -158,6 +162,7 @@ const DropzoneTrigger = ({
           onOpen={resource.open}
           h={h}
           error={error}
+          disabled={disabled}
         />
       )}
 

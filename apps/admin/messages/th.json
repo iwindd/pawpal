@@ -108,13 +108,11 @@
       "add-btn": "เพิ่มสไลด์โชว์",
       "no-published-carousels": "ไม่มีสไลด์โชว์ที่เผยแพร่"
     },
-    "create": {
-      "title": "สร้างสไลด์โชว์",
+    "form": {
       "sections": {
-        "info": "ข้อมูลสไลด์โชว์",
-        "publish": "การเผยแพร่"
+        "info": "ข้อมูลสไลด์โชว์"
       },
-      "form": {
+      "fields": {
         "resource": {
           "placeholder": "รูปภาพสไลด์โชว์",
           "hint": "รองรับไฟล์ .jpg, .png ขนาดไม่เกิน 16mb"
@@ -130,44 +128,7 @@
       },
       "actions": {
         "cancel": "ยกเลิก",
-        "create": "เผยแพร่"
-      },
-      "notify": {
-        "success": {
-          "title": "สำเร็จ",
-          "message": "สร้างสไลด์โชว์แล้ว"
-        }
-      }
-    },
-    "edit": {
-      "title": "แก้ไขสไลด์โชว์",
-      "sections": {
-        "info": "ข้อมูลสไลด์โชว์",
-        "publish": "การเผยแพร่"
-      },
-      "form": {
-        "resource": {
-          "placeholder": "รูปภาพสไลด์โชว์",
-          "hint": "รองรับไฟล์ .jpg, .png ขนาดไม่เกิน 16mb"
-        },
-        "title": {
-          "label": "ชื่อสไลด์โชว์",
-          "placeholder": "กรอกชื่อสไลด์โชว์"
-        },
-        "product": {
-          "label": "สินค้าที่เกี่ยวข้อง",
-          "placeholder": "เลือกสินค้า..."
-        }
-      },
-      "actions": {
-        "cancel": "ยกเลิก",
-        "save": "แก้ไข"
-      },
-      "notify": {
-        "success": {
-          "title": "สำเร็จ",
-          "message": "บันทึกการเปลี่ยนแปลงแล้ว"
-        }
+        "save": "เผยแพร่"
       }
     },
     "reorder": {
@@ -184,6 +145,16 @@
       "draft": "แบบร่าง",
       "archived": "จัดเก็บ",
       "published": "เผยแพร่"
+    },
+    "notify": {
+      "created": {
+        "title": "สำเร็จ",
+        "message": "สร้างสไลด์โชว์แล้ว"
+      },
+      "updated": {
+        "title": "สำเร็จ",
+        "message": "บันทึกการเปลี่ยนแปลงสไลด์โชว์แล้ว"
+      }
     }
   },
   "Resources": {
