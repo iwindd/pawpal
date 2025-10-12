@@ -1,5 +1,5 @@
 import datatableUtils from '@/utils/datatable';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import {
   AdminProductResponse,
   DatatableQueryDto,
@@ -286,6 +286,45 @@ export class ProductService {
       products: productsWithSales,
       total,
       hasMore,
+    };
+  }
+
+  async findOne(id: string): Promise<AdminProductResponse | null> {
+    const product = await this.prisma.product.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        slug: true,
+        name: true,
+        createdAt: true,
+        _count: {
+          select: { packages: true },
+        },
+        category: {
+          select: {
+            name: true,
+            slug: true,
+          },
+        },
+        productTags: {
+          select: {
+            slug: true,
+            name: true,
+          },
+        },
+      },
+    });
+
+    if (!product) throw new BadRequestException('product_not_found');
+
+    return {
+      id: product.id,
+      slug: product.slug,
+      name: product.name,
+      createdAt: product.createdAt.toISOString(),
+      packageCount: product._count.packages,
+      category: product.category,
+      productTags: product.productTags,
     };
   }
 

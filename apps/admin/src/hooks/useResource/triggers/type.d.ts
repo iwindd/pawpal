@@ -7,8 +7,9 @@ export interface DropzoneTriggerProps extends DropzoneTriggerBase {
   label?: string;
   placeholder?: string;
   hint: string;
-  value?: string | null;
   onChange?: (value: string | null) => void;
+  defaultValue?: string;
+  value?: string;
 }
 
 export interface DropzoneTriggerHasImageProps extends DropzoneTriggerBase {

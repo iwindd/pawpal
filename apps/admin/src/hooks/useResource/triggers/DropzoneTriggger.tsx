@@ -126,6 +126,8 @@ const DropzoneTrigger = ({
   onChange,
   error,
   h,
+  defaultValue,
+  value,
 }: DropzoneTriggerProps) => {
   const __ = useTranslations("Resources.modal");
   const resource = useResource({
@@ -134,6 +136,8 @@ const DropzoneTrigger = ({
         onChange(resource.id);
       }
     },
+    defaultValue,
+    value,
   });
 
   return (

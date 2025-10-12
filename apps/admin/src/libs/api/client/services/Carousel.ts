@@ -39,6 +39,13 @@ class CarouselApi {
     });
   }
 
+  public async update(
+    id: string,
+    payload: CarouselInput
+  ): Promise<AxiosResponse<ResourceResponse>> {
+    return await this.client.patch(`/admin/carousel/${id}`, payload);
+  }
+
   public async getPublished(params?: {
     sort?: DataTableSortStatus<CarouselResponse>;
   }): Promise<PawApiResponseDataTable<CarouselResponse>> {

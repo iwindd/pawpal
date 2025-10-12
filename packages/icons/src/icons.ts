@@ -37,6 +37,8 @@ export {
   IconPhoto,
   IconPlus,
   IconWorld as IconPublish,
+  IconShare3 as IconPublishShare,
+  IconCalendarEvent as IconSchedule,
   IconSearch,
   IconSettings,
   IconShoppingBag,

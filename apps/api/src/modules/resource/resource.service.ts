@@ -5,34 +5,36 @@ import { LocalStorageService } from './local-storage.service';
 
 @Injectable()
 export class ResourceService {
+  private readonly resourceResponseSelect = {
+    id: true,
+    url: true,
+    createdAt: true,
+    type: true,
+    user: {
+      select: {
+        id: true,
+        displayName: true,
+      },
+    },
+  };
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly storage: LocalStorageService,
   ) {}
 
-  // TODO: Remove this method
-  async getResources(): Promise<ResourceResponse[]> {
-    const resources = await this.prisma.resource.findMany({
-      orderBy: {
-        createdAt: 'desc',
-      },
-      select: {
-        id: true,
-        url: true,
-        createdAt: true,
-        type: true,
-        user: {
-          select: {
-            id: true,
-            displayName: true,
-          },
-        },
-      },
+  async findOne(id: string): Promise<ResourceResponse | null> {
+    const resource = await this.prisma.resource.findUnique({
+      where: { id },
+      select: this.resourceResponseSelect,
     });
-    return resources.map((resource) => ({
+
+    if (!resource) throw new Error('resource_not_found');
+
+    return {
       ...resource,
       createdAt: resource.createdAt.toISOString(),
-    }));
+    };
   }
 
   async findAllResources(params: {
@@ -49,18 +51,7 @@ export class ResourceService {
       orderBy: {
         createdAt: 'desc',
       },
-      select: {
-        id: true,
-        url: true,
-        createdAt: true,
-        type: true,
-        user: {
-          select: {
-            id: true,
-            displayName: true,
-          },
-        },
-      },
+      select: this.resourceResponseSelect,
     });
 
     return {
@@ -82,18 +73,7 @@ export class ResourceService {
         url: key,
         user_id,
       },
-      select: {
-        id: true,
-        url: true,
-        createdAt: true,
-        type: true,
-        user: {
-          select: {
-            id: true,
-            displayName: true,
-          },
-        },
-      },
+      select: this.resourceResponseSelect,
     });
 
     return {

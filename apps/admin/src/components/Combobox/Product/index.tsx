@@ -1,4 +1,5 @@
 import API from "@/libs/api/client";
+import { AdminProductResponse } from "@pawpal/shared";
 import {
   Combobox,
   ComboboxProps,
@@ -14,7 +15,7 @@ import { forwardRef, useEffect, useState } from "react";
 interface ComboboxProductProps
   extends Omit<ComboboxProps, "children" | "store"> {
   value?: string | null;
-  defaultValue?: never;
+  defaultValue?: string;
   onChange?: (value: string | null) => void;
   label?: string;
   placeholder?: string;
@@ -37,7 +38,7 @@ const ComboboxProduct = forwardRef<HTMLInputElement, ComboboxProductProps>(
       required,
       description,
       disabled,
-      defaultValue, // to prevent passing it to InputBase
+      defaultValue,
       ...props
     },
     ref
@@ -45,6 +46,7 @@ const ComboboxProduct = forwardRef<HTMLInputElement, ComboboxProductProps>(
     const [searchTerm, setSearchTerm] = useState("");
     const [debouncedSearchTerm] = useDebouncedValue(searchTerm, 300);
     const [internalValue, setInternalValue] = useState<string | null>(null);
+    const [products, setProducts] = useState<AdminProductResponse[]>([]);
     const __ = useTranslations("Combobox.product");
 
     const combobox = useCombobox({
@@ -64,17 +66,47 @@ const ComboboxProduct = forwardRef<HTMLInputElement, ComboboxProductProps>(
         }),
     });
 
+    const fetchProduct = async (id: string) => {
+      const response = await API.product.findOne(id);
+
+      if (!response.success || !response.data) return false;
+      const product = response.data;
+      setProducts((prev) => {
+        if (prev.find((p) => p.id === product.id)) return prev;
+        return [...prev, product];
+      });
+
+      setInternalValue(product.name);
+    };
+
+    useEffect(() => {
+      if (defaultValue) {
+        fetchProduct(defaultValue);
+      }
+    }, [defaultValue]);
+
     useEffect(() => {
       setInternalValue(value ?? null);
     }, [value]);
+
+    useEffect(() => {
+      if (data?.data?.data) {
+        const newData = data.data.data;
+        setProducts((prevDat) => {
+          const ids = prevDat.map((p) => p.id);
+          const filtered = newData.filter((p) => !ids.includes(p.id));
+          return [...prevDat, ...filtered].sort((a, b) =>
+            a.name.localeCompare(b.name)
+          );
+        });
+      }
+    }, [data]);
 
     const handleSelect = (val: string | null) => {
       setInternalValue(val);
       onChange?.(val);
       combobox.closeDropdown();
     };
-
-    const products = data?.data?.data || [];
 
     const selectedProduct = products.find((p) =>
       [internalValue, value].includes(p.id.toString())

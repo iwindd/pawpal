@@ -6,6 +6,7 @@ import {
   Controller,
   Get,
   HttpCode,
+  Param,
   Post,
   Query,
   UploadedFile,
@@ -35,6 +36,11 @@ export class ResourcesController {
       page: Number(page),
       limit: Number(limit),
     });
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.resourceService.findOne(id);
   }
 
   @Post()

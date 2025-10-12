@@ -7,6 +7,8 @@ import {
   Controller,
   Get,
   HttpCode,
+  Param,
+  Patch,
   Post,
   Query,
   UseGuards,
@@ -49,6 +51,16 @@ export class AdminCarouselController {
   @UsePipes(new ZodValidationPipe(DatatableQuerySchema))
   async getPublished(): Promise<DatatableResponse<CarouselResponse>> {
     return await this.carouselService.getPublished();
+  }
+
+  @Get(':id')
+  async findOne(@Param('id') id: string) {
+    return this.carouselService.findOne(id);
+  }
+
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() payload: CarouselInput) {
+    return this.carouselService.update(id, payload);
   }
 
   @Post('reorder')

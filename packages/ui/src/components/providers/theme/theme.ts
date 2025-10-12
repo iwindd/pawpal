@@ -98,6 +98,7 @@ const configTheme: MantineThemeOverride = {
       "#284985",
     ],
     danger: DEFAULT_THEME.colors.red,
+    save: DEFAULT_THEME.colors.teal,
   },
 
   /** Index of theme.colors[color].

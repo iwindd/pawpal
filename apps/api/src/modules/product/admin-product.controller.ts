@@ -1,5 +1,5 @@
 import { ZodValidationPipe } from '@/common/ZodValidationPipe';
-import { Controller, Get, Query, UsePipes } from '@nestjs/common';
+import { Controller, Get, Param, Query, UsePipes } from '@nestjs/common';
 import {
   AdminProductResponse,
   DatatableQueryDto,
@@ -18,5 +18,10 @@ export class AdminProductController {
     @Query() queryParams: DatatableQueryDto,
   ): Promise<DatatableResponse<AdminProductResponse>> {
     return this.productService.getProducts(queryParams);
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.productService.findOne(id);
   }
 }

@@ -8,6 +8,7 @@ import API from "@/libs/api/client";
 import { IconPublishShare, IconSchedule } from "@pawpal/icons";
 import {
   CarouselInput,
+  CarouselResponse,
   carouselSchema,
   ENUM_CAROUSEL_STATUS,
 } from "@pawpal/shared";
@@ -26,35 +27,37 @@ import {
 import { notify } from "@pawpal/ui/notifications";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { refreshCarousel } from "../actions";
 
-const CarouselCreatePage = () => {
-  const __ = useTranslations("Carousel.create");
+interface CarouselViewProps {
+  carousel: CarouselResponse;
+}
+
+const CarouselView = ({ carousel }: CarouselViewProps) => {
+  const __ = useTranslations("Carousel.edit");
   const [message, setMessage] = useState<string | null>(null);
   const queryClient = useQueryClient();
-  const router = useRouter();
 
   const form = useFormValidate({
     schema: carouselSchema,
     group: "carousel",
     mode: "uncontrolled",
     initialValues: {
-      title: "",
-      resource_id: "",
-      product_id: "",
-      status: DEFAULT_CAROUSEL_STATUS,
+      title: carousel.title,
+      resource_id: carousel.image.id,
+      product_id: carousel.product?.id || "",
+      status: carousel.status || DEFAULT_CAROUSEL_STATUS,
     },
   });
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (payload: CarouselInput) => {
-      return await API.carousel.create(payload);
+      return await API.carousel.update(carousel.id, payload);
     },
     onSuccess: ({ data: carousel }) => {
       queryClient.invalidateQueries({ queryKey: ["carousels"] });
-      router.push(`/website/carousel/${carousel.id}`);
-      form.reset();
+      refreshCarousel(carousel.id);
       notify.show({
         title: __("notify.success.title"),
         message: __("notify.success.message"),
@@ -76,8 +79,9 @@ const CarouselCreatePage = () => {
             <DropzoneTrigger
               placeholder={__("form.resource.placeholder")}
               hint={__("form.resource.hint")}
-              key={form.key("resource_id")}
               h="400"
+              defaultValue={carousel.image.id}
+              key={form.key("resource_id")}
               {...form.getInputProps("resource_id")}
             />
           </Paper>
@@ -149,7 +153,7 @@ const CarouselCreatePage = () => {
                 rightSection={<IconPublishShare size={16} />}
                 loading={isPending}
               >
-                {__("actions.create")}
+                {__("actions.save")}
               </Button>
             </Group>
             <Group>
@@ -162,4 +166,4 @@ const CarouselCreatePage = () => {
   );
 };
 
-export default CarouselCreatePage;
+export default CarouselView;

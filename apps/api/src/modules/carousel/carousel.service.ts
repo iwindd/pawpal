@@ -99,6 +99,34 @@ export class CarouselService {
     };
   }
 
+  async findOne(id: string): Promise<CarouselResponse> {
+    const carousel = await this.prisma.carousel.findUnique({
+      where: { id },
+      select: {
+        ...this.carouselResponseSelect,
+      },
+    });
+    if (!carousel) throw new BadRequestException('carousel_not_found');
+    return carousel;
+  }
+
+  async update(id: string, payload: CarouselInput): Promise<CarouselResponse> {
+    const updatedCarousel = await this.prisma.carousel.update({
+      where: { id },
+      data: {
+        title: payload.title,
+        status: payload.status,
+        resource_id: payload.resource_id,
+        product_id: payload.product_id || null,
+      },
+      select: {
+        ...this.carouselResponseSelect,
+      },
+    });
+
+    return updatedCarousel;
+  }
+
   async getPublished(): Promise<DatatableResponse<CarouselResponse>> {
     const carousels = await this.prisma.carousel.findMany({
       where: {
