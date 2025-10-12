@@ -1,5 +1,5 @@
 import API from "@/libs/api/client";
-import { IconDrag } from "@pawpal/icons";
+import { IconDrag, IconEdit } from "@pawpal/icons";
 import { CarouselReorderInput, CarouselResponse } from "@pawpal/shared";
 import { clsx } from "@pawpal/ui/clsx";
 import {
@@ -22,6 +22,7 @@ import { Notifications } from "@pawpal/ui/notifications";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
+import TableAction from "../action";
 import ColumnImage from "./components/ColumnImage";
 import classes from "./style.module.css";
 
@@ -118,13 +119,30 @@ const PublishDatatable = () => {
       render: (value) => {
         return (
           <Stack gap={0} justify="center">
-            <Title order={3}>{value.title}</Title>
+            <Title order={5}>{value.title}</Title>
             <Text size="xs" c="dimmed">
               {value.product?.name}
             </Text>
           </Stack>
         );
       },
+    },
+    {
+      accessor: "actions",
+      title: "actions",
+      textAlign: "center",
+      render: (carousel) => (
+        <TableAction
+          displayType="icon"
+          actions={[
+            {
+              translate: "edit",
+              action: `/website/carousel/${carousel.id}`,
+              icon: IconEdit,
+            },
+          ]}
+        />
+      ),
     },
   ];
 
@@ -172,6 +190,7 @@ const PublishDatatable = () => {
             visibility: "collapse",
           },
         }}
+        scrollAreaProps={{ type: "never" }}
         rowFactory={RowFactory}
       />
     </DragDropContext>

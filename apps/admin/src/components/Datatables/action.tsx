@@ -1,10 +1,18 @@
-import { Button, Menu, MenuItemProps, Text } from "@pawpal/ui/core";
+import {
+  ActionIcon,
+  Button,
+  Group,
+  Menu,
+  MenuItemProps,
+  Text,
+} from "@pawpal/ui/core";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { Fragment } from "react";
 
 interface ActionProps {
-  label: string;
+  label?: string;
+  displayType?: "menu" | "icon";
   actions: {
     label?: string;
     translate?: string;
@@ -17,7 +25,14 @@ interface ActionProps {
     props?: MenuItemProps;
   }[];
 }
-const TableAction = ({ label, actions }: ActionProps) => {
+
+const RenderMenu = ({
+  label,
+  actions,
+}: {
+  label: string;
+  actions: ActionProps["actions"];
+}) => {
   const __ = useTranslations("Datatable.Action");
 
   return (
@@ -61,6 +76,51 @@ const TableAction = ({ label, actions }: ActionProps) => {
       </Menu.Dropdown>
     </Menu>
   );
+};
+
+const RenderIcon = ({ actions }: { actions: ActionProps["actions"] }) => {
+  if (actions.length === 0) return null;
+
+  return (
+    <Group gap={4} justify="right" wrap="nowrap">
+      {actions.map((action, index) => {
+        const props: any = {
+          onClick: action.action,
+          color: action.color,
+          ...(action.props && { ...action.props }),
+        };
+
+        if (typeof action.action === "string") {
+          props.onClick = () => undefined;
+          props.component = Link;
+          props.href = action.action;
+        }
+
+        if (!action.icon) return null;
+
+        const Icon = action.icon;
+
+        return (
+          <ActionIcon
+            key={"action-icon-" + index}
+            variant="subtle"
+            size="sm"
+            {...props}
+          >
+            <Icon size={14} />
+          </ActionIcon>
+        );
+      })}
+    </Group>
+  );
+};
+
+const TableAction = ({ label, displayType = "menu", actions }: ActionProps) => {
+  if (displayType === "icon") {
+    return <RenderIcon actions={actions} />;
+  }
+
+  return <RenderMenu label={label || "Actions"} actions={actions} />;
 };
 
 export default TableAction;
