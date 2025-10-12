@@ -1,3 +1,7 @@
+// Locales configuration
+import "dayjs/locale/en";
+import "dayjs/locale/th";
+
 interface Locale {
   label: string;
   shortName: string;

@@ -9,6 +9,7 @@ import { UIProvider } from "@pawpal/ui/provider";
 import "@pawpal/ui/styles/global.css";
 import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
+import { getLocale } from "next-intl/server";
 
 export const metadata: Metadata = {
   title: "Pawpal Admin",
@@ -20,6 +21,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const currentLocale = await getLocale();
   let session = null;
 
   try {
@@ -33,7 +35,7 @@ export default async function RootLayout({
 
   return (
     <html
-      lang="en"
+      lang={currentLocale}
       {...mantineHtmlProps}
       suppressHydrationWarning
       className={`${sarabun.className} ${lamoon.className}`}
@@ -46,7 +48,7 @@ export default async function RootLayout({
       <body>
         <NextIntlClientProvider>
           <QueryProvider>
-            <UIProvider>
+            <UIProvider locale={currentLocale}>
               <AuthProvider session={session}>
                 {session ? <AppLayout>{children}</AppLayout> : children}
               </AuthProvider>

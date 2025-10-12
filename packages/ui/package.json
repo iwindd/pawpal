@@ -15,6 +15,7 @@
     "./provider": "./src/provider.ts",
     "./clsx": "./src/clsx.ts",
     "./draggable": "./src/draggable.ts",
+    "./dates": "./src/dates.ts",
     "./fonts/lamoon": "./src/fonts/lamoon.ts",
     "./fonts/sarabun": "./src/fonts/sarabun.ts"
   },
@@ -36,6 +37,7 @@
     "@hello-pangea/dnd": "catalog:",
     "@mantine/carousel": "catalog:",
     "@mantine/core": "catalog:",
+    "@mantine/dates": "^8.3.1",
     "@mantine/dropzone": "catalog:",
     "@mantine/form": "catalog:",
     "@mantine/hooks": "catalog:",
@@ -49,6 +51,7 @@
   },
   "peerDependencies": {
     "next": "catalog:",
-    "next-intl": "catalog:"
+    "next-intl": "catalog:",
+    "dayjs": "catalog:"
   }
 }
