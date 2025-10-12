@@ -1,35 +1,26 @@
-import { Image, Paper } from "@pawpal/ui/core";
+import ResourceImage from "@/components/ResourceImage";
+import { Paper } from "@pawpal/ui/core";
 import { useTranslations } from "next-intl";
-import NextImage from "next/image";
 import classes from "./style.module.css";
 
 interface CardCarouselProps {
-  image: string;
-  category: string | null;
-  title: string;
-  href: string | null;
+  alt: string;
+  src: string;
 }
 
-const CardCarousel = ({
-  image,
-  category,
-  title,
-  href,
-}: Readonly<CardCarouselProps>) => {
+const CardCarousel = ({ alt, src }: Readonly<CardCarouselProps>) => {
   const __ = useTranslations("Home.CardCarousel");
 
   return (
     <Paper shadow="md" p="xl" radius={0} className={classes.card}>
       <div className={classes.imageContainer}>
-        <Image
-          component={NextImage}
-          alt={`${category}-${title}`}
+        <ResourceImage
+          alt={alt}
           height={530}
           width={1920}
           className={classes.image}
           priority={true}
-          unoptimized
-          src={`/assets/images/carousel/${image}`}
+          src={src}
           fallbackSrc="/assets/images/fallback-carousel.jpg"
         />
         <div className={classes.overlay} />

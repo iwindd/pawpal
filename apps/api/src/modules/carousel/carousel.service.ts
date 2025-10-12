@@ -23,6 +23,7 @@ export class CarouselService {
     product: {
       select: {
         id: true,
+        slug: true,
         name: true,
       },
     },

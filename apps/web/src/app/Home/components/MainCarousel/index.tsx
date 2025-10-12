@@ -1,4 +1,5 @@
 "use client";
+import { CarouselResponse } from "@pawpal/shared";
 import { Autoplay, Carousel } from "@pawpal/ui/carousel";
 import { Box, Button, Flex, Group, Stack, Text, Title } from "@pawpal/ui/core";
 import { useTranslations } from "next-intl";
@@ -7,42 +8,17 @@ import { useRef, useState } from "react";
 import CardCarousel from "../CardCarousel";
 import classes from "./style.module.css";
 
-const CAROUSEL_MOCKUP = [
-  {
-    id: 1,
-    image: "fallback-carousel.jpg",
-    title: "Promotion 10%",
-    category: "Valorant",
-    href: "/products/valorant",
-  },
-  {
-    id: 2,
-    image: "fallback-carousel.jpg",
-    title: "Free Heirloom",
-    category: "Apex Legends",
-    href: "/products/apex-legends",
-  },
-  {
-    id: 3,
-    image: "fallback-carousel.jpg",
-    title: "Free 10% of your purchase",
-    category: "Fortnite",
-    href: "/products/fortnite",
-  },
-  {
-    id: 4,
-    image: "fallback-carousel.jpg",
-    title: "Get cashback 10%",
-    category: null,
-    href: null,
-  },
-];
+interface MainCarouselProps {
+  carousels: CarouselResponse[];
+}
 
-const MainCarousel = () => {
+const MainCarousel = ({ carousels }: MainCarouselProps) => {
   const autoplay = useRef(Autoplay({ delay: 7000 }));
-  const [items] = useState(CAROUSEL_MOCKUP);
+  const [items] = useState(carousels);
   const [activeIndex, setActiveIndex] = useState(0);
   const __ = useTranslations("Home.CardCarousel");
+
+  console.log(carousels);
 
   const currentItem = items[activeIndex];
 
@@ -53,20 +29,20 @@ const MainCarousel = () => {
           <Flex className={classes.flex}>
             <Stack gap={0} className={classes.carouselMessage} justify="end">
               <Text className={classes.category} size="xs" m="0">
-                {currentItem?.category}
+                {currentItem?.product?.name}
               </Text>
               <Title order={3} className={classes.title} m="0">
                 {currentItem?.title}
               </Title>
             </Stack>
             <Box>
-              {currentItem?.href && (
+              {currentItem?.product && (
                 <Button
                   component={Link}
-                  variant="priamry"
+                  variant="primary"
                   mt={"md"}
                   className={classes.button}
-                  href={currentItem.href}
+                  href={`/products/${currentItem.product.slug}`}
                   px={"xl"}
                 >
                   {__("topup")}
@@ -88,7 +64,7 @@ const MainCarousel = () => {
       >
         {items.map((item) => (
           <Carousel.Slide key={item.id} style={{ width: "100%" }}>
-            <CardCarousel {...item} />
+            <CardCarousel alt={item.title} src={item.image.url} />
           </Carousel.Slide>
         ))}
       </Carousel>

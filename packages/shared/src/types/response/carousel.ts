@@ -5,6 +5,7 @@ export interface CarouselResponse {
   title: string;
   product: {
     id: string;
+    slug: string;
     name: string;
   };
   image: {
