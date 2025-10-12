@@ -48,9 +48,8 @@ export class AdminCarouselController {
   }
 
   @Get('published')
-  @UsePipes(new ZodValidationPipe(DatatableQuerySchema))
-  async getPublished(): Promise<DatatableResponse<CarouselResponse>> {
-    return await this.carouselService.getPublished();
+  async findAllPublished() {
+    return await this.carouselService.findAllPublished();
   }
 
   @Get(':id')
