@@ -1,5 +1,6 @@
 import {
   CarouselInput,
+  CarouselReorderInput,
   CarouselResponse,
   ResourceResponse,
 } from "@pawpal/shared";
@@ -47,6 +48,10 @@ class CarouselApi {
         ...(params?.sort && { sort: params.sort }),
       },
     });
+  }
+
+  public async reorder(data: CarouselReorderInput): Promise<void> {
+    await this.client.post("/admin/carousel/reorder", data);
   }
 }
 

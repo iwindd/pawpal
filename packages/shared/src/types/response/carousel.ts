@@ -18,4 +18,5 @@ export interface CarouselResponse {
   status: CarouselStatus;
   createdAt: string | Date;
   updatedAt: string | Date;
+  order: number;
 }

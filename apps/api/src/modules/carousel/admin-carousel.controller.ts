@@ -6,6 +6,7 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
   Post,
   Query,
   UseGuards,
@@ -13,6 +14,8 @@ import {
 } from '@nestjs/common';
 import {
   CarouselInput,
+  CarouselReorderInput,
+  carouselReorderSchema,
   CarouselResponse,
   DatatableQueryDto,
   DatatableQuerySchema,
@@ -44,9 +47,16 @@ export class AdminCarouselController {
 
   @Get('published')
   @UsePipes(new ZodValidationPipe(DatatableQuerySchema))
-  async getPublished(
-    @Query() params: DatatableQueryDto,
-  ): Promise<DatatableResponse<CarouselResponse>> {
-    return await this.carouselService.getPublished(params);
+  async getPublished(): Promise<DatatableResponse<CarouselResponse>> {
+    return await this.carouselService.getPublished();
+  }
+
+  @Post('reorder')
+  @HttpCode(200)
+  async reorder(
+    @Body(new ZodValidationPipe(carouselReorderSchema))
+    payload: CarouselReorderInput,
+  ): Promise<void> {
+    return await this.carouselService.reorder(payload);
   }
 }

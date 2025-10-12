@@ -1,0 +1,4 @@
+.draggableRow[data-is-dragging="true"] td {
+  opacity: 0.75;
+  width: 100%;
+}

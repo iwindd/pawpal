@@ -20,6 +20,7 @@ catalog:
   eslint-plugin-turbo: ^2.5.0
   express-session: ^1.18.2
   globals: ^16.3.0
+  "@hello-pangea/dnd": ^18.0.1
   jest: ^30.0.0
   "@mantine/carousel": ^8.3.1
   "@mantine/core": ^8.3.1

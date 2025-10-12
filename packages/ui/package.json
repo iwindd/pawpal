@@ -14,6 +14,7 @@
     "./dropzone": "./src/dropzone.ts",
     "./provider": "./src/provider.ts",
     "./clsx": "./src/clsx.ts",
+    "./draggable": "./src/draggable.ts",
     "./fonts/lamoon": "./src/fonts/lamoon.ts",
     "./fonts/sarabun": "./src/fonts/sarabun.ts"
   },
@@ -32,6 +33,7 @@
     "typescript": "catalog:"
   },
   "dependencies": {
+    "@hello-pangea/dnd": "catalog:",
     "@mantine/carousel": "catalog:",
     "@mantine/core": "catalog:",
     "@mantine/dropzone": "catalog:",

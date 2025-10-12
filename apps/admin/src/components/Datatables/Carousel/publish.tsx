@@ -1,16 +1,104 @@
 import API from "@/libs/api/client";
-import { CarouselResponse } from "@pawpal/shared";
-import { DataTable, DataTableProps, Stack, Text, Title } from "@pawpal/ui/core";
-import { useQuery } from "@tanstack/react-query";
+import { IconDrag } from "@pawpal/icons";
+import { CarouselReorderInput, CarouselResponse } from "@pawpal/shared";
+import { clsx } from "@pawpal/ui/clsx";
+import {
+  Center,
+  DataTable,
+  DataTableDraggableRow,
+  DataTableProps,
+  Stack,
+  TableTd,
+  Text,
+  Title,
+} from "@pawpal/ui/core";
+import {
+  DragDropContext,
+  Draggable,
+  Droppable,
+  DropResult,
+} from "@pawpal/ui/draggable";
+import { Notifications } from "@pawpal/ui/notifications";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
 import ColumnImage from "./components/ColumnImage";
+import classes from "./style.module.css";
+
+const TableWrapper = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <Droppable droppableId="datatable">
+      {(provided) => (
+        <div {...provided.droppableProps} ref={provided.innerRef}>
+          {children}
+          {provided.placeholder}
+        </div>
+      )}
+    </Droppable>
+  );
+};
+
+const RowFactory = ({ record, index, rowProps, children }: any) => {
+  return (
+    <Draggable key={record.id} draggableId={record.id} index={index}>
+      {(provided, snapshot) => (
+        <DataTableDraggableRow
+          isDragging={snapshot.isDragging}
+          {...rowProps}
+          className={clsx(rowProps.className, classes.draggableRow)}
+          {...provided.draggableProps}
+        >
+          <TableTd>
+            <Center {...provided.dragHandleProps} ref={provided.innerRef}>
+              <IconDrag size={22} color="gray" />
+            </Center>
+          </TableTd>
+          {children}
+        </DataTableDraggableRow>
+      )}
+    </Draggable>
+  );
+};
 
 const PublishDatatable = () => {
-  const { data, isFetching } = useQuery({
+  const [records, setRecords] = useState<CarouselResponse[]>([]);
+  const __ = useTranslations("Carousel");
+
+  const { data, isFetching, refetch } = useQuery({
     queryKey: ["carousels", "published"],
     queryFn: () => API.carousel.getPublished(),
   });
 
+  const { mutate, isPending } = useMutation({
+    mutationFn: async (data: CarouselReorderInput) =>
+      await API.carousel.reorder(data),
+    onSuccess: () => {
+      refetch();
+      Notifications.show({
+        title: __("reorder.success.title"),
+        message: __("reorder.success.message"),
+        color: "green",
+      });
+    },
+    onError: () => {
+      Notifications.show({
+        title: __("reorder.error.title"),
+        message: __("reorder.error.message"),
+        color: "red",
+      });
+    },
+  });
+
   const columns: DataTableProps<CarouselResponse>["columns"] = [
+    {
+      accessor: "order",
+      noWrap: true,
+      sortable: true,
+      textAlign: "center",
+      hiddenContent: true,
+      title: "#",
+      width: "50px",
+    },
     {
       accessor: "image.url",
       noWrap: true,
@@ -40,21 +128,54 @@ const PublishDatatable = () => {
     },
   ];
 
+  useEffect(() => {
+    if (data?.data.data) {
+      setRecords(data.data.data);
+    }
+  }, [data]);
+
+  const handleDragEnd = (result: DropResult) => {
+    if (!result.destination) return;
+    const sourceIndex = result.source.index;
+    const destinationIndex = result.destination.index;
+    const carouselId = records[sourceIndex]?.id;
+
+    if (sourceIndex === destinationIndex) return;
+    if (isPending) return;
+    if (!carouselId) return;
+
+    mutate({
+      carousel_id: carouselId,
+      fromIndex: sourceIndex,
+      toIndex: destinationIndex,
+    });
+  };
+
   if (isFetching && !data) return null;
   if (!data || data.data.data.length === 0) return null;
 
   return (
-    <DataTable
-      withTableBorder
-      striped
-      highlightOnHover
-      height={530}
-      minHeight={530}
-      columns={columns}
-      fetching={isFetching}
-      records={data?.data.data || []}
-      noHeader
-    />
+    <DragDropContext onDragEnd={handleDragEnd}>
+      <DataTable
+        striped
+        highlightOnHover
+        height={530}
+        minHeight={530}
+        columns={columns}
+        fetching={isFetching || isPending}
+        records={[...records].sort((a, b) => a.order - b.order)}
+        tableWrapper={TableWrapper}
+        styles={{
+          table: {
+            tableLayout: "fixed",
+          },
+          header: {
+            visibility: "collapse",
+          },
+        }}
+        rowFactory={RowFactory}
+      />
+    </DragDropContext>
   );
 };
 

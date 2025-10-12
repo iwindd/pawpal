@@ -9,6 +9,7 @@ export * from "./schemas/order/purchase";
 export * from "./schemas/resource/resource";
 export * from "./schemas/sale";
 export * from "./schemas/website/carousel";
+export * from "./schemas/website/carousel-reorder";
 export * from "./types/dto/DatatableQueryParam";
 export * from "./types/response/carousel";
 export * from "./types/response/datatable";

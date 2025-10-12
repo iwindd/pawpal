@@ -229,6 +229,7 @@ model Carousel {
   creator    User   @relation("CarouselCreatedBy", fields: [creator_id], references: [id])
   creator_id String
 
+  order     Int      @default(-1)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

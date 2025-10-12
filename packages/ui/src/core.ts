@@ -45,6 +45,7 @@ export {
   Space,
   Stack,
   Table,
+  TableTd,
   Tabs,
   Text,
   TextInput,
@@ -71,6 +72,7 @@ export {
 
 export {
   DataTable,
+  DataTableDraggableRow,
   type DataTableColumn,
   type DataTableProps,
   type DataTableSortStatus,

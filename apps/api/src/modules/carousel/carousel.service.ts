@@ -1,8 +1,9 @@
 import datatableUtils from '@/utils/datatable';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { CarouselStatus } from '@pawpal/prisma';
 import {
   CarouselInput,
+  CarouselReorderInput,
   CarouselResponse,
   DatatableQueryDto,
   DatatableResponse,
@@ -12,6 +13,7 @@ import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class CarouselService {
+  private readonly logger = new Logger(CarouselService.name);
   private readonly carouselResponseSelect = {
     id: true,
     title: true,
@@ -36,6 +38,7 @@ export class CarouselService {
         displayName: true,
       },
     },
+    order: true,
   };
 
   constructor(private readonly prisma: PrismaService) {}
@@ -96,33 +99,14 @@ export class CarouselService {
     };
   }
 
-  async getPublished(
-    queryParams: DatatableQueryDto,
-  ): Promise<DatatableResponse<CarouselResponse>> {
-    const { page, limit, sort, search } = queryParams;
-    const skip = (page - 1) * limit;
-
-    const where: any = {
-      status: { equals: CarouselStatus.PUBLISHED },
-    };
-
-    if (search) {
-      where.title = {
-        contains: search,
-        mode: 'insensitive',
-      };
-
-      where.product.name = {
-        contains: search,
-        mode: 'insensitive',
-      };
-    }
-
+  async getPublished(): Promise<DatatableResponse<CarouselResponse>> {
     const carousels = await this.prisma.carousel.findMany({
-      where,
-      skip,
-      take: limit,
-      orderBy: datatableUtils.buildOrderBy(sort),
+      where: {
+        status: { equals: CarouselStatus.PUBLISHED },
+      },
+      orderBy: {
+        order: 'asc',
+      },
       select: {
         ...this.carouselResponseSelect,
       },
@@ -132,5 +116,36 @@ export class CarouselService {
       data: carousels,
       total: carousels.length,
     };
+  }
+
+  async reorder({
+    fromIndex,
+    toIndex,
+    carousel_id,
+  }: CarouselReorderInput): Promise<void> {
+    try {
+      const operator = fromIndex < toIndex ? 'decrement' : 'increment';
+      const range =
+        fromIndex < toIndex
+          ? { gt: fromIndex, lte: toIndex }
+          : { gte: toIndex, lt: fromIndex };
+
+      await this.prisma.$transaction(async () => {
+        await this.prisma.carousel.updateMany({
+          where: { order: range },
+          data: { order: { [operator]: 1 } },
+        });
+        await this.prisma.carousel.update({
+          where: { id: carousel_id },
+          data: { order: toIndex },
+        });
+      });
+      this.logger.log(
+        `Reordered carousel item ${carousel_id} from ${fromIndex} to ${toIndex}`,
+      );
+    } catch (error) {
+      this.logger.error('Error reordering carousel items:', error);
+      throw new BadRequestException('Failed to reorder carousel items');
+    }
   }
 }

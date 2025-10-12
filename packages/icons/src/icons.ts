@@ -19,6 +19,7 @@ export {
   IconDashboard,
   IconTrash as IconDelete,
   IconPencil as IconDraft,
+  IconGripVertical as IconDrag,
   IconPencil as IconEdit,
   IconBolt as IconFlashsale,
   IconFolder,
