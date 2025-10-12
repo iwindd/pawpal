@@ -6,6 +6,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { CarouselModule } from '../carousel/carousel.module';
+import { NotificationModule } from '../notification/notification.module';
 import { OrderModule } from '../order/order.module';
 import { PackageModule } from '../package/package.module';
 import { PaymentModule } from '../payment/payment.module';
@@ -34,6 +35,7 @@ import { WalletModule } from '../wallet/wallet.module';
     PackageModule,
     ResourceModule,
     CarouselModule,
+    NotificationModule,
   ],
   controllers: [AppController],
   providers: [AppService],

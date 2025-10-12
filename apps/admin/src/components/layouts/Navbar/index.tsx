@@ -1,5 +1,6 @@
 import { NavLink, navlinks, othersNavlinks } from "@/configs/navbar";
 import { useActiveRouteConfig } from "@/hooks/useActiveRouteConfig";
+import API from "@/libs/api/client";
 import { IconMinus, IconPlus } from "@pawpal/icons";
 import {
   Badge,
@@ -14,6 +15,7 @@ import {
   UnstyledButton,
 } from "@pawpal/ui/core";
 import { useDisclosure } from "@pawpal/ui/hooks";
+import { useQuery } from "@tanstack/react-query";
 import { useFormatter, useTranslations } from "next-intl";
 import Link from "next/link";
 import classes from "./style.module.css";
@@ -25,6 +27,10 @@ interface Props {
 
 export default function Navbar({ opened, toggle }: Readonly<Props>) {
   const activeRoute = useActiveRouteConfig();
+  const { data: badges } = useQuery({
+    queryKey: ["notifications"],
+    queryFn: async () => await API.getNotifications(),
+  });
 
   return (
     <Stack h="100%" gap={20} px="md" py="lg">
@@ -41,7 +47,7 @@ export default function Navbar({ opened, toggle }: Readonly<Props>) {
             const isActive = activeRoute?.path === path;
 
             return navlink.files.length > 0 ? (
-              <Folder key={navlink.id} {...navlink} />
+              <Folder key={navlink.id} {...navlink} badges={badges} />
             ) : (
               <Flex w="100%" direction="column" align="start" key={navlink.id}>
                 <LinkItem {...navlink} link={path} isActive={isActive} />
@@ -89,7 +95,12 @@ const LinkItem = ({
   );
 };
 
-const Folder = ({ title, icon: Icon, files }: NavLink) => {
+const Folder = ({
+  title,
+  icon: Icon,
+  files,
+  badges,
+}: NavLink & { badges: Record<string, number> }) => {
   const [opened, { toggle }] = useDisclosure(true);
   const __ = useTranslations("Navbar.links");
   const format = useFormatter();
@@ -117,14 +128,26 @@ const Folder = ({ title, icon: Icon, files }: NavLink) => {
       </UnstyledButton>
       <Collapse w="100%" pl={30} in={opened}>
         <Flex w="100%" py={14} direction="column" align="start" gap={10}>
-          {files.map((file) => (
-            <Link key={file.id} className={classes.subNavLink} href={file.link}>
-              <Text lts={-0.5}>{__(file.name)}</Text>
-              <Badge radius={6} className={classes.noti} px={6}>
-                {format.number(file.noti)}
-              </Badge>
-            </Link>
-          ))}
+          {files.map((file) => {
+            const notificationCount = file.badgeKey
+              ? badges?.[file.badgeKey] || 0
+              : 0;
+
+            return (
+              <Link
+                key={file.id}
+                className={classes.subNavLink}
+                href={file.link}
+              >
+                <Text lts={-0.5}>{__(file.name)}</Text>
+                {badges && file.badgeKey && (
+                  <Badge radius={6} className={classes.noti} px={6}>
+                    {format.number(notificationCount)}
+                  </Badge>
+                )}
+              </Link>
+            );
+          })}
         </Flex>
       </Collapse>
     </Flex>

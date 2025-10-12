@@ -17,7 +17,7 @@ export interface NavLink {
     id: number;
     name: string;
     link: string;
-    noti: number;
+    badgeKey?: string;
   }[];
   hasBorderBottom?: boolean;
 }
@@ -41,13 +41,11 @@ export const navlinks: NavLink[] = [
         id: 1,
         name: "work.order",
         link: "/",
-        noti: 0,
       },
       {
         id: 2,
         name: "work.topup",
         link: "/",
-        noti: 0,
       },
     ],
   },
@@ -68,7 +66,7 @@ export const navlinks: NavLink[] = [
         id: 1,
         name: "website.carousel",
         link: "/website/carousel",
-        noti: 0,
+        badgeKey: "carousels",
       },
     ],
   },
