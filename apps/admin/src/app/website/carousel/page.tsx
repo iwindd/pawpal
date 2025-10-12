@@ -42,10 +42,20 @@ const CarouselPage = () => {
             </Button>
           </Group>
         </Grid.Col>
-        <Grid.Col span={8}>
+        <Grid.Col
+          span={{
+            base: 12,
+            lg: 9,
+          }}
+        >
           <PreviewCarousel />
         </Grid.Col>
-        <Grid.Col span={4}>
+        <Grid.Col
+          span={{
+            base: 12,
+            lg: 3,
+          }}
+        >
           <PublishDatatable />
         </Grid.Col>
         <Grid.Col span={12}>

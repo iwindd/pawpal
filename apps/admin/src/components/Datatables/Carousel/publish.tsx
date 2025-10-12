@@ -159,8 +159,7 @@ const PublishDatatable = () => {
       <DataTable
         striped
         highlightOnHover
-        height={530}
-        minHeight={530}
+        maxHeight={530}
         columns={columns}
         fetching={isFetching || isPending}
         records={[...records].sort((a, b) => a.order - b.order)}
