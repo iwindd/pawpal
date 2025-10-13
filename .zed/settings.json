@@ -1,18 +1,24 @@
 {
   "tab_size": 2,
   "format_on_save": "on",
-  "formatter": [
-    {
-      "external": {
-        "command": "prettier",
-        "arguments": ["--stdin-filepath", "{buffer_path}"]
-      }
+  "languages": {
+    "TypeScript": {
+      "formatter": [
+        // Use ESLint's --fix:
+        { "code_action": "source.fixAll.eslint" },
+        // Organize imports on save:
+        { "code_action": "source.organizeImports" }
+      ]
     },
-    // Use ESLint's --fix:
-    { "code_action": "source.fixAll.eslint" },
-    // Organize imports on save:
-    { "code_action": "source.organizeImports" }
-  ],
+    "TSX": {
+      "formatter": [
+        // Use ESLint's --fix:
+        { "code_action": "source.fixAll.eslint" },
+        // Organize imports on save:
+        { "code_action": "source.organizeImports" }
+      ]
+    }
+  },
   "lsp": {
     "vtsls": {
       "settings": {
