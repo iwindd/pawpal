@@ -3,8 +3,10 @@
 import CarouselDatatable from "@/components/Datatables/Carousel/carousel";
 import PublishDatatable from "@/components/Datatables/Carousel/publish";
 import PageHeader from "@/components/Pages/PageHeader";
-import { Grid, Paper } from "@pawpal/ui/core";
+import { IconPlus } from "@pawpal/icons";
+import { Button, Grid, Paper } from "@pawpal/ui/core";
 import { useTranslations } from "next-intl";
+import Link from "next/link";
 import { PreviewCarousel } from "./components/PreviewCarousel";
 
 const CarouselPage = () => {
@@ -14,7 +16,16 @@ const CarouselPage = () => {
     <div>
       <Grid gutter={0}>
         <Grid.Col span={12}>
-          <PageHeader title={__("title")} />
+          <PageHeader title={__("title")}>
+            <Button
+              variant="outline"
+              component={Link}
+              href="/website/carousel/create"
+              leftSection={<IconPlus size={17} />}
+              size="sm">
+              {__("add-btn")}
+            </Button>
+          </PageHeader>
         </Grid.Col>
         <Grid.Col
           span={{

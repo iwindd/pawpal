@@ -1,3 +1,4 @@
+"use client";
 import AppBreadcrumbs from "@/components/AppBreadcrumbs";
 import { Group, Paper, Stack, Title } from "@pawpal/ui/core";
 
