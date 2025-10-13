@@ -47,7 +47,11 @@
       "resources": "ทรัพยากร",
       "website": {
         "main": "เว็บไซต์",
-        "carousel": "สไลด์โชว์"
+        "carousel": {
+          "main": "สไลด์โชว์",
+          "create": "สร้างสไลด์",
+          "edit": "แก้ไขสไลด์"
+        }
       },
       "fanpage": "Fanpage"
     }
@@ -145,6 +149,12 @@
       "draft": "แบบร่าง",
       "archived": "จัดเก็บ",
       "published": "เผยแพร่"
+    },
+    "create": {
+      "title": "สร้างสไลด์โชว์"
+    },
+    "edit": {
+      "title": "รายละเอียดสไลด์โชว์"
     },
     "notify": {
       "created": {
