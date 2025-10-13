@@ -64,7 +64,7 @@ export const navlinks: NavLink[] = [
     files: [
       {
         id: 1,
-        name: "website.carousel",
+        name: "website.carousel.main",
         link: "/website/carousel",
         badgeKey: "carousels",
       },

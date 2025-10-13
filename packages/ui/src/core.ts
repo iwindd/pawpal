@@ -7,6 +7,7 @@ export {
   AspectRatio,
   Avatar,
   Badge,
+  Breadcrumbs,
   Box,
   Burger,
   Button,

@@ -42,12 +42,24 @@ export const ROUTES: Record<string, RouteItem> = {
   },
   website: {
     path: "/website",
-    label: "website",
+    label: "website.main",
     icon: IconWork,
     children: {
       carousel: {
         path: "/website/carousel",
-        label: "website.carousel",
+        label: "website.carousel.main",
+        children: {
+          create: {
+            path: "/website/carousel/create",
+            label: "website.carousel.create",
+            icon: IconWork,
+          },
+          edit: {
+            path: "/website/carousel/:id",
+            label: "website.carousel.edit",
+            icon: IconWork,
+          },
+        },
       },
     },
   },
