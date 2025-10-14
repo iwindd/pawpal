@@ -57,6 +57,7 @@ export class AdminCarouselController {
     return this.carouselService.findOne(id);
   }
 
+  //TODO:: FIX Validation
   @Patch(':id')
   update(@Param('id') id: string, @Body() payload: CarouselInput) {
     return this.carouselService.update(id, payload);
