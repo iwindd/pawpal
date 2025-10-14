@@ -5,7 +5,7 @@ import AuthApi from "./services/Auth";
 import CarouselApi from "./services/Carousel";
 import ProductApi from "./services/Product";
 
-export class ServerApi extends PawApi {
+class ServerApi extends PawApi {
   public readonly auth: AuthApi;
   public readonly product: ProductApi;
   public readonly carousel: CarouselApi;
@@ -26,5 +26,7 @@ const APISession = async () => {
 
   return new ServerApi(token);
 };
+
+export const ServerAPI = new ServerApi();
 
 export default APISession;

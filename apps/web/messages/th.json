@@ -333,6 +333,7 @@
     "useCode": "ใช้โค้ด",
     "purchase": "ซื้อเลย",
     "amount": "จำนวน",
+    "processing": "กำลังดำเนินการสั่งซื้อ...",
     "notify": {
       "success": {
         "title": "สำเร็จ",

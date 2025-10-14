@@ -1,4 +1,4 @@
-import { ProductListItem, ProductResponse } from "@pawpal/shared";
+import { ProductListItem } from "@pawpal/shared";
 import { AxiosInstance } from "axios";
 import { PawApiResponse } from "../../api";
 
@@ -35,13 +35,6 @@ class ProductApi {
     const response = await this.client.get(
       `/product?${searchParams.toString()}`
     );
-    return { success: true, data: response.data };
-  }
-
-  async getProductBySlug(
-    slug: string
-  ): Promise<PawApiResponse<ProductResponse | null>> {
-    const response = await this.client.get(`/product/${slug}`);
     return { success: true, data: response.data };
   }
 }
