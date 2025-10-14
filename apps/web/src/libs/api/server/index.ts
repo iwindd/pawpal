@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import OrderApi from "../../../../../admin/src/libs/api/server/services/Order";
 import PawApi from "../api";
 import AuthApi from "./services/Auth";
 import CarouselApi from "./services/Carousel";
@@ -8,12 +9,14 @@ export class ServerApi extends PawApi {
   public readonly auth: AuthApi;
   public readonly product: ProductApi;
   public readonly carousel: CarouselApi;
+  public readonly order: OrderApi;
 
   constructor(token?: string) {
     super(token);
     this.auth = new AuthApi(this.client);
     this.product = new ProductApi(this.client);
     this.carousel = new CarouselApi(this.client);
+    this.order = new OrderApi(this.client);
   }
 }
 

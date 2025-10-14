@@ -142,4 +142,48 @@ export class OrderService {
       total,
     };
   }
+
+  async findOne(id: string): Promise<AdminOrderResponse> {
+    const order = await this.prisma.order.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            email: true,
+            displayName: true,
+          },
+        },
+        orderPackages: {
+          include: {
+            package: {
+              include: {
+                product: {
+                  include: {
+                    category: {
+                      select: {
+                        id: true,
+                        name: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    return {
+      ...order,
+      total: order.total.toString(),
+      orderPackages: order.orderPackages.map((op) => ({
+        ...op,
+        price: op.price.toString(),
+      })),
+    } as AdminOrderResponse;
+  }
 }

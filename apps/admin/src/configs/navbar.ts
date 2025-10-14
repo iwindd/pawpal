@@ -6,7 +6,7 @@ import {
   IconShoppingBag,
   IconWork,
 } from "@pawpal/icons";
-import { ROUTES } from "./route";
+import { pather } from "./route";
 
 export interface NavLink {
   id: number;
@@ -27,25 +27,20 @@ export const navlinks: NavLink[] = [
     id: 1,
     icon: IconDashboard,
     title: "home",
-    link: ROUTES["home"]?.path as string,
+    link: pather("home"),
     files: [],
     hasBorderBottom: true,
   },
   {
     id: 3,
     icon: IconWork,
-    title: "work.main",
-    link: "/",
+    title: "job.main",
+    link: pather("job"),
     files: [
       {
         id: 1,
         name: "orders.main",
-        link: ROUTES["orders"]?.path as string,
-      },
-      {
-        id: 2,
-        name: "work.topup",
-        link: "/",
+        link: pather("job.orders"),
       },
     ],
   },
@@ -53,19 +48,19 @@ export const navlinks: NavLink[] = [
     id: 4,
     icon: IconShoppingBag,
     title: "products.main",
-    link: ROUTES["products"]?.path as string,
+    link: pather("products"),
     files: [],
   },
   {
     id: 6,
     icon: IconAppWindow,
     title: "website.main",
-    link: ROUTES["website"]?.path as string,
+    link: pather("website"),
     files: [
       {
         id: 1,
         name: "website.carousel.main",
-        link: "/website/carousel",
+        link: pather("website.carousel"),
         badgeKey: "carousels",
       },
     ],
@@ -74,7 +69,7 @@ export const navlinks: NavLink[] = [
     id: 5,
     icon: IconFolder,
     title: "resources",
-    link: ROUTES["resources"]?.path as string,
+    link: pather("resources"),
     files: [],
   },
 ];

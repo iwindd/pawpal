@@ -18,6 +18,25 @@ export const ROUTES: Record<string, RouteItem> = {
     label: "login",
     icon: IconLogin,
   },
+  job: {
+    path: "/job",
+    label: "job.main",
+    icon: IconWork,
+    children: {
+      orders: {
+        path: "/job/orders",
+        label: "orders.main",
+        icon: IconWork,
+        children: {
+          edit: {
+            path: "/job/orders/:id",
+            label: "orders.edit",
+            icon: IconWork,
+          },
+        },
+      },
+    },
+  },
   products: {
     path: "/products",
     label: "products.main",
@@ -34,11 +53,6 @@ export const ROUTES: Record<string, RouteItem> = {
         icon: IconWork,
       },
     },
-  },
-  orders: {
-    path: "/orders",
-    label: "orders.main",
-    icon: IconWork,
   },
   resources: {
     path: "/resources",
