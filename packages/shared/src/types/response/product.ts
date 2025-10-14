@@ -29,6 +29,14 @@ export interface ProductListItem {
   sales: ProductSaleValue | null;
 }
 
+export interface ProductField {
+  id: string;
+  label: string;
+  placeholder: string;
+  type: "TEXT" | "EMAIL" | "SELECT";
+  metadata: any;
+}
+
 export interface ProductResponse {
   slug: string;
   name: string;
@@ -38,6 +46,7 @@ export interface ProductResponse {
   productTags: ProductTag[];
   packages: ProductPackage[];
   sales: ProductSaleValue | null;
+  fields: ProductField[];
 }
 
 export interface AdminProductResponse {

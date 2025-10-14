@@ -22,6 +22,7 @@ model User {
   roles       Role[]       @relation("UserRoles")
   Resource    Resource[]   @relation("ResourceUser")
   carousels   Carousel[]   @relation("CarouselCreatedBy")
+  fields      Field[]      @relation("FieldCreatedBy")
 
   @@map("users")
 }
@@ -128,6 +129,7 @@ model Product {
   productTags ProductTag[] @relation("ProductTags")
   packages    Package[]    @relation("ProductPackages")
   carousel    Carousel[]   @relation("CarouselProduct")
+  fields      Field[]      @relation("ProductField")
 
   @@index([slug])
   @@index([category_id])
@@ -236,6 +238,24 @@ model Carousel {
   @@map("carousels")
 }
 
+model Field {
+  id          String    @id @default(cuid())
+  label       String
+  placeholder String?
+  metadata    Json
+  type        FieldType @default(TEXT)
+
+  creator    User   @relation("FieldCreatedBy", fields: [creator_id], references: [id])
+  creator_id String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  products Product[] @relation("ProductField")
+
+  @@map("fields")
+}
+
 enum ProductTagType {
   USER_DEFINED
   SYSTEM
@@ -276,4 +296,10 @@ enum CarouselStatus {
   DRAFT
   PUBLISHED
   ARCHIVED
+}
+
+enum FieldType {
+  TEXT
+  EMAIL
+  SELECT
 }

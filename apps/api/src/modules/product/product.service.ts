@@ -172,6 +172,15 @@ export class ProductService {
             },
           },
         },
+        fields: {
+          select: {
+            id: true,
+            label: true,
+            placeholder: true,
+            metadata: true,
+            type: true,
+          },
+        },
       },
     });
 
@@ -202,6 +211,7 @@ export class ProductService {
             : undefined,
       })),
       sales: mostDiscountedSale,
+      fields: product.fields,
     };
   }
 

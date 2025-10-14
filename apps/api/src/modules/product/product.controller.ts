@@ -1,5 +1,5 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
-import { ProductListItem, ProductResponse } from '@pawpal/shared';
+import { ProductListItem } from '@pawpal/shared';
 import { ProductService } from './product.service';
 
 @Controller('product')
@@ -36,9 +36,7 @@ export class ProductController {
   }
 
   @Get(':slug')
-  async getProductBySlug(
-    @Param('slug') slug: string,
-  ): Promise<ProductResponse | null> {
+  getProductBySlug(@Param('slug') slug: string) {
     return this.productService.getProductBySlug(slug);
   }
 

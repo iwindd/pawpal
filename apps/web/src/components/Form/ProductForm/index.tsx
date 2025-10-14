@@ -28,6 +28,7 @@ import { useTranslations } from "next-intl";
 import NextImage from "next/image";
 import { useEffect, useState } from "react";
 import AmountIndicator from "./components/AmountIndicator";
+import Fields from "./components/Fields";
 import PackageRadio from "./components/PackageRadio";
 import PaymentRadio from "./components/PaymentRadio";
 
@@ -147,12 +148,7 @@ const ProductForm = ({ product, onPurchase, isLoading }: ProductFormProps) => {
                 <Title order={6} mb="md">
                   {__("gameAccount")}
                 </Title>
-                <TextInput
-                  label={__("userId")}
-                  placeholder={__("userIdPlaceholder")}
-                  key={form.key("userId")}
-                  {...form.getInputProps("userId")}
-                />
+                <Fields fields={product.fields} />
               </Card>
 
               {/* Amount indicator */}
