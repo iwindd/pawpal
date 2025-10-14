@@ -1,12 +1,22 @@
 import { ZodValidationPipe } from '@/common/ZodValidationPipe';
-import { Body, Controller, Delete, Get, Param, Post, Query, UsePipes } from '@nestjs/common';
 import {
-    AdminProductResponse,
-    DatatableQueryDto,
-    DatatableQuerySchema,
-    DatatableResponse,
-    ProductInput,
-    productSchema
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  UsePipes,
+} from '@nestjs/common';
+import {
+  AdminProductResponse,
+  DatatableQueryDto,
+  DatatableQuerySchema,
+  DatatableResponse,
+  ProductInput,
+  productSchema,
 } from '@pawpal/shared';
 import { ProductService } from './product.service';
 
@@ -22,18 +32,36 @@ export class AdminProductController {
     return this.productService.getProducts(queryParams);
   }
 
+  @Get('combobox/:id')
+  findOneCombobox(@Param('id') id: string) {
+    return this.productService.findOneCombobox(id);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.productService.findOne(id);
   }
 
+  // TODO:: Refactor return type
   @Post()
   @UsePipes(new ZodValidationPipe(productSchema))
-  create(@Body() createProductDto: ProductInput): Promise<AdminProductResponse> {
+  create(
+    @Body() createProductDto: ProductInput,
+  ): Promise<AdminProductResponse> {
     return this.productService.create(createProductDto);
   }
 
+  // TODO:: Refactor return type
+  @Patch(':id')
+  update(
+    @Param('id') id: string,
+    @Body(new ZodValidationPipe(productSchema)) updateProductDto: ProductInput,
+  ) {
+    return this.productService.update(id, updateProductDto);
+  }
+
   @Delete(':id')
+  @UsePipes(new ZodValidationPipe(productSchema))
   remove(@Param('id') id: string): Promise<{ success: boolean }> {
     return this.productService.remove(id);
   }

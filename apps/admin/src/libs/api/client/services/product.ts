@@ -1,4 +1,10 @@
-import { AdminProductResponse, AdminProductEditResponse, DatatableResponse, ProductInput, ProductUpdateInput } from "@pawpal/shared";
+import {
+  AdminProductEditResponse,
+  AdminProductResponse,
+  DatatableResponse,
+  ProductInput,
+  ProductUpdateInput,
+} from "@pawpal/shared";
 import { DataTableSortStatus } from "@pawpal/ui/core";
 import { AxiosError, AxiosInstance, AxiosResponse } from "axios";
 import { PawApiResponse } from "../../api";
@@ -57,7 +63,9 @@ class ProductApi {
     }
   }
 
-  async create(data: ProductInput): Promise<PawApiResponse<AdminProductResponse>> {
+  async create(
+    data: ProductInput
+  ): Promise<PawApiResponse<AdminProductResponse>> {
     try {
       const response = await this.client.post("/admin/product", data);
       return {
@@ -69,9 +77,12 @@ class ProductApi {
     }
   }
 
-  async update(id: string, data: ProductUpdateInput): Promise<PawApiResponse<AdminProductResponse>> {
+  async update(
+    id: string,
+    data: ProductUpdateInput
+  ): Promise<PawApiResponse<AdminProductResponse>> {
     try {
-      const response = await this.client.put(`/admin/product/${id}`, data);
+      const response = await this.client.patch(`/admin/product/${id}`, data);
       return {
         success: true,
         data: response.data,

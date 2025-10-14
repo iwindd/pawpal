@@ -1,14 +1,14 @@
 import datatableUtils from '@/utils/datatable';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import {
-    AdminProductEditResponse,
-    AdminProductResponse,
-    DatatableQueryDto,
-    DatatableResponse,
-    ProductInput,
-    ProductListItem,
-    ProductResponse,
-    ProductSaleValue
+  AdminProductEditResponse,
+  AdminProductResponse,
+  DatatableQueryDto,
+  DatatableResponse,
+  ProductInput,
+  ProductListItem,
+  ProductResponse,
+  ProductSaleValue,
 } from '@pawpal/shared';
 import { PrismaService } from '../prisma/prisma.service';
 import { SaleService } from '../sale/sale.service';
@@ -344,7 +344,8 @@ export class ProductService {
     };
   }
 
-  async findOne(id: string): Promise<AdminProductResponse | null> {
+  // TODO:: Refactor types
+  async findOneCombobox(id: string): Promise<AdminProductResponse | null> {
     const product = await this.prisma.product.findUnique({
       where: { id },
       select: {
@@ -381,6 +382,58 @@ export class ProductService {
       packageCount: product._count.packages,
       category: product.category,
       productTags: product.productTags,
+    };
+  }
+
+  async findOne(id: string): Promise<AdminProductEditResponse | null> {
+    const product = await this.prisma.product.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        slug: true,
+        name: true,
+        description: true,
+        createdAt: true,
+        category: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          },
+        },
+        productTags: {
+          select: {
+            slug: true,
+            name: true,
+          },
+        },
+        packages: {
+          select: {
+            id: true,
+            name: true,
+            price: true,
+            description: true,
+          },
+        },
+      },
+    });
+
+    if (!product) throw new BadRequestException('product_not_found');
+
+    return {
+      id: product.id,
+      slug: product.slug,
+      name: product.name,
+      description: product.description,
+      createdAt: product.createdAt.toISOString(),
+      category: product.category,
+      productTags: product.productTags,
+      packages: product.packages.map((pkg) => ({
+        id: pkg.id,
+        name: pkg.name,
+        price: Number(pkg.price),
+        description: pkg.description,
+      })),
     };
   }
 
@@ -487,6 +540,49 @@ export class ProductService {
       category: product.category,
       productTags: product.productTags,
     };
+  }
+
+  async update(id: string, data: ProductInput) {
+    const { packages, ...productData } = data;
+
+    // If packages are provided, replace all existing packages
+    const updateData: any = { ...productData };
+
+    if (packages) {
+      updateData.packages = {
+        deleteMany: {},
+        create: packages,
+      };
+    }
+
+    const product = await this.prisma.product.update({
+      where: { id },
+      data: updateData,
+      select: {
+        id: true,
+        slug: true,
+        name: true,
+        createdAt: true,
+        _count: {
+          select: { packages: true },
+        },
+        category: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          },
+        },
+        productTags: {
+          select: {
+            slug: true,
+            name: true,
+          },
+        },
+      },
+    });
+
+    if (!product) throw new BadRequestException('product_not_found');
   }
 
   async remove(id: string): Promise<{ success: boolean }> {

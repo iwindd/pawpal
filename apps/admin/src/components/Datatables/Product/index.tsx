@@ -1,10 +1,9 @@
 "use client";
-import { ROUTES } from "@/configs/route";
+import { IconEdit } from "@pawpal/icons";
 import { AdminProductResponse } from "@pawpal/shared";
-import { ActionIcon, DataTable, DataTableProps, Group } from "@pawpal/ui/core";
-import { IconEdit, IconDelete } from "@pawpal/icons";
+import { DataTable, DataTableProps } from "@pawpal/ui/core";
 import { useFormatter, useTranslations } from "next-intl";
-import Link from "next/link";
+import TableAction from "../action";
 import { BaseDatatableProps } from "../datatable";
 
 interface Props extends BaseDatatableProps<AdminProductResponse> {}
@@ -66,27 +65,18 @@ const ProductDatatable = ({
       accessor: "actions",
       title: "Actions",
       width: 100,
+      textAlign: "center",
       render: (record) => (
-        <Group gap={4}>
-          <ActionIcon
-            size="sm"
-            variant="light"
-            color="blue"
-            component={Link}
-            href={typeof ROUTES.products?.children?.edit?.path === 'function'
-              ? ROUTES.products.children.edit.path(record.id)
-              : `/products/${record.id}/edit`}
-          >
-            <IconEdit size={14} />
-          </ActionIcon>
-          <ActionIcon
-            size="sm"
-            variant="light"
-            color="red"
-          >
-            <IconDelete size={14} />
-          </ActionIcon>
-        </Group>
+        <TableAction
+          displayType="icon"
+          actions={[
+            {
+              color: "blue",
+              icon: IconEdit,
+              action: `/products/${record.id}`,
+            },
+          ]}
+        />
       ),
     },
   ];
