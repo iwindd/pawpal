@@ -1,10 +1,7 @@
-import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
-import { SessionAuthGuard } from '@/common/guards/session-auth.guard';
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { CarouselService } from './carousel.service';
 
 @Controller('carousel')
-@UseGuards(SessionAuthGuard, JwtAuthGuard)
 export class CarouselController {
   constructor(private readonly carouselService: CarouselService) {}
 
