@@ -1,7 +1,7 @@
 import { IconFolder, IconHome, IconLogin, IconWork } from "@pawpal/icons";
 
 export type RouteItem = {
-  path: string | ((...args: any[]) => string);
+  path: string;
   label: string;
   icon?: React.ComponentType<any>;
   children?: Record<string, RouteItem>;
@@ -68,4 +68,44 @@ export const ROUTES: Record<string, RouteItem> = {
       },
     },
   },
+};
+
+function fillPathParams<T extends Record<string, any>>(
+  path: string,
+  params: T
+): string {
+  return path.replace(/:([a-zA-Z]+)/g, (_, key) => {
+    const value = params[key];
+    if (!value) throw new Error(`Missing param: ${key}`);
+    return value;
+  });
+}
+
+export const pather = (
+  routeName: string,
+  params?: Record<string, any>
+): string => {
+  const paths: string[] = routeName.split(".");
+  if (!paths) throw new Error(`invalid_path: ${routeName}`);
+  if (paths.length <= 0) throw new Error(`invalid_path: ${routeName}`);
+  let currentPathKey = paths[0] as string;
+  let currentPath = ROUTES[currentPathKey];
+  paths.shift();
+
+  if (paths.length > 0) {
+    paths.forEach((value) => {
+      const children = currentPath?.children || {};
+      if (!children[value])
+        throw new Error(
+          `path "${currentPathKey}" not have children (${value}). (${routeName})`
+        );
+
+      currentPathKey += `.${value}`;
+      currentPath = children[value];
+    });
+  }
+
+  if (!currentPath) throw Error(`invalid_path: ${routeName}`);
+
+  return fillPathParams<any>(currentPath.path, params);
 };
