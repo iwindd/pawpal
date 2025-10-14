@@ -13,6 +13,7 @@ export interface ProductPackage {
 }
 
 export interface ProductCategory {
+  id: string;
   name: string;
   slug: string;
 }
@@ -47,4 +48,15 @@ export interface AdminProductResponse {
   category: ProductCategory;
   productTags: ProductTag[];
   packageCount: number;
+}
+
+export interface AdminProductEditResponse {
+  id: string;
+  slug: string;
+  name: string;
+  description?: string;
+  createdAt: string;
+  category: ProductCategory;
+  productTags: ProductTag[];
+  packages: ProductPackage[];
 }

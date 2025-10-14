@@ -20,7 +20,7 @@ export const ROUTES: Record<string, RouteItem> = {
   },
   products: {
     path: "/products",
-    label: "products",
+    label: "products.main",
     icon: IconWork,
     children: {
       create: {
@@ -29,7 +29,7 @@ export const ROUTES: Record<string, RouteItem> = {
         icon: IconWork,
       },
       edit: {
-        path: "/products/:slug/edit",
+        path: "/products/:id",
         label: "products.edit",
         icon: IconWork,
       },

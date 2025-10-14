@@ -1,17 +1,21 @@
 "use client";
 import ProductDatatable from "@/components/Datatables/Product";
+import PageHeader from "@/components/Pages/PageHeader";
 import { ROUTES } from "@/configs/route";
 import useDatatable from "@/hooks/useDatatable";
 import API from "@/libs/api/client";
+import { IconPlus } from "@pawpal/icons";
 import { AdminProductResponse } from "@pawpal/shared";
-import { Button, Group, Paper, Title } from "@pawpal/ui/core";
+import { Button, Paper } from "@pawpal/ui/core";
 import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
 export default function ProductsPage() {
   const datatable = useDatatable<AdminProductResponse>();
+  const __ = useTranslations("Product")
   const { data, isFetching } = useQuery({
     queryKey: [
       "products",
@@ -29,15 +33,16 @@ export default function ProductsPage() {
 
   return (
     <div>
-      <Group justify="space-between" mb="md">
-        <Title order={2}>Products</Title>
+      <PageHeader title={__("main.title")}>
         <Button
           component={Link}
+          variant="outline"
+          rightSection={<IconPlus size={14} />}
           href={ROUTES["products"]?.children?.create?.path as string}
         >
-          Create
+          {__("main.add-btn")}
         </Button>
-      </Group>
+      </PageHeader>
 
       <Paper p={0}>
         <ProductDatatable

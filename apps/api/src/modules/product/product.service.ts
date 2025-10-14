@@ -1,12 +1,14 @@
 import datatableUtils from '@/utils/datatable';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import {
-  AdminProductResponse,
-  DatatableQueryDto,
-  DatatableResponse,
-  ProductListItem,
-  ProductResponse,
-  ProductSaleValue,
+    AdminProductEditResponse,
+    AdminProductResponse,
+    DatatableQueryDto,
+    DatatableResponse,
+    ProductInput,
+    ProductListItem,
+    ProductResponse,
+    ProductSaleValue
 } from '@pawpal/shared';
 import { PrismaService } from '../prisma/prisma.service';
 import { SaleService } from '../sale/sale.service';
@@ -139,6 +141,7 @@ export class ProductService {
         createdAt: true,
         category: {
           select: {
+            id: true,
             name: true,
             slug: true,
           },
@@ -289,6 +292,58 @@ export class ProductService {
     };
   }
 
+  async findOneForEdit(id: string): Promise<AdminProductEditResponse | null> {
+    const product = await this.prisma.product.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        slug: true,
+        name: true,
+        description: true,
+        createdAt: true,
+        category: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          },
+        },
+        productTags: {
+          select: {
+            slug: true,
+            name: true,
+          },
+        },
+        packages: {
+          select: {
+            id: true,
+            name: true,
+            price: true,
+            description: true,
+          },
+        },
+      },
+    });
+
+    if (!product) return null;
+
+    return {
+      id: product.id,
+      slug: product.slug,
+      name: product.name,
+      description: product.description,
+      createdAt: product.createdAt.toISOString(),
+      category: product.category,
+      productTags: product.productTags,
+      packages: product.packages.map((pkg) => ({
+        id: pkg.id,
+        name: pkg.name,
+        price: Number(pkg.price),
+        description: pkg.description,
+      })),
+    };
+  }
+
   async findOne(id: string): Promise<AdminProductResponse | null> {
     const product = await this.prisma.product.findUnique({
       where: { id },
@@ -302,6 +357,7 @@ export class ProductService {
         },
         category: {
           select: {
+            id: true,
             name: true,
             slug: true,
           },
@@ -360,6 +416,7 @@ export class ProductService {
         },
         category: {
           select: {
+            id: true,
             name: true,
             slug: true,
           },
@@ -385,6 +442,59 @@ export class ProductService {
       })),
       total,
     };
+  }
+
+  async create(data: ProductInput): Promise<AdminProductResponse> {
+    const { packages, ...productData } = data;
+
+    const product = await this.prisma.product.create({
+      data: {
+        ...productData,
+        packages: {
+          create: packages,
+        },
+      },
+      select: {
+        id: true,
+        slug: true,
+        name: true,
+        createdAt: true,
+        _count: {
+          select: { packages: true },
+        },
+        category: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          },
+        },
+        productTags: {
+          select: {
+            slug: true,
+            name: true,
+          },
+        },
+      },
+    });
+
+    return {
+      id: product.id,
+      slug: product.slug,
+      name: product.name,
+      createdAt: product.createdAt.toISOString(),
+      packageCount: product._count.packages,
+      category: product.category,
+      productTags: product.productTags,
+    };
+  }
+
+  async remove(id: string): Promise<{ success: boolean }> {
+    await this.prisma.product.delete({
+      where: { id },
+    });
+
+    return { success: true };
   }
 
   private getMostDiscountedSale(sales: any[]): ProductSaleValue | null {

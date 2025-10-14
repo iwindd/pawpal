@@ -1,7 +1,10 @@
 "use client";
+import { ROUTES } from "@/configs/route";
 import { AdminProductResponse } from "@pawpal/shared";
-import { DataTable, DataTableProps } from "@pawpal/ui/core";
+import { ActionIcon, DataTable, DataTableProps, Group } from "@pawpal/ui/core";
+import { IconEdit, IconDelete } from "@pawpal/icons";
 import { useFormatter, useTranslations } from "next-intl";
+import Link from "next/link";
 import { BaseDatatableProps } from "../datatable";
 
 interface Props extends BaseDatatableProps<AdminProductResponse> {}
@@ -58,6 +61,33 @@ const ProductDatatable = ({
       title: __("createdAt"),
       render: (value) => format.dateTime(new Date(value.createdAt), "date"),
       visibleMediaQuery: above.md,
+    },
+    {
+      accessor: "actions",
+      title: "Actions",
+      width: 100,
+      render: (record) => (
+        <Group gap={4}>
+          <ActionIcon
+            size="sm"
+            variant="light"
+            color="blue"
+            component={Link}
+            href={typeof ROUTES.products?.children?.edit?.path === 'function'
+              ? ROUTES.products.children.edit.path(record.id)
+              : `/products/${record.id}/edit`}
+          >
+            <IconEdit size={14} />
+          </ActionIcon>
+          <ActionIcon
+            size="sm"
+            variant="light"
+            color="red"
+          >
+            <IconDelete size={14} />
+          </ActionIcon>
+        </Group>
+      ),
     },
   ];
 

@@ -1,10 +1,12 @@
 import { ZodValidationPipe } from '@/common/ZodValidationPipe';
-import { Controller, Get, Param, Query, UsePipes } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Query, UsePipes } from '@nestjs/common';
 import {
-  AdminProductResponse,
-  DatatableQueryDto,
-  DatatableQuerySchema,
-  DatatableResponse,
+    AdminProductResponse,
+    DatatableQueryDto,
+    DatatableQuerySchema,
+    DatatableResponse,
+    ProductInput,
+    productSchema
 } from '@pawpal/shared';
 import { ProductService } from './product.service';
 
@@ -23,5 +25,16 @@ export class AdminProductController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.productService.findOne(id);
+  }
+
+  @Post()
+  @UsePipes(new ZodValidationPipe(productSchema))
+  create(@Body() createProductDto: ProductInput): Promise<AdminProductResponse> {
+    return this.productService.create(createProductDto);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string): Promise<{ success: boolean }> {
+    return this.productService.remove(id);
   }
 }

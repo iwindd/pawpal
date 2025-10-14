@@ -1,4 +1,4 @@
-import { AdminProductResponse, DatatableResponse } from "@pawpal/shared";
+import { AdminProductResponse, AdminProductEditResponse, DatatableResponse, ProductInput, ProductUpdateInput } from "@pawpal/shared";
 import { DataTableSortStatus } from "@pawpal/ui/core";
 import { AxiosError, AxiosInstance, AxiosResponse } from "axios";
 import { PawApiResponse } from "../../api";
@@ -37,6 +37,56 @@ class ProductApi {
       return {
         success: true,
         data: response.data,
+      };
+    } catch (error) {
+      return { success: false, data: error as AxiosError };
+    }
+  }
+
+  async findOneForEdit(
+    id: string
+  ): Promise<PawApiResponse<AdminProductEditResponse | null>> {
+    try {
+      const response = await this.client.get(`/admin/product/${id}/edit`);
+      return {
+        success: true,
+        data: response.data,
+      };
+    } catch (error) {
+      return { success: false, data: error as AxiosError };
+    }
+  }
+
+  async create(data: ProductInput): Promise<PawApiResponse<AdminProductResponse>> {
+    try {
+      const response = await this.client.post("/admin/product", data);
+      return {
+        success: true,
+        data: response.data,
+      };
+    } catch (error) {
+      return { success: false, data: error as AxiosError };
+    }
+  }
+
+  async update(id: string, data: ProductUpdateInput): Promise<PawApiResponse<AdminProductResponse>> {
+    try {
+      const response = await this.client.put(`/admin/product/${id}`, data);
+      return {
+        success: true,
+        data: response.data,
+      };
+    } catch (error) {
+      return { success: false, data: error as AxiosError };
+    }
+  }
+
+  async delete(id: string): Promise<PawApiResponse<boolean>> {
+    try {
+      await this.client.delete(`/admin/product/${id}`);
+      return {
+        success: true,
+        data: true,
       };
     } catch (error) {
       return { success: false, data: error as AxiosError };

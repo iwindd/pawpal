@@ -43,7 +43,11 @@
         "order": "คำสั่งซื้อ",
         "topup": "เติมเงิน"
       },
-      "products": "สินค้า",
+      "products": {
+        "main": "สินค้าทั้งหมด",
+        "create": "สร้างสินค้า",
+        "edit": "แก้ไขสินค้า"
+      },
       "resources": "ทรัพยากร",
       "website": {
         "main": "เว็บไซต์",
@@ -56,6 +60,62 @@
       "fanpage": "Fanpage"
     }
   },
+  "Product": {
+    "main": {
+      "title": "สินค้าทั้งหมด",
+      "add-btn": "เพิ่มสินค้า"
+    },
+    "create": {
+      "title": "เพิ่มสินค้า"
+    },
+    "form": {
+      "sections": {
+        "information": "ข้อมูลสินค้า",
+        "packages": "แพ็คเกจ"
+      },
+      "fields": {
+        "product": {
+          "name": {
+            "label": "ชื่อสินค้า",
+            "placeholder": "ระบุชื่อสินค้า"
+          },
+          "slug": {
+            "label": "Slug",
+            "placeholder": "ระบุ Slug"
+          },
+          "description": {
+            "label": "รายละเอียด",
+            "placeholder": "ระบุรายละเอียด"
+          },
+          "category": {
+            "label": "หมวดหมู่",
+            "placeholder": "ระบุหมวดหมู่"
+          }
+        },
+        "package": {
+          "name": {
+            "label": "ชื่อแพ็คเกจ",
+            "placeholder": "ระบุชื่อแพ็คเกจ"
+          },
+          "price": {
+            "label": "ราคาแพ็คเกจ",
+            "placeholder": "ระบุราคาแพ็คเกจ"
+          },
+          "description": {
+            "label": "รายละเอียดแพ็คเกจ",
+            "placeholder": "ระบุรายละเอียดแพ็คเกจ"
+          }
+        }
+      },
+      "messages": {
+        "package_count": "แพ็คเกจที่ {count}"
+      },
+      "actions": {
+        "addPackage": "เพิ่มแพ็คเกจ",
+        "save": "บันทึก"
+      }
+    }
+  },
   "Errors": {
     "login": {
       "invalid_email_format": "อีเมลไม่ถูกต้อง",
@@ -64,6 +124,18 @@
       "invalid_credentials": "อีเมลหรือรหัสผ่านไม่ถูกต้อง",
       "error": "กรุณาลองใหม่อีกครั้งภายหลัง!",
       "user_not_admin": "คุณไม่มีสิทธิ์เข้าถึงระบบนี้"
+    },
+    "product": {
+      "product_name_too_short": "ชื่อสินค้าต้องมีความยาวอย่างน้อย 3-20 ตัวอักษร",
+      "product_name_too_long": "ชื่อสินค้าต้องมีความยาวอย่างน้อย 3-20 ตัวอักษร",
+      "product_slug_too_short": "Slug สินค้าต้องมีความยาวอย่างน้อย 3-20 ตัวอักษร",
+      "product_slug_too_long": "Slug สินค้าต้องมีความยาวอย่างน้อย 3-20 ตัวอักษร",
+      "product_description_too_long": "รายละเอียดสินค้าต้องมีความยาวไม่เกิน 150 ตัวอักษร",
+      "package_name_too_short": "ชื่อแพ็คเกจต้องมีความยาวอย่างน้อย 3-20 ตัวอักษร",
+      "package_name_too_long": "ชื่อแพ็คเกจต้องมีความยาวอย่างน้อย 3-20 ตัวอักษร",
+      "price_must_be_positive": "ราคาสินค้าไม่ถูกต้อง",
+      "invalid_category_id": "หมวดหมู่ไม่ถูกต้อง",
+      "error": "กรุณาลองใหม่อีกครั้งภายหลัง!"
     },
     "resource": {
       "file_type_not_accepted": "ประเภทไฟล์ไม่ถูกต้อง",
