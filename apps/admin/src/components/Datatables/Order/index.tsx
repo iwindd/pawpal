@@ -1,6 +1,8 @@
 "use client";
+import { pather } from "@/configs/route";
 import useDatatable from "@/hooks/useDatatable";
 import API from "@/libs/api/client";
+import { IconEdit } from "@pawpal/icons";
 import { AdminOrderResponse } from "@pawpal/shared";
 import {
   Breadcrumbs,
@@ -11,6 +13,7 @@ import {
 } from "@pawpal/ui/core";
 import { useQuery } from "@tanstack/react-query";
 import { useFormatter, useTranslations } from "next-intl";
+import TableAction from "../action";
 import { BaseDatatableProps } from "../datatable";
 
 interface Props extends BaseDatatableProps<AdminOrderResponse> {}
@@ -117,6 +120,24 @@ const OrderDatatable = () => {
       render: (record) =>
         format.dateTime(new Date(record.createdAt), "dateTime"),
       visibleMediaQuery: above.sm,
+    },
+    {
+      accessor: "actions",
+      noWrap: true,
+      title: __("actions"),
+      render: (record) => (
+        <TableAction
+          displayType="icon"
+          actions={[
+            {
+              translate: "edit",
+              action: pather("job.orders.edit", { id: record.id }),
+              icon: IconEdit,
+              color: "blue",
+            },
+          ]}
+        />
+      ),
     },
   ];
 

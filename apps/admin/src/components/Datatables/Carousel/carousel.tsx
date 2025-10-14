@@ -102,7 +102,8 @@ const CarouselDatatable = () => {
       textAlign: "center",
       render: (carousel) => (
         <TableAction
-          label={__("actions")}
+          displayType="icon"
+          align="center"
           actions={[
             {
               translate: "edit",

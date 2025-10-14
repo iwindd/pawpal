@@ -130,10 +130,11 @@ const PublishDatatable = () => {
     {
       accessor: "actions",
       title: "actions",
-      textAlign: "center",
+      textAlign: "right",
       render: (carousel) => (
         <TableAction
           displayType="icon"
+          align="end"
           actions={[
             {
               translate: "edit",

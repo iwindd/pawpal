@@ -10,6 +10,7 @@ import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { Fragment } from "react";
 
+type ActionAlign = "start" | "center" | "end";
 interface ActionProps {
   label?: string;
   displayType?: "menu" | "icon";
@@ -24,6 +25,7 @@ interface ActionProps {
     color?: MenuItemProps["color"];
     props?: MenuItemProps;
   }[];
+  align?: ActionAlign;
 }
 
 const RenderMenu = ({
@@ -82,7 +84,7 @@ const RenderIcon = ({ actions }: { actions: ActionProps["actions"] }) => {
   if (actions.length === 0) return null;
 
   return (
-    <Group gap={4} justify="right" wrap="nowrap">
+    <>
       {actions.map((action, index) => {
         const props: any = {
           onClick: action.action,
@@ -103,7 +105,7 @@ const RenderIcon = ({ actions }: { actions: ActionProps["actions"] }) => {
         return (
           <ActionIcon
             key={"action-icon-" + index}
-            variant="subtle"
+            variant="light"
             size="sm"
             {...props}
           >
@@ -111,16 +113,24 @@ const RenderIcon = ({ actions }: { actions: ActionProps["actions"] }) => {
           </ActionIcon>
         );
       })}
-    </Group>
+    </>
   );
 };
 
-const TableAction = ({ label, displayType = "menu", actions }: ActionProps) => {
-  if (displayType === "icon") {
-    return <RenderIcon actions={actions} />;
-  }
-
-  return <RenderMenu label={label || "Actions"} actions={actions} />;
+const TableAction = ({
+  label,
+  displayType = "menu",
+  align,
+  actions,
+}: ActionProps) => {
+  return (
+    <Group gap={4} justify={align} wrap="nowrap">
+      {displayType == "icon" && <RenderIcon actions={actions} />}
+      {displayType === "menu" && (
+        <RenderMenu label={label || "Actions"} actions={actions} />
+      )}
+    </Group>
+  );
 };
 
 export default TableAction;
