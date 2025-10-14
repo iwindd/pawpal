@@ -1,10 +1,10 @@
 import {
-    IconAppWindow,
-    IconBrandFacebook,
-    IconDashboard,
-    IconFolder,
-    IconShoppingBag,
-    IconWork,
+  IconAppWindow,
+  IconBrandFacebook,
+  IconDashboard,
+  IconFolder,
+  IconShoppingBag,
+  IconWork,
 } from "@pawpal/icons";
 import { ROUTES } from "./route";
 
@@ -39,8 +39,8 @@ export const navlinks: NavLink[] = [
     files: [
       {
         id: 1,
-        name: "work.order",
-        link: "/",
+        name: "orders.main",
+        link: ROUTES["orders"]?.path as string,
       },
       {
         id: 2,

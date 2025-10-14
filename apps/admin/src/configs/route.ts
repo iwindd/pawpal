@@ -35,6 +35,11 @@ export const ROUTES: Record<string, RouteItem> = {
       },
     },
   },
+  orders: {
+    path: "/orders",
+    label: "orders.main",
+    icon: IconWork,
+  },
   resources: {
     path: "/resources",
     label: "resources",
