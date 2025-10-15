@@ -30,9 +30,8 @@ const useFormValidate = <T extends Record<string, any>>({
       const props = form.getInputProps(path as any);
       return {
         ...props,
-        error: props.error
-          ? __(`Errors.${group || "global"}.${props.error as string}`)
-          : undefined,
+        // TODO:: Refactor error message handling in the future
+        error: props.error,
       };
     },
   };
