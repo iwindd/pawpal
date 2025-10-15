@@ -1,9 +1,9 @@
 import { AuthUser } from '@/common/decorators/user.decorator';
 import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
 import { SessionAuthGuard } from '@/common/guards/session-auth.guard';
-import { ZodValidationPipe } from '@/common/ZodValidationPipe';
+import { PurchasePipe } from '@/common/pipes/PurchasePipe';
 import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
-import { PurchaseInput, purchaseSchema, Session } from '@pawpal/shared';
+import { PurchaseInput, Session } from '@pawpal/shared';
 import { OrderService } from './order.service';
 
 @Controller('order')
@@ -13,7 +13,7 @@ export class OrderController {
 
   @Post()
   async createOrder(
-    @Body(new ZodValidationPipe(purchaseSchema)) body: PurchaseInput,
+    @Body(PurchasePipe) body: PurchaseInput,
     @AuthUser() user: Session,
   ) {
     return this.orderService.createOrder(user.id, body);

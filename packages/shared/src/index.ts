@@ -1,4 +1,4 @@
-export { type ZodType } from "zod";
+export { ZodError, type ZodType } from "zod";
 export * from "./configs/payment";
 export * from "./schemas/auth/change-email";
 export * from "./schemas/auth/change-password";
