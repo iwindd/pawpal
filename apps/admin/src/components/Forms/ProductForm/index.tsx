@@ -3,25 +3,25 @@ import CategoryCombobox from "@/components/Combobox/Category";
 import useFormValidate from "@/hooks/useFormValidate";
 import { IconDelete, IconPlus, IconPublishShare } from "@pawpal/icons";
 import {
-    AdminProductEditResponse,
-    ProductInput,
-    productSchema
+  AdminProductEditResponse,
+  ProductInput,
+  productSchema,
+  slugify,
 } from "@pawpal/shared";
 import {
-    ActionIcon,
-    Button,
-    ErrorMessage,
-    Grid,
-    Group,
-    NumberInput,
-    Paper,
-    Stack,
-    Text,
-    TextInput
+  ActionIcon,
+  Button,
+  ErrorMessage,
+  Grid,
+  Group,
+  NumberInput,
+  Paper,
+  Stack,
+  Text,
+  TextInput,
 } from "@pawpal/ui/core";
 import { UseFormReturnType } from "@pawpal/ui/form";
 import { useTranslations } from "next-intl";
-import { useEffect } from "react";
 
 export type ProductFormControl = UseFormReturnType<ProductInput>;
 
@@ -53,32 +53,19 @@ const ProductForm = ({
       description: product?.description || "",
       category_id: product?.category?.id || "",
       packages: product?.packages?.length
-        ? product.packages.map(pkg => ({
+        ? product.packages.map((pkg) => ({
             name: pkg.name,
             price: pkg.price,
-            description: pkg.description || ""
+            description: pkg.description || "",
           }))
         : [{ name: "", price: 0, description: "" }],
     },
+    onValuesChange: (current, prev) => {
+      if (current.name !== prev.name) {
+        form.setFieldValue("slug", slugify(current.name));
+      }
+    },
   });
-
-  // Auto-generate slug from name
-  const generateSlug = (name: string) => {
-    return name
-      .toLowerCase()
-      .trim()
-      .replace(/[^\w\s-]/g, "")
-      .replace(/[\s_-]+/g, "-")
-      .replace(/^-+|-+$/g, "");
-  };
-
-  useEffect(() => {
-    const nameValue = form.getValues().name;
-    if (nameValue) {
-      const slug = generateSlug(nameValue);
-      form.setFieldValue("slug", slug);
-    }
-  }, [form.getValues().name]);
 
   const handleSubmit = (values: ProductInput) => {
     onSubmit(values, form);
@@ -125,7 +112,7 @@ const ProductForm = ({
 
               <Grid.Col span={{ base: 12, md: 6 }}>
                 <TextInput
-                      label={__("fields.product.slug.label")}
+                  label={__("fields.product.slug.label")}
                   placeholder={__("fields.product.slug.placeholder")}
                   withAsterisk
                   key={form.key("slug")}
@@ -222,9 +209,13 @@ const ProductForm = ({
                       <Grid.Col span={{ base: 12, md: 4 }}>
                         <TextInput
                           label={__("fields.package.description.label")}
-                          placeholder={__("fields.package.description.placeholder")}
+                          placeholder={__(
+                            "fields.package.description.placeholder"
+                          )}
                           key={form.key(`packages.${index}.description`)}
-                          {...form.getInputProps(`packages.${index}.description`)}
+                          {...form.getInputProps(
+                            `packages.${index}.description`
+                          )}
                         />
                       </Grid.Col>
                     </Grid>
