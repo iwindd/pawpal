@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
+import { FieldAfterParse } from '@/common/pipes/PurchasePipe';
 import { OrderStatus } from '@pawpal/prisma';
 import {
   AdminOrderResponse,
@@ -25,7 +26,7 @@ export class OrderService {
     });
   }
 
-  async createOrder(userId: string, body: PurchaseInput) {
+  async createOrder(userId: string, body: PurchaseInput<FieldAfterParse>) {
     const pkg = await this.packageService.getPackage(body.packageId);
     const price = +pkg.price;
     const amount = +body.amount;
@@ -50,6 +51,16 @@ export class OrderService {
             amount: amount,
             price: price.toString(),
           },
+        },
+        orderFields: {
+          create: body.fields.map((field) => ({
+            field: {
+              connect: {
+                id: field.id,
+              },
+            },
+            value: field.value,
+          })),
         },
       },
     });

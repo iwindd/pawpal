@@ -186,6 +186,7 @@ model Order {
   updatedAt DateTime    @updatedAt
 
   orderPackages OrderPackage[] @relation("OrderPackages")
+  orderFields   OrderField[]   @relation("OrderFields")
 
   @@map("orders")
 }
@@ -202,6 +203,17 @@ model OrderPackage {
   updatedAt  DateTime @updatedAt
 
   @@map("order_packages")
+}
+
+model OrderField {
+  id       String @id @default(cuid())
+  order    Order  @relation("OrderFields", fields: [order_id], references: [id])
+  order_id String
+  field    Field  @relation("OrderFields", fields: [field_id], references: [id])
+  field_id String
+  value    String
+
+  @@map("order_fields")
 }
 
 model Resource {
@@ -251,7 +263,8 @@ model Field {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  products Product[] @relation("ProductField")
+  products    Product[]    @relation("ProductField")
+  orderFields OrderField[] @relation("OrderFields")
 
   @@map("fields")
 }

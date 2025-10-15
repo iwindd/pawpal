@@ -2,6 +2,11 @@ import { PackageService } from '@/modules/package/package.service';
 import { Injectable, PipeTransform } from '@nestjs/common';
 import { buildFieldSchema, purchaseSchema } from '@pawpal/shared';
 
+export interface FieldAfterParse {
+  id: string;
+  value: string;
+}
+
 @Injectable()
 export class PurchasePipe implements PipeTransform {
   private readonly basePurchaseSchema = purchaseSchema;
@@ -14,6 +19,18 @@ export class PurchasePipe implements PipeTransform {
       fields: buildFieldSchema(fields).schema,
     });
     const parsedFull = fullSchema.parse(value);
-    return parsedFull;
+
+    const fieldArray = [];
+    for (const fieldId in parsedFull.fields) {
+      fieldArray.push({
+        id: fieldId,
+        value: parsedFull.fields[fieldId],
+      });
+    }
+
+    return {
+      ...parsedFull,
+      fields: fieldArray,
+    };
   }
 }

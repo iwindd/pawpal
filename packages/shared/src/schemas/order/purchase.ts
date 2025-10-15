@@ -12,7 +12,8 @@ export const purchaseSchema = z.object({
     .trim(),
 });
 
-export type PurchaseInput = z.infer<typeof purchaseSchema> & {
-  fields: any;
+export type PurchaseInput<T = any> = z.infer<typeof purchaseSchema> & {
+  fields: T[];
 };
+
 export type TestVariablePurchase = {};
