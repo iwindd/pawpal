@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import passport from 'passport';
 import { join } from 'path';
+import { ZodFilter } from './common/execeptions/ZodFilter';
 import { DelayInterceptor } from './common/interceptors/delay.interceptor';
 // Constants
 const DEFAULT_PORT = 3000;
@@ -52,6 +53,9 @@ async function bootstrap(): Promise<void> {
   app.useStaticAssets(join(process.cwd(), 'uploads'), {
     prefix: '/storage/',
   });
+
+  app.useGlobalFilters(new ZodFilter());
+
   await app.listen(port);
 }
 
