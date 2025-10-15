@@ -1,7 +1,6 @@
 import { z } from "zod";
 
 export const purchaseSchema = z.object({
-  userId: z.string().min(1, { message: "invalid_user_info" }).trim(),
   packageId: z.string().min(1, { message: "invalid_package" }).trim(),
   amount: z
     .number()
@@ -13,6 +12,7 @@ export const purchaseSchema = z.object({
     .trim(),
 });
 
-export type PurchaseInput = z.infer<typeof purchaseSchema>;
-
+export type PurchaseInput = z.infer<typeof purchaseSchema> & {
+  fields: any;
+};
 export type TestVariablePurchase = {};

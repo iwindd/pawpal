@@ -2,6 +2,7 @@
 import PurchaseConfirmationModal from "@/components/Modals/PurchaseConfirmationModal";
 import useFormValidate from "@/hooks/useFormValidate";
 import {
+  buildFieldSchema,
   defaultPaymentMethod,
   ENUM_DISCOUNT_TYPE,
   paymentMethods,
@@ -26,7 +27,7 @@ import {
 import { useDisclosure } from "@pawpal/ui/hooks";
 import { useTranslations } from "next-intl";
 import NextImage from "next/image";
-import { useEffect, useState } from "react";
+import { useRef, useState } from "react";
 import AmountIndicator from "./components/AmountIndicator";
 import Fields from "./components/Fields";
 import PackageRadio from "./components/PackageRadio";
@@ -42,16 +43,22 @@ const ProductForm = ({ product, onPurchase, isLoading }: ProductFormProps) => {
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [showConfirmationModal, { open, close }] = useDisclosure(false);
   const __ = useTranslations("ProductDetail");
+  const fieldSchema = useRef(buildFieldSchema(product.fields));
+  const schema = useRef(
+    purchaseSchema.extend({
+      fields: fieldSchema.current.schema,
+    })
+  );
 
   const form = useFormValidate<PurchaseInput>({
-    schema: purchaseSchema,
+    schema: schema.current,
     group: "purchase",
-    mode: "controlled",
+    mode: "uncontrolled",
     initialValues: {
-      packageId: "",
-      userId: "",
+      packageId: product.packages[0]?.id || "",
       amount: 1,
       paymentMethod: defaultPaymentMethod,
+      fields: fieldSchema.current.default,
     },
     onValuesChange: ({ packageId, amount }) => {
       if (!packageId || !product) return;
@@ -76,12 +83,6 @@ const ProductForm = ({ product, onPurchase, isLoading }: ProductFormProps) => {
   const selectedPackage = product.packages.find(
     (p) => p.id === submittedValues?.packageId
   );
-
-  useEffect(() => {
-    if (product?.packages?.length && product.packages.length > 0) {
-      form.setFieldValue("packageId", product.packages[0]?.id || "");
-    }
-  }, [product]);
 
   return (
     <>
@@ -148,7 +149,7 @@ const ProductForm = ({ product, onPurchase, isLoading }: ProductFormProps) => {
                 <Title order={6} mb="md">
                   {__("gameAccount")}
                 </Title>
-                <Fields fields={product.fields} />
+                <Fields fields={product.fields} form={form} />
               </Card>
 
               {/* Amount indicator */}
@@ -219,7 +220,12 @@ const ProductForm = ({ product, onPurchase, isLoading }: ProductFormProps) => {
         amount={submittedValues?.amount || 0}
         price={(selectedPackage?.price || 0) * (submittedValues?.amount || 0)}
         paymentMethod={submittedValues?.paymentMethod}
-        userInfo={submittedValues?.userId}
+        fields={
+          product.fields.map((field) => ({
+            label: field.label,
+            value: submittedValues?.fields[field.id] || "",
+          })) || []
+        }
         sale={
           selectedPackage?.sale && {
             type: ENUM_DISCOUNT_TYPE.PERCENT,

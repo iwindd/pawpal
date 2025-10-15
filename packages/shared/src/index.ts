@@ -7,6 +7,7 @@ export * from "./schemas/auth/register";
 export * from "./schemas/auth/updateProfile";
 export * from "./schemas/category";
 export * from "./schemas/order";
+export * from "./schemas/order/field";
 export * from "./schemas/product";
 export * from "./schemas/resource/resource";
 export * from "./schemas/sale";
@@ -18,5 +19,4 @@ export * from "./types/response/datatable";
 export * from "./types/response/order";
 export * from "./types/response/product";
 export * from "./types/response/resource";
-
 export * from "./types/session";

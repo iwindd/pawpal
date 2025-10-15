@@ -13,6 +13,7 @@ import {
   GroupProps,
   Modal,
   Stack,
+  Table,
   Text as TextBase,
   TextProps,
   Title,
@@ -36,8 +37,8 @@ interface PurchaseConfirmationModalProps {
   package: string;
   amount: number;
   price: number;
+  fields: Record<string, any>[];
   paymentMethod?: PaymentMethod;
-  userInfo?: string;
   sale?: PricingSale;
 }
 
@@ -89,13 +90,24 @@ export default function PurchaseConfirmationModal({
         )}
 
         {/* Game Account */}
-        {props.userInfo && (
-          <Group>
+        {props.fields && (
+          <Stack align="start" gap={0}>
             <Text>{__("gameAccount")}</Text>
-            <Stack>
-              <Text>{props.userInfo}</Text>
-            </Stack>
-          </Group>
+            <Table withRowBorders={false} p={0} verticalSpacing={0}>
+              <Table.Tbody p={0}>
+                {props.fields.map((field, index) => (
+                  <Table.Tr key={field.label + index}>
+                    <Table.Td p={0}>
+                      <Text>- {field.label}</Text>
+                    </Table.Td>
+                    <Table.Td p={0} align="right">
+                      <Text>{field.value}</Text>
+                    </Table.Td>
+                  </Table.Tr>
+                ))}
+              </Table.Tbody>
+            </Table>
+          </Stack>
         )}
 
         {/* Pricing Summary */}
