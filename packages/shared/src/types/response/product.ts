@@ -1,3 +1,5 @@
+import { FieldType } from "../../schemas/order/field";
+
 export interface ProductSaleValue {
   percent: number;
   endAt: string;
@@ -33,8 +35,9 @@ export interface ProductField {
   id: string;
   label: string;
   placeholder: string;
-  type: "TEXT" | "EMAIL" | "SELECT";
+  type: FieldType;
   metadata: any;
+  optional?: boolean;
 }
 
 export interface ProductResponse {

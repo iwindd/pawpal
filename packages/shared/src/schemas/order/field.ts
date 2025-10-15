@@ -6,10 +6,11 @@ export const ENUM_FIELD_TYPE = {
   TEXT: "TEXT",
   EMAIL: "EMAIL",
   SELECT: "SELECT",
+  PASSWORD: "PASSWORD",
 };
 
-export const buildFieldSchema = <T extends ProductField[]>(
-  fields: T,
+export const buildFieldSchema = (
+  fields: ProductField[],
   defaultValues: Record<string, any> = {}
 ) => {
   const shape: Record<string, z.ZodTypeAny> = {};
@@ -17,7 +18,7 @@ export const buildFieldSchema = <T extends ProductField[]>(
   fields.forEach((field) => {
     switch (field.type) {
       case ENUM_FIELD_TYPE.TEXT:
-        shape[field.id] = z.string().min(1);
+        shape[field.id] = z.string();
         break;
       case ENUM_FIELD_TYPE.EMAIL:
         shape[field.id] = z.email();
@@ -33,13 +34,19 @@ export const buildFieldSchema = <T extends ProductField[]>(
 
           shape[field.id] = z.enum(tuple);
         } else {
-          shape[field.id] = z.string().min(1);
+          shape[field.id] = z.string();
         }
         break;
       }
+      case ENUM_FIELD_TYPE.PASSWORD:
+        shape[field.id] = z.string();
+        break;
       default:
         break;
     }
+
+    const object = shape[field.id];
+    if (field.optional) shape[field.id] = object!.optional();
 
     defaultValues[field.id] = undefined;
   });

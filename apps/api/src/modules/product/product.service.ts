@@ -179,6 +179,7 @@ export class ProductService {
             placeholder: true,
             metadata: true,
             type: true,
+            optional: true,
           },
         },
       },

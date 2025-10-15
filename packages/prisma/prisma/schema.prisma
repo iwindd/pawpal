@@ -254,11 +254,13 @@ model Field {
   id          String    @id @default(cuid())
   label       String
   placeholder String?
-  metadata    Json
+  metadata    Json      @default("{}")
   type        FieldType @default(TEXT)
 
-  creator    User   @relation("FieldCreatedBy", fields: [creator_id], references: [id])
-  creator_id String
+  creator    User?   @relation("FieldCreatedBy", fields: [creator_id], references: [id])
+  creator_id String?
+
+  optional Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -315,4 +317,5 @@ enum FieldType {
   TEXT
   EMAIL
   SELECT
+  PASSWORD
 }

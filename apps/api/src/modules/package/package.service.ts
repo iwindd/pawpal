@@ -33,6 +33,7 @@ export class PackageService {
                 placeholder: true,
                 metadata: true,
                 type: true,
+                optional: true,
               },
             },
           },

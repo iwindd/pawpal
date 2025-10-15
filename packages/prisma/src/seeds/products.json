@@ -80,6 +80,13 @@
         "name": "Valorant 9800",
         "price": 2329
       }
+    ],
+    "fields": [
+      {
+        "label": "RiotID",
+        "type": "TEXT",
+        "placeholder": "ตัวอย่าง: PawPal#TH1234"
+      }
     ]
   },
   {
@@ -92,6 +99,24 @@
         "id": "valorant-nightfall-1000",
         "name": "Valorant Nightfall 1000",
         "price": 1000
+      }
+    ],
+    "fields": [
+      {
+        "label": "Username",
+        "type": "TEXT",
+        "placeholder": "ตัวอย่าง: PawPal"
+      },
+      {
+        "label": "Password",
+        "type": "PASSWORD",
+        "placeholder": "รหัสผ่านของคุณ"
+      },
+      {
+        "label": "RiotID",
+        "type": "TEXT",
+        "placeholder": "ตัวอย่าง: PawPal#TH1234 (สำหรับยืนยัน)",
+        "optional": true
       }
     ]
   },

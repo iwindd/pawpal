@@ -23,6 +23,18 @@ const FieldText = (props: Field) => {
   );
 };
 
+const FieldPassword = (props: Field) => {
+  return (
+    <TextInput
+      label={props.label}
+      placeholder={props.placeholder}
+      type="password"
+      key={props.form.key(`fields.${props.id}`)}
+      {...props.form.getInputProps(`fields.${props.id}`)}
+    />
+  );
+};
+
 const FieldEmail = (props: Field) => {
   return (
     <TextInput
@@ -67,6 +79,10 @@ const Fields = ({ fields, form }: FieldProps) => {
 
         if (field.type === "SELECT") {
           return <FieldSelect key={field.id} {...field} form={form} />;
+        }
+
+        if (field.type === "PASSWORD") {
+          return <FieldPassword key={field.id} {...field} form={form} />;
         }
 
         return null;

@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { DiscountType, PrismaClient } from "../generated/client";
+import { DiscountType, FieldType, PrismaClient } from "../generated/client";
 import categories from "./seeds/categories.json";
 import products from "./seeds/products.json";
 import productTags from "./seeds/productTags.json";
@@ -112,6 +112,12 @@ async function main() {
           packages: {
             create: product.packages.map((pkg) => ({ ...pkg })),
           },
+          fields: {
+            create: (product.fields || []).map((field) => ({
+              ...field,
+              type: field.type as FieldType,
+            })),
+          },
         },
       });
     }
@@ -148,6 +154,7 @@ async function main() {
     `Created ${await prisma.productTag.count()} product tags\n`,
     `Created ${await prisma.package.count()} packages\n`,
     `Created ${await prisma.sale.count()} sales\n`,
+    `Created ${await prisma.field.count()} fields\n`,
     `--------------------------------\n`
   );
 }
