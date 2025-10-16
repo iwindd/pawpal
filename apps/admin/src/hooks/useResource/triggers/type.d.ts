@@ -1,25 +1,21 @@
-interface DropzoneTriggerBase {
+export interface DropzoneTriggerProps extends DropzoneTriggerBase {
   error?: string | null;
   h?: number | string;
+  w?: number | string;
   disabled?: boolean;
-}
-
-export interface DropzoneTriggerProps extends DropzoneTriggerBase {
   label?: string;
   placeholder?: string;
-  hint: string;
+  hint?: string;
   onChange?: (value: string | null) => void;
   defaultValue?: string;
   value?: string;
 }
 
-export interface DropzoneTriggerHasImageProps extends DropzoneTriggerBase {
+export interface DropzoneTriggerHasImageProps extends DropzoneTriggerProps {
   selectedResource: ResourceResponse | null;
   onOpen: () => void;
 }
 
-export interface DropzoneTriggerNoImageProps extends DropzoneTriggerBase {
-  placeholder?: DropzoneTriggerProps["placeholder"];
-  hint: DropzoneTriggerProps["hint"];
+export interface DropzoneTriggerNoImageProps extends DropzoneTriggerProps {
   onOpen: () => void;
 }

@@ -16,6 +16,7 @@ const HasImage = ({
   onOpen,
   error,
   h,
+  w,
   disabled,
 }: DropzoneTriggerHasImageProps) => {
   const __ = useTranslations("Resources.modal");
@@ -24,6 +25,7 @@ const HasImage = ({
     <Paper
       radius={"sm"}
       h={h}
+      w={w}
       style={{
         overflow: "hidden",
         border: error ? "1px solid var(--mantine-color-error)" : undefined,
@@ -65,6 +67,7 @@ const NoImage = ({
   onOpen,
   error,
   h,
+  w,
   disabled,
 }: DropzoneTriggerNoImageProps) => {
   /* TODO:: Upload drag and drop */
@@ -72,6 +75,7 @@ const NoImage = ({
     <Dropzone
       m={0}
       h={h}
+      w={w}
       onDrop={(files) => console.log("accepted files", files)}
       maxSize={5 * 1024 ** 2}
       onClick={onOpen}
@@ -88,7 +92,6 @@ const NoImage = ({
         justify="center"
         align="center"
         gap="xl"
-        mih={220}
         style={{ pointerEvents: "none" }}
       >
         <Dropzone.Accept>
@@ -109,29 +112,27 @@ const NoImage = ({
           />
         </Dropzone.Idle>
 
-        <div>
-          <Text size="xl" inline>
-            {placeholder}
-          </Text>
-          <Text size="sm" c="dimmed" inline mt={7}>
-            {hint}
-          </Text>
-        </div>
+        {(placeholder || hint) && (
+          <div>
+            <Text size="xl" inline>
+              {placeholder}
+            </Text>
+            <Text size="sm" c="dimmed" inline mt={7}>
+              {hint}
+            </Text>
+          </div>
+        )}
       </Group>
     </Dropzone>
   );
 };
 
 const DropzoneTrigger = ({
-  label,
-  placeholder,
-  hint,
   onChange,
-  error,
-  h,
   defaultValue,
   value,
-  disabled,
+  label,
+  ...props
 }: DropzoneTriggerProps) => {
   const resource = useResource({
     onResourceSelect: (resource) => {
@@ -145,28 +146,19 @@ const DropzoneTrigger = ({
 
   return (
     <Stack gap={"xs"}>
-      <Input.Label>{label}</Input.Label>
+      {label && <Input.Label>{label}</Input.Label>}
 
       {resource.selectedResource ? (
         <HasImage
+          {...props}
           selectedResource={resource.selectedResource}
           onOpen={resource.open}
-          h={h}
-          error={error}
-          disabled={disabled}
         />
       ) : (
-        <NoImage
-          placeholder={placeholder}
-          hint={hint}
-          onOpen={resource.open}
-          h={h}
-          error={error}
-          disabled={disabled}
-        />
+        <NoImage {...props} onOpen={resource.open} />
       )}
 
-      <Input.Error>{error}</Input.Error>
+      <Input.Error>{props.error}</Input.Error>
       {resource.modal}
     </Stack>
   );
