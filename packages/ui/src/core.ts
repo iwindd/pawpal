@@ -7,8 +7,9 @@ export {
   AspectRatio,
   Avatar,
   Badge,
-  Breadcrumbs,
+  Paper as BasePaper,
   Box,
+  Breadcrumbs,
   Burger,
   Button,
   Card,
@@ -37,7 +38,6 @@ export {
   Modal,
   NumberInput,
   Overlay,
-  Paper,
   PasswordInput,
   Radio,
   rem,
@@ -49,6 +49,7 @@ export {
   TableTd,
   Tabs,
   Text,
+  Textarea,
   TextInput,
   ThemeIcon,
   Title,
@@ -70,6 +71,8 @@ export {
   type TextInputProps,
   type TextProps,
 } from "@mantine/core";
+
+export { default as Paper } from "./components/Paper";
 
 export {
   DataTable,
