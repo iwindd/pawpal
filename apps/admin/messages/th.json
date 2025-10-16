@@ -313,5 +313,43 @@
       "label": "สินค้า",
       "loading": "กำลังโหลด..."
     }
+  },
+  "Field": {
+    "form": {
+      "fields": {
+        "label": {
+          "label": "ชื่อฟิลด์",
+          "placeholder": "กรอกชื่อฟิลด์"
+        },
+        "placeholder": {
+          "label": "Placeholder",
+          "placeholder": "กรอก Placeholder"
+        },
+        "type": {
+          "label": "ประเภทฟิลด์",
+          "placeholder": "เลือกประเภทฟิลด์",
+          "options": {
+            "text": "ข้อความ",
+            "email": "อีเมล",
+            "password": "รหัสผ่าน",
+            "select": "ตัวเลือก"
+          }
+        },
+        "option": {
+          "placeholder": "ตัวเลือกที่ {index}",
+          "addButton": "เพิ่มตัวเลือก"
+        },
+        "isOptional": {
+          "label": "ไม่จำเป็นต้องระบุฟิลด์นี้"
+        }
+      },
+      "actions": {
+        "addOption": "เพิ่มตัวเลือก",
+        "removeOption": "ลบตัวเลือก",
+        "cancel": "ยกเลิก",
+        "save": "บันทึก",
+        "saveAndAdd": "บันทึกและใช้งาน"
+      }
+    }
   }
 }
