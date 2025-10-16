@@ -158,7 +158,7 @@ const DropzoneTrigger = ({
         <NoImage {...props} onOpen={resource.open} />
       )}
 
-      <Input.Error>{props.error}</Input.Error>
+      {props.error && <Input.Error>{props.error}</Input.Error>}
       {resource.modal}
     </Stack>
   );
