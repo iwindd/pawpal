@@ -1,6 +1,7 @@
 "use client";
 import CategoryCombobox from "@/components/Combobox/Category";
 import useFormValidate from "@/hooks/useFormValidate";
+import DropzoneTrigger from "@/hooks/useResource/triggers/DropzoneTriggger";
 import { IconDelete, IconPlus, IconPublishShare } from "@pawpal/icons";
 import {
   AdminProductEditResponse,
@@ -18,10 +19,12 @@ import {
   Paper,
   Stack,
   Text,
+  Textarea,
   TextInput,
 } from "@pawpal/ui/core";
 import { UseFormReturnType } from "@pawpal/ui/form";
 import { useTranslations } from "next-intl";
+import classes from "./style.module.css";
 
 export type ProductFormControl = UseFormReturnType<ProductInput>;
 
@@ -47,19 +50,27 @@ const ProductForm = ({
     group: "product",
     mode: "uncontrolled",
     enhanceGetInputProps: () => ({ disabled: disabled || isLoading }),
-    initialValues: {
-      name: product?.name || "",
-      slug: product?.slug || "",
-      description: product?.description || "",
-      category_id: product?.category?.id || "",
-      packages: product?.packages?.length
-        ? product.packages.map((pkg) => ({
+    initialValues: product
+      ? {
+          name: product.name,
+          slug: product.slug,
+          description: product.description,
+          category_id: product.category.id,
+          image_id: product?.image?.id || "",
+          packages: product.packages.map((pkg) => ({
             name: pkg.name,
             price: pkg.price,
-            description: pkg.description || "",
-          }))
-        : [{ name: "", price: 0, description: "" }],
-    },
+            description: pkg.description,
+          })),
+        }
+      : {
+          name: "",
+          slug: "",
+          description: "",
+          category_id: "",
+          image_id: "",
+          packages: [{ name: "", price: 0, description: "" }],
+        },
     onValuesChange: (current, prev) => {
       if (current.name !== prev.name) {
         form.setFieldValue("slug", slugify(current.name));
@@ -93,72 +104,88 @@ const ProductForm = ({
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack maw="1920">
         {/* Product Information */}
-        <Paper p="md">
-          <Stack gap="md">
-            <Text size="lg" fw={600}>
-              {__("sections.information")}
-            </Text>
-
-            <Grid>
-              <Grid.Col span={{ base: 12, md: 6 }}>
+        <Paper p="lg" title={__("sections.information")}>
+          <Group gap={"xs"} className={classes.productInfo} align="flex-start">
+            <Stack>
+              <DropzoneTrigger
+                w={150}
+                h={150}
+                defaultValue={product?.image?.id}
+                key={form.key("image_id")}
+                {...form.getInputProps("image_id")}
+              />
+            </Stack>
+            <Stack flex={1} gap={0} className={classes.productInfoContent}>
+              <Stack mih={150} gap={"xs"} mb="xs">
                 <TextInput
-                  label={__("fields.product.name.label")}
                   placeholder={__("fields.product.name.placeholder")}
                   withAsterisk
+                  size="md"
                   key={form.key("name")}
                   {...form.getInputProps("name")}
                 />
-              </Grid.Col>
-
-              <Grid.Col span={{ base: 12, md: 6 }}>
-                <TextInput
-                  label={__("fields.product.slug.label")}
-                  placeholder={__("fields.product.slug.placeholder")}
-                  withAsterisk
-                  key={form.key("slug")}
-                  {...form.getInputProps("slug")}
-                />
-              </Grid.Col>
-
-              <Grid.Col span={12}>
-                <TextInput
-                  label={__("fields.product.description.label")}
+                <Textarea
                   placeholder={__("fields.product.description.placeholder")}
+                  maxRows={3}
+                  size="xs"
+                  flex={1}
+                  styles={{
+                    root: {
+                      flex: 1,
+                      display: "flex",
+                      flexDirection: "column",
+                    },
+                    wrapper: {
+                      flex: 1,
+                      display: "flex",
+                      flexDirection: "column",
+                    },
+                    input: { flex: 1, resize: "none" },
+                  }}
+                  classNames={{
+                    input: classes.descriptionInput,
+                  }}
                   key={form.key("description")}
                   {...form.getInputProps("description")}
                 />
-              </Grid.Col>
-
-              <Grid.Col span={{ base: 12, md: 6 }}>
+              </Stack>
+              <Group gap="xs" className={classes.productInfoMeta}>
+                <TextInput
+                  placeholder={__("fields.product.slug.placeholder")}
+                  withAsterisk
+                  size="xs"
+                  key={form.key("slug")}
+                  {...form.getInputProps("slug")}
+                />
                 <CategoryCombobox
-                  label={__("fields.product.category.label")}
                   placeholder={__("fields.product.category.placeholder")}
                   withAsterisk
+                  size="xs"
                   key={form.key("category_id")}
                   {...form.getInputProps("category_id")}
                 />
-              </Grid.Col>
-            </Grid>
-          </Stack>
+              </Group>
+            </Stack>
+          </Group>
         </Paper>
-
         {/* Packages */}
-        <Paper p="md">
+        <Paper
+          p="md"
+          title={__("sections.packages")}
+          rightSection={
+            <Button
+              size="xs"
+              variant="light"
+              leftSection={<IconPlus size={14} />}
+              onClick={addPackage}
+              disabled={disabled || isLoading}
+            >
+              {__("actions.addPackage")}
+            </Button>
+          }
+        >
           <Stack gap="md">
-            <Group justify="space-between" align="center">
-              <Text size="lg" fw={600}>
-                {__("sections.packages")}
-              </Text>
-              <Button
-                size="xs"
-                variant="light"
-                leftSection={<IconPlus size={14} />}
-                onClick={addPackage}
-                disabled={disabled || isLoading}
-              >
-                {__("actions.addPackage")}
-              </Button>
-            </Group>
+            <Group justify="space-between" align="center"></Group>
 
             <Stack gap="md">
               {form.getValues().packages.map((_, index) => (

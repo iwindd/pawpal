@@ -130,6 +130,8 @@ model Product {
   packages    Package[]    @relation("ProductPackages")
   carousel    Carousel[]   @relation("CarouselProduct")
   fields      Field[]      @relation("ProductField")
+  image       Resource?    @relation("ProductImage", fields: [image_id], references: [id])
+  image_id    String?
 
   @@index([slug])
   @@index([category_id])
@@ -227,6 +229,7 @@ model Resource {
   user_id String
 
   carousel Carousel[] @relation("CarouselImage")
+  products Product[]  @relation("ProductImage")
 
   @@map("resources")
 }

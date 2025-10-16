@@ -121,9 +121,6 @@ const ProductForm = ({ product, onPurchase, isLoading }: ProductFormProps) => {
 
           <Grid.Col span={{ base: 8 }}>
             <Card shadow="sm">
-              <Title order={6} mb="md">
-                {__("selectPackage")}
-              </Title>
               <Radio.Group
                 key={form.key("packageId")}
                 {...form.getInputProps("packageId")}

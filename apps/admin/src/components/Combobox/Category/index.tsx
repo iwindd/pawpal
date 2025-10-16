@@ -1,10 +1,11 @@
 "use client";
 import API from "@/libs/api/client";
 import {
-    Combobox,
-    InputBase,
-    Loader,
-    useCombobox,
+  Combobox,
+  ComboboxProps,
+  InputBase,
+  Loader,
+  useCombobox,
 } from "@pawpal/ui/core";
 import { useDebouncedValue } from "@pawpal/ui/hooks";
 import { useQuery } from "@tanstack/react-query";
@@ -25,10 +26,24 @@ interface CategoryComboboxProps {
   withAsterisk?: boolean;
   disabled?: boolean;
   clearable?: boolean;
+  size?: ComboboxProps["size"];
 }
 
 const CategoryCombobox = forwardRef<HTMLInputElement, CategoryComboboxProps>(
-  ({ placeholder, label, value, onChange, error, withAsterisk, disabled, clearable = true }, ref) => {
+  (
+    {
+      placeholder,
+      label,
+      value,
+      onChange,
+      error,
+      withAsterisk,
+      disabled,
+      size,
+      clearable = true,
+    },
+    ref
+  ) => {
     const [searchTerm, setSearchTerm] = useState("");
     const [debouncedSearchTerm] = useDebouncedValue(searchTerm, 300);
     const [internalValue, setInternalValue] = useState<string | null>(null);
@@ -44,7 +59,9 @@ const CategoryCombobox = forwardRef<HTMLInputElement, CategoryComboboxProps>(
     const { data: categoriesResponse, isLoading } = useQuery({
       queryKey: ["categories", debouncedSearchTerm],
       queryFn: async () => {
-        const response = await API.category.list({ search: debouncedSearchTerm });
+        const response = await API.category.list({
+          search: debouncedSearchTerm,
+        });
         return response.data;
       },
     });
@@ -71,10 +88,7 @@ const CategoryCombobox = forwardRef<HTMLInputElement, CategoryComboboxProps>(
     const displayValue = selectedCategory?.name || internalValue || value || "";
 
     const options = categories.map((category) => (
-      <Combobox.Option
-        value={category.id}
-        key={category.id}
-      >
+      <Combobox.Option value={category.id} key={category.id}>
         {category.name}
       </Combobox.Option>
     ));
@@ -130,6 +144,7 @@ const CategoryCombobox = forwardRef<HTMLInputElement, CategoryComboboxProps>(
             disabled={disabled}
             value={inputValue}
             pointer
+            size={size}
             onChange={(event) => {
               setSearchTerm(event.currentTarget.value);
               combobox.openDropdown();

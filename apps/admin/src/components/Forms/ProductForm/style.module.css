@@ -1,0 +1,41 @@
+.productInfo {
+  flex-wrap: nowrap;
+
+  @media (max-width: 36em) {
+    flex-direction: column;
+    align-items: start;
+  }
+}
+
+.productInfoContent {
+  flex: 1;
+  gap: 0;
+
+  @media (max-width: 36em) {
+    width: 100%;
+  }
+}
+
+.productInfoMeta {
+  flex-wrap: nowrap;
+
+  @media (max-width: 36em) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+}
+
+.descriptionInput {
+  transition: background-color 0.2s ease;
+  background-color: light-dark(
+    var(--mantine-color-gray-0),
+    var(--mantine-color-dark-6)
+  );
+  color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-1));
+}
+
+.descriptionInput:hover,
+.descriptionInput:focus {
+  color: light-dark(var(--mantine-color-black), var(--mantine-color-dark-0));
+}

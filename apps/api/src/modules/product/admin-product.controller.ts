@@ -1,3 +1,4 @@
+import { ZodPipe } from '@/common/pipes/ZodPipe';
 import { ZodValidationPipe } from '@/common/ZodValidationPipe';
 import {
   Body,
@@ -51,13 +52,12 @@ export class AdminProductController {
     return this.productService.create(createProductDto);
   }
 
-  // TODO:: Refactor return type
   @Patch(':id')
   update(
     @Param('id') id: string,
-    @Body(new ZodValidationPipe(productSchema)) updateProductDto: ProductInput,
+    @Body(new ZodPipe(productSchema)) payload: ProductInput,
   ) {
-    return this.productService.update(id, updateProductDto);
+    return this.productService.update(id, payload);
   }
 
   @Delete(':id')

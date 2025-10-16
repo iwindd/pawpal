@@ -333,19 +333,20 @@ export class ProductService {
             description: true,
           },
         },
+        image: {
+          select: {
+            id: true,
+            url: true,
+          },
+        },
       },
     });
 
     if (!product) return null;
 
     return {
-      id: product.id,
-      slug: product.slug,
-      name: product.name,
-      description: product.description,
+      ...product,
       createdAt: product.createdAt.toISOString(),
-      category: product.category,
-      productTags: product.productTags,
       packages: product.packages.map((pkg) => ({
         id: pkg.id,
         name: pkg.name,
@@ -426,19 +427,20 @@ export class ProductService {
             description: true,
           },
         },
+        image: {
+          select: {
+            id: true,
+            url: true,
+          },
+        },
       },
     });
 
     if (!product) throw new BadRequestException('product_not_found');
 
     return {
-      id: product.id,
-      slug: product.slug,
-      name: product.name,
-      description: product.description,
+      ...product,
       createdAt: product.createdAt.toISOString(),
-      category: product.category,
-      productTags: product.productTags,
       packages: product.packages.map((pkg) => ({
         id: pkg.id,
         name: pkg.name,
@@ -555,6 +557,7 @@ export class ProductService {
 
   async update(id: string, data: ProductInput) {
     const { packages, ...productData } = data;
+    console.log(data);
 
     // If packages are provided, replace all existing packages
     const updateData: any = { ...productData };
@@ -569,28 +572,6 @@ export class ProductService {
     const product = await this.prisma.product.update({
       where: { id },
       data: updateData,
-      select: {
-        id: true,
-        slug: true,
-        name: true,
-        createdAt: true,
-        _count: {
-          select: { packages: true },
-        },
-        category: {
-          select: {
-            id: true,
-            name: true,
-            slug: true,
-          },
-        },
-        productTags: {
-          select: {
-            slug: true,
-            name: true,
-          },
-        },
-      },
     });
 
     if (!product) throw new BadRequestException('product_not_found');

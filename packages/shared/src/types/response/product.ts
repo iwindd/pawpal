@@ -71,4 +71,8 @@ export interface AdminProductEditResponse {
   category: ProductCategory;
   productTags: ProductTag[];
   packages: ProductPackage[];
+  image: {
+    id: string;
+    url: string;
+  } | null;
 }
