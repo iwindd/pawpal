@@ -6,6 +6,7 @@ export * from "./schemas/auth/login";
 export * from "./schemas/auth/register";
 export * from "./schemas/auth/updateProfile";
 export * from "./schemas/category";
+export * from "./schemas/field/index";
 export * from "./schemas/order";
 export * from "./schemas/order/field";
 export * from "./schemas/product";
