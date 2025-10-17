@@ -3,11 +3,11 @@ import { z } from "zod";
 export const DatatableQuerySchema = z
   .object({
     page: z
-      .string()
+      .union([z.string(), z.number()])
       .optional()
       .transform((v) => (v ? Number(v) : 1)),
     limit: z
-      .string()
+      .union([z.string(), z.number()])
       .optional()
       .transform((v) => (v ? Number(v) : 15)),
     search: z.string().optional(),
@@ -25,4 +25,15 @@ export const DatatableQuerySchema = z
     },
   }));
 
+export type DatatableInput = {
+  page?: number;
+  limit?: number;
+  search?: string;
+  sort?: {
+    columnAccessor: string;
+    direction: "asc" | "desc";
+  };
+};
+
+/** @deprecated Use `DatatableInput` for input OR `DatatableQuery` for query */
 export type DatatableQueryDto = z.infer<typeof DatatableQuerySchema>;
