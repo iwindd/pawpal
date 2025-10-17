@@ -1,7 +1,7 @@
 "use client";
 import ProductDatatable from "@/components/Datatables/Product";
 import PageHeader from "@/components/Pages/PageHeader";
-import { ROUTES } from "@/configs/route";
+import { pather } from "@/configs/route";
 import useDatatable from "@/hooks/useDatatable";
 import API from "@/libs/api/client";
 import { IconPlus } from "@pawpal/icons";
@@ -15,7 +15,7 @@ export const dynamic = "force-dynamic";
 
 export default function ProductsPage() {
   const datatable = useDatatable<AdminProductResponse>();
-  const __ = useTranslations("Product")
+  const __ = useTranslations("Product");
   const { data, isFetching } = useQuery({
     queryKey: [
       "products",
@@ -38,7 +38,7 @@ export default function ProductsPage() {
           component={Link}
           variant="outline"
           rightSection={<IconPlus size={14} />}
-          href={ROUTES["products"]?.children?.create?.path as string}
+          href={pather("products.create")}
         >
           {__("main.add-btn")}
         </Button>

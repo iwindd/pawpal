@@ -21,4 +21,5 @@ export * from "./types/response/order";
 export * from "./types/response/product";
 export * from "./types/response/resource";
 export * from "./types/session";
+export * from "./utils/route";
 export * from "./utils/slugify";

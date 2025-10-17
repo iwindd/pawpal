@@ -1,4 +1,4 @@
-import { ROUTES } from "@/configs/route";
+import { pather } from "@/configs/route";
 import APISession from "@/libs/api/server";
 import { MiddlewareFunction } from "@pawpal/nextjs-middleware";
 
@@ -8,12 +8,12 @@ const RedirectIfAdminMiddleware: MiddlewareFunction = async (context) => {
     const { success: isLoggedIn, data: user } = await API.auth.getProfile();
 
     if (isLoggedIn && user.roles.includes("Admin"))
-      return { type: "redirect", url: ROUTES["home"]?.path as string };
+      return { type: "redirect", url: pather("home") };
 
     return { type: "continue" };
   } catch (error) {
     console.error("[RedirectIfAdminMiddleware] error:", error);
-    return { type: "redirect", url: ROUTES["home"]?.path as string };
+    return { type: "redirect", url: pather("home") };
   }
 };
 
