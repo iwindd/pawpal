@@ -50,7 +50,9 @@
       "products": {
         "main": "สินค้าทั้งหมด",
         "create": "สร้างสินค้า",
-        "edit": "แก้ไขสินค้า"
+        "edit": "ข้อมูล",
+        "packages": "แพ็คเกจ",
+        "fields": "ฟิลด์"
       },
       "resources": "ทรัพยากร",
       "website": {
@@ -71,6 +73,11 @@
     },
     "create": {
       "title": "เพิ่มสินค้า"
+    },
+    "tabs": {
+      "information": "รายละเอียด",
+      "packages": "แพ็คเกจ",
+      "fields": "ฟิลด์"
     },
     "form": {
       "sections": {

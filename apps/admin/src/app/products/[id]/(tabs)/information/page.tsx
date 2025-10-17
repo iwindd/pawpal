@@ -1,18 +1,17 @@
 "use client";
 import ProductForm from "@/components/Forms/ProductForm";
 import API from "@/libs/api/client";
-import { AdminProductEditResponse, ProductInput } from "@pawpal/shared";
+import { ProductInput } from "@pawpal/shared";
 import { Box } from "@pawpal/ui/core";
 import { notify } from "@pawpal/ui/notifications";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
+import { useProduct } from "../../ProductContext";
 
-interface ProductViewProps {
-  product: AdminProductEditResponse;
-}
-
-const ProductView = ({ product }: ProductViewProps) => {
+const ProductInformationPage = () => {
   const queryClient = useQueryClient();
+  const product = useProduct();
+
   const __ = useTranslations("Product");
 
   const { mutate } = useMutation({
@@ -33,10 +32,10 @@ const ProductView = ({ product }: ProductViewProps) => {
   };
 
   return (
-    <Box>
+    <Box py="md">
       <ProductForm product={product} onSubmit={onSubmit} />
     </Box>
   );
 };
 
-export default ProductView;
+export default ProductInformationPage;
