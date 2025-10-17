@@ -1,3 +1,5 @@
+import { compile, match } from "./path";
+
 export type CFG_ROUTE = {
   path: string;
   label: string;
@@ -12,63 +14,65 @@ export type Route = {
   label: string;
   name: string;
   icon?: any;
-  children?: Record<string, Route>;
+  parent?: string;
 };
 
 export const ROUTER = (
   ROUTES: Record<string, CFG_ROUTE>
 ): Record<string, Route> => {
+  const APP_ROUTES: Record<string, Route> = {};
+
   function traverse(
     routes: Record<string, CFG_ROUTE>,
     parentKey: string | null = null
   ) {
     for (const key in routes) {
       const fullKey = parentKey ? `${parentKey}.${key}` : key;
-      routes[key]!.name = routes[key]!.name || fullKey;
+      const routeName = routes[key]!.name || fullKey;
+      routes[key]!.name = routeName;
+
+      const route = {
+        ...routes[key]!,
+        name: routeName,
+        label: routes[key]!.label || routeName,
+        parent: parentKey,
+      } as Route;
+
+      delete (route as CFG_ROUTE).children;
+      APP_ROUTES[fullKey] = route;
 
       if (routes[key]!.children) traverse(routes[key]!.children, fullKey);
     }
   }
 
-  const newROUTES = { ...ROUTES };
-  traverse(newROUTES);
+  traverse({ ...ROUTES });
 
-  return newROUTES as Record<string, Route>;
-};
-
-export const pathMatches = (routePath: string, pathname: string) => {
-  const routeSegments = routePath.split("/").filter(Boolean);
-  const pathSegments = pathname.split("/").filter(Boolean);
-
-  if (routeSegments.length !== pathSegments.length) return false;
-
-  return routeSegments.every(
-    (seg, i) => seg.startsWith(":") || seg === pathSegments[i]
-  );
+  return APP_ROUTES;
 };
 
 export const findRouteTrail = (
   pathname: string,
-  routes: Record<string, Route>,
-  trail: Route[] = []
+  routes: Record<string, Route>
 ): Route[] | null => {
   for (const key in routes) {
     const route = routes[key] as Route;
-    const currentTrail = [...trail, route];
+    const matcher = match(route.path);
 
-    if (
-      pathMatches(route.path, pathname) ||
-      pathname.startsWith(route.path + "/")
-    ) {
-      if (route.children) {
-        const childTrail = findRouteTrail(
-          pathname,
-          route.children,
-          currentTrail
-        );
-        if (childTrail) return childTrail;
+    if (matcher(pathname)) {
+      const trail: Route[] = [route];
+
+      let parentKey = route.parent;
+      while (parentKey) {
+        const parentRoute = routes[parentKey];
+        if (parentRoute) {
+          trail.unshift(parentRoute);
+          parentKey = parentRoute.parent;
+        } else {
+          break;
+        }
       }
-      return currentTrail;
+
+      return trail;
     }
   }
   return null;
@@ -78,19 +82,11 @@ export const findActiveRoute = (
   pathname: string,
   routes: Record<string, Route>
 ): Route | null => {
-  const trail = findRouteTrail(pathname, routes);
-  return trail?.at(-1) || null;
-};
-
-export const fillPathParams = <T extends Record<string, any>>(
-  path: string,
-  params: T
-): string => {
-  return path.replaceAll(/:([a-zA-Z]+)/g, (_, key) => {
-    const value = params[key];
-    if (!value) throw new Error(`Missing param: ${key}`);
-    return value;
-  });
+  for (const route of Object.values(routes)) {
+    const matcher = match(route.path);
+    if (matcher(pathname)) return route;
+  }
+  return null;
 };
 
 export const patherBase = (
@@ -98,27 +94,9 @@ export const patherBase = (
   ROUTES: Record<string, Route>,
   params?: Record<string, any>
 ): string => {
-  const paths: string[] = routeName.split(".");
-  if (!paths) throw new Error(`invalid_path: ${routeName}`);
-  if (paths.length <= 0) throw new Error(`invalid_path: ${routeName}`);
-  let currentPathKey = paths[0] as string;
-  let currentPath = ROUTES[currentPathKey];
-  paths.shift();
+  const route = ROUTES[routeName];
+  if (!route) throw new Error(`Route not found: ${routeName}`);
 
-  if (paths.length > 0) {
-    for (const value of paths) {
-      const children = currentPath?.children || {};
-      if (!children[value])
-        throw new Error(
-          `path "${currentPathKey}" not have children (${value}). (${routeName})`
-        );
-
-      currentPathKey += `.${value}`;
-      currentPath = children[value];
-    }
-  }
-
-  if (!currentPath) throw new Error(`invalid_path: ${routeName}`);
-
-  return fillPathParams<any>(currentPath.path, params);
+  const toPath = compile(route.path);
+  return toPath(params || {}) as string;
 };
