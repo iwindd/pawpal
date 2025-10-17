@@ -3,7 +3,6 @@ import {
   AdminProductResponse,
   DatatableResponse,
   ProductInput,
-  ProductUpdateInput,
 } from "@pawpal/shared";
 import { DataTableSortStatus } from "@pawpal/ui/core";
 import { AxiosError, AxiosInstance, AxiosResponse } from "axios";
@@ -79,7 +78,7 @@ class ProductApi {
 
   async update(
     id: string,
-    data: ProductUpdateInput
+    data: ProductInput
   ): Promise<PawApiResponse<AdminProductResponse>> {
     try {
       const response = await this.client.patch(`/admin/product/${id}`, data);

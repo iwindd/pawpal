@@ -32,8 +32,7 @@ export const productSchema = z.object({
     .max(PRODUCT_DESCRIPTION_MAX_LENGTH, "product_description_too_long")
     .optional(),
   category_id: z.string().min(1, "invalid_category_id"),
-  packages: z.array(packageSchema).min(1, "required_at_least_one_package"),
-  image_id: z.string().trim(),
+  image_id: z.string().min(1),
 });
 
 export type ProductInput = z.infer<typeof productSchema>;

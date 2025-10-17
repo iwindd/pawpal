@@ -510,71 +510,17 @@ export class ProductService {
     };
   }
 
-  async create(data: ProductInput): Promise<AdminProductResponse> {
-    const { packages, ...productData } = data;
-
-    const product = await this.prisma.product.create({
-      data: {
-        ...productData,
-        packages: {
-          create: packages,
-        },
-      },
-      select: {
-        id: true,
-        slug: true,
-        name: true,
-        createdAt: true,
-        _count: {
-          select: { packages: true },
-        },
-        category: {
-          select: {
-            id: true,
-            name: true,
-            slug: true,
-          },
-        },
-        productTags: {
-          select: {
-            slug: true,
-            name: true,
-          },
-        },
-      },
+  async create(payload: ProductInput) {
+    return await this.prisma.product.create({
+      data: payload,
     });
-
-    return {
-      id: product.id,
-      slug: product.slug,
-      name: product.name,
-      createdAt: product.createdAt.toISOString(),
-      packageCount: product._count.packages,
-      category: product.category,
-      productTags: product.productTags,
-    };
   }
 
-  async update(id: string, data: ProductInput) {
-    const { packages, ...productData } = data;
-    console.log(data);
-
-    // If packages are provided, replace all existing packages
-    const updateData: any = { ...productData };
-
-    if (packages) {
-      updateData.packages = {
-        deleteMany: {},
-        create: packages,
-      };
-    }
-
-    const product = await this.prisma.product.update({
+  async update(id: string, payload: ProductInput) {
+    return await this.prisma.product.update({
       where: { id },
-      data: updateData,
+      data: payload,
     });
-
-    if (!product) throw new BadRequestException('product_not_found');
   }
 
   async remove(id: string): Promise<{ success: boolean }> {

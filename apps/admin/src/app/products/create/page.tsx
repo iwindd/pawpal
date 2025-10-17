@@ -1,7 +1,7 @@
 "use client";
 import ProductForm from "@/components/Forms/ProductForm";
 import PageHeader from "@/components/Pages/PageHeader";
-import { pather } from "@/configs/route";
+import { getPath } from "@/configs/route";
 import API from "@/libs/api/client";
 import { ProductInput } from "@pawpal/shared";
 import { useMutation } from "@tanstack/react-query";
@@ -16,9 +16,16 @@ export default function CreateProductPage() {
 
   const createMutation = useMutation({
     mutationFn: (data: ProductInput) => API.product.create(data),
+    onMutate: () => {
+      setErrorMessage(null);
+    },
     onSuccess: (response) => {
       if (response.success) {
-        router.push(pather("products.edit", { id: response.data.id }));
+        router.push(
+          getPath("products.packages", {
+            id: response.data.id,
+          })
+        );
       } else {
         setErrorMessage("Failed to create product. Please try again.");
       }
@@ -29,7 +36,6 @@ export default function CreateProductPage() {
   });
 
   const handleSubmit = (values: ProductInput) => {
-    setErrorMessage(null);
     createMutation.mutate(values);
   };
 

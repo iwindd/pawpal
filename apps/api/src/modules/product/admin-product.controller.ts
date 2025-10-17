@@ -19,11 +19,15 @@ import {
   ProductInput,
   productSchema,
 } from '@pawpal/shared';
+import { PackageService } from '../package/package.service';
 import { ProductService } from './product.service';
 
 @Controller('admin/product')
 export class AdminProductController {
-  constructor(private readonly productService: ProductService) {}
+  constructor(
+    private readonly productService: ProductService,
+    private readonly packageService: PackageService,
+  ) {}
 
   @Get()
   @UsePipes(new ZodValidationPipe(DatatableQuerySchema))
@@ -43,12 +47,8 @@ export class AdminProductController {
     return this.productService.findOne(id);
   }
 
-  // TODO:: Refactor return type
   @Post()
-  @UsePipes(new ZodValidationPipe(productSchema))
-  create(
-    @Body() createProductDto: ProductInput,
-  ): Promise<AdminProductResponse> {
+  create(@Body(new ZodPipe(productSchema)) createProductDto: ProductInput) {
     return this.productService.create(createProductDto);
   }
 

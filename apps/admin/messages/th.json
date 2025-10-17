@@ -137,6 +137,42 @@
       }
     }
   },
+  "ProductPackage": {
+    "title": "รายการแพ็คเกจ",
+    "form": {
+      "fields": {
+        "name": {
+          "label": "ชื่อแพ็คเกจ",
+          "placeholder": "กรอกชื่อแพ็คเกจ"
+        },
+        "description": {
+          "label": "รายละเอียดแพ็คเกจ",
+          "placeholder": "กรอกรายละเอียดแพ็คเกจ"
+        },
+        "price": {
+          "label": "ราคาแพ็คเกจ",
+          "placeholder": "กรอกราคาแพ็คเกจ"
+        }
+      },
+      "actions": {
+        "cancel": "ยกเลิก",
+        "save": "บันทึก"
+      }
+    },
+    "notify": {
+      "created": {
+        "title": "สำเร็จ",
+        "message": "สร้างแพ็คเกจใหม่แล้ว"
+      },
+      "updated": {
+        "title": "สำเร็จ",
+        "message": "บันทึกการเปลี่ยนแปลงแพ็คเกจแล้ว"
+      }
+    },
+    "actions": {
+      "addPackage": "เพิ่มแพ็คเกจ"
+    }
+  },
   "Errors": {
     "login": {
       "invalid_email_format": "อีเมลไม่ถูกต้อง",
@@ -187,6 +223,13 @@
       "packages": "แพ็คเกจ",
       "packageFormat": "{count} แพ็คเกจ",
       "createdAt": "วันที่สร้าง"
+    },
+    "productPackage": {
+      "name": "ชื่อแพ็คเกจ",
+      "description": "รายละเอียดแพ็คเกจ",
+      "price": "ราคาแพ็คเกจ",
+      "createdAt": "วันที่สร้าง",
+      "actions": "เครื่องมือ"
     },
     "carousel": {
       "image": "สไลด์โชว์",

@@ -98,6 +98,7 @@ const configTheme: MantineThemeOverride = {
       "#284985",
     ],
     danger: DEFAULT_THEME.colors.red,
+    secondary: DEFAULT_THEME.colors.dark,
     save: DEFAULT_THEME.colors.teal,
   },
 

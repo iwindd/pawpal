@@ -31,7 +31,8 @@ const useFormValidate = <T extends Record<string, any>>({
       return {
         ...props,
         error: props.error
-          ? __(`Errors.${group || "global"}.${props.error as string}`)
+          ? // TODO:: Refactor to use form errors with group
+            props.error
           : undefined,
       };
     },

@@ -3,6 +3,7 @@ import AuthApi from "./services/Auth";
 import CarouselApi from "./services/Carousel";
 import CategoryApi from "./services/category";
 import OrderApi from "./services/order";
+import PackageApi from "./services/Package";
 import ProductApi from "./services/product";
 import ResourceApi from "./services/Resource";
 
@@ -13,6 +14,7 @@ class ClientApi extends PawApi {
   public readonly resource: ResourceApi;
   public readonly carousel: CarouselApi;
   public readonly order: OrderApi;
+  public readonly package: PackageApi;
 
   constructor(token?: string) {
     super(token);
@@ -22,6 +24,7 @@ class ClientApi extends PawApi {
     this.resource = new ResourceApi(this.client);
     this.carousel = new CarouselApi(this.client);
     this.order = new OrderApi(this.client);
+    this.package = new PackageApi(this.client);
   }
 
   public async getNotifications(): Promise<Record<string, number>> {

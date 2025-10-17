@@ -2,7 +2,6 @@
 import CategoryCombobox from "@/components/Combobox/Category";
 import useFormValidate from "@/hooks/useFormValidate";
 import DropzoneTrigger from "@/hooks/useResource/triggers/DropzoneTriggger";
-import { IconDelete, IconPlus, IconPublishShare } from "@pawpal/icons";
 import {
   AdminProductEditResponse,
   ProductInput,
@@ -10,15 +9,11 @@ import {
   slugify,
 } from "@pawpal/shared";
 import {
-  ActionIcon,
   Button,
   ErrorMessage,
-  Grid,
   Group,
-  NumberInput,
   Paper,
   Stack,
-  Text,
   Textarea,
   TextInput,
 } from "@pawpal/ui/core";
@@ -50,27 +45,13 @@ const ProductForm = ({
     group: "product",
     mode: "uncontrolled",
     enhanceGetInputProps: () => ({ disabled: disabled || isLoading }),
-    initialValues: product
-      ? {
-          name: product.name,
-          slug: product.slug,
-          description: product.description,
-          category_id: product.category.id,
-          image_id: product?.image?.id || "",
-          packages: product.packages.map((pkg) => ({
-            name: pkg.name,
-            price: pkg.price,
-            description: pkg.description,
-          })),
-        }
-      : {
-          name: "",
-          slug: "",
-          description: "",
-          category_id: "",
-          image_id: "",
-          packages: [{ name: "", price: 0, description: "" }],
-        },
+    initialValues: {
+      name: product?.name || "",
+      slug: product?.slug || "",
+      description: product?.description || "",
+      category_id: product?.category.id || "",
+      image_id: product?.image?.id || "",
+    },
     onValuesChange: (current, prev) => {
       if (current.name !== prev.name) {
         form.setFieldValue("slug", slugify(current.name));
@@ -80,24 +61,6 @@ const ProductForm = ({
 
   const handleSubmit = (values: ProductInput) => {
     onSubmit(values, form);
-  };
-
-  const addPackage = () => {
-    const currentPackages = form.getValues().packages;
-    form.setFieldValue("packages", [
-      ...currentPackages,
-      { name: "", price: 0, description: "" },
-    ]);
-  };
-
-  const removePackage = (index: number) => {
-    const currentPackages = form.getValues().packages;
-    if (currentPackages.length > 1) {
-      form.setFieldValue(
-        "packages",
-        currentPackages.filter((_, i) => i !== index)
-      );
-    }
   };
 
   return (
@@ -168,103 +131,20 @@ const ProductForm = ({
             </Stack>
           </Group>
         </Paper>
-        {/* Packages */}
-        <Paper
-          p="md"
-          title={__("sections.packages")}
-          rightSection={
-            <Button
-              size="xs"
-              variant="light"
-              leftSection={<IconPlus size={14} />}
-              onClick={addPackage}
-              disabled={disabled || isLoading}
-            >
-              {__("actions.addPackage")}
-            </Button>
-          }
-        >
-          <Stack gap="md">
-            <Group justify="space-between" align="center"></Group>
-
-            <Stack gap="md">
-              {form.getValues().packages.map((_, index) => (
-                <Paper key={index} p="sm" withBorder>
-                  <Stack gap="sm">
-                    <Group justify="space-between" align="center">
-                      <Text size="sm" fw={500}>
-                        {__("messages.package_count", { count: index + 1 })}
-                      </Text>
-                      {form.getValues().packages.length > 1 && (
-                        <ActionIcon
-                          size="sm"
-                          color="red"
-                          variant="light"
-                          onClick={() => removePackage(index)}
-                          disabled={disabled || isLoading}
-                        >
-                          <IconDelete size={14} />
-                        </ActionIcon>
-                      )}
-                    </Group>
-
-                    <Grid>
-                      <Grid.Col span={{ base: 12, md: 4 }}>
-                        <TextInput
-                          label={__("fields.package.name.label")}
-                          placeholder={__("fields.package.name.placeholder")}
-                          withAsterisk
-                          key={form.key(`packages.${index}.name`)}
-                          {...form.getInputProps(`packages.${index}.name`)}
-                        />
-                      </Grid.Col>
-
-                      <Grid.Col span={{ base: 12, md: 4 }}>
-                        <NumberInput
-                          label={__("fields.package.price.label")}
-                          placeholder={__("fields.package.price.placeholder")}
-                          withAsterisk
-                          min={0}
-                          decimalScale={2}
-                          fixedDecimalScale
-                          prefix="$"
-                          key={form.key(`packages.${index}.price`)}
-                          {...form.getInputProps(`packages.${index}.price`)}
-                        />
-                      </Grid.Col>
-
-                      <Grid.Col span={{ base: 12, md: 4 }}>
-                        <TextInput
-                          label={__("fields.package.description.label")}
-                          placeholder={__(
-                            "fields.package.description.placeholder"
-                          )}
-                          key={form.key(`packages.${index}.description`)}
-                          {...form.getInputProps(
-                            `packages.${index}.description`
-                          )}
-                        />
-                      </Grid.Col>
-                    </Grid>
-                  </Stack>
-                </Paper>
-              ))}
-            </Stack>
-          </Stack>
-        </Paper>
 
         {/* Form Actions */}
-        <Stack gap="xs" align="end" py="md">
+        <Stack gap="xs" align="end">
           <Group component={Group} gap="md" p={0} justify="flex-end">
-            <Button
-              type="submit"
-              color="save"
-              disabled={disabled}
-              rightSection={<IconPublishShare size={16} />}
-              loading={isLoading}
-            >
-              {__("actions.save")}
-            </Button>
+            {form.isDirty() && (
+              <Button
+                type="submit"
+                color="save"
+                disabled={disabled}
+                loading={isLoading}
+              >
+                {__("actions.save")}
+              </Button>
+            )}
           </Group>
           <Group>
             <ErrorMessage message={errorMessage} formatGroup="Errors.product" />
