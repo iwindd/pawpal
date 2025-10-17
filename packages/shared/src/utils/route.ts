@@ -89,14 +89,26 @@ export const findActiveRoute = (
   return null;
 };
 
-export const patherBase = (
+export const getRoute = (
+  routeName: string,
+  ROUTES: Record<string, Route>
+): Route => {
+  const findRouteByKey = ROUTES[routeName];
+  const findRouteByName = Object.values(ROUTES).find(
+    (r) => r.name === routeName
+  );
+  const route = findRouteByKey || findRouteByName;
+  if (!route) throw new Error(`Route not found: ${routeName}`);
+
+  return route;
+};
+
+export const getPath = (
   routeName: string,
   ROUTES: Record<string, Route>,
   params?: Record<string, any>
 ): string => {
-  const route = ROUTES[routeName];
-  if (!route) throw new Error(`Route not found: ${routeName}`);
-
+  const route = getRoute(routeName, ROUTES);
   const toPath = compile(route.path);
   return toPath(params || {}) as string;
 };
