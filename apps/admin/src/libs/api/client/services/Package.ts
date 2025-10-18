@@ -26,6 +26,13 @@ class PackageApi {
       params,
     });
   }
+
+  async update(
+    id: string,
+    data: PackageInput
+  ): Promise<PawApiResponse<AdminProductPackageResponse>> {
+    return await this.client.patch(`/admin/package/${id}`, data);
+  }
 }
 
 export default PackageApi;

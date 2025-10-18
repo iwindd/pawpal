@@ -105,4 +105,15 @@ export class PackageService {
       },
     });
   }
+
+  async update(packageId: string, payload: PackageInput) {
+    return await this.prisma.package.update({
+      where: {
+        id: packageId,
+      },
+      data: {
+        ...payload,
+      },
+    });
+  }
 }

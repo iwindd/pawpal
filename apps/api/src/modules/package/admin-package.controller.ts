@@ -1,6 +1,14 @@
 import { DatatablePipe, DatatableQuery } from '@/common/pipes/DatatablePipe';
 import { ZodPipe } from '@/common/pipes/ZodPipe';
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { PackageInput, packageSchema } from '@pawpal/shared';
 import { PackageService } from './package.service';
 
@@ -22,5 +30,13 @@ export class AdminPackageController {
     @Body(new ZodPipe(packageSchema)) data: PackageInput,
   ) {
     return this.packageService.createPackageForProduct(id, data);
+  }
+
+  @Patch(':id')
+  update(
+    @Param('id') id: string,
+    @Body(new ZodPipe(packageSchema)) data: PackageInput,
+  ) {
+    return this.packageService.update(id, data);
   }
 }

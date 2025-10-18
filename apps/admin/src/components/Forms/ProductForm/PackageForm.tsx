@@ -1,5 +1,9 @@
 import useFormValidate from "@/hooks/useFormValidate";
-import { PackageInput, packageSchema } from "@pawpal/shared";
+import {
+  AdminProductPackageResponse,
+  PackageInput,
+  packageSchema,
+} from "@pawpal/shared";
 import { Button, Group, NumberInput, Stack, TextInput } from "@pawpal/ui/core";
 import { useTranslations } from "next-intl";
 
@@ -7,6 +11,7 @@ export interface PackageFormProps {
   onSubmit: (data: PackageInput) => void;
   actionSection?: React.ReactNode;
   isLoading?: boolean;
+  package?: AdminProductPackageResponse;
 }
 
 const PackageForm = (props: PackageFormProps) => {
@@ -18,9 +23,9 @@ const PackageForm = (props: PackageFormProps) => {
     mode: "uncontrolled",
     enhanceGetInputProps: () => ({ disabled: props.isLoading }),
     initialValues: {
-      name: "",
-      price: 0,
-      description: "",
+      name: props.package?.name || "",
+      price: (props.package?.price && Number(props.package.price)) || 0,
+      description: props.package?.description || "",
     },
   });
 

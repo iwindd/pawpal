@@ -1,10 +1,13 @@
 "use client";
 import useDatatable from "@/hooks/useDatatable";
 import API from "@/libs/api/client";
+import { IconEdit } from "@pawpal/icons";
 import { AdminProductPackageResponse } from "@pawpal/shared";
 import { DataTable, DataTableProps, Text } from "@pawpal/ui/core";
 import { useQuery } from "@tanstack/react-query";
 import { useFormatter, useTranslations } from "next-intl";
+import TableAction from "../../action";
+import useEditPackageModal from "./edit";
 
 interface ProductPackageDatatableProps {
   productId: string;
@@ -14,6 +17,7 @@ const ProductPackageDatatable = ({
   productId,
 }: ProductPackageDatatableProps) => {
   const format = useFormatter();
+  const editPackage = useEditPackageModal();
   const __ = useTranslations("Datatable.productPackage");
   const { above, ...datatable } = useDatatable<AdminProductPackageResponse>({
     sortStatus: {
@@ -64,25 +68,46 @@ const ProductPackageDatatable = ({
       render: (record) =>
         format.dateTime(new Date(record.createdAt), "dateTime"),
     },
+    {
+      accessor: "actions",
+      title: __("actions"),
+      render: (record) => (
+        <TableAction
+          displayType="icon"
+          actions={[
+            {
+              translate: "edit",
+              icon: IconEdit,
+              color: "blue",
+              action: () => editPackage.open(record),
+            },
+          ]}
+        />
+      ),
+    },
   ];
 
   return (
-    <DataTable
-      highlightOnHover
-      height="65.4dvh"
-      minHeight={400}
-      maxHeight={1000}
-      idAccessor="id"
-      columns={columns}
-      records={data?.data.data ?? []}
-      totalRecords={data?.data.total ?? 0}
-      recordsPerPage={datatable.limit}
-      page={datatable.page}
-      onPageChange={datatable.setPage}
-      fetching={isFetching}
-      sortStatus={datatable.sortStatus}
-      onSortStatusChange={datatable.setSortStatus}
-    />
+    <>
+      <DataTable
+        highlightOnHover
+        height="65.4dvh"
+        minHeight={400}
+        maxHeight={1000}
+        idAccessor="id"
+        columns={columns}
+        records={data?.data.data ?? []}
+        totalRecords={data?.data.total ?? 0}
+        recordsPerPage={datatable.limit}
+        page={datatable.page}
+        onPageChange={datatable.setPage}
+        fetching={isFetching}
+        sortStatus={datatable.sortStatus}
+        onSortStatusChange={datatable.setSortStatus}
+      />
+
+      {editPackage.modal}
+    </>
   );
 };
 
