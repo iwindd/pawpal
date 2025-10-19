@@ -174,7 +174,15 @@
       "editPackage": "แพ็คเกจ"
     }
   },
+  "ProductField": {
+    "title": "รายการฟิลด์",
+    "actions": {
+      "addField": "เพิ่มฟิลด์",
+      "editField": "แก้ไขฟิลด์"
+    }
+  },
   "Errors": {
+    "try_again": "กรุณาลองใหม่อีกครั้งภายหลัง!",
     "login": {
       "invalid_email_format": "อีเมลไม่ถูกต้อง",
       "password_too_short": "รหัสผ่านต้องมีความยาวอย่างน้อย 6-30 ตัวอักษร",
@@ -248,6 +256,14 @@
       "total": "ยอดรวม",
       "status": "สถานะ",
       "createdAt": "วันที่สั่งซื้อ",
+      "actions": "เครื่องมือ"
+    },
+    "field": {
+      "label": "ชื่อฟิลด์",
+      "type": "ประเภทฟิลด์",
+      "optional": "ไม่บังคับ",
+      "createdAt": "วันที่สร้าง",
+      "creator": "ผู้สร้าง",
       "actions": "เครื่องมือ"
     }
   },
@@ -378,13 +394,7 @@
         },
         "type": {
           "label": "ประเภทฟิลด์",
-          "placeholder": "เลือกประเภทฟิลด์",
-          "options": {
-            "text": "ข้อความ",
-            "email": "อีเมล",
-            "password": "รหัสผ่าน",
-            "select": "ตัวเลือก"
-          }
+          "placeholder": "เลือกประเภทฟิลด์"
         },
         "option": {
           "placeholder": "ตัวเลือกที่ {index}",
@@ -401,6 +411,16 @@
         "save": "บันทึก",
         "saveAndAdd": "บันทึกและใช้งาน"
       }
+    },
+    "types": {
+      "text": "ข้อความ",
+      "email": "อีเมล",
+      "password": "รหัสผ่าน",
+      "select": "ตัวเลือก"
+    },
+    "optional": {
+      "yes": "บังคับ",
+      "no": "ไม่บังคับ"
     }
   }
 }

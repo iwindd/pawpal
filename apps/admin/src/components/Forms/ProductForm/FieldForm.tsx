@@ -1,3 +1,4 @@
+import FieldTypeSelect from "@/components/Select/FieldType";
 import useFormValidate from "@/hooks/useFormValidate";
 import { IconDelete } from "@pawpal/icons";
 import { ENUM_FIELD_TYPE, FieldInput, FieldSchema } from "@pawpal/shared";
@@ -5,9 +6,9 @@ import {
   ActionIcon,
   Button,
   Checkbox,
+  ErrorMessage,
   Group,
   Paper,
-  Select,
   Stack,
   Table,
   TextInput,
@@ -16,18 +17,21 @@ import { useTranslations } from "next-intl";
 
 export interface FieldFormProps {
   onSubmit: (data: any) => void;
+  isLoading?: boolean;
+  errorMessage?: string | null;
 }
 
-const FieldForm = ({ onSubmit }: FieldFormProps) => {
+const FieldForm = ({ onSubmit, isLoading, errorMessage }: FieldFormProps) => {
   const __ = useTranslations("Field.form");
 
   const form = useFormValidate<FieldInput>({
     schema: FieldSchema,
     mode: "controlled",
+    enhanceGetInputProps: () => ({ disabled: isLoading }),
     initialValues: {
       label: "",
       placeholder: "",
-      type: "text",
+      type: ENUM_FIELD_TYPE.TEXT,
       optional: false,
       metadata: {
         options: [""],
@@ -35,22 +39,25 @@ const FieldForm = ({ onSubmit }: FieldFormProps) => {
     },
   });
 
+  const getCurrentOptions = (): string[] => {
+    return (form.getValues() as any).metadata?.options || [];
+  };
+
   const handleAddOption = () => {
-    const metadata = form.getValues().metadata || { options: [] };
-    const currentOptions = metadata.options || [];
+    const currentOptions = getCurrentOptions();
     form.setFieldValue("metadata", {
       options: [...currentOptions, ""],
     });
   };
 
   const handleRemoveField = (index: number) => {
-    const currentOptions = form.getValues().metadata?.options || [];
+    const currentOptions = getCurrentOptions();
     form.setFieldValue("metadata", {
       options: currentOptions.filter((_, i) => i !== index),
     });
   };
 
-  const currentOptions = form.getValues().metadata?.options || [];
+  const currentOptions = getCurrentOptions();
 
   return (
     <form onSubmit={form.onSubmit(onSubmit)}>
@@ -72,32 +79,11 @@ const FieldForm = ({ onSubmit }: FieldFormProps) => {
         />
 
         <Stack gap={0}>
-          <Select
-            label={__("fields.type.label")}
-            placeholder={__("fields.type.placeholder")}
-            defaultValue={ENUM_FIELD_TYPE.TEXT}
+          <FieldTypeSelect
             withAsterisk
-            data={[
-              {
-                value: ENUM_FIELD_TYPE.TEXT,
-                label: __("fields.type.options.text"),
-              },
-              {
-                value: ENUM_FIELD_TYPE.SELECT,
-                label: __("fields.type.options.select"),
-              },
-              {
-                value: ENUM_FIELD_TYPE.EMAIL,
-                label: __("fields.type.options.email"),
-              },
-              {
-                value: ENUM_FIELD_TYPE.PASSWORD,
-                label: __("fields.type.options.password"),
-              },
-            ]}
             key={form.key("type")}
             {...form.getInputProps("type")}
-          ></Select>
+          />
 
           {/* OPTIONS */}
           {form.getValues().type == ENUM_FIELD_TYPE.SELECT && (
@@ -149,9 +135,14 @@ const FieldForm = ({ onSubmit }: FieldFormProps) => {
 
         <Checkbox label={__("fields.isOptional.label")}></Checkbox>
 
-        <Group justify="end" mt="md">
-          <Button type="submit">{__("actions.saveAndAdd")}</Button>
-        </Group>
+        <Stack align="end" mt="md" gap="xs">
+          <div>
+            <Button loading={isLoading} type="submit">
+              {__("actions.saveAndAdd")}
+            </Button>
+          </div>
+          <ErrorMessage message={errorMessage} formatGroup="Errors" />
+        </Stack>
       </Stack>
     </form>
   );

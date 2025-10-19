@@ -1,27 +1,29 @@
-import { optional, z } from "zod";
+import { z } from "zod";
 import { ENUM_FIELD_TYPE } from "../order/field";
 
-export const FieldSchema = z.object({
-  label: z.string().max(50),
-  placeholder: z.string().max(50).optional(),
-  type: z.enum([
-    ENUM_FIELD_TYPE.EMAIL,
-    ENUM_FIELD_TYPE.TEXT,
-    ENUM_FIELD_TYPE.SELECT,
-    ENUM_FIELD_TYPE.PASSWORD,
-  ]),
-  optional: optional(z.boolean().default(false)),
+const baseFieldSchema = z.object({
+  label: z.string().min(3).max(50),
+  placeholder: z.string().min(3).max(50).optional(),
+  optional: z.boolean().default(false),
+  products: z.array(z.string()).optional(),
 });
 
-export const FieldSelectMetadataSchema = z.object({
-  options: z.array(z.string().max(50)).min(1),
-});
+export const FieldSchema = z.discriminatedUnion("type", [
+  baseFieldSchema.extend({
+    type: z.literal(ENUM_FIELD_TYPE.EMAIL),
+  }),
+  baseFieldSchema.extend({
+    type: z.literal(ENUM_FIELD_TYPE.TEXT),
+  }),
+  baseFieldSchema.extend({
+    type: z.literal(ENUM_FIELD_TYPE.PASSWORD),
+  }),
+  baseFieldSchema.extend({
+    type: z.literal(ENUM_FIELD_TYPE.SELECT),
+    metadata: z.object({
+      options: z.array(z.string().min(3).max(50)).min(1),
+    }),
+  }),
+]);
 
-type FieldInputWithoutMetadata = z.infer<typeof FieldSchema>;
-export type FieldSelectMetadataInput = z.infer<
-  typeof FieldSelectMetadataSchema
->;
-
-export type FieldInput = FieldInputWithoutMetadata & {
-  metadata?: FieldSelectMetadataInput;
-};
+export type FieldInput = z.infer<typeof FieldSchema>;
