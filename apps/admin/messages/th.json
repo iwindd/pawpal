@@ -55,6 +55,11 @@
         "fields": "ฟิลด์"
       },
       "resources": "ทรัพยากร",
+      "users": {
+        "main": "ผู้ใช้งาน",
+        "customer": "ลูกค้า",
+        "employee": "พนักงาน"
+      },
       "website": {
         "main": "เว็บไซต์",
         "carousel": {
@@ -225,6 +230,16 @@
       "error": "กรุณาลองใหม่อีกครั้งภายหลัง!"
     }
   },
+  "Customer": {
+    "main": {
+      "title": "ลูกค้าทั้งหมด"
+    }
+  },
+  "Employee": {
+    "main": {
+      "title": "พนักงานทั้งหมด"
+    }
+  },
   "Datatable": {
     "Search": {
       "placeholder": "ค้นหา..."
@@ -234,6 +249,17 @@
       "edit": "แก้ไข",
       "delete": "ลบ",
       "archive": "จัดเก็บ"
+    },
+    "customer": {
+      "customer": "ผู้ใช้งาน",
+      "orders": "คำสั่งซื้อ",
+      "orderFormat": "{count} คำสั่งซื้อ",
+      "createdAt": "วันที่สร้าง"
+    },
+    "employee": {
+      "employee": "พนักงาน",
+      "role": "บทบาท",
+      "createdAt": "วันที่สร้าง"
     },
     "product": {
       "name": "ขื่อสินค้า",

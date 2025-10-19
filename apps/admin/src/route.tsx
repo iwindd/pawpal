@@ -1,4 +1,10 @@
-import { IconFolder, IconHome, IconLogin, IconWork } from "@pawpal/icons";
+import {
+  IconFolder,
+  IconHome,
+  IconLogin,
+  IconUser,
+  IconWork,
+} from "@pawpal/icons";
 import { ROUTER } from "@pawpal/shared";
 
 const ROUTES = ROUTER({
@@ -72,6 +78,21 @@ const ROUTES = ROUTER({
     path: "/resources",
     label: "resources",
     icon: IconFolder,
+  },
+  users: {
+    path: "/users",
+    label: "users.main",
+    icon: IconUser,
+    children: {
+      customers: {
+        path: "/users/customers",
+        label: "users.customer",
+      },
+      employees: {
+        path: "/users/employees",
+        label: "users.employee",
+      },
+    },
   },
   website: {
     path: "/website",

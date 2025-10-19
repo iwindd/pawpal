@@ -4,9 +4,10 @@ import {
   IconDashboard,
   IconFolder,
   IconShoppingBag,
+  IconUser,
   IconWork,
 } from "@pawpal/icons";
-import { pather } from "./route";
+import { getPath, pather } from "./route";
 
 export interface NavLink {
   id: number;
@@ -52,6 +53,24 @@ export const navlinks: NavLink[] = [
     files: [],
   },
   {
+    id: 5,
+    icon: IconUser,
+    title: "users.main",
+    link: "#",
+    files: [
+      {
+        id: 1,
+        name: "users.customer",
+        link: getPath("users.customers"),
+      },
+      {
+        id: 2,
+        name: "users.employee",
+        link: getPath("users.employees"),
+      },
+    ],
+  },
+  {
     id: 6,
     icon: IconAppWindow,
     title: "website.main",
@@ -66,7 +85,7 @@ export const navlinks: NavLink[] = [
     ],
   },
   {
-    id: 5,
+    id: 7,
     icon: IconFolder,
     title: "resources",
     link: pather("resources"),
