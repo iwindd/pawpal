@@ -21,7 +21,7 @@ const FieldPage = () => {
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (data: FieldInput) =>
-      API.field.create(data, [product.id]),
+      API.field.createProductField(product.id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["fields", product.id] });
       notify.show({

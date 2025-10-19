@@ -1,7 +1,12 @@
 import FieldTypeSelect from "@/components/Select/FieldType";
 import useFormValidate from "@/hooks/useFormValidate";
 import { IconDelete } from "@pawpal/icons";
-import { ENUM_FIELD_TYPE, FieldInput, FieldSchema } from "@pawpal/shared";
+import {
+  AdminFieldResponse,
+  ENUM_FIELD_TYPE,
+  FieldInput,
+  FieldSchema,
+} from "@pawpal/shared";
 import {
   ActionIcon,
   Button,
@@ -16,12 +21,18 @@ import {
 import { useTranslations } from "next-intl";
 
 export interface FieldFormProps {
+  field?: AdminFieldResponse;
   onSubmit: (data: any) => void;
   isLoading?: boolean;
   errorMessage?: string | null;
 }
 
-const FieldForm = ({ onSubmit, isLoading, errorMessage }: FieldFormProps) => {
+const FieldForm = ({
+  field,
+  onSubmit,
+  isLoading,
+  errorMessage,
+}: FieldFormProps) => {
   const __ = useTranslations("Field.form");
 
   const form = useFormValidate<FieldInput>({
@@ -29,12 +40,12 @@ const FieldForm = ({ onSubmit, isLoading, errorMessage }: FieldFormProps) => {
     mode: "controlled",
     enhanceGetInputProps: () => ({ disabled: isLoading }),
     initialValues: {
-      label: "",
-      placeholder: "",
-      type: ENUM_FIELD_TYPE.TEXT,
-      optional: false,
+      label: field?.label || "",
+      placeholder: field?.placeholder || "",
+      type: field?.type || ENUM_FIELD_TYPE.TEXT,
+      optional: field?.optional || false,
       metadata: {
-        options: [""],
+        options: field?.metadata?.options || [""],
       },
     },
   });
@@ -138,7 +149,7 @@ const FieldForm = ({ onSubmit, isLoading, errorMessage }: FieldFormProps) => {
         <Stack align="end" mt="md" gap="xs">
           <div>
             <Button loading={isLoading} type="submit">
-              {__("actions.saveAndAdd")}
+              {__("actions.save")}
             </Button>
           </div>
           <ErrorMessage message={errorMessage} formatGroup="Errors" />

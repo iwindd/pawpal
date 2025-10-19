@@ -12,6 +12,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useFormatter, useTranslations } from "next-intl";
 import { DragRowFactory, DragTableWrapper } from "../..";
 import TableAction from "../../action";
+import useEditFieldModal from "./hooks/edit";
 import { useFieldReorder } from "./hooks/reorder";
 
 interface ProductFieldDatatable {
@@ -56,6 +57,8 @@ const ProductFieldDatatable = ({ productId }: ProductFieldDatatable) => {
       },
     },
   });
+
+  const fieldUpdater = useEditFieldModal();
 
   const columns: DataTableProps<AdminFieldResponse>["columns"] = [
     {
@@ -107,6 +110,7 @@ const ProductFieldDatatable = ({ productId }: ProductFieldDatatable) => {
               translate: "edit",
               icon: IconEdit,
               color: "blue",
+              action: fieldUpdater.open.bind(null, record),
             },
           ]}
         />
@@ -134,26 +138,29 @@ const ProductFieldDatatable = ({ productId }: ProductFieldDatatable) => {
   const records = data?.data.data ?? [];
 
   return (
-    <DragDropContext onDragEnd={handleDragEnd}>
-      <DataTable
-        highlightOnHover
-        height="65.4dvh"
-        minHeight={400}
-        maxHeight={1000}
-        columns={columns}
-        records={[...records].sort((a, b) => a.order - b.order)}
-        totalRecords={data?.data.total ?? 0}
-        recordsPerPage={datatable.limit}
-        page={datatable.page}
-        onPageChange={datatable.setPage}
-        fetching={isFetching || fieldReorder.isPending}
-        sortStatus={datatable.sortStatus}
-        onSortStatusChange={datatable.setSortStatus}
-        rowFactory={DragRowFactory}
-        tableWrapper={DragTableWrapper}
-        styles={{ table: { tableLayout: "fixed" } }}
-      />
-    </DragDropContext>
+    <>
+      <DragDropContext onDragEnd={handleDragEnd}>
+        <DataTable
+          highlightOnHover
+          height="65.4dvh"
+          minHeight={400}
+          maxHeight={1000}
+          columns={columns}
+          records={[...records].sort((a, b) => a.order - b.order)}
+          totalRecords={data?.data.total ?? 0}
+          recordsPerPage={datatable.limit}
+          page={datatable.page}
+          onPageChange={datatable.setPage}
+          fetching={isFetching || fieldReorder.isPending}
+          sortStatus={datatable.sortStatus}
+          onSortStatusChange={datatable.setSortStatus}
+          rowFactory={DragRowFactory}
+          tableWrapper={DragTableWrapper}
+          styles={{ table: { tableLayout: "fixed" } }}
+        />
+      </DragDropContext>
+      {fieldUpdater.modal}
+    </>
   );
 };
 

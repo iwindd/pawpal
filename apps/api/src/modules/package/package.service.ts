@@ -36,15 +36,11 @@ export class PackageService {
               select: {
                 id: true,
                 order: true,
-                field: {
-                  select: {
-                    label: true,
-                    placeholder: true,
-                    metadata: true,
-                    type: true,
-                    optional: true,
-                  },
-                },
+                label: true,
+                placeholder: true,
+                metadata: true,
+                type: true,
+                optional: true,
               },
             },
           },
@@ -54,11 +50,7 @@ export class PackageService {
 
     if (!product) throw new NotFoundException('invalid_package');
 
-    return product.product.fields.map((pf) => ({
-      id: pf.id,
-      order: pf.order,
-      ...pf.field,
-    }));
+    return product.product.fields;
   }
 
   async getProductPackages(

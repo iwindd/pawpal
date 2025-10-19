@@ -20,22 +20,12 @@ export class FieldService {
     };
   }
 
-  addToProduct(fieldId: string, productId: string) {
-    return this.prismaService.productField.create({
-      data: {
-        field: {
-          connect: { id: fieldId },
-        },
-        product: {
-          connect: { id: productId },
-        },
-      },
-    });
-  }
-
-  async create(payload: FieldInput, user: Session) {
-    const products = Array.isArray(payload.products) ? payload.products : [];
-    const field = await this.prismaService.field.create({
+  async createProductField(
+    productId: string,
+    payload: FieldInput,
+    user: Session,
+  ) {
+    const field = await this.prismaService.productField.create({
       data: {
         ...payload,
         type: payload.type as FieldType,
@@ -43,42 +33,26 @@ export class FieldService {
         creator: {
           connect: { id: user.id },
         },
-        products: {},
+        product: {
+          connect: { id: productId },
+        },
       },
     });
-
-    if (!field) throw new Error('field_creation_failed');
-
-    if (products.length > 0) {
-      await this.prismaService.$transaction(async () => {
-        for (const productId of products) {
-          await this.prismaService.productField.create({
-            data: {
-              field: {
-                connect: { id: field.id },
-              },
-              product: {
-                connect: { id: productId },
-              },
-            },
-          });
-        }
-      });
-    }
 
     return field;
   }
 
   update(id: string, payload: FieldInput) {
-    return this.prismaService.field.update({
+    return this.prismaService.productField.update({
       where: {
         id,
       },
       data: {
-        ...payload,
+        label: payload.label,
+        placeholder: payload.placeholder,
         type: payload.type as FieldType,
+        optional: payload.optional,
         metadata: this.parseMetadata(payload),
-        products: {},
       },
     });
   }
@@ -92,13 +66,11 @@ export class FieldService {
       ...(search
         ? {
             OR: [
+              { label: { contains: search, mode: 'insensitive' } },
+              { placeholder: { contains: search, mode: 'insensitive' } },
               {
-                field: {
-                  label: { contains: search, mode: 'insensitive' },
-                  placeholder: { contains: search, mode: 'insensitive' },
-                  creator: {
-                    displayName: { contains: search, mode: 'insensitive' },
-                  },
+                creator: {
+                  displayName: { contains: search, mode: 'insensitive' },
                 },
               },
             ],
@@ -111,35 +83,27 @@ export class FieldService {
       where,
       skip,
       take,
-      orderBy: orderBy as Prisma.FieldOrderByWithRelationInput,
+      orderBy: orderBy,
       select: {
         id: true,
         order: true,
-        field: {
+        label: true,
+        placeholder: true,
+        type: true,
+        optional: true,
+        metadata: true,
+        createdAt: true,
+        creator: {
           select: {
-            label: true,
-            placeholder: true,
-            type: true,
-            optional: true,
-            metadata: true,
-            createdAt: true,
-            creator: {
-              select: {
-                id: true,
-                displayName: true,
-              },
-            },
+            id: true,
+            displayName: true,
           },
         },
       },
     });
 
     return {
-      data: fields.map((pf) => ({
-        id: pf.id,
-        order: pf.order,
-        ...pf.field,
-      })),
+      data: fields,
       total: total,
     };
   }

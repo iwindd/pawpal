@@ -29,14 +29,17 @@ class FieldApi {
     );
   }
 
-  async create(
-    data: FieldInput,
-    products?: string[]
+  async createProductField(
+    productId: string,
+    data: FieldInput
   ): Promise<AxiosResponse<any>> {
-    return await this.client.post(`/admin/field`, {
+    return await this.client.post(`/admin/field/product/${productId}`, {
       ...data,
-      products: products || [],
     });
+  }
+
+  async update(id: string, data: FieldInput): Promise<AxiosResponse<any>> {
+    return await this.client.patch(`/admin/field/${id}`, data);
   }
 }
 

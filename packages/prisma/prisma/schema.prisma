@@ -17,12 +17,12 @@ model User {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  userWallets UserWallet[] @relation("UserWallets")
-  orders      Order[]      @relation("OrderUser")
-  roles       Role[]       @relation("UserRoles")
-  Resource    Resource[]   @relation("ResourceUser")
-  carousels   Carousel[]   @relation("CarouselCreatedBy")
-  fields      Field[]      @relation("FieldCreatedBy")
+  userWallets UserWallet[]   @relation("UserWallets")
+  orders      Order[]        @relation("OrderUser")
+  roles       Role[]         @relation("UserRoles")
+  Resource    Resource[]     @relation("ResourceUser")
+  carousels   Carousel[]     @relation("CarouselCreatedBy")
+  fields      ProductField[] @relation("FieldCreatedBy")
 
   @@map("users")
 }
@@ -124,6 +124,31 @@ model ProductTag {
   @@index([slug])
   @@index([type])
   @@map("product_tags")
+}
+
+model ProductField {
+  id          String    @id @default(cuid())
+  label       String
+  placeholder String?
+  metadata    Json      @default("{}")
+  type        FieldType @default(TEXT)
+
+  creator    User?   @relation("FieldCreatedBy", fields: [creator_id], references: [id])
+  creator_id String?
+
+  optional Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  order Int @default(0)
+
+  product_id String
+  product    Product @relation("ProductField", fields: [product_id], references: [id])
+
+  orderFields OrderField[] @relation("OrderFields")
+
+  @@map("product_fields")
 }
 
 model Product {
@@ -262,41 +287,6 @@ model Carousel {
   updatedAt DateTime @updatedAt
 
   @@map("carousels")
-}
-
-model Field {
-  id          String    @id @default(cuid())
-  label       String
-  placeholder String?
-  metadata    Json      @default("{}")
-  type        FieldType @default(TEXT)
-
-  creator    User?   @relation("FieldCreatedBy", fields: [creator_id], references: [id])
-  creator_id String?
-
-  optional Boolean @default(false)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  products ProductField[] @relation("ProductField")
-
-  @@map("fields")
-}
-
-model ProductField {
-  id         String  @id @default(cuid())
-  product    Product @relation("ProductField", fields: [product_id], references: [id])
-  product_id String
-
-  field    Field  @relation("ProductField", fields: [field_id], references: [id])
-  field_id String
-  order    Int    @default(0)
-
-  orderFields OrderField[] @relation("OrderFields")
-
-  @@unique([product_id, field_id])
-  @@map("product_fields")
 }
 
 enum ProductTagType {

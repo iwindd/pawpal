@@ -5,7 +5,6 @@ const baseFieldSchema = z.object({
   label: z.string().min(3).max(50),
   placeholder: z.string().min(3).max(50).optional(),
   optional: z.boolean().default(false),
-  products: z.array(z.string()).optional(),
 });
 
 export const FieldSchema = z.discriminatedUnion("type", [

@@ -23,14 +23,18 @@ import { FieldService } from './field.service';
 export class AdminFieldController {
   constructor(private readonly fieldService: FieldService) {}
 
-  @Post()
-  create(@Body(FieldPipe) payload: FieldInput, @AuthUser() user: Session) {
-    return this.fieldService.create(payload, user);
-  }
-
   @Patch(':id')
   update(@Param('id') id: string, @Body() payload: FieldInput) {
     return this.fieldService.update(id, payload);
+  }
+
+  @Post('/product/:productId')
+  create(
+    @Param('productId') productId: string,
+    @Body(FieldPipe) payload: FieldInput,
+    @AuthUser() user: Session,
+  ) {
+    return this.fieldService.createProductField(productId, payload, user);
   }
 
   @Get('/product/:id')
