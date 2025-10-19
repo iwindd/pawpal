@@ -29,6 +29,7 @@
     "@pawpal/prisma": "workspace:*",
     "@pawpal/shared": "workspace:*",
     "@pawpal/typescript-config": "workspace:*",
+    "@quixo3/prisma-session-store": "catalog:",
     "bcrypt": "catalog:",
     "cookie-parser": "catalog:",
     "dayjs": "catalog:",

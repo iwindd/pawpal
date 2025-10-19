@@ -88,3 +88,4 @@ catalog:
   "@types/supertest": ^6.0.2
   uuid: ^8.3.2
   zod: ^4.1.9
+  "@quixo3/prisma-session-store": ^3.1.13
