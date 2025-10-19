@@ -1,65 +1,15 @@
 import API from "@/libs/api/client";
-import { IconDrag, IconEdit } from "@pawpal/icons";
+import { IconEdit } from "@pawpal/icons";
 import { CarouselReorderInput, CarouselResponse } from "@pawpal/shared";
-import { clsx } from "@pawpal/ui/clsx";
-import {
-  Center,
-  DataTable,
-  DataTableDraggableRow,
-  DataTableProps,
-  Stack,
-  TableTd,
-  Text,
-  Title,
-} from "@pawpal/ui/core";
-import {
-  DragDropContext,
-  Draggable,
-  Droppable,
-  DropResult,
-} from "@pawpal/ui/draggable";
+import { DataTable, DataTableProps, Stack, Text, Title } from "@pawpal/ui/core";
+import { DragDropContext, DropResult } from "@pawpal/ui/draggable";
 import { Notifications } from "@pawpal/ui/notifications";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
+import { DragRowFactory, DragTableWrapper } from "..";
 import TableAction from "../action";
 import ColumnImage from "./components/ColumnImage";
-import classes from "./style.module.css";
-
-const TableWrapper = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <Droppable droppableId="datatable">
-      {(provided) => (
-        <div {...provided.droppableProps} ref={provided.innerRef}>
-          {children}
-          {provided.placeholder}
-        </div>
-      )}
-    </Droppable>
-  );
-};
-
-const RowFactory = ({ record, index, rowProps, children }: any) => {
-  return (
-    <Draggable key={record.id} draggableId={record.id} index={index}>
-      {(provided, snapshot) => (
-        <DataTableDraggableRow
-          isDragging={snapshot.isDragging}
-          {...rowProps}
-          className={clsx(rowProps.className, classes.draggableRow)}
-          {...provided.draggableProps}
-        >
-          <TableTd>
-            <Center {...provided.dragHandleProps} ref={provided.innerRef}>
-              <IconDrag size={22} color="gray" />
-            </Center>
-          </TableTd>
-          {children}
-        </DataTableDraggableRow>
-      )}
-    </Draggable>
-  );
-};
 
 const PublishDatatable = () => {
   const [records, setRecords] = useState<CarouselResponse[]>([]);
@@ -182,7 +132,7 @@ const PublishDatatable = () => {
         columns={columns}
         fetching={isFetching || isPending}
         records={[...records].sort((a, b) => a.order - b.order)}
-        tableWrapper={TableWrapper}
+        tableWrapper={DragTableWrapper}
         styles={{
           table: {
             tableLayout: "fixed",
@@ -192,7 +142,7 @@ const PublishDatatable = () => {
           },
         }}
         scrollAreaProps={{ type: "never" }}
-        rowFactory={RowFactory}
+        rowFactory={DragRowFactory}
       />
     </DragDropContext>
   );
