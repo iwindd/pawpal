@@ -1,6 +1,7 @@
 import { AuthUser } from '@/common/decorators/user.decorator';
 import { DatatablePipe, DatatableQuery } from '@/common/pipes/DatatablePipe';
 import { FieldPipe } from '@/common/pipes/FieldPipe';
+import { ZodPipe } from '@/common/pipes/ZodPipe';
 import {
   Body,
   Controller,
@@ -10,7 +11,12 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { FieldInput, Session } from '@pawpal/shared';
+import {
+  FieldInput,
+  FieldReorderInput,
+  FieldReorderSchema,
+  Session,
+} from '@pawpal/shared';
 import { FieldService } from './field.service';
 
 @Controller('admin/field')
@@ -33,5 +39,13 @@ export class AdminFieldController {
     @Query(DatatablePipe) query: DatatableQuery,
   ) {
     return this.fieldService.getProductFields(id, query);
+  }
+
+  @Post('/product/:productId/reorder')
+  reorderProductField(
+    @Param('productId') productId: string,
+    @Body(new ZodPipe(FieldReorderSchema)) payload: FieldReorderInput,
+  ) {
+    return this.fieldService.reorderProductField(productId, payload);
   }
 }

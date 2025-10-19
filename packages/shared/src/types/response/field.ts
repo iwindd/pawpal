@@ -12,4 +12,5 @@ export interface AdminFieldResponse {
   };
   createdAt: Date;
   creator: Creator;
+  order: number;
 }

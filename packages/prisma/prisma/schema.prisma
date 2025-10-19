@@ -126,11 +126,11 @@ model Product {
   category    Category @relation("ProductCategory", fields: [category_id], references: [id])
   category_id String
 
-  productTags ProductTag[] @relation("ProductTags")
-  packages    Package[]    @relation("ProductPackages")
-  carousel    Carousel[]   @relation("CarouselProduct")
-  fields      Field[]      @relation("ProductField")
-  image       Resource?    @relation("ProductImage", fields: [image_id], references: [id])
+  productTags ProductTag[]   @relation("ProductTags")
+  packages    Package[]      @relation("ProductPackages")
+  carousel    Carousel[]     @relation("CarouselProduct")
+  fields      ProductField[] @relation("ProductField")
+  image       Resource?      @relation("ProductImage", fields: [image_id], references: [id])
   image_id    String?
 
   @@index([slug])
@@ -208,10 +208,10 @@ model OrderPackage {
 }
 
 model OrderField {
-  id       String @id @default(cuid())
-  order    Order  @relation("OrderFields", fields: [order_id], references: [id])
+  id       String       @id @default(cuid())
+  order    Order        @relation("OrderFields", fields: [order_id], references: [id])
   order_id String
-  field    Field  @relation("OrderFields", fields: [field_id], references: [id])
+  field    ProductField @relation("OrderFields", fields: [field_id], references: [id])
   field_id String
   value    String
 
@@ -246,7 +246,7 @@ model Carousel {
   creator    User   @relation("CarouselCreatedBy", fields: [creator_id], references: [id])
   creator_id String
 
-  order     Int      @default(-1)
+  order     Int      @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -268,10 +268,24 @@ model Field {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  products    Product[]    @relation("ProductField")
-  orderFields OrderField[] @relation("OrderFields")
+  products ProductField[] @relation("ProductField")
 
   @@map("fields")
+}
+
+model ProductField {
+  id         String  @id @default(cuid())
+  product    Product @relation("ProductField", fields: [product_id], references: [id])
+  product_id String
+
+  field    Field  @relation("ProductField", fields: [field_id], references: [id])
+  field_id String
+  order    Int    @default(0)
+
+  orderFields OrderField[] @relation("OrderFields")
+
+  @@unique([product_id, field_id])
+  @@map("product_fields")
 }
 
 enum ProductTagType {

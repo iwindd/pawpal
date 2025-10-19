@@ -3,6 +3,7 @@ import {
   DatatableInput,
   DatatableResponse,
   FieldInput,
+  FieldReorderInput,
 } from "@pawpal/shared";
 import { AxiosInstance, AxiosResponse } from "axios";
 
@@ -16,6 +17,16 @@ class FieldApi {
     return await this.client.get(`/admin/field/product/${id}`, {
       params,
     });
+  }
+
+  async reorder(
+    productId: string,
+    data: FieldReorderInput
+  ): Promise<AxiosResponse<any>> {
+    return await this.client.post(
+      `/admin/field/product/${productId}/reorder`,
+      data
+    );
   }
 
   async create(

@@ -173,13 +173,21 @@ export class ProductService {
           },
         },
         fields: {
+          orderBy: {
+            order: 'asc',
+          },
           select: {
             id: true,
-            label: true,
-            placeholder: true,
-            metadata: true,
-            type: true,
-            optional: true,
+            order: true,
+            field: {
+              select: {
+                label: true,
+                placeholder: true,
+                metadata: true,
+                type: true,
+                optional: true,
+              },
+            },
           },
         },
       },
@@ -212,7 +220,11 @@ export class ProductService {
             : undefined,
       })),
       sales: mostDiscountedSale,
-      fields: product.fields,
+      fields: product.fields.map((pf) => ({
+        id: pf.id,
+        order: pf.order,
+        ...pf.field,
+      })),
     };
   }
 

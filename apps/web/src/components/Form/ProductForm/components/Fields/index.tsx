@@ -17,6 +17,7 @@ const FieldText = (props: Field) => {
       label={props.label}
       placeholder={props.placeholder}
       type="text"
+      withAsterisk={!props.optional}
       key={props.form.key(`fields.${props.id}`)}
       {...props.form.getInputProps(`fields.${props.id}`)}
     />
@@ -29,6 +30,7 @@ const FieldPassword = (props: Field) => {
       label={props.label}
       placeholder={props.placeholder}
       type="password"
+      withAsterisk={!props.optional}
       key={props.form.key(`fields.${props.id}`)}
       {...props.form.getInputProps(`fields.${props.id}`)}
     />
@@ -41,6 +43,7 @@ const FieldEmail = (props: Field) => {
       label={props.label}
       placeholder={props.placeholder}
       type="email"
+      withAsterisk={!props.optional}
       key={props.form.key(`fields.${props.id}`)}
       {...props.form.getInputProps(`fields.${props.id}`)}
     />
@@ -59,6 +62,7 @@ const FieldSelect = (props: Field) => {
         value: option,
         label: option,
       }))}
+      withAsterisk={!props.optional}
       key={props.form.key(`fields.${props.id}`)}
       {...props.form.getInputProps(`fields.${props.id}`)}
     />

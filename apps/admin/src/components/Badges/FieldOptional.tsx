@@ -1,5 +1,5 @@
 "use client";
-import { IconCheck, IconX } from "@pawpal/icons";
+import { IconAsterisk } from "@pawpal/icons";
 import { Badge, BadgeProps } from "@pawpal/ui/core";
 import { useTranslations } from "next-intl";
 
@@ -15,7 +15,7 @@ const FieldOptionalBadge = ({
   const __ = useTranslations("Field.optional");
 
   const color = optional ? "green" : "yellow";
-  const Icon = optional ? IconCheck : IconX;
+  const Icon = !optional && IconAsterisk;
   const status = optional ? "yes" : "no";
 
   return (

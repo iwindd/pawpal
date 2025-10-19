@@ -4,6 +4,7 @@ export {
   IconList as IconAll,
   IconAppWindow,
   IconArchive,
+  IconAsterisk,
   IconBrandApple,
   IconBrandFacebook,
   IconBrandGoogle,

@@ -6,9 +6,13 @@ import API from "@/libs/api/client";
 import { IconEdit } from "@pawpal/icons";
 import { AdminFieldResponse } from "@pawpal/shared";
 import { DataTable, DataTableProps, Text, Title } from "@pawpal/ui/core";
+import { DragDropContext, DropResult } from "@pawpal/ui/draggable";
+import { notify } from "@pawpal/ui/notifications";
 import { useQuery } from "@tanstack/react-query";
 import { useFormatter, useTranslations } from "next-intl";
+import { DragRowFactory, DragTableWrapper } from "../..";
 import TableAction from "../../action";
+import { useFieldReorder } from "./hooks/reorder";
 
 interface ProductFieldDatatable {
   productId: string;
@@ -19,12 +23,12 @@ const ProductFieldDatatable = ({ productId }: ProductFieldDatatable) => {
   const __ = useTranslations("Datatable.field");
   const { above, ...datatable } = useDatatable<AdminFieldResponse>({
     sortStatus: {
-      columnAccessor: "createdAt",
-      direction: "desc",
+      columnAccessor: "order",
+      direction: "asc",
     },
   });
 
-  const { data, isFetching } = useQuery({
+  const { data, isFetching, refetch } = useQuery({
     queryKey: [
       "fields",
       productId,
@@ -40,7 +44,26 @@ const ProductFieldDatatable = ({ productId }: ProductFieldDatatable) => {
       }),
   });
 
+  const fieldReorder = useFieldReorder({
+    productId: productId,
+    options: {
+      onSuccess: () => {
+        refetch();
+        notify.show({
+          message: __("notify.ordered.message"),
+          color: "green",
+        });
+      },
+    },
+  });
+
   const columns: DataTableProps<AdminFieldResponse>["columns"] = [
+    {
+      accessor: "dragHandle",
+      title: "",
+      hiddenContent: true,
+      width: 60,
+    },
     {
       accessor: "label",
       title: __("label"),
@@ -91,22 +114,46 @@ const ProductFieldDatatable = ({ productId }: ProductFieldDatatable) => {
     },
   ];
 
+  const handleDragEnd = (result: DropResult) => {
+    if (!result.destination) return;
+    const sourceIndex = result.source.index;
+    const destinationIndex = result.destination.index;
+    const fieldId = records[sourceIndex]?.id;
+
+    if (sourceIndex === destinationIndex) return;
+    if (fieldReorder.isPending) return;
+    if (!fieldId) return;
+
+    fieldReorder.mutate({
+      fromIndex: sourceIndex,
+      toIndex: destinationIndex,
+      field_id: fieldId,
+    });
+  };
+
+  const records = data?.data.data ?? [];
+
   return (
-    <DataTable
-      highlightOnHover
-      height="65.4dvh"
-      minHeight={400}
-      maxHeight={1000}
-      columns={columns}
-      records={data?.data.data ?? []}
-      totalRecords={data?.data.total ?? 0}
-      recordsPerPage={datatable.limit}
-      page={datatable.page}
-      onPageChange={datatable.setPage}
-      fetching={isFetching}
-      sortStatus={datatable.sortStatus}
-      onSortStatusChange={datatable.setSortStatus}
-    />
+    <DragDropContext onDragEnd={handleDragEnd}>
+      <DataTable
+        highlightOnHover
+        height="65.4dvh"
+        minHeight={400}
+        maxHeight={1000}
+        columns={columns}
+        records={[...records].sort((a, b) => a.order - b.order)}
+        totalRecords={data?.data.total ?? 0}
+        recordsPerPage={datatable.limit}
+        page={datatable.page}
+        onPageChange={datatable.setPage}
+        fetching={isFetching || fieldReorder.isPending}
+        sortStatus={datatable.sortStatus}
+        onSortStatusChange={datatable.setSortStatus}
+        rowFactory={DragRowFactory}
+        tableWrapper={DragTableWrapper}
+        styles={{ table: { tableLayout: "fixed" } }}
+      />
+    </DragDropContext>
   );
 };
 

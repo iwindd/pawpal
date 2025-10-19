@@ -97,7 +97,7 @@ async function main() {
   // Seed products
   await prisma.$transaction(async () => {
     for (const product of products) {
-      await prisma.product.upsert({
+      const createdProduct = await prisma.product.upsert({
         where: { slug: product.slug },
         update: {},
         create: {
@@ -112,14 +112,32 @@ async function main() {
           packages: {
             create: product.packages.map((pkg) => ({ ...pkg })),
           },
-          fields: {
-            create: (product.fields || []).map((field) => ({
-              ...field,
-              type: field.type as FieldType,
-            })),
-          },
         },
       });
+
+      if (product.fields && product.fields.length > 0) {
+        for (const field of product.fields) {
+          const createdField = await prisma.field.create({
+            data: {
+              label: field.label,
+              placeholder: field.placeholder,
+              type: field.type as FieldType,
+              optional: field.optional,
+            },
+          });
+
+          await prisma.productField.create({
+            data: {
+              product: {
+                connect: { id: createdProduct.id },
+              },
+              field: {
+                connect: { id: createdField.id },
+              },
+            },
+          });
+        }
+      }
     }
   });
 

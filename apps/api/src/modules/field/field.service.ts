@@ -1,7 +1,12 @@
 import { DatatableQuery } from '@/common/pipes/DatatablePipe';
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@pawpal/prisma';
-import { FieldInput, FieldType, Session } from '@pawpal/shared';
+import {
+  FieldInput,
+  FieldReorderInput,
+  FieldType,
+  Session,
+} from '@pawpal/shared';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
@@ -15,9 +20,22 @@ export class FieldService {
     };
   }
 
-  create(payload: FieldInput, user: Session) {
+  addToProduct(fieldId: string, productId: string) {
+    return this.prismaService.productField.create({
+      data: {
+        field: {
+          connect: { id: fieldId },
+        },
+        product: {
+          connect: { id: productId },
+        },
+      },
+    });
+  }
+
+  async create(payload: FieldInput, user: Session) {
     const products = Array.isArray(payload.products) ? payload.products : [];
-    return this.prismaService.field.create({
+    const field = await this.prismaService.field.create({
       data: {
         ...payload,
         type: payload.type as FieldType,
@@ -25,11 +43,30 @@ export class FieldService {
         creator: {
           connect: { id: user.id },
         },
-        products: {
-          connect: products.map((productId) => ({ id: productId })),
-        },
+        products: {},
       },
     });
+
+    if (!field) throw new Error('field_creation_failed');
+
+    if (products.length > 0) {
+      await this.prismaService.$transaction(async () => {
+        for (const productId of products) {
+          await this.prismaService.productField.create({
+            data: {
+              field: {
+                connect: { id: field.id },
+              },
+              product: {
+                connect: { id: productId },
+              },
+            },
+          });
+        }
+      });
+    }
+
+    return field;
   }
 
   update(id: string, payload: FieldInput) {
@@ -50,20 +87,18 @@ export class FieldService {
     productId: string,
     { skip, take, orderBy, search }: DatatableQuery,
   ) {
-    const where: Prisma.FieldWhereInput = {
-      products: {
-        some: {
-          id: productId,
-        },
-      },
+    const where: Prisma.ProductFieldWhereInput = {
+      product_id: productId,
       ...(search
         ? {
             OR: [
-              { label: { contains: search, mode: 'insensitive' } },
-              { placeholder: { contains: search, mode: 'insensitive' } },
               {
-                creator: {
-                  displayName: { contains: search, mode: 'insensitive' },
+                field: {
+                  label: { contains: search, mode: 'insensitive' },
+                  placeholder: { contains: search, mode: 'insensitive' },
+                  creator: {
+                    displayName: { contains: search, mode: 'insensitive' },
+                  },
                 },
               },
             ],
@@ -71,32 +106,63 @@ export class FieldService {
         : {}),
     };
 
-    const total = await this.prismaService.field.count({ where });
-    const fields = await this.prismaService.field.findMany({
+    const total = await this.prismaService.productField.count({ where });
+    const fields = await this.prismaService.productField.findMany({
       where,
       skip,
       take,
       orderBy: orderBy as Prisma.FieldOrderByWithRelationInput,
       select: {
         id: true,
-        label: true,
-        placeholder: true,
-        type: true,
-        optional: true,
-        metadata: true,
-        createdAt: true,
-        creator: {
+        order: true,
+        field: {
           select: {
-            id: true,
-            displayName: true,
+            label: true,
+            placeholder: true,
+            type: true,
+            optional: true,
+            metadata: true,
+            createdAt: true,
+            creator: {
+              select: {
+                id: true,
+                displayName: true,
+              },
+            },
           },
         },
       },
     });
 
     return {
-      data: fields,
+      data: fields.map((pf) => ({
+        id: pf.id,
+        order: pf.order,
+        ...pf.field,
+      })),
       total: total,
     };
+  }
+
+  async reorderProductField(
+    product_id: string,
+    { fromIndex, toIndex, field_id }: FieldReorderInput,
+  ) {
+    const operator = fromIndex < toIndex ? 'decrement' : 'increment';
+    const range =
+      fromIndex < toIndex
+        ? { gt: fromIndex, lte: toIndex }
+        : { gte: toIndex, lt: fromIndex };
+
+    await this.prismaService.$transaction(async () => {
+      await this.prismaService.productField.updateMany({
+        where: { order: range, product_id: product_id },
+        data: { order: { [operator]: 1 } },
+      });
+      await this.prismaService.productField.update({
+        where: { id: field_id, product_id: product_id },
+        data: { order: toIndex },
+      });
+    });
   }
 }
