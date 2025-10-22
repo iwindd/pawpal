@@ -11,20 +11,22 @@ import Link from "next/link";
 import { Fragment } from "react";
 
 type ActionAlign = "start" | "center" | "end";
+
+export interface Action {
+  label?: string;
+  translate?: string;
+  action?: string | (() => void);
+  icon?: React.ComponentType<any>;
+  divider?: boolean;
+  header?: string;
+  rightSection?: React.ReactNode;
+  color?: MenuItemProps["color"];
+  props?: MenuItemProps;
+}
 interface ActionProps {
   label?: string;
   displayType?: "menu" | "icon";
-  actions: {
-    label?: string;
-    translate?: string;
-    action?: string | (() => void);
-    icon?: React.ComponentType<any>;
-    divider?: boolean;
-    header?: string;
-    rightSection?: React.ReactNode;
-    color?: MenuItemProps["color"];
-    props?: MenuItemProps;
-  }[];
+  actions: Action[];
   align?: ActionAlign;
 }
 
