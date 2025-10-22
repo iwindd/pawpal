@@ -4,15 +4,19 @@ import API from "@/libs/api/client";
 import {
   AdminTransactionResponse,
   ENUM_TRANSACTION_STATUS,
+  TransactionStatus,
 } from "@pawpal/shared";
 import { DataTable, DataTableProps } from "@pawpal/ui/core";
-import { useQuery } from "@tanstack/react-query";
+import { useConfirmation } from "@pawpal/ui/hooks";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useFormatter, useTranslations } from "next-intl";
 import TableAction, { Action } from "../action";
 
 const TransactionDatatable = () => {
   const format = useFormatter();
   const __ = useTranslations("Datatable.transaction");
+  const { confirm } = useConfirmation();
+  const queryClient = useQueryClient();
   const { above, ...datatable } = useDatatable<AdminTransactionResponse>({
     sortStatus: {
       columnAccessor: "createdAt",
@@ -20,7 +24,7 @@ const TransactionDatatable = () => {
     },
   });
 
-  const { data, isFetching } = useQuery({
+  const { data, isFetching, refetch } = useQuery({
     queryKey: [
       "transactions",
       datatable.page,
@@ -34,6 +38,48 @@ const TransactionDatatable = () => {
         sort: datatable.sortStatus,
       }),
   });
+
+  const { mutate: changeTransactionStatus } = useMutation({
+    mutationFn: async ({
+      transactionId,
+      status,
+    }: {
+      transactionId: string;
+      status: TransactionStatus;
+    }) => {
+      return API.transaction.changeTransactionStatus(transactionId, status);
+    },
+    onSuccess: () => {
+      refetch();
+      queryClient.invalidateQueries({ queryKey: ["orders"] });
+    },
+  });
+
+  const onActionMakeFailed = async (transactionId: string) => {
+    const confirmed = await confirm({
+      confirmProps: { color: "red" },
+    });
+
+    if (!confirmed) return;
+
+    changeTransactionStatus({
+      transactionId,
+      status: ENUM_TRANSACTION_STATUS.FAILED as TransactionStatus,
+    });
+  };
+
+  const onActionMakeSuccess = async (transactionId: string) => {
+    const confirmed = await confirm({
+      confirmProps: { color: "green" },
+    });
+
+    if (!confirmed) return;
+
+    changeTransactionStatus({
+      transactionId,
+      status: ENUM_TRANSACTION_STATUS.SUCCESS as TransactionStatus,
+    });
+  };
 
   const columns: DataTableProps<AdminTransactionResponse>["columns"] = [
     {
@@ -98,12 +144,12 @@ const TransactionDatatable = () => {
             {
               label: __("action.make_success"),
               color: "green",
-              action: () => {},
+              action: onActionMakeSuccess.bind(null, records.id),
             },
             {
               label: __("action.make_failed"),
               color: "red",
-              action: () => {},
+              action: onActionMakeFailed.bind(null, records.id),
             }
           );
         }

@@ -1,5 +1,4 @@
 import { TransactionFilterBuilder } from '@/common/filters/transactionFilter';
-import { WalletResponse } from '@/common/interfaces/wallet.interface';
 import { DatatableQuery } from '@/common/pipes/DatatablePipe';
 import { Injectable } from '@nestjs/common';
 import {
@@ -9,6 +8,7 @@ import {
   UserWalletTransaction,
   WalletType,
 } from '@pawpal/prisma';
+import { TransactionStatusInput } from '@pawpal/shared';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
@@ -122,17 +122,44 @@ export class WalletService {
     );
   }
 
-  async successCharge(transactionId: string): Promise<WalletResponse> {
-    const transaction = await this.prisma.userWalletTransaction.findUnique({
-      where: { id: transactionId },
+  async validateOrderProceed(orderId: string) {
+    const order = await this.prisma.order.findUniqueOrThrow({
+      where: { id: orderId, status: 'PENDING_PAYMENT' },
       select: {
         id: true,
-        amount: true,
-        wallet: true,
+        user_id: true,
+        total: true,
       },
     });
+    const missingAmount = await this.getMissingAmount(
+      +order.total,
+      order.user_id,
+    );
 
-    if (!transaction) throw new Error('Transaction not found');
+    if (missingAmount > 0) {
+      return await this.prisma.order.update({
+        where: { id: order.id },
+        data: { status: 'CANCELLED' },
+      });
+    }
+
+    return await this.prisma.order.update({
+      where: { id: order.id },
+      data: { status: 'PAID' },
+    });
+  }
+
+  async successCharge(transactionId: string) {
+    const transaction =
+      await this.prisma.userWalletTransaction.findFirstOrThrow({
+        where: { id: transactionId },
+        select: {
+          id: true,
+          amount: true,
+          wallet: true,
+          order_id: true,
+        },
+      });
 
     const originalBalance = +transaction.wallet.balance;
     const updatedWallet = await this.updateWalletBalance(
@@ -145,12 +172,29 @@ export class WalletService {
       TransactionStatus.SUCCESS,
     );
 
+    if (transaction.order_id)
+      await this.validateOrderProceed(transaction.order_id);
+
     return {
       transaction_id: updatedTransaction.id,
       balance_before: originalBalance,
       balance_after: +updatedWallet.balance,
       balance: +updatedWallet.balance,
     };
+  }
+
+  async failedCharge(transactionId: string) {
+    const transaction = await this.updateTransactionStatus(
+      transactionId,
+      TransactionStatus.FAILED,
+    );
+
+    if (transaction.order_id) {
+      await this.prisma.order.update({
+        where: { id: transaction.order_id },
+        data: { status: 'CANCELLED' },
+      });
+    }
   }
 
   async getMissingAmount(
@@ -188,5 +232,19 @@ export class WalletService {
         orderBy,
       }),
     };
+  }
+
+  changeTransactionStatus(
+    transactionId: string,
+    { status }: TransactionStatusInput,
+  ) {
+    switch (status) {
+      case TransactionStatus.SUCCESS:
+        return this.successCharge(transactionId);
+      case TransactionStatus.FAILED:
+        return this.failedCharge(transactionId);
+      default:
+        throw new Error('Invalid status');
+    }
   }
 }
