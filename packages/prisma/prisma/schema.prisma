@@ -84,12 +84,13 @@ model UserWalletTransaction {
   amount         Decimal           @db.Decimal(10, 2)
   balance_before Decimal           @db.Decimal(10, 2)
   balance_after  Decimal           @db.Decimal(10, 2)
-  reference      String?
   status         TransactionStatus @default(PENDING)
   currency       String            @default("THB")
   payment_method String            @default("unknown")
   createdAt      DateTime          @default(now())
   updatedAt      DateTime          @updatedAt
+  order          Order?            @relation(fields: [order_id], references: [id])
+  order_id       String?
 
   @@index([wallet_id])
   @@index([type])
@@ -223,8 +224,9 @@ model Order {
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
 
-  orderPackages OrderPackage[] @relation("OrderPackages")
-  orderFields   OrderField[]   @relation("OrderFields")
+  orderPackages          OrderPackage[]          @relation("OrderPackages")
+  orderFields            OrderField[]            @relation("OrderFields")
+  userWalletTransactions UserWalletTransaction[]
 
   @@map("orders")
 }

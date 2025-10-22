@@ -8,12 +8,14 @@ import { OrderStatus } from '@pawpal/prisma';
 import { AdminOrderResponse, PurchaseInput } from '@pawpal/shared';
 import { PackageService } from '../package/package.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { WalletService } from '../wallet/wallet.service';
 
 @Injectable()
 export class OrderService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly packageService: PackageService,
+    private readonly walletService: WalletService,
   ) {}
 
   async getProductPackage(packageId: string) {
@@ -26,9 +28,7 @@ export class OrderService {
 
   async createOrder(userId: string, body: PurchaseInput<FieldAfterParse>) {
     const pkg = await this.packageService.getPackage(body.packageId);
-    const price = +pkg.price;
-    const amount = +body.amount;
-    const total = price * amount;
+    const total = +pkg.price * body.amount;
 
     const order = await this.prisma.order.create({
       data: {
@@ -46,8 +46,8 @@ export class OrderService {
                 id: pkg.id,
               },
             },
-            amount: amount,
-            price: price.toString(),
+            amount: total,
+            price: pkg.price,
           },
         },
         orderFields: {
@@ -63,7 +63,14 @@ export class OrderService {
       },
     });
 
-    return order;
+    await this.walletService.createChargeIfMissingAmount(
+      userId,
+      total,
+      order.id,
+      'wallet',
+    );
+
+    return 'OK';
   }
 
   async getTopupOrders({ take, search, orderBy, skip }: DatatableQuery) {

@@ -79,6 +79,7 @@ export class WalletService {
   async createCharge(
     userId: string,
     amount: number,
+    orderId?: string,
     paymentMethod: string = 'unknown',
     walletType: WalletType = WalletType.MAIN,
   ): Promise<UserWalletTransaction> {
@@ -92,8 +93,31 @@ export class WalletService {
         balance_after: Number(wallet.balance) + amount,
         payment_method: paymentMethod,
         status: TransactionStatus.PENDING,
+        ...(orderId ? { order_id: orderId } : {}),
       },
     });
+  }
+
+  async createChargeIfMissingAmount(
+    userId: string,
+    amount: number,
+    orderId?: string,
+    paymentMethod: string = 'unknown',
+    walletType: WalletType = WalletType.MAIN,
+  ) {
+    const missingAmount = await this.getMissingAmount(
+      amount,
+      userId,
+      walletType,
+    );
+    if (missingAmount <= 0) return null;
+    return this.createCharge(
+      userId,
+      missingAmount,
+      orderId,
+      paymentMethod,
+      walletType,
+    );
   }
 
   async successCharge(transactionId: string): Promise<WalletResponse> {
@@ -125,5 +149,20 @@ export class WalletService {
       balance_after: +updatedWallet.balance,
       balance: +updatedWallet.balance,
     };
+  }
+
+  async getMissingAmount(
+    requiredAmount: number,
+    userId: string,
+    walletType: WalletType = WalletType.MAIN,
+  ): Promise<number> {
+    const wallet = await this.getWalletOrCreate(userId, walletType);
+    const currentBalance = +wallet.balance;
+
+    if (currentBalance >= requiredAmount) {
+      return 0;
+    }
+
+    return requiredAmount - currentBalance;
   }
 }
