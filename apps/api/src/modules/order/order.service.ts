@@ -1,13 +1,11 @@
 import { Injectable } from '@nestjs/common';
 
+import { OrderFilterBuilder } from '@/common/filters/orderFilter';
+import { DatatableQuery } from '@/common/pipes/DatatablePipe';
 import { FieldAfterParse } from '@/common/pipes/PurchasePipe';
+import { OrderExtension } from '@/utils/prisma/order';
 import { OrderStatus } from '@pawpal/prisma';
-import {
-  AdminOrderResponse,
-  DatatableQueryDto,
-  DatatableResponse,
-  PurchaseInput,
-} from '@pawpal/shared';
+import { AdminOrderResponse, PurchaseInput } from '@pawpal/shared';
 import { PackageService } from '../package/package.service';
 import { PrismaService } from '../prisma/prisma.service';
 
@@ -68,89 +66,25 @@ export class OrderService {
     return order;
   }
 
-  async getOrdersForAdmin(
-    queryParams: DatatableQueryDto,
-  ): Promise<DatatableResponse<AdminOrderResponse>> {
-    const { page, limit, search, sort } = queryParams;
-    const skip = (page - 1) * limit;
+  async getTopupOrders({ take, search, orderBy, skip }: DatatableQuery) {
+    const where = new OrderFilterBuilder()
+      .onlyActiveStatuses()
+      .searchUser(search)
+      .build();
 
-    const where = {
-      status: {
-        in: [OrderStatus.PAID, OrderStatus.PROCESSING],
+    const orders = await this.prisma.order.findMany({
+      where,
+      skip,
+      take,
+      orderBy,
+      include: {
+        ...OrderExtension.withUserAndPackages(),
       },
-      ...(search && {
-        OR: [
-          {
-            user: {
-              email: {
-                contains: search,
-                mode: 'insensitive' as const,
-              },
-            },
-          },
-          {
-            user: {
-              displayName: {
-                contains: search,
-                mode: 'insensitive' as const,
-              },
-            },
-          },
-        ],
-      }),
-    };
-
-    const orderBy = {
-      [sort.columnAccessor]: sort.direction,
-    };
-
-    const [orders, total] = await Promise.all([
-      this.prisma.order.findMany({
-        where,
-        skip,
-        take: limit,
-        orderBy,
-        include: {
-          user: {
-            select: {
-              id: true,
-              email: true,
-              displayName: true,
-            },
-          },
-          orderPackages: {
-            include: {
-              package: {
-                include: {
-                  product: {
-                    include: {
-                      category: {
-                        select: {
-                          id: true,
-                          name: true,
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-      }),
-      this.prisma.order.count({ where }),
-    ]);
+    });
 
     return {
-      data: orders.map((order) => ({
-        ...order,
-        total: order.total.toString(),
-        orderPackages: order.orderPackages.map((op) => ({
-          ...op,
-          price: op.price.toString(),
-        })),
-      })) as AdminOrderResponse[],
-      total,
+      data: orders,
+      total: await this.prisma.order.count({ where }),
     };
   }
 

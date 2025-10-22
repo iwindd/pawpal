@@ -1,5 +1,5 @@
 "use client";
-import { pather } from "@/configs/route";
+import { getPath } from "@/configs/route";
 import useDatatable from "@/hooks/useDatatable";
 import API from "@/libs/api/client";
 import { IconEdit } from "@pawpal/icons";
@@ -14,9 +14,6 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { useFormatter, useTranslations } from "next-intl";
 import TableAction from "../action";
-import { BaseDatatableProps } from "../datatable";
-
-interface Props extends BaseDatatableProps<AdminOrderResponse> {}
 
 const OrderDatatable = () => {
   const format = useFormatter();
@@ -36,7 +33,7 @@ const OrderDatatable = () => {
       datatable.sortStatus.direction,
     ],
     queryFn: () =>
-      API.order.list({
+      API.order.getTopupOrders({
         page: datatable.page,
         limit: datatable.limit,
         sort: datatable.sortStatus,
@@ -101,7 +98,7 @@ const OrderDatatable = () => {
       sortable: true,
       title: __("total"),
       render: (record) =>
-        format.number(parseFloat(record.total), {
+        format.number(+record.total, {
           style: "currency",
           currency: "THB",
         }),
@@ -131,7 +128,7 @@ const OrderDatatable = () => {
           actions={[
             {
               translate: "edit",
-              action: pather("job.orders.edit", { id: record.id }),
+              action: getPath("job.orders.edit", { id: record.id }),
               icon: IconEdit,
               color: "blue",
             },
