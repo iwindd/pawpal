@@ -1,10 +1,15 @@
+import {
+  TransactionStatus,
+  TransactionType,
+} from "../../schemas/wallet/transaction";
+
 export interface AdminTransactionResponse {
   id: string;
-  type: "TOPUP";
+  type: TransactionType;
   amount: number;
   balance_before: number;
   balance_after: number;
-  status: "PENDING" | "SUCCESS" | "FAILED";
+  status: TransactionStatus;
   currency: "THB";
   payment_method: string;
   order_id?: string;

@@ -325,7 +325,11 @@
       "types": {
         "topup": "เติมเงิน"
       },
-      "orderNone": "ไม่มีคำสั่งซื้อ"
+      "orderNone": "ไม่มีคำสั่งซื้อ",
+      "action": {
+        "make_failed": "ชำระเงินล้มเหลว",
+        "make_success": "ชำระเงินสำเร็จ"
+      }
     }
   },
   "Order": {

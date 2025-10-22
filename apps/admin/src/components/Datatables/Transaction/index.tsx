@@ -1,10 +1,14 @@
 "use client";
 import useDatatable from "@/hooks/useDatatable";
 import API from "@/libs/api/client";
-import { AdminTransactionResponse } from "@pawpal/shared";
+import {
+  AdminTransactionResponse,
+  ENUM_TRANSACTION_STATUS,
+} from "@pawpal/shared";
 import { DataTable, DataTableProps } from "@pawpal/ui/core";
 import { useQuery } from "@tanstack/react-query";
 import { useFormatter, useTranslations } from "next-intl";
+import TableAction, { Action } from "../action";
 
 const TransactionDatatable = () => {
   const format = useFormatter();
@@ -81,6 +85,31 @@ const TransactionDatatable = () => {
       sortable: true,
       title: __("order"),
       render: ({ order_id }) => order_id || __("orderNone"),
+    },
+    {
+      accessor: "actions",
+      noWrap: true,
+      title: __("actions"),
+      render: (records) => {
+        const actions: Action[] = [];
+
+        if (records.status === ENUM_TRANSACTION_STATUS.PENDING) {
+          actions.push(
+            {
+              label: __("action.make_success"),
+              color: "green",
+              action: () => {},
+            },
+            {
+              label: __("action.make_failed"),
+              color: "red",
+              action: () => {},
+            }
+          );
+        }
+
+        return <TableAction label={__("actions")} actions={actions} />;
+      },
     },
   ];
 

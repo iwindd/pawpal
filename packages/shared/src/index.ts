@@ -29,3 +29,4 @@ export * from "./types/session";
 export * from "./utils/path";
 export * from "./utils/route";
 export * from "./utils/slugify";
+export * from './schemas/wallet/transaction'

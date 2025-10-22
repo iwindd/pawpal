@@ -1,3 +1,4 @@
+import { TransactionFilterBuilder } from '@/common/filters/transactionFilter';
 import { WalletResponse } from '@/common/interfaces/wallet.interface';
 import { DatatableQuery } from '@/common/pipes/DatatablePipe';
 import { Injectable } from '@nestjs/common';
@@ -173,7 +174,10 @@ export class WalletService {
     orderBy,
     search,
   }: DatatableQuery) {
-    const where = {};
+    const where = new TransactionFilterBuilder()
+      .onlyPendingStatus()
+      .searchUser(search)
+      .build();
 
     return {
       total: await this.prisma.userWalletTransaction.count({ where }),
