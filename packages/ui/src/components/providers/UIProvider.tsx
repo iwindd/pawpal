@@ -7,6 +7,7 @@ import {
 } from "@pawpal/ui/core";
 import { DatesProvider } from "@pawpal/ui/dates";
 import { Notifications } from "@pawpal/ui/notifications";
+import { ConfirmationProvider } from "./ConfirmationProvider";
 import configTheme from "./theme/theme";
 // Constants
 const COLOR_SCHEME_KEY = "pawpal-color-scheme";
@@ -41,7 +42,7 @@ export const UIProvider = ({
         <Notifications />
         <Backdrop />
 
-        {children}
+        <ConfirmationProvider>{children}</ConfirmationProvider>
       </DatesProvider>
     </MantineProvider>
   );

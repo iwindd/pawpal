@@ -1,4 +1,10 @@
 {
+  "__ConfirmationProvider": {
+    "title": "ยืนยันการดำเนินการ",
+    "message": "คุณแน่ใจหรือไม่ว่าต้องการดำเนินการต่อ?",
+    "confirm": "ตกลง",
+    "cancel": "ยกเลิก"
+  },
   "title": "Pawpal Admin",
   "Auth": {
     "login": {
