@@ -43,6 +43,11 @@ export const navlinks: NavLink[] = [
         name: "orders.main",
         link: pather("job.orders"),
       },
+      {
+        id: 2,
+        name: "transactions.main",
+        link: pather("job.transactions"),
+      },
     ],
   },
   {

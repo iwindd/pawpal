@@ -7,6 +7,7 @@ import OrderApi from "./services/order";
 import PackageApi from "./services/Package";
 import ProductApi from "./services/product";
 import ResourceApi from "./services/Resource";
+import TransactionApi from "./services/Transaction";
 import UserApi from "./services/user";
 
 class ClientApi extends PawApi {
@@ -19,6 +20,7 @@ class ClientApi extends PawApi {
   public readonly package: PackageApi;
   public readonly field: FieldApi;
   public readonly user: UserApi;
+  public readonly transaction: TransactionApi;
 
   constructor(token?: string) {
     super(token);
@@ -31,6 +33,7 @@ class ClientApi extends PawApi {
     this.package = new PackageApi(this.client);
     this.field = new FieldApi(this.client);
     this.user = new UserApi(this.client);
+    this.transaction = new TransactionApi(this.client);
   }
 
   public async getNotifications(): Promise<Record<string, number>> {

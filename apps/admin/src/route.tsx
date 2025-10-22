@@ -35,6 +35,12 @@ const ROUTES = ROUTER({
           },
         },
       },
+      transactions: {
+        path: "/job/transactions",
+        label: "transactions.main",
+        icon: IconWork,
+        children: {},
+      },
     },
   },
   products: {

@@ -1,4 +1,5 @@
 import { WalletResponse } from '@/common/interfaces/wallet.interface';
+import { DatatableQuery } from '@/common/pipes/DatatablePipe';
 import { Injectable } from '@nestjs/common';
 import {
   TransactionStatus,
@@ -164,5 +165,24 @@ export class WalletService {
     }
 
     return requiredAmount - currentBalance;
+  }
+
+  async getPendingTransactions({
+    skip,
+    take,
+    orderBy,
+    search,
+  }: DatatableQuery) {
+    const where = {};
+
+    return {
+      total: await this.prisma.userWalletTransaction.count({ where }),
+      data: await this.prisma.userWalletTransaction.findMany({
+        where,
+        skip,
+        take,
+        orderBy,
+      }),
+    };
   }
 }
