@@ -1,5 +1,5 @@
-import { getDiscountedPrice } from "@/utils/productUtils";
-import { ProductResponse } from "@pawpal/shared";
+import { getPriceWithSale } from "@/utils/pricing";
+import { ENUM_DISCOUNT_TYPE, ProductResponse } from "@pawpal/shared";
 import {
   Box,
   Card,
@@ -67,7 +67,10 @@ const PackagePartial = ({ product, form }: PackagePartialProps) => {
                     <Stack gap={0} align="flex-end">
                       <Text size="sm" inline>
                         {format.number(
-                          getDiscountedPrice(data.price, sale),
+                          getPriceWithSale(data.price, {
+                            type: ENUM_DISCOUNT_TYPE.PERCENT,
+                            value: sale?.percent || 0,
+                          }),
                           "currency"
                         )}
                       </Text>

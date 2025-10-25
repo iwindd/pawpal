@@ -53,6 +53,7 @@ const ProductForm = ({ product, onPurchase, isLoading }: ProductFormProps) => {
       amount: 1,
       paymentMethod: defaultPaymentMethod,
       fields: fieldSchema.current.default,
+      includeWalletBalance: false,
     },
     onValuesChange: (values) => {
       const pkg = product.packages.find((p) => p.id === values.packageId);
@@ -111,6 +112,7 @@ const ProductForm = ({ product, onPurchase, isLoading }: ProductFormProps) => {
         amount={submittedValues?.amount || 0}
         price={(selectedPackage?.price || 0) * (submittedValues?.amount || 0)}
         paymentMethod={submittedValues?.paymentMethod}
+        includeWalletBalance={submittedValues?.includeWalletBalance}
         fields={
           product.fields.map((field) => ({
             label: field.label,

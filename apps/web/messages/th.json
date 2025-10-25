@@ -337,6 +337,8 @@
     "codeLabel": "รหัสสินค้า (ถ้ามี)",
     "codePlaceholder": "ใส่โค้ดส่วนลด",
     "useCode": "ใช้โค้ด",
+    "includeWalletBalance": "ใช้ยอดคงเหลือในกระเป๋าเงิน",
+    "includeWalletBalanceDescription": "ยอดคงเหลือ: {amount} {discount}",
     "purchase": "ซื้อเลย",
     "amount": "จำนวน",
     "processing": "กำลังดำเนินการสั่งซื้อ...",
@@ -360,6 +362,7 @@
     "totalPrice": "ราคารวม",
     "paymentMethod": "วิธีการชำระเงิน",
     "gameAccount": "บัญชีเกม",
+    "includeWalletBalance": "ใช้ยอดคงเหลือในกระเป๋าเงิน",
     "cancel": "ยกเลิก",
     "confirm": "ยืนยันการซื้อ"
   }

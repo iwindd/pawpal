@@ -10,6 +10,7 @@ export const purchaseSchema = z.object({
     .string()
     .min(1, { message: "invalid_payment_method" })
     .trim(),
+  includeWalletBalance: z.boolean().optional(),
 });
 
 export type PurchaseInput<T = any> = z.infer<typeof purchaseSchema> & {

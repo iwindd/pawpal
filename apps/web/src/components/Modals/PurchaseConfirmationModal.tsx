@@ -1,11 +1,8 @@
 "use client";
 
 import paymentMethods, { PaymentMethod } from "@/configs/payment";
-import {
-  getDiscountValue,
-  getPriceWithSale,
-  PricingSale,
-} from "@/libs/pricing";
+import { useAuth } from "@/contexts/AuthContext";
+import { getPriceWithSale, PricingSale } from "@/utils/pricing";
 import {
   Button,
   Divider,
@@ -40,6 +37,7 @@ interface PurchaseConfirmationModalProps {
   fields: Record<string, any>[];
   paymentMethod?: PaymentMethod;
   sale?: PricingSale;
+  includeWalletBalance?: boolean;
 }
 
 export default function PurchaseConfirmationModal({
@@ -49,10 +47,26 @@ export default function PurchaseConfirmationModal({
   ...props
 }: Readonly<PurchaseConfirmationModalProps>) {
   const format = useFormatter();
+  const { user } = useAuth();
   const __ = useTranslations("PurchaseConfirmation");
   const paymentMethod = paymentMethods.find(
     (p) => p.value === props.paymentMethod
   );
+
+  const price = props.price * props.amount;
+  const discountedPrice = props.sale
+    ? getPriceWithSale(price, props.sale)
+    : price;
+
+  const walletBalance = user?.userWallet.MAIN || 0;
+  const includeWallet = props.includeWalletBalance;
+
+  const walletUsed = includeWallet
+    ? Math.min(walletBalance, discountedPrice)
+    : 0;
+
+  const finalPayable = discountedPrice - walletUsed;
+  const totalPrice = Math.max(finalPayable, 0);
 
   return (
     <Modal
@@ -111,23 +125,30 @@ export default function PurchaseConfirmationModal({
         )}
 
         {/* Pricing Summary */}
-        {props.sale && (
+        {price > totalPrice && (
           <Stack gap="0">
             <Group>
               <Text size="sm">{__("originalPrice")}</Text>
               <Text size="sm" td="line-through" c="dimmed">
-                {format.number(props.price, "currency")}
+                {format.number(price, "currency")}
               </Text>
             </Group>
-            <Group>
-              <Text size="xs">- {__("saleDiscount")}</Text>
-              <Text size="xs" c="green">
-                {format.number(
-                  getDiscountValue(props.price, props.sale),
-                  "currency"
-                )}
-              </Text>
-            </Group>
+            {props.includeWalletBalance && (
+              <Group>
+                <Text size="xs">- {__("includeWalletBalance")}</Text>
+                <Text size="xs" c="green">
+                  {format.number(walletUsed, "currency")}
+                </Text>
+              </Group>
+            )}
+            {props.sale && (
+              <Group>
+                <Text size="xs">- {__("saleDiscount")}</Text>
+                <Text size="xs" c="green">
+                  {format.number(discountedPrice, "currency")}
+                </Text>
+              </Group>
+            )}
           </Stack>
         )}
 
@@ -136,11 +157,7 @@ export default function PurchaseConfirmationModal({
         <Group>
           <Title order={4}>{__("totalPrice")}</Title>
           <Text size="lg" c="green">
-            {format.number(
-              (props.sale && getPriceWithSale(props.price, props.sale)) ||
-                props.price,
-              "currency"
-            )}
+            {format.number(totalPrice, "currency")}
           </Text>
         </Group>
 

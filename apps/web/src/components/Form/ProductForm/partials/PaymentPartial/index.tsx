@@ -1,9 +1,11 @@
+import { useAuth } from "@/contexts/AuthContext";
 import usePaymentGateway from "@/hooks/usePaymentGateway";
-import { getDiscountedPrice } from "@/utils/productUtils";
-import { ProductPackage } from "@pawpal/shared";
+import { getPriceWithSale } from "@/utils/pricing";
+import { ENUM_DISCOUNT_TYPE, ProductPackage } from "@pawpal/shared";
 import {
   Box,
   Card,
+  Checkbox,
   Group,
   Image,
   Radio,
@@ -24,8 +26,27 @@ interface PaymentPartialProp {
 
 const PaymentPartial = ({ form, selectedPackage }: PaymentPartialProp) => {
   const __ = useTranslations("ProductDetail");
-  const { data } = usePaymentGateway();
   const format = useFormatter();
+  const { data } = usePaymentGateway();
+  const { user } = useAuth();
+  const basePrice = selectedPackage?.price || 0;
+  const amount = form.getValues().amount;
+  const price = basePrice * amount;
+  const discountedPrice = getPriceWithSale(price, {
+    type: ENUM_DISCOUNT_TYPE.PERCENT,
+    value: selectedPackage?.sale?.percent || 0,
+  });
+
+  const walletBalance = user?.userWallet.MAIN || 0;
+  const includeWallet = form.getValues().includeWalletBalance;
+
+  const walletUsed = includeWallet
+    ? Math.min(walletBalance, discountedPrice)
+    : 0;
+
+  const finalPayable = discountedPrice - walletUsed;
+
+  const totalPrice = Math.max(finalPayable, 0);
 
   return (
     <Card shadow="sm">
@@ -50,6 +71,7 @@ const PaymentPartial = ({ form, selectedPackage }: PaymentPartialProp) => {
                   align="center"
                   justify="space-between"
                   w="100%"
+                  gap="xs"
                 >
                   <Group>
                     <Box w={50} h={50}>
@@ -61,28 +83,24 @@ const PaymentPartial = ({ form, selectedPackage }: PaymentPartialProp) => {
                         height={50}
                       />
                     </Box>
-                    <div>
-                      <Title order={5} className={classes.label}>
-                        {gateway.label}
-                      </Title>
-                      <Text size="xs" className={classes.description}>
+                  </Group>
+                  <Stack gap={0} flex={1} style={{ overflow: "hidden" }}>
+                    <Title order={5} className={classes.label}>
+                      {gateway.label}
+                    </Title>
+                    {gateway.text ? (
+                      <Text size="xs" truncate>
                         {gateway.text}
                       </Text>
-                    </div>
-                  </Group>
+                    ) : null}
+                  </Stack>
                   <Stack gap={0} align="flex-end">
                     <Text size="sm" inline>
-                      {format.number(
-                        getDiscountedPrice(
-                          selectedPackage?.price || 0,
-                          selectedPackage?.sale
-                        ),
-                        "currency"
-                      )}
+                      {format.number(totalPrice, "currency")}
                     </Text>
-                    {selectedPackage?.sale && (
+                    {price > totalPrice && (
                       <Text size="xs" c="dimmed" td="line-through" inline>
-                        {format.number(selectedPackage?.price || 0, "currency")}
+                        {format.number(price, "currency")}
                       </Text>
                     )}
                   </Stack>
@@ -92,6 +110,20 @@ const PaymentPartial = ({ form, selectedPackage }: PaymentPartialProp) => {
           })}
         </Stack>
       </Radio.Group>
+      <Checkbox
+        mt={"md"}
+        label={__("includeWalletBalance")}
+        description={__("includeWalletBalanceDescription", {
+          amount: includeWallet
+            ? format.number(walletBalance - walletUsed, "currency")
+            : format.number(walletBalance, "currency"),
+          discount: includeWallet
+            ? `(-${format.number(walletUsed, "currency")})`
+            : "",
+        })}
+        key={form.key("includeWalletBalance")}
+        {...form.getInputProps("includeWalletBalance", { type: "checkbox" })}
+      />
     </Card>
   );
 };
