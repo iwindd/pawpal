@@ -1,7 +1,6 @@
 import { AppModule } from '@/modules/app/app.module';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { prisma } from '@pawpal/prisma';
 import { PrismaSessionStore } from '@quixo3/prisma-session-store';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
@@ -9,6 +8,8 @@ import passport from 'passport';
 import { join } from 'path';
 import { ZodFilter } from './common/execeptions/ZodFilter';
 import { DelayInterceptor } from './common/interceptors/delay.interceptor';
+import { PrismaService } from './modules/prisma/prisma.service';
+
 // Constants
 const DEFAULT_PORT = 3000;
 const DEVELOPMENT_ENV = 'development';
@@ -26,12 +27,14 @@ async function bootstrap(): Promise<void> {
     app.useGlobalInterceptors(new DelayInterceptor());
   }
 
+  const prismaService = app.get(PrismaService);
+
   app.use(
     session({
       secret: process.env.APP_SECRET,
       resave: false,
       saveUninitialized: false,
-      store: new PrismaSessionStore(prisma, {
+      store: new PrismaSessionStore(prismaService, {
         checkPeriod: 2 * 60 * 1000,
         dbRecordIdIsSessionId: true,
       }),

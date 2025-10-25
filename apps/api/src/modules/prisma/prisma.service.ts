@@ -13,6 +13,21 @@ export class PrismaService
 {
   private readonly logger = new Logger(PrismaService.name);
 
+  constructor() {
+    super({
+      datasources: {
+        db: {
+          url: process.env.DATABASE_URL,
+        },
+      },
+      log:
+        process.env.NODE_ENV === 'development'
+          ? ['query', 'error', 'warn']
+          : ['error'],
+      errorFormat: 'pretty',
+    });
+  }
+
   async onModuleInit(): Promise<void> {
     try {
       await this.$connect();
