@@ -1,14 +1,16 @@
-import { ProductField, PurchaseInput } from "@pawpal/shared";
-import { Select, TextInput } from "@pawpal/ui/core";
+import { ProductField } from "@pawpal/shared";
+import { Card, Select, TextInput, Title } from "@pawpal/ui/core";
 import { UseFormReturnType } from "@pawpal/ui/form";
+import { useTranslations } from "next-intl";
+import { PurchaseFormInput } from "../..";
 
 interface Field extends ProductField {
-  form: UseFormReturnType<PurchaseInput>;
+  form: UseFormReturnType<PurchaseFormInput>;
 }
 
 interface FieldProps {
   fields: ProductField[];
-  form: UseFormReturnType<PurchaseInput>;
+  form: UseFormReturnType<PurchaseFormInput>;
 }
 
 const FieldText = (props: Field) => {
@@ -69,9 +71,14 @@ const FieldSelect = (props: Field) => {
   );
 };
 
-const Fields = ({ fields, form }: FieldProps) => {
+const FieldPartial = ({ fields, form }: FieldProps) => {
+  const __ = useTranslations("ProductDetail");
+
   return (
-    <>
+    <Card shadow="sm">
+      <Title order={6} mb="md">
+        {__("gameAccount")}
+      </Title>
       {fields.map((field) => {
         if (field.type === "TEXT") {
           return <FieldText key={field.id} {...field} form={form} />;
@@ -91,8 +98,8 @@ const Fields = ({ fields, form }: FieldProps) => {
 
         return null;
       })}
-    </>
+    </Card>
   );
 };
 
-export default Fields;
+export default FieldPartial;

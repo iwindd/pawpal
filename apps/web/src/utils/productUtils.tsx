@@ -23,3 +23,11 @@ export const isFlashsale = (sales: ProductSaleValue | null): boolean => {
   const endAt = dayjs(sales.endAt);
   return endAt.diff(startAt, "hour") < 24;
 };
+
+export const getDiscountedPrice = (
+  price: number,
+  sale?: ProductSaleValue
+): number => {
+  if (!sale) return price;
+  return price - price * (sale.percent / 100);
+};
