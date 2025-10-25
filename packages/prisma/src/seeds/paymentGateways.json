@@ -1,0 +1,18 @@
+[
+  {
+    "id": "promptpay-manual",
+    "name": "PromptPay Manual",
+    "label": "PromptPay",
+    "description": "TODO:: Description for PromptPay Manual",
+    "text": "",
+    "isActive": true
+  },
+  {
+    "id": "true-money-wallet-voucher",
+    "name": "TrueMoney Wallet Voucher",
+    "label": "TrueMoney Wallet",
+    "description": "TODO:: Description for TrueMoney Wallet Voucher",
+    "text": "",
+    "isActive": true
+  }
+]

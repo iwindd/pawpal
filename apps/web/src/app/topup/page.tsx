@@ -1,5 +1,6 @@
 "use client";
 import { useAuth } from "@/contexts/AuthContext";
+import usePaymentGateway from "@/hooks/usePaymentGateway";
 import API from "@/libs/api/client";
 import { backdrop } from "@pawpal/ui/backdrop";
 import {
@@ -24,6 +25,7 @@ const TopupPage = () => {
   const [amount, setAmount] = useState<number | "">("");
   const [paymentMethod, setPaymentMethod] = useState<string>("");
   const { refreshProfile } = useAuth();
+  const paymentGateways = usePaymentGateway();
 
   const handleTopup = async () => {
     if (!amount || !paymentMethod) return;
@@ -72,17 +74,15 @@ const TopupPage = () => {
               </Text>
               <Stack gap="sm">
                 <Radio.Group value={paymentMethod} onChange={setPaymentMethod}>
-                  <Stack pt="md" gap="xs">
-                    <RadioMethod
-                      label={__("trueMoneyWallet")}
-                      description={__("trueMoneyDescription")}
-                      value="true-money-wallet"
-                    />
-                    <RadioMethod
-                      label={__("promptpay")}
-                      description={__("promptpayDescription")}
-                      value="promptpay"
-                    />
+                  <Stack gap="xs">
+                    {paymentGateways.data?.map((gateway) => (
+                      <RadioMethod
+                        key={gateway.id}
+                        label={gateway.label}
+                        description={gateway.text}
+                        value={gateway.id}
+                      />
+                    ))}
                   </Stack>
                 </Radio.Group>
               </Stack>

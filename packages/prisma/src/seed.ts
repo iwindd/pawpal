@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import { DiscountType, FieldType, PrismaClient } from "../generated/client";
 import categories from "./seeds/categories.json";
+import paymentGateways from "./seeds/paymentGateways.json";
 import products from "./seeds/products.json";
 import productTags from "./seeds/productTags.json";
 import roles from "./seeds/roles.json";
@@ -144,6 +145,19 @@ async function main() {
     }
   });
 
+  // Seed Payment Gateways
+  await prisma.$transaction(async () => {
+    for (const gateway of paymentGateways) {
+      await prisma.paymentGateway.upsert({
+        where: { id: gateway.id },
+        update: {},
+        create: {
+          ...gateway,
+        },
+      });
+    }
+  });
+
   console.log(
     `✅ Seed completed successfully!\n`,
     `--------------------------------\n`,
@@ -156,6 +170,7 @@ async function main() {
     `Created ${await prisma.package.count()} packages\n`,
     `Created ${await prisma.sale.count()} sales\n`,
     `Created ${await prisma.productField.count()} fields\n`,
+    `Created ${await prisma.paymentGateway.count()} payment gateways\n`,
     `--------------------------------\n`
   );
 }

@@ -11,6 +11,7 @@ import { FieldModule } from '../field/field.module';
 import { NotificationModule } from '../notification/notification.module';
 import { OrderModule } from '../order/order.module';
 import { PackageModule } from '../package/package.module';
+import { PaymentGatewayModule } from '../payment-gateway/payment-gateway.module';
 import { PaymentModule } from '../payment/payment.module';
 import { PrismaModule } from '../prisma/prisma.module';
 import { ProductModule } from '../product/product.module';
@@ -32,6 +33,7 @@ import { WalletModule } from '../wallet/wallet.module';
     ProductTagModule,
     SaleModule,
     PaymentModule,
+    PaymentGatewayModule,
     WalletModule,
     OrderModule,
     PackageModule,

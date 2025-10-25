@@ -30,3 +30,4 @@ export * from "./utils/path";
 export * from "./utils/route";
 export * from "./utils/slugify";
 export * from './schemas/wallet/transaction'
+export * from './types/response/payment-gateway'

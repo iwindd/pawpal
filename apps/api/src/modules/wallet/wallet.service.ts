@@ -62,7 +62,6 @@ export class WalletService {
         balance_before: wallet.balance,
         balance_after: Number(wallet.balance) + amount,
         type: transactionType,
-        payment_method: paymentMethod,
         status: TransactionStatus.SUCCESS,
       },
     });
@@ -93,7 +92,6 @@ export class WalletService {
         amount: amount,
         balance_before: wallet.balance,
         balance_after: Number(wallet.balance) + amount,
-        payment_method: paymentMethod,
         status: TransactionStatus.PENDING,
         ...(orderId ? { order_id: orderId } : {}),
       },

@@ -2,6 +2,7 @@ import PawApi from "../api";
 import AuthApi from "./services/Auth";
 import OrderApi from "./services/Order";
 import PaymentApi from "./services/Payment";
+import PaymentGatewayApi from "./services/PaymentGateway";
 import ProductApi from "./services/Product";
 
 class ClientApi extends PawApi {
@@ -9,6 +10,7 @@ class ClientApi extends PawApi {
   public readonly payment: PaymentApi;
   public readonly product: ProductApi;
   public readonly order: OrderApi;
+  public readonly paymentGateway: PaymentGatewayApi;
 
   constructor(token?: string) {
     super(token);
@@ -16,6 +18,7 @@ class ClientApi extends PawApi {
     this.payment = new PaymentApi(this.client);
     this.product = new ProductApi(this.client);
     this.order = new OrderApi(this.client);
+    this.paymentGateway = new PaymentGatewayApi(this.client);
   }
 }
 
