@@ -4,7 +4,6 @@ import { OrderFilterBuilder } from '@/common/filters/orderFilter';
 import { DatatableQuery } from '@/common/pipes/DatatablePipe';
 import { FieldAfterParse } from '@/common/pipes/PurchasePipe';
 import { OrderExtension } from '@/utils/prisma/order';
-import { OrderStatus } from '@pawpal/prisma';
 import { AdminOrderResponse, PurchaseInput } from '@pawpal/shared';
 import { PackageService } from '../package/package.service';
 import { PrismaService } from '../prisma/prisma.service';
@@ -28,7 +27,9 @@ export class OrderService {
 
   async createOrder(userId: string, body: PurchaseInput<FieldAfterParse>) {
     const pkg = await this.packageService.getPackage(body.packageId);
-    const total = +pkg.price * body.amount;
+    /*     const total = +pkg.price * body.amount;
+
+    console.warn(pkg);
 
     const order = await this.prisma.order.create({
       data: {
@@ -69,8 +70,8 @@ export class OrderService {
       order.id,
       'wallet',
     );
-
-    return 'OK';
+ */
+    return pkg;
   }
 
   async getTopupOrders({ take, search, orderBy, skip }: DatatableQuery) {

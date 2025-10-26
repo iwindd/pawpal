@@ -19,3 +19,16 @@ export const getDiscountValue = (price: number, sale: PricingSale) => {
 
   return sale.value;
 };
+
+export const getPercentDiscount = (
+  discountType: DiscountType,
+  discount: number,
+  basePrice?: number
+): number => {
+  console.log("get percent discount called", discountType, discount, basePrice);
+  if (discountType === ENUM_DISCOUNT_TYPE.PERCENT) {
+    return discount;
+  }
+
+  return basePrice ? (discount / 100) * basePrice : 0;
+};

@@ -20,7 +20,7 @@ model User {
   userWallets UserWallet[]   @relation("UserWallets")
   orders      Order[]        @relation("OrderUser")
   roles       Role[]         @relation("UserRoles")
-  Resource    Resource[]     @relation("ResourceUser")
+  Resources   Resource[]     @relation("ResourceUser")
   carousels   Carousel[]     @relation("CarouselCreatedBy")
   fields      ProductField[] @relation("FieldCreatedBy")
 
@@ -165,7 +165,7 @@ model ProductField {
   order Int @default(0)
 
   product_id String
-  product    Product @relation("ProductField", fields: [product_id], references: [id])
+  product    Product @relation("ProductFields", fields: [product_id], references: [id])
 
   orderFields OrderField[] @relation("OrderFields")
 
@@ -185,8 +185,8 @@ model Product {
 
   productTags ProductTag[]   @relation("ProductTags")
   packages    Package[]      @relation("ProductPackages")
-  carousel    Carousel[]     @relation("CarouselProduct")
-  fields      ProductField[] @relation("ProductField")
+  carousels   Carousel[]     @relation("ProductCarousels")
+  fields      ProductField[] @relation("ProductFields")
   image       Resource?      @relation("ProductImage", fields: [image_id], references: [id])
   image_id    String?
 
@@ -207,8 +207,8 @@ model Package {
   product    Product @relation("ProductPackages", fields: [product_id], references: [id])
   product_id String
 
-  sale         Sale[]         @relation("SalePackages")
-  orderPackage OrderPackage[] @relation("OrderPackages")
+  sales         Sale[]         @relation("PackageSales")
+  orderPackages OrderPackage[] @relation("OrderPackages")
 
   @@index([product_id])
   @@index([price])
@@ -226,7 +226,7 @@ model Sale {
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
 
-  package Package[] @relation("SalePackages")
+  packages Package[] @relation("PackageSales")
 
   @@index([startAt])
   @@index([endAt])
@@ -298,7 +298,7 @@ model Carousel {
   status      CarouselStatus @default(DRAFT)
   image       Resource       @relation("CarouselImage", fields: [resource_id], references: [id])
   resource_id String
-  product     Product?       @relation("CarouselProduct", fields: [product_id], references: [id])
+  product     Product?       @relation("ProductCarousels", fields: [product_id], references: [id])
   product_id  String?
 
   creator    User   @relation("CarouselCreatedBy", fields: [creator_id], references: [id])

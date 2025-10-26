@@ -1,6 +1,7 @@
 import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { PrismaClient } from '@pawpal/prisma';
 import { loggingModelExtension } from './extensions/LoggingExtension';
+import { packageSaleExtension } from './extensions/PackageExtension';
 
 @Injectable()
 export class PrismaProvider
@@ -24,6 +25,6 @@ export class PrismaProvider
   }
 
   withExtensions() {
-    return this.$extends(loggingModelExtension);
+    return this.$extends(loggingModelExtension).$extends(packageSaleExtension);
   }
 }

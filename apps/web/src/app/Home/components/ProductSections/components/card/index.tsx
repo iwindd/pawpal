@@ -1,4 +1,5 @@
 "use client";
+import { getPercentDiscount } from "@/utils/pricing";
 import { getSectionIcon, isFlashsale } from "@/utils/productUtils";
 import { ProductListItem } from "@pawpal/shared";
 import {
@@ -43,18 +44,24 @@ const ProductCard = ({ product }: ProductCardProps) => {
             loading="lazy"
             fallbackSrc="/assets/images/fallback-product.jpg"
           />
-          {product.sales?.percent && (
+          {product.sale && (
             <Group>
               <Badge
-                color={isFlashsale(product.sales) ? "red" : "orange"}
+                color={isFlashsale(product.sale) ? "red" : "orange"}
                 size="md"
                 className={classes.discountBadge}
-                pl={(isFlashsale(product.sales) && 4) || "sm"}
+                pl={(isFlashsale(product.sale) && 4) || "sm"}
                 leftSection={
-                  isFlashsale(product.sales) && getSectionIcon("flashsale")
+                  isFlashsale(product.sale) && getSectionIcon("flashsale")
                 }
               >
-                -{product.sales.percent}%
+                -
+                {getPercentDiscount(
+                  product.sale.discountType,
+                  product.sale.discount,
+                  (product.sale?.price && Number(product.sale.price)) || 0
+                )}
+                %
               </Badge>
             </Group>
           )}

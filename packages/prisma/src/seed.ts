@@ -125,6 +125,7 @@ async function main() {
     }
   });
 
+  // Seed sales
   await prisma.$transaction(async () => {
     for (const sale of sales) {
       await prisma.sale.upsert({
@@ -137,11 +138,15 @@ async function main() {
           discount: sale.discount,
           startAt: new Date(sale.startAt),
           endAt: new Date(sale.endAt),
-          package: {
+          packages: {
             connect: sale.packages.map((pkg: string) => ({ id: pkg })),
           },
         },
       });
+
+      console.log(
+        `  - Seeded sale: ${sale.name} including packages (${sale.packages.join(", ")})`
+      );
     }
   });
 

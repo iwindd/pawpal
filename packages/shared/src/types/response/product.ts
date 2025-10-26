@@ -1,15 +1,19 @@
+import { Decimal } from "../../../../prisma/generated/client/runtime/library";
 import { FieldType } from "../../schemas/order/field";
+import { DiscountType } from "../../schemas/sale";
 
 export interface ProductSaleValue {
-  percent: number;
-  endAt: string;
-  startAt: string;
+  discount: number;
+  discountType: DiscountType;
+  endAt: string | Date;
+  startAt: string | Date;
+  price?: number | Decimal;
 }
 
 export interface ProductPackage {
   id: string;
   name: string;
-  price: number;
+  price: number | Decimal;
   description?: string;
   sale?: ProductSaleValue;
 }
@@ -28,7 +32,7 @@ export interface ProductTag {
 export interface ProductListItem {
   slug: string;
   name: string;
-  sales: ProductSaleValue | null;
+  sale: ProductSaleValue | null;
 }
 
 export interface ProductField {
@@ -44,7 +48,7 @@ export interface ProductResponse {
   slug: string;
   name: string;
   description?: string;
-  createdAt: string;
+  createdAt: string | Date;
   category: ProductCategory;
   productTags: ProductTag[];
   packages: ProductPackage[];

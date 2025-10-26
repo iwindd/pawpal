@@ -1,3 +1,7 @@
+import {
+  FindProductPipe,
+  FindProductQuery,
+} from '@/common/pipes/FindProductPipe';
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ProductListItem } from '@pawpal/shared';
 import { ProductService } from './product.service';
@@ -21,18 +25,8 @@ export class ProductController {
   }
 
   @Get()
-  async getAllProducts(
-    @Query('page') page: number = 1,
-    @Query('limit') limit: number = 12,
-    @Query('search') search?: string,
-    @Query('category') category?: string,
-  ): Promise<{ products: ProductListItem[]; total: number; hasMore: boolean }> {
-    return this.productService.getAllProducts({
-      page: Number(page),
-      limit: Number(limit),
-      search,
-      category,
-    });
+  async getAllProducts(@Query(FindProductPipe) query: FindProductQuery) {
+    return this.productService.getAllProducts(query);
   }
 
   @Get(':slug')

@@ -49,30 +49,25 @@ export default function ProductsPage() {
   } = useInfiniteQuery({
     queryKey: ["products", state.search],
     queryFn: async ({ pageParam = 1 }) => {
-      const response = await API.product.getAllProducts({
+      return await API.product.getAllProducts({
         page: pageParam,
         limit: 12,
-        filters: {
-          search: state.search || undefined,
-          category: state.category || undefined,
-        },
+        search: state.search || undefined,
+        // TODO:: add category filter when backend supports it
       });
-
-      if (!response.success) {
-        throw new Error("Failed to fetch products");
-      }
-
-      return response.data;
     },
     getNextPageParam: (lastPage, allPages) => {
-      return lastPage.hasMore ? allPages.length + 1 : undefined;
+      const total = lastPage.data.total;
+      const loaded = allPages.flatMap((p) => p.data.data).length;
+
+      return loaded < total ? allPages.length + 1 : undefined;
     },
     initialPageParam: 1,
   });
 
   // Flatten all products from all pages
   const allProducts = useMemo(() => {
-    return data?.pages.flatMap((page) => page.products) ?? [];
+    return data?.pages.flatMap((page) => page.data.data) ?? [];
   }, [data]);
 
   const handleSearch = useCallback((search: string) => {

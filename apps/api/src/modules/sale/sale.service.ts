@@ -1,35 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { DiscountType, Sale } from '@pawpal/prisma';
 import { Decimal } from '@pawpal/prisma/generated/client/runtime/library';
-import { ProductSaleValue } from '@pawpal/shared';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class SaleService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getMostDiscountedSaleByProduct(
-    productId: string,
-  ): Promise<ProductSaleValue | null> {
-    const sales = await this.getSalesByProduct(productId);
-    if (sales.length === 0) return null;
-
-    const mostPercentDiscount = sales
-      .slice()
-      .sort((a, b) => Number(b.discount) - Number(a.discount))[0];
-
-    return {
-      percent: Number(mostPercentDiscount.discount),
-      endAt: mostPercentDiscount.endAt.toISOString(),
-      startAt: mostPercentDiscount.startAt.toISOString(),
-    };
-  }
-
   async getPackagesHasSaleByProduct(productId: string): Promise<any> {
     return await this.prisma.package.findMany({
       where: {
         product: { slug: productId },
-        sale: {
+        sales: {
           some: {
             startAt: { lte: new Date() },
             endAt: { gte: new Date() },
@@ -40,7 +22,7 @@ export class SaleService {
         id: true,
         name: true,
         price: true,
-        sale: {
+        sales: {
           where: {
             startAt: { lte: new Date() },
             endAt: { gte: new Date() },
@@ -57,7 +39,7 @@ export class SaleService {
   async getSalesByProduct(productId: string): Promise<Sale[]> {
     const sales = await this.prisma.sale.findMany({
       where: {
-        package: { some: { product: { slug: productId } } },
+        packages: { some: { product: { slug: productId } } },
         startAt: { lte: new Date() },
         endAt: { gte: new Date() },
         isActive: true,

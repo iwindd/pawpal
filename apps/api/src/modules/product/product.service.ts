@@ -1,3 +1,4 @@
+import { FindProductQuery } from '@/common/pipes/FindProductPipe';
 import datatableUtils from '@/utils/datatable';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import {
@@ -7,18 +8,9 @@ import {
   DatatableResponse,
   ProductInput,
   ProductListItem,
-  ProductResponse,
-  ProductSaleValue,
 } from '@pawpal/shared';
 import { PrismaService } from '../prisma/prisma.service';
 import { SaleService } from '../sale/sale.service';
-
-interface GetAllProductsParams {
-  page: number;
-  limit: number;
-  search?: string;
-  category?: string;
-}
 
 @Injectable()
 export class ProductService {
@@ -40,7 +32,7 @@ export class ProductService {
         name: true,
         packages: {
           select: {
-            sale: {
+            sales: {
               where: {
                 startAt: { lte: new Date() },
                 endAt: { gte: new Date() },
@@ -54,18 +46,16 @@ export class ProductService {
             },
           },
         },
+        MOST_SALE: true,
       },
       take: productLimit,
     });
 
     return newProducts.map((product) => {
-      const sales = product.packages.flatMap((pkg) => pkg.sale);
-      const mostDiscountedSale = this.getMostDiscountedSale(sales);
-
       return {
         slug: product.slug,
         name: product.name,
-        sales: mostDiscountedSale,
+        sale: product.MOST_SALE,
       };
     });
   }
@@ -78,7 +68,7 @@ export class ProductService {
       where: {
         packages: {
           some: {
-            sale: {
+            sales: {
               some: {
                 startAt: { lte: new Date() },
                 endAt: { gte: new Date() },
@@ -92,7 +82,7 @@ export class ProductService {
         name: true,
         packages: {
           select: {
-            sale: {
+            sales: {
               where: {
                 startAt: { lte: new Date() },
                 endAt: { gte: new Date() },
@@ -106,6 +96,7 @@ export class ProductService {
             },
           },
         },
+        MOST_SALE: true,
       },
       orderBy: {
         createdAt: 'desc',
@@ -115,23 +106,16 @@ export class ProductService {
 
     if (!currentSale.length) return [];
 
-    const productsWithSales = currentSale.map((product) => {
-      const sales = product.packages.flatMap((pkg) => pkg.sale);
-      const mostDiscountedSale = this.getMostDiscountedSale(sales);
-
+    return currentSale.map((product) => {
       return {
         slug: product.slug,
         name: product.name,
-        sales: mostDiscountedSale,
+        sale: product.MOST_SALE,
       };
     });
-
-    return productsWithSales
-      .filter((product) => product.sales !== null)
-      .sort((a, b) => (b.sales?.percent || 0) - (a.sales?.percent || 0));
   }
 
-  async getProductBySlug(slug: string): Promise<ProductResponse | null> {
+  async getProductBySlug(slug: string) {
     const product = await this.prisma.product.findUnique({
       where: { slug },
       select: {
@@ -158,7 +142,7 @@ export class ProductService {
             name: true,
             price: true,
             description: true,
-            sale: {
+            sales: {
               where: {
                 startAt: { lte: new Date() },
                 endAt: { gte: new Date() },
@@ -191,43 +175,13 @@ export class ProductService {
 
     if (!product) return null;
 
-    const sales = product.packages.flatMap((pkg) => pkg.sale);
-    const mostDiscountedSale = this.getMostDiscountedSale(sales);
-
     return {
-      slug: product.slug,
-      name: product.name,
-      description: product.description,
-      createdAt: product.createdAt.toISOString(),
-      category: product.category,
-      productTags: product.productTags,
-      packages: product.packages.map((pkg) => ({
-        id: pkg.id,
-        name: pkg.name,
-        price: Number(pkg.price),
-        description: pkg.description,
-        sale:
-          pkg.sale.length > 0
-            ? {
-                percent: Number(pkg.sale[0].discount),
-                endAt: pkg.sale[0].endAt.toISOString(),
-                startAt: pkg.sale[0].startAt.toISOString(),
-              }
-            : undefined,
-      })),
-      sales: mostDiscountedSale,
-      fields: product.fields,
+      ...product,
+      MOST_SALE: await this.prisma.package.findMostSaleByProduct(slug),
     };
   }
 
-  async getAllProducts(params: GetAllProductsParams): Promise<{
-    products: ProductListItem[];
-    total: number;
-    hasMore: boolean;
-  }> {
-    const { page, limit, search } = params;
-    const skip = (page - 1) * limit;
-
+  async getAllProducts({ take, skip, orderBy, search }: FindProductQuery) {
     // Build where clause
     const where: any = {};
 
@@ -240,13 +194,12 @@ export class ProductService {
 
     // Category filter will be implemented when category filtering is needed
 
-    let orderBy: any = { createdAt: 'desc' };
     const total = await this.prisma.product.count({ where });
     const products = await this.prisma.product.findMany({
       where,
       orderBy,
       skip,
-      take: limit,
+      take,
       select: {
         slug: true,
         name: true,
@@ -270,7 +223,7 @@ export class ProductService {
             name: true,
             price: true,
             description: true,
-            sale: {
+            sales: {
               where: {
                 startAt: { lte: new Date() },
                 endAt: { gte: new Date() },
@@ -284,26 +237,17 @@ export class ProductService {
             },
           },
         },
+        MOST_SALE: true,
       },
     });
 
-    const productsWithSales = products.map((product) => {
-      const sales = product.packages.flatMap((pkg) => pkg.sale);
-      const mostDiscountedSale = this.getMostDiscountedSale(sales);
-
-      return {
+    return {
+      data: products.map((product) => ({
         slug: product.slug,
         name: product.name,
-        sales: mostDiscountedSale,
-      };
-    });
-
-    const hasMore = skip + limit < total;
-
-    return {
-      products: productsWithSales,
+        sale: product.MOST_SALE,
+      })),
       total,
-      hasMore,
     };
   }
 
@@ -533,21 +477,5 @@ export class ProductService {
     });
 
     return { success: true };
-  }
-
-  private getMostDiscountedSale(sales: any[]): ProductSaleValue | null {
-    if (sales.length === 0) return null;
-
-    const mostDiscountedSale = sales.reduce((max, sale) => {
-      const currentDiscount = Number(sale.discount);
-      const maxDiscount = Number(max.discount);
-      return currentDiscount > maxDiscount ? sale : max;
-    }, sales[0]);
-
-    return {
-      percent: Number(mostDiscountedSale.discount),
-      endAt: mostDiscountedSale.endAt.toISOString(),
-      startAt: mostDiscountedSale.startAt.toISOString(),
-    };
   }
 }

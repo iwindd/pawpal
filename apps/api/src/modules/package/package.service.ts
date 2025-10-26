@@ -18,6 +18,21 @@ export class PackageService {
       where: {
         id: packageId,
       },
+      include: {
+        sales: {
+          where: {
+            startAt: { lte: new Date() },
+            endAt: { gte: new Date() },
+          },
+          select: {
+            id: true,
+            discount: true,
+            discountType: true,
+            startAt: true,
+            endAt: true,
+          },
+        },
+      },
     });
 
     if (!pkg) throw new NotFoundException('invalid_package');
