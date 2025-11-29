@@ -25,12 +25,12 @@ catalog:
   "@mantine/carousel": ^8.3.1
   "@mantine/core": ^8.3.1
   mantine-datatable: ^8.2.0
+  "@mantine/dates": ^8.3.1
   "@mantine/dropzone": ^8.3.1
   "@mantine/form": ^8.3.1
   mantine-form-zod-resolver: ^1.3.0
   "@mantine/hooks": ^8.3.1
   "@mantine/notifications": ^8.3.1
-  "@mantine/dates": ^8.3.1
   multer: ^2.0.2
   "@nestjs/cli": ^11.0.0
   "@nestjs/common": ^11.0.1
@@ -42,6 +42,7 @@ catalog:
   "@nestjs/platform-express": ^11.0.1
   "@nestjs/schedule": ^6.0.1
   "@nestjs/schematics": ^11.0.0
+  "@nestjs/swagger": ^11.2.3
   "@nestjs/testing": ^11.0.1
   next: ^15.5.3
   "@next/eslint-plugin-next": ^15.5.0
@@ -55,6 +56,7 @@ catalog:
   prettier: ^3.6.2
   prisma: 6.16.2
   "@prisma/client": 6.16.2
+  "@quixo3/prisma-session-store": ^3.1.13
   react: ^19.1.0
   react-dom: ^19.1.0
   reflect-metadata: ^0.2.2
@@ -88,4 +90,3 @@ catalog:
   "@types/supertest": ^6.0.2
   uuid: ^8.3.2
   zod: ^4.1.9
-  "@quixo3/prisma-session-store": ^3.1.13

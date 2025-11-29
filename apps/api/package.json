@@ -26,6 +26,7 @@
     "@nestjs/passport": "catalog:",
     "@nestjs/platform-express": "catalog:",
     "@nestjs/schedule": "catalog:",
+    "@nestjs/swagger": "catalog:",
     "@pawpal/prisma": "workspace:*",
     "@pawpal/shared": "workspace:*",
     "@pawpal/typescript-config": "workspace:*",

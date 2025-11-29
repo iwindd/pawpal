@@ -1,6 +1,7 @@
 import { AppModule } from '@/modules/app/app.module';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { PrismaSessionStore } from '@quixo3/prisma-session-store';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
@@ -63,6 +64,11 @@ async function bootstrap(): Promise<void> {
   });
 
   app.useGlobalFilters(new ZodFilter());
+
+  // swagger
+  const config = new DocumentBuilder().setTitle('PawpalAPI').build();
+  const documentFactory = () => SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, documentFactory);
 
   await app.listen(port);
 }
