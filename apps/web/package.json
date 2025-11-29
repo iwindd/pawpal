@@ -16,7 +16,6 @@
     "@pawpal/ui": "workspace:*",
     "@tanstack/react-query": "catalog:",
     "@tanstack/react-query-devtools": "catalog:",
-    "@types/axios": "catalog:",
     "axios": "catalog:",
     "dayjs": "catalog:",
     "next": "catalog:",

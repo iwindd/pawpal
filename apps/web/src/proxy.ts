@@ -4,31 +4,22 @@ import {
   withMiddleware,
 } from "@pawpal/nextjs-middleware";
 import { NextRequest, NextResponse } from "next/server";
-import AuthMiddleware from "./middlewares/AdminMiddleware";
-import RedirectIfAdminMiddleware from "./middlewares/RedirectIfAdminMiddleware";
+import AuthMiddleware from "./middlewares/AuthMiddleware";
 
 // Define routes for this application
 const routes: RouteDefinition[] = [
-  // Allow guests on the login page
-  { path: "/login", middleware: ["redirectIfAdmin"] },
-  // Apply admin middleware globally to all other routes
-  { path: "/*", middleware: ["admin"] },
+  { path: "/user", middleware: ["auth"] },
+  { path: "/user/*", middleware: ["auth"] },
 ];
 
 // Register middleware
 middlewareRegistry.register({
-  name: "admin",
+  name: "auth",
   handler: AuthMiddleware,
   priority: 1,
 });
 
-middlewareRegistry.register({
-  name: "redirectIfAdmin",
-  handler: RedirectIfAdminMiddleware,
-  priority: 1,
-});
-
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   return withMiddleware(
     request,
     routes,
