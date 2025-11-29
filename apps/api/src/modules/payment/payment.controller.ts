@@ -16,22 +16,11 @@ export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
 
   @Post('topup')
-  async topup(
-    @Body() body: { amount: number; payment_method: string },
-    @AuthUser() user: Session,
-  ) {
-    return this.paymentService.topup(user.id, body.amount, body.payment_method);
-  }
-
-  @Post('charge')
   createPayment(
     @Body(new ZodPipe(PaymentChargeCreateSchema))
     payload: PaymentChargeCreateInput,
     @AuthUser() user: Session,
   ) {
-    return this.paymentService.createPayment({
-      ...payload,
-      user: user,
-    });
+    return this.paymentService.topup(user, payload.amount, payload.payment_id);
   }
 }

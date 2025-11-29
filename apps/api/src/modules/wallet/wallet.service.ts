@@ -2,6 +2,7 @@ import { TransactionFilterBuilder } from '@/common/filters/transactionFilter';
 import { DatatableQuery } from '@/common/pipes/DatatablePipe';
 import { Injectable } from '@nestjs/common';
 import {
+  PaymentGateway,
   TransactionStatus,
   TransactionType,
   UserWallet,
@@ -80,10 +81,10 @@ export class WalletService {
   async createCharge(
     userId: string,
     amount: number,
+    paymentMethod: Pick<PaymentGateway, 'id'>,
     orderId?: string,
-    paymentMethod: string = 'unknown',
     walletType: WalletType = WalletType.MAIN,
-  ): Promise<UserWalletTransaction> {
+  ) {
     const wallet = await this.getWalletOrCreate(userId, walletType);
     return await this.prisma.userWalletTransaction.create({
       data: {
@@ -93,31 +94,23 @@ export class WalletService {
         balance_before: wallet.balance,
         balance_after: Number(wallet.balance) + amount,
         status: TransactionStatus.PENDING,
+        payment_gateway_id: paymentMethod.id,
         ...(orderId ? { order_id: orderId } : {}),
       },
+      select: {
+        id: true,
+        type: true,
+        amount: true,
+        status: true,
+        payment: {
+          select: {
+            id: true,
+            metadata: true,
+          },
+        },
+        createdAt: true,
+      },
     });
-  }
-
-  async createChargeIfMissingAmount(
-    userId: string,
-    amount: number,
-    orderId?: string,
-    paymentMethod: string = 'unknown',
-    walletType: WalletType = WalletType.MAIN,
-  ) {
-    const missingAmount = await this.getMissingAmount(
-      amount,
-      userId,
-      walletType,
-    );
-    if (missingAmount <= 0) return null;
-    return this.createCharge(
-      userId,
-      missingAmount,
-      orderId,
-      paymentMethod,
-      walletType,
-    );
   }
 
   async validateOrderProceed(orderId: string) {

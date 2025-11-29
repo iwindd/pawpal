@@ -1,8 +1,12 @@
 "use client";
-import { useAuth } from "@/contexts/AuthContext";
+import PromptPayManualModal from "@/components/Modals/PromptPayManualModal";
+import useCreateCharge from "@/hooks/useCreateCharge";
+import useFormValidate from "@/hooks/useFormValidate";
 import usePaymentGateway from "@/hooks/usePaymentGateway";
-import API from "@/libs/api/client";
-import { backdrop } from "@pawpal/ui/backdrop";
+import {
+  PaymentChargeCreateInput,
+  PaymentChargeCreateSchema,
+} from "@pawpal/shared";
 import {
   Box,
   Button,
@@ -17,41 +21,47 @@ import {
 } from "@pawpal/ui/core";
 import { Notifications } from "@pawpal/ui/notifications";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useEffect } from "react";
 import RadioMethod from "./components/RadioMethod";
 
 const TopupPage = () => {
   const __ = useTranslations("Topup");
-  const [amount, setAmount] = useState<number | "">("");
-  const [paymentMethod, setPaymentMethod] = useState<string>("");
-  const { refreshProfile } = useAuth();
   const paymentGateways = usePaymentGateway();
+  const { createCharge, latestResponse, promptPayModal, setPromptPayModal } =
+    useCreateCharge();
 
-  const handleTopup = async () => {
-    if (!amount || !paymentMethod) return;
+  const isLoading = createCharge.isPending;
 
-    try {
-      backdrop.show({
-        text: __("topupLoading"),
-      });
-      const response = await API.payment.topup(amount, paymentMethod);
-      if (!response.success) throw new Error("Topup failed");
-      refreshProfile();
-      Notifications.show({
-        title: __("notify.success.title"),
-        message: __("notify.success.message"),
-        color: "green",
-      });
-    } catch (error) {
-      Notifications.show({
-        title: __("notify.error.title"),
-        message: __("notify.error.message"),
-        color: "red",
-      });
-      console.error(error);
-    } finally {
-      backdrop.hide();
-    }
+  const form = useFormValidate<PaymentChargeCreateInput>({
+    schema: PaymentChargeCreateSchema,
+    initialValues: {
+      amount: 100,
+      payment_id: "",
+    },
+    enhanceGetInputProps: () => ({
+      disabled: isLoading,
+    }),
+  });
+
+  useEffect(() => {
+    if (!paymentGateways.defaultPaymentGateway) return;
+    form.setValues({
+      ...form.getValues(),
+      payment_id: paymentGateways.defaultPaymentGateway.id,
+    });
+  }, [paymentGateways.defaultPaymentGateway]);
+
+  const handleSubmit = async (payload: PaymentChargeCreateInput) => {
+    return await createCharge.mutateAsync(payload);
+  };
+
+  const onClosePromptPayModal = () => {
+    setPromptPayModal(false);
+    Notifications.show({
+      title: __("notify.success.title"),
+      message: __("notify.success.message"),
+      color: "green",
+    });
   };
 
   return (
@@ -64,81 +74,93 @@ const TopupPage = () => {
           {__("subtitle")}
         </Text>
       </Card>
-      <Grid gutter="sm">
-        <Grid.Col span={{ base: 12, md: 8 }} order={{ base: 2, md: 1 }}>
-          <Stack gap="sm">
-            {/* Additional Info */}
-            <Card shadow="sm" padding="lg">
-              <Text size="sm" fw={500} mb="md">
-                {__("paymentMethod")}
-              </Text>
-              <Stack gap="sm">
-                <Radio.Group value={paymentMethod} onChange={setPaymentMethod}>
-                  <Stack gap="xs">
-                    {paymentGateways.data?.map((gateway) => (
-                      <RadioMethod
-                        key={gateway.id}
-                        label={gateway.label}
-                        description={gateway.text}
-                        value={gateway.id}
-                      />
-                    ))}
-                  </Stack>
-                </Radio.Group>
-              </Stack>
-            </Card>
-            <Card shadow="sm" padding="lg">
-              <Stack gap="xs">
-                <Text size="sm" fw={500}>
-                  {__("infoTitle")}
+      <form onSubmit={form.onSubmit(handleSubmit)}>
+        <Grid gutter="sm">
+          <Grid.Col span={{ base: 12, md: 8 }} order={{ base: 2, md: 1 }}>
+            <Stack gap="sm">
+              {/* Additional Info */}
+              <Card shadow="sm" padding="lg">
+                <Text size="sm" fw={500} mb="md">
+                  {__("paymentMethod")}
                 </Text>
-                <Text size="xs" c="dimmed">
-                  {__("infoDescription")}
-                </Text>
-              </Stack>
-            </Card>
-          </Stack>
-        </Grid.Col>
-        <Grid.Col span={{ base: 12, md: 4 }} order={{ base: 1, md: 2 }}>
-          <Card shadow="sm" padding="lg">
-            <Stack gap="lg">
-              {/* Amount Input */}
-              <Box>
-                <Text size="sm" fw={500} mb="xs">
-                  {__("amount")}
-                </Text>
-                <NumberInput
-                  placeholder={__("amountPlaceholder")}
-                  value={amount}
-                  onChange={(value) => setAmount(value as number)}
-                  min={1}
-                  max={100000}
-                  prefix="฿"
-                  size="md"
-                  styles={{
-                    input: {
-                      textAlign: "center",
-                      fontSize: "1.2rem",
-                      fontWeight: 600,
-                    },
-                  }}
-                />
-              </Box>
-
-              {/* Topup Button */}
-              <Button
-                size="md"
-                fullWidth
-                disabled={!amount || !paymentMethod}
-                onClick={handleTopup}
-                mt="md"
-              >
-                {__("topupButton")}
-              </Button>
+                <Stack gap="sm">
+                  <Radio.Group
+                    key={form.key("payment_id")}
+                    {...form.getInputProps("payment_id")}
+                  >
+                    <Stack gap="xs">
+                      {paymentGateways.data?.map((gateway) => (
+                        <RadioMethod
+                          key={gateway.id}
+                          label={gateway.label}
+                          description={gateway.text}
+                          value={gateway.id}
+                        />
+                      ))}
+                    </Stack>
+                  </Radio.Group>
+                </Stack>
+              </Card>
+              <Card shadow="sm" padding="lg">
+                <Stack gap="xs">
+                  <Text size="sm" fw={500}>
+                    {__("infoTitle")}
+                  </Text>
+                  <Text size="xs" c="dimmed">
+                    {__("infoDescription")}
+                  </Text>
+                </Stack>
+              </Card>
             </Stack>
-          </Card>
-        </Grid.Col>
-      </Grid>
+          </Grid.Col>
+          <Grid.Col span={{ base: 12, md: 4 }} order={{ base: 1, md: 2 }}>
+            <Card shadow="sm" padding="lg">
+              <Stack gap="lg">
+                {/* Amount Input */}
+                <Box>
+                  <Text size="sm" fw={500} mb="xs">
+                    {__("amount")}
+                  </Text>
+                  <NumberInput
+                    placeholder={__("amountPlaceholder")}
+                    min={1}
+                    max={100000}
+                    prefix="฿"
+                    size="md"
+                    styles={{
+                      input: {
+                        textAlign: "center",
+                        fontSize: "1.2rem",
+                        fontWeight: 600,
+                      },
+                    }}
+                    key={form.key("amount")}
+                    {...form.getInputProps("amount")}
+                  />
+                </Box>
+
+                {/* Topup Button */}
+                <Button
+                  size="md"
+                  fullWidth
+                  type="submit"
+                  mt="md"
+                  loading={isLoading}
+                >
+                  {__("topupButton")}
+                </Button>
+              </Stack>
+            </Card>
+          </Grid.Col>
+        </Grid>
+      </form>
+
+      <PromptPayManualModal
+        qrcode={latestResponse?.qrcode}
+        payment={latestResponse?.payment?.metadata || {}}
+        opened={!!latestResponse && promptPayModal}
+        onClose={onClosePromptPayModal}
+      />
     </Container>
   );
 };

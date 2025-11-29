@@ -16,4 +16,26 @@ export class PaymentGatewayService {
       },
     });
   }
+
+  async getGateway(id: string) {
+    return this.prisma.paymentGateway.findUniqueOrThrow({
+      where: {
+        id: id,
+        isActive: true,
+      },
+      select: {
+        id: true,
+        metadata: true,
+      },
+    });
+  }
+
+  async isActive(id: string) {
+    const gateway = await this.prisma.paymentGateway.findUnique({
+      where: { id },
+      select: { isActive: true },
+    });
+
+    return gateway?.isActive;
+  }
 }

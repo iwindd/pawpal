@@ -304,7 +304,7 @@
     "notify": {
       "success": {
         "title": "สำเร็จ",
-        "message": "คุณได้เติมเงินสำเร็จ"
+        "message": "กำลังตรวจสอบ กำลังดำเนินการเติมเงินของคุณ"
       },
       "error": {
         "title": "ผิดพลาด",
@@ -365,5 +365,10 @@
     "includeWalletBalance": "ใช้ยอดคงเหลือในกระเป๋าเงิน",
     "cancel": "ยกเลิก",
     "confirm": "ยืนยันการซื้อ"
+  },
+  "PromptPayManualModal": {
+    "title": "QR PromptPay",
+    "description": "หมายเลข: {number}",
+    "submit-btn": "แจ้งโอนเงิน"
   }
 }

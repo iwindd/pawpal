@@ -2,14 +2,15 @@ import API from "@/libs/api/client";
 import { useQuery } from "@tanstack/react-query";
 
 const usePaymentGateway = () => {
-  const { data, isLoading } = useQuery({
+  const query = useQuery({
     queryKey: ["payment-gateway"],
-    queryFn: async () => await API.paymentGateway.findAllActive(),
+    queryFn: async () => await API.payment.gateway.findAllActive(),
   });
 
   return {
-    data: data?.data,
-    isLoading,
+    ...query,
+    data: query.data?.data || [],
+    defaultPaymentGateway: query.data?.data?.[0] || null,
   };
 };
 

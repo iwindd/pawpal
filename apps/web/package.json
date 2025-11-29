@@ -17,10 +17,11 @@
     "@tanstack/react-query": "catalog:",
     "@tanstack/react-query-devtools": "catalog:",
     "@types/axios": "catalog:",
-    "dayjs": "catalog:",
     "axios": "catalog:",
+    "dayjs": "catalog:",
     "next": "catalog:",
     "next-intl": "catalog:",
+    "qrcode.react": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:"
   },

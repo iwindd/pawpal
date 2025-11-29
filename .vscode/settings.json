@@ -60,5 +60,6 @@
     "**/*.sass",
     "**/*.less",
     "./apps/web/node_modules/@pawpal/ui/node_modules/@mantine/core/styles.css"
-  ]
+  ],
+  "prisma-smart-formatter.typescript.defaultFormatter": "esbenp.prettier-vscode"
 }

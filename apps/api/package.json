@@ -39,6 +39,7 @@
     "passport": "catalog:",
     "passport-jwt": "catalog:",
     "passport-local": "catalog:",
+    "promptpay-qr": "catalog:",
     "reflect-metadata": "catalog:",
     "rxjs": "catalog:",
     "uuid": "catalog:"

@@ -37,7 +37,7 @@
     "@hello-pangea/dnd": "catalog:",
     "@mantine/carousel": "catalog:",
     "@mantine/core": "catalog:",
-    "@mantine/dates": "^8.3.1",
+    "@mantine/dates": "catalog:",
     "@mantine/dropzone": "catalog:",
     "@mantine/form": "catalog:",
     "@mantine/hooks": "catalog:",
