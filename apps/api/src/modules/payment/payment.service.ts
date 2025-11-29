@@ -1,4 +1,6 @@
+import { WithUser } from '@/common/decorators/user.decorator';
 import { BadGatewayException, Injectable, Logger } from '@nestjs/common';
+import { PaymentChargeCreateInput } from '@pawpal/shared';
 import { WalletService } from '../wallet/wallet.service';
 
 @Injectable()
@@ -26,5 +28,11 @@ export class PaymentService {
           `Payment method ${paymentMethod} is not supported.`,
         );
     }
+  }
+
+  async createPayment(payload: WithUser<PaymentChargeCreateInput>) {
+    this.logger.log(
+      `Creating payment of ${payload.amount} for user ${payload.user.id} with payment ID ${payload.payment_id}`,
+    );
   }
 }

@@ -1,8 +1,13 @@
 import { AuthUser } from '@/common/decorators/user.decorator';
 import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
 import { SessionAuthGuard } from '@/common/guards/session-auth.guard';
+import { ZodPipe } from '@/common/pipes/ZodPipe';
 import { Body, Controller, Post, UseGuards } from '@nestjs/common';
-import { Session } from '@pawpal/shared';
+import {
+  PaymentChargeCreateInput,
+  PaymentChargeCreateSchema,
+  Session,
+} from '@pawpal/shared';
 import { PaymentService } from './payment.service';
 
 @Controller('payment')
@@ -16,5 +21,17 @@ export class PaymentController {
     @AuthUser() user: Session,
   ) {
     return this.paymentService.topup(user.id, body.amount, body.payment_method);
+  }
+
+  @Post('charge')
+  createPayment(
+    @Body(new ZodPipe(PaymentChargeCreateSchema))
+    payload: PaymentChargeCreateInput,
+    @AuthUser() user: Session,
+  ) {
+    return this.paymentService.createPayment({
+      ...payload,
+      user: user,
+    });
   }
 }
