@@ -80,10 +80,10 @@
         "payment": {
           "main": "ช่องทางการชำระเงิน",
           "promptpayManual": {
-            "main": "ชำระเงินด้วย PromptPay"
+            "main": "PromptPay Manual"
           },
           "walletVoucher": {
-            "main": "ชำระเงินด้วย Wallet Voucher"
+            "main": "Wallet Voucher"
           }
         }
       },
@@ -505,6 +505,41 @@
   "Transaction": {
     "main": {
       "title": "ธุรกรรม"
+    }
+  },
+  "PaymentGateway": {
+    "title": "ช่องทางการชำระเงิน ",
+    "PromptpayManual": {
+      "sections": {
+        "metadata": "ข้อมูลบัญชี"
+      },
+      "form": {
+        "fields": {
+          "number": {
+            "label": "เลขบัญชี",
+            "placeholder": "กรอกเลขบัญชี"
+          },
+          "name": {
+            "label": "ชื่อผู้ถือบัญชี",
+            "placeholder": "กรอกชื่อผู้ถือบัญชี"
+          }
+        },
+        "actions": {
+          "save": "บันทึก"
+        }
+      },
+      "notify": {
+        "updated": {
+          "title": "สำเร็จ",
+          "message": "บันทึกการเปลี่ยนแปลงบัญชี Promptpay Manual แล้ว"
+        }
+      },
+      "confirmation": {
+        "save": {
+          "title": "ต้องการบันทึก?",
+          "message": "หากคุณยืนยันแล้ว ระบบจะบันทึกการเปลี่ยนแปลงบัญชี Promptpay Manual นี้"
+        }
+      }
     }
   }
 }

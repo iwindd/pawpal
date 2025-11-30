@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { PromptpayManualInput } from '@pawpal/shared';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
@@ -37,5 +38,22 @@ export class PaymentGatewayService {
     });
 
     return gateway?.isActive;
+  }
+
+  async updatePromptpayManualMetadata(metadata: PromptpayManualInput) {
+    const gateway = await this.getGateway('promptpay-manual');
+
+    return this.prisma.paymentGateway.update({
+      where: { id: gateway.id },
+      data: {
+        metadata: metadata,
+      },
+      select: {
+        id: true,
+        name: true,
+        label: true,
+        metadata: true,
+      },
+    });
   }
 }

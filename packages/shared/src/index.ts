@@ -11,6 +11,7 @@ export * from "./schemas/field/reorder";
 export * from "./schemas/order";
 export * from "./schemas/order/field";
 export * from "./schemas/payment/charge/create";
+export * from "./schemas/payment/promptpay";
 export * from "./schemas/product";
 export * from "./schemas/resource/resource";
 export * from "./schemas/sale";
