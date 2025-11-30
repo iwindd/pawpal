@@ -1,4 +1,6 @@
+import { PrismaPg } from "@prisma/adapter-pg";
 import bcrypt from "bcrypt";
+import { env } from "prisma/config";
 import { DiscountType, FieldType, PrismaClient } from "../generated/client";
 import categories from "./seeds/categories.json";
 import paymentGateways from "./seeds/paymentGateways.json";
@@ -8,7 +10,10 @@ import roles from "./seeds/roles.json";
 import sales from "./seeds/sales.json";
 import users from "./seeds/users.json";
 
-const prisma = new PrismaClient();
+const adapter = new PrismaPg({
+  connectionString: env("DATABASE_URL"),
+});
+const prisma = new PrismaClient({ adapter });
 
 async function main() {
   console.log("🌱 Starting seed...");

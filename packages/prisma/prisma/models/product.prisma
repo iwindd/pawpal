@@ -1,0 +1,109 @@
+model Package {
+  id          String   @id @default(cuid())
+  name        String
+  price       Decimal  @db.Decimal(10, 2)
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  product    Product @relation("ProductPackages", fields: [product_id], references: [id])
+  product_id String
+
+  sales         Sale[]         @relation("PackageSales")
+  orderPackages OrderPackage[] @relation("OrderPackages")
+
+  @@index([product_id])
+  @@index([price])
+  @@map("packages")
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  category    Category @relation("ProductCategory", fields: [category_id], references: [id])
+  category_id String
+
+  productTags ProductTag[]   @relation("ProductTags")
+  packages    Package[]      @relation("ProductPackages")
+  carousels   Carousel[]     @relation("ProductCarousels")
+  fields      ProductField[] @relation("ProductFields")
+  image       Resource?      @relation("ProductImage", fields: [image_id], references: [id])
+  image_id    String?
+
+  @@index([slug])
+  @@index([category_id])
+  @@index([createdAt])
+  @@map("products")
+}
+
+
+model Category {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  products Product[] @relation("ProductCategory")
+
+  @@index([slug])
+  @@index([name])
+  @@map("categories")
+}
+
+model ProductTag {
+  id        String         @id @default(cuid())
+  slug      String         @unique
+  name      String
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  type      ProductTagType @default(USER_DEFINED)
+
+  products Product[] @relation("ProductTags")
+
+  @@index([slug])
+  @@index([type])
+  @@map("product_tags")
+}
+
+enum ProductTagType {
+  USER_DEFINED
+  SYSTEM
+}
+
+model ProductField {
+  id          String    @id @default(cuid())
+  label       String
+  placeholder String?
+  metadata    Json      @default("{}")
+  type        FieldType @default(TEXT)
+
+  creator    User?   @relation("FieldCreatedBy", fields: [creator_id], references: [id])
+  creator_id String?
+
+  optional Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  order Int @default(0)
+
+  product_id String
+  product    Product @relation("ProductFields", fields: [product_id], references: [id])
+
+  orderFields OrderField[] @relation("OrderFields")
+
+  @@map("product_fields")
+}
+
+enum FieldType {
+  TEXT
+  EMAIL
+  SELECT
+  PASSWORD
+}

@@ -1,0 +1,44 @@
+model Resource {
+  id        String       @id @default(cuid())
+  url       String
+  type      ResourceType @default(IMAGE)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  user    User   @relation("ResourceUser", fields: [user_id], references: [id])
+  user_id String
+
+  carousel Carousel[] @relation("CarouselImage")
+  products Product[]  @relation("ProductImage")
+
+  @@map("resources")
+}
+
+enum ResourceType {
+  IMAGE
+}
+
+model Carousel {
+  id          String         @id @default(cuid())
+  title       String
+  status      CarouselStatus @default(DRAFT)
+  image       Resource       @relation("CarouselImage", fields: [resource_id], references: [id])
+  resource_id String
+  product     Product?       @relation("ProductCarousels", fields: [product_id], references: [id])
+  product_id  String?
+
+  creator    User   @relation("CarouselCreatedBy", fields: [creator_id], references: [id])
+  creator_id String
+
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("carousels")
+}
+
+enum CarouselStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}

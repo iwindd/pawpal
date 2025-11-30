@@ -1,0 +1,48 @@
+model Order {
+  id        String      @id @default(cuid())
+  user      User        @relation("OrderUser", fields: [user_id], references: [id])
+  user_id   String
+  total     Decimal     @db.Decimal(10, 2)
+  status    OrderStatus @default(PENDING_PAYMENT)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  orderPackages          OrderPackage[]          @relation("OrderPackages")
+  orderFields            OrderField[]            @relation("OrderFields")
+  userWalletTransactions UserWalletTransaction[]
+
+  @@map("orders")
+}
+
+enum OrderStatus {
+  PENDING_PAYMENT
+  PAID
+  PROCESSING
+  COMPLETED
+  CANCELLED
+}
+
+model OrderPackage {
+  id         String   @id @default(cuid())
+  order      Order    @relation("OrderPackages", fields: [order_id], references: [id])
+  order_id   String
+  package    Package  @relation("OrderPackages", fields: [package_id], references: [id])
+  package_id String
+  amount     Int
+  price      Decimal  @db.Decimal(10, 2)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("order_packages")
+}
+
+model OrderField {
+  id       String       @id @default(cuid())
+  order    Order        @relation("OrderFields", fields: [order_id], references: [id])
+  order_id String
+  field    ProductField @relation("OrderFields", fields: [field_id], references: [id])
+  field_id String
+  value    String
+
+  @@map("order_fields")
+}

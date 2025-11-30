@@ -1,0 +1,71 @@
+
+model UserWallet {
+  id         String     @id @default(cuid())
+  user_id    String
+  user       User       @relation("UserWallets", fields: [user_id], references: [id])
+  walletType WalletType @default(MAIN)
+  balance    Decimal    @db.Decimal(10, 2)
+  currency   String     @default("THB")
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+
+  userWalletTransactions UserWalletTransaction[] @relation("UserWalletTransactions")
+
+  @@map("user_wallets")
+}
+
+enum WalletType {
+  MAIN
+}
+
+model UserWalletTransaction {
+  id             String            @id @default(cuid())
+  type           TransactionType   @default(TOPUP)
+  wallet_id      String
+  wallet         UserWallet        @relation("UserWalletTransactions", fields: [wallet_id], references: [id])
+  amount         Decimal           @db.Decimal(10, 2)
+  balance_before Decimal           @db.Decimal(10, 2)
+  balance_after  Decimal           @db.Decimal(10, 2)
+  status         TransactionStatus @default(PENDING)
+  currency       String            @default("THB")
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+  order          Order?            @relation(fields: [order_id], references: [id])
+  order_id       String?
+
+  payment            PaymentGateway? @relation(fields: [payment_gateway_id], references: [id])
+  payment_gateway_id String?
+
+  @@index([wallet_id])
+  @@index([type])
+  @@index([payment_gateway_id])
+  @@map("user_wallet_transactions")
+}
+
+enum TransactionType {
+  TOPUP
+}
+
+enum TransactionStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
+model PaymentGateway {
+  id          String   @id
+  name        String // name for admin panel
+  description String? // description for admin panel
+  label       String // label for user interface
+  text        String? // additional text for user interface
+  metadata    Json     @default("{}")
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  order       Int      @default(0)
+
+  userWalletTransactions UserWalletTransaction[]
+
+  @@index([isActive])
+  @@map("payment_gateways")
+}

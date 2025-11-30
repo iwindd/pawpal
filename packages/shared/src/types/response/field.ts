@@ -1,4 +1,4 @@
-import { FieldType } from "@pawpal/prisma";
+import { FieldType } from "../../schemas/order/field";
 import { Creator } from "./creator";
 
 export interface AdminFieldResponse {

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DiscountType, Sale } from '@pawpal/prisma';
-import { Decimal } from '@pawpal/prisma/generated/client/runtime/library';
+import { DecimalJsLike } from '@pawpal/prisma/generated/client/runtime/client';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
@@ -60,8 +60,9 @@ export class SaleService {
         Infinity,
       );
 
-      const parseFixedToPercent = (sale: Sale): Decimal => {
-        return ((Number(sale.discount) / lowestPrice) * 100) as any as Decimal;
+      const parseFixedToPercent = (sale: Sale): DecimalJsLike => {
+        return ((Number(sale.discount) / lowestPrice) *
+          100) as any as DecimalJsLike;
       };
 
       return sales.map((sale) => ({
