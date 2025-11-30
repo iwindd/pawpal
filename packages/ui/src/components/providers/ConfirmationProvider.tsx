@@ -15,6 +15,10 @@ type ConfirmOptions = {
 
 type ConfirmationContextType = {
   confirm: (options: ConfirmOptions) => Promise<boolean>;
+  confirmation: (
+    callback: (arg: any) => void | Promise<void>,
+    options: ConfirmOptions
+  ) => (arg: any) => Promise<void>;
 };
 
 const ConfirmationContext = createContext<ConfirmationContextType | null>(null);
@@ -35,6 +39,19 @@ export function ConfirmationProvider({
     return new Promise<boolean>((resolve) => setResolver(() => resolve));
   };
 
+  const confirmation = (
+    callback: (arg: any) => void | Promise<void>,
+    opts: ConfirmOptions
+  ) => {
+    return async (arg: any) => {
+      const result = await confirm(opts);
+
+      if (result) {
+        callback(arg);
+      }
+    };
+  };
+
   const handleConfirm = () => {
     close();
     resolver?.(true);
@@ -45,7 +62,7 @@ export function ConfirmationProvider({
     resolver?.(false);
   };
 
-  const obj = useMemo(() => ({ confirm }), []);
+  const obj = useMemo(() => ({ confirm, confirmation }), []);
 
   return (
     <ConfirmationContext.Provider value={obj}>
