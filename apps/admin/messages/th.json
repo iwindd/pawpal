@@ -76,6 +76,15 @@
           "main": "สไลด์โชว์",
           "create": "สร้างสไลด์",
           "edit": "แก้ไขสไลด์"
+        },
+        "payment": {
+          "main": "ช่องทางการชำระเงิน",
+          "promptpayManual": {
+            "main": "ชำระเงินด้วย PromptPay"
+          },
+          "walletVoucher": {
+            "main": "ชำระเงินด้วย Wallet Voucher"
+          }
         }
       },
       "fanpage": "Fanpage"

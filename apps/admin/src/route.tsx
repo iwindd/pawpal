@@ -121,6 +121,23 @@ const ROUTES = ROUTER({
           },
         },
       },
+      payment: {
+        path: "/website/payment",
+        label: "website.payment.main",
+        icon: IconWork,
+        children: {
+          promptpayManual: {
+            path: "/website/payment/promptpay-manual",
+            label: "website.payment.promptpayManual.main",
+            icon: IconWork,
+          },
+          walletVoucher: {
+            path: "/website/payment/wallet-voucher",
+            label: "website.payment.walletVoucher.main",
+            icon: IconWork,
+          },
+        },
+      },
     },
   },
 });

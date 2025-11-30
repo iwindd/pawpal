@@ -87,6 +87,11 @@ export const navlinks: NavLink[] = [
         link: pather("website.carousel"),
         badgeKey: "carousels",
       },
+      {
+        id: 2,
+        name: "website.payment.main",
+        link: pather("website.payment"),
+      },
     ],
   },
   {
