@@ -15,10 +15,10 @@ type ConfirmOptions = {
 
 type ConfirmationContextType = {
   confirm: (options: ConfirmOptions) => Promise<boolean>;
-  confirmation: (
-    callback: (arg: any) => void | Promise<void>,
+  confirmation: <T>(
+    callback: (arg: T) => any | Promise<any>,
     options: ConfirmOptions
-  ) => (arg: any) => Promise<void>;
+  ) => (arg: T) => Promise<any>;
 };
 
 const ConfirmationContext = createContext<ConfirmationContextType | null>(null);
@@ -39,11 +39,11 @@ export function ConfirmationProvider({
     return new Promise<boolean>((resolve) => setResolver(() => resolve));
   };
 
-  const confirmation = (
-    callback: (arg: any) => void | Promise<void>,
+  const confirmation = <T,>(
+    callback: (arg: T) => any | Promise<any>,
     opts: ConfirmOptions
   ) => {
-    return async (arg: any) => {
+    return async (arg: T) => {
       const result = await confirm(opts);
 
       if (result) {
