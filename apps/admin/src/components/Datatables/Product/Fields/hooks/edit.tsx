@@ -1,11 +1,10 @@
 "use client";
 import FieldForm from "@/components/Forms/ProductForm/FieldForm";
-import API from "@/libs/api/client";
+import { useUpdateFieldMutation } from "@/services/field";
 import { AdminFieldResponse, FieldInput } from "@pawpal/shared";
 import { Modal } from "@pawpal/ui/core";
 import { useDisclosure } from "@pawpal/ui/hooks";
 import { notify } from "@pawpal/ui/notifications";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 
@@ -17,31 +16,23 @@ interface EditFieldModalProps {
 
 const EditFieldModal = ({ field, opened, onClose }: EditFieldModalProps) => {
   const __ = useTranslations("ProductField");
-  const queryClient = useQueryClient();
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [updateFieldMutation, { isLoading, error }] = useUpdateFieldMutation();
 
-  const { mutate, isPending } = useMutation({
-    mutationFn: async (data: FieldInput) => {
-      if (!field) throw new Error("Field is required");
+  const handleSubmit = async (data: FieldInput) => {
+    if (!field) return;
+    const response = await updateFieldMutation({
+      fieldId: field?.id,
+      payload: data,
+    });
 
-      return await API.field.update(field.id, data);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["fields"] });
-      notify.show({
-        title: __("notify.updated.title"),
-        message: __("notify.updated.message"),
-        color: "green",
-      });
-      onClose();
-    },
-    onError: () => {
-      setErrorMessage("try_again");
-    },
-  });
+    if (response.error) return;
 
-  const handleSubmit = (data: FieldInput) => {
-    mutate(data);
+    notify.show({
+      title: __("notify.updated.title"),
+      message: __("notify.updated.message"),
+      color: "green",
+    });
+    onClose();
   };
 
   return (
@@ -49,8 +40,8 @@ const EditFieldModal = ({ field, opened, onClose }: EditFieldModalProps) => {
       <FieldForm
         field={field}
         onSubmit={handleSubmit}
-        isLoading={isPending}
-        errorMessage={errorMessage}
+        isLoading={isLoading}
+        errorMessage={error && "try_again"}
       />
     </Modal>
   );

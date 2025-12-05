@@ -2,18 +2,19 @@
 import FieldOptionalBadge from "@/components/Badges/FieldOptional";
 import FieldTypeBadge from "@/components/Badges/FieldType";
 import useDatatable from "@/hooks/useDatatable";
-import API from "@/libs/api/client";
+import {
+  useGetProductFieldsQuery,
+  useReorderProductFieldMutation,
+} from "@/services/field";
 import { IconEdit } from "@pawpal/icons";
 import { AdminFieldResponse } from "@pawpal/shared";
 import { DataTable, DataTableProps, Text, Title } from "@pawpal/ui/core";
 import { DragDropContext, DropResult } from "@pawpal/ui/draggable";
 import { notify } from "@pawpal/ui/notifications";
-import { useQuery } from "@tanstack/react-query";
 import { useFormatter, useTranslations } from "next-intl";
 import { DragRowFactory, DragTableWrapper } from "../..";
 import TableAction from "../../action";
 import useEditFieldModal from "./hooks/edit";
-import { useFieldReorder } from "./hooks/reorder";
 
 interface ProductFieldDatatable {
   productId: string;
@@ -29,34 +30,17 @@ const ProductFieldDatatable = ({ productId }: ProductFieldDatatable) => {
     },
   });
 
-  const { data, isFetching, refetch } = useQuery({
-    queryKey: [
-      "fields",
-      productId,
-      datatable.page,
-      datatable.sortStatus.columnAccessor,
-      datatable.sortStatus.direction,
-    ],
-    queryFn: () =>
-      API.field.getProductFields(productId, {
-        page: datatable.page,
-        limit: datatable.limit,
-        sort: datatable.sortStatus,
-      }),
-  });
-
-  const fieldReorder = useFieldReorder({
+  const { data, isLoading } = useGetProductFieldsQuery({
     productId: productId,
-    options: {
-      onSuccess: () => {
-        refetch();
-        notify.show({
-          message: __("notify.ordered.message"),
-          color: "green",
-        });
-      },
+    params: {
+      page: datatable.page,
+      limit: datatable.limit,
+      sort: datatable.sortStatus,
     },
   });
+
+  const [reorderProductFieldMutation, { isLoading: isReordering }] =
+    useReorderProductFieldMutation();
 
   const fieldUpdater = useEditFieldModal();
 
@@ -118,24 +102,32 @@ const ProductFieldDatatable = ({ productId }: ProductFieldDatatable) => {
     },
   ];
 
-  const handleDragEnd = (result: DropResult) => {
+  const handleDragEnd = async (result: DropResult) => {
     if (!result.destination) return;
     const sourceIndex = result.source.index;
     const destinationIndex = result.destination.index;
-    const fieldId = records[sourceIndex]?.id;
+    const fieldId = data?.data[sourceIndex]?.id;
 
     if (sourceIndex === destinationIndex) return;
-    if (fieldReorder.isPending) return;
+    if (isReordering) return;
     if (!fieldId) return;
 
-    fieldReorder.mutate({
-      fromIndex: sourceIndex,
-      toIndex: destinationIndex,
-      field_id: fieldId,
+    const response = await reorderProductFieldMutation({
+      productId,
+      payload: {
+        fromIndex: sourceIndex,
+        toIndex: destinationIndex,
+        field_id: fieldId,
+      },
     });
-  };
 
-  const records = data?.data.data ?? [];
+    if (!response.error) {
+      notify.show({
+        message: __("notify.ordered.message"),
+        color: "green",
+      });
+    }
+  };
 
   return (
     <>
@@ -146,12 +138,12 @@ const ProductFieldDatatable = ({ productId }: ProductFieldDatatable) => {
           minHeight={400}
           maxHeight={1000}
           columns={columns}
-          records={[...records].sort((a, b) => a.order - b.order)}
-          totalRecords={data?.data.total ?? 0}
+          records={data?.data ?? []}
+          totalRecords={data?.total ?? 0}
           recordsPerPage={datatable.limit}
           page={datatable.page}
           onPageChange={datatable.setPage}
-          fetching={isFetching || fieldReorder.isPending}
+          fetching={isLoading || isReordering}
           sortStatus={datatable.sortStatus}
           onSortStatusChange={datatable.setSortStatus}
           rowFactory={DragRowFactory}
