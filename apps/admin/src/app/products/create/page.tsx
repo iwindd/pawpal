@@ -2,41 +2,25 @@
 import ProductForm from "@/components/Forms/ProductForm";
 import PageHeader from "@/components/Pages/PageHeader";
 import { getPath } from "@/configs/route";
-import API from "@/libs/api/client";
+import { useCreateProductMutation } from "@/services/product";
 import { ProductInput } from "@pawpal/shared";
-import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 
 export default function CreateProductPage() {
   const router = useRouter();
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const __ = useTranslations("Product");
+  const [createProduct, { isLoading, error }] = useCreateProductMutation();
 
-  const createMutation = useMutation({
-    mutationFn: (data: ProductInput) => API.product.create(data),
-    onMutate: () => {
-      setErrorMessage(null);
-    },
-    onSuccess: (response) => {
-      if (response.success) {
-        router.push(
-          getPath("products.packages", {
-            id: response.data.id,
-          })
-        );
-      } else {
-        setErrorMessage("Failed to create product. Please try again.");
-      }
-    },
-    onError: () => {
-      setErrorMessage("Failed to create product. Please try again.");
-    },
-  });
+  const handleSubmit = async (payload: ProductInput) => {
+    const { data: product, error } = await createProduct(payload);
 
-  const handleSubmit = (values: ProductInput) => {
-    createMutation.mutate(values);
+    if (error || !product) return;
+    router.push(
+      getPath("products.packages", {
+        id: product.id,
+      })
+    );
   };
 
   return (
@@ -45,8 +29,8 @@ export default function CreateProductPage() {
 
       <ProductForm
         onSubmit={handleSubmit}
-        isLoading={createMutation.isPending}
-        errorMessage={errorMessage}
+        isLoading={isLoading}
+        errorMessage={error && "error"}
       />
     </div>
   );

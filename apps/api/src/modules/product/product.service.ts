@@ -312,6 +312,7 @@ export class ProductService {
         id: true,
         slug: true,
         name: true,
+        description: true,
         createdAt: true,
         _count: {
           select: { packages: true },
@@ -329,19 +330,29 @@ export class ProductService {
             name: true,
           },
         },
+        packages: {
+          select: {
+            id: true,
+            name: true,
+            price: true,
+            description: true,
+          },
+        },
+        image: {
+          select: {
+            id: true,
+            url: true,
+          },
+        },
       },
     });
 
     if (!product) throw new BadRequestException('product_not_found');
 
     return {
-      id: product.id,
-      slug: product.slug,
-      name: product.name,
-      createdAt: product.createdAt.toISOString(),
+      ...product,
       packageCount: product._count.packages,
-      category: product.category,
-      productTags: product.productTags,
+      createdAt: product.createdAt.toISOString(),
     };
   }
 
@@ -441,18 +452,28 @@ export class ProductService {
             name: true,
           },
         },
+        packages: {
+          select: {
+            id: true,
+            name: true,
+            price: true,
+            description: true,
+          },
+        },
+        image: {
+          select: {
+            id: true,
+            url: true,
+          },
+        },
       },
     });
 
     return {
       data: products.map((product) => ({
-        id: product.id,
-        slug: product.slug,
-        name: product.name,
+        ...product,
         createdAt: product.createdAt.toISOString(),
         packageCount: product._count.packages,
-        category: product.category,
-        productTags: product.productTags,
       })),
       total,
     };

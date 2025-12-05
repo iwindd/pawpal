@@ -1,4 +1,7 @@
-import API from "@/libs/api/client";
+import {
+  useGetProductsQuery,
+  useLazyGetProductQuery,
+} from "@/services/product";
 import { AdminProductResponse } from "@pawpal/shared";
 import {
   Combobox,
@@ -8,12 +11,13 @@ import {
   useCombobox,
 } from "@pawpal/ui/core";
 import { useDebouncedValue } from "@pawpal/ui/hooks";
-import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { forwardRef, useEffect, useState } from "react";
 
-interface ComboboxProductProps
-  extends Omit<ComboboxProps, "children" | "store"> {
+interface ComboboxProductProps extends Omit<
+  ComboboxProps,
+  "children" | "store"
+> {
   value?: string | null;
   defaultValue?: string;
   onChange?: (value: string | null) => void;
@@ -47,8 +51,8 @@ const ComboboxProduct = forwardRef<HTMLInputElement, ComboboxProductProps>(
     const [debouncedSearchTerm] = useDebouncedValue(searchTerm, 300);
     const [internalValue, setInternalValue] = useState<string | null>(null);
     const [products, setProducts] = useState<AdminProductResponse[]>([]);
+    const [getProduct] = useLazyGetProductQuery();
     const __ = useTranslations("Combobox.product");
-
     const combobox = useCombobox({
       onDropdownClose: () => {
         combobox.resetSelectedOption();
@@ -56,23 +60,18 @@ const ComboboxProduct = forwardRef<HTMLInputElement, ComboboxProductProps>(
       },
     });
 
-    const { data, isLoading } = useQuery({
-      queryKey: ["products", debouncedSearchTerm],
-      queryFn: () =>
-        API.product.list({
-          page: 1,
-          limit: 8,
-          search: debouncedSearchTerm,
-        }),
+    const { data, isLoading } = useGetProductsQuery({
+      page: 1,
+      limit: 8,
+      search: debouncedSearchTerm,
     });
 
     const fetchProduct = async (id: string) => {
-      const response = await API.product.findOne(id);
+      const { data: product, ...response } = await getProduct(id);
+      if (!response.isSuccess || !product) return;
 
-      if (!response.success || !response.data) return false;
-      const product = response.data;
       setProducts((prev) => {
-        if (prev.find((p) => p.id === product.id)) return prev;
+        if (prev.some((p) => p.id === product.id)) return prev;
         return [...prev, product];
       });
 
@@ -90,8 +89,8 @@ const ComboboxProduct = forwardRef<HTMLInputElement, ComboboxProductProps>(
     }, [value]);
 
     useEffect(() => {
-      if (data?.data?.data) {
-        const newData = data.data.data;
+      if (data?.data) {
+        const newData = data.data;
         setProducts((prevDat) => {
           const ids = prevDat.map((p) => p.id);
           const filtered = newData.filter((p) => !ids.includes(p.id));

@@ -63,10 +63,16 @@ export interface AdminProductResponse {
   id: string;
   slug: string;
   name: string;
+  description?: string;
   createdAt: string;
   category: ProductCategory;
   productTags: ProductTag[];
+  packages: ProductPackage[];
   packageCount: number;
+  image: {
+    id: string;
+    url: string;
+  } | null;
 }
 
 export interface AdminProductEditResponse {

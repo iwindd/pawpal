@@ -87,10 +87,9 @@ export const packageSaleExtension = Prisma.defineExtension((client) => {
               }[];
             }[];
           }) {
-            if (!product.packages) throw new Error('Packages not included');
+            if (!product.packages) return null;
             if (product.packages.length === 0) return null;
-            if (!product.packages[0].sales)
-              throw new Error('Sales not included');
+            if (!product.packages[0].sales) return null;
 
             const sales = product.packages.flatMap((pkg) =>
               pkg.sales.map((sale) => ({
