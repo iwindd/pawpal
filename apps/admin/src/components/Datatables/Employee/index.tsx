@@ -1,6 +1,6 @@
 "use client";
 import useDatatable from "@/hooks/useDatatable";
-import API from "@/libs/api/client";
+import { useGetEmployeesQuery } from "@/services/users";
 import { AdminEmployeeResponse } from "@pawpal/shared";
 import {
   Avatar,
@@ -9,7 +9,6 @@ import {
   Group,
   Text,
 } from "@pawpal/ui/core";
-import { useQuery } from "@tanstack/react-query";
 import { useFormatter, useTranslations } from "next-intl";
 
 const EmployeeDatatable = () => {
@@ -22,19 +21,10 @@ const EmployeeDatatable = () => {
     },
   });
 
-  const { data, isFetching } = useQuery({
-    queryKey: [
-      "employees",
-      datatable.page,
-      datatable.sortStatus.columnAccessor,
-      datatable.sortStatus.direction,
-    ],
-    queryFn: () =>
-      API.user.getEmployees({
-        page: datatable.page,
-        limit: datatable.limit,
-        sort: datatable.sortStatus,
-      }),
+  const { data, isLoading } = useGetEmployeesQuery({
+    page: datatable.page,
+    limit: datatable.limit,
+    sort: datatable.sortStatus,
   });
 
   const columns: DataTableProps<AdminEmployeeResponse>["columns"] = [
@@ -78,12 +68,12 @@ const EmployeeDatatable = () => {
       maxHeight={1000}
       idAccessor="id"
       columns={columns}
-      records={data?.data.data || []}
-      totalRecords={data?.data.total || 0}
+      records={data?.data || []}
+      totalRecords={data?.total || 0}
       recordsPerPage={15}
       page={datatable.page}
       onPageChange={datatable.setPage}
-      fetching={isFetching}
+      fetching={isLoading}
       sortStatus={datatable.sortStatus}
       onSortStatusChange={datatable.setSortStatus}
     />

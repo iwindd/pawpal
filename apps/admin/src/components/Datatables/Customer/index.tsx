@@ -1,6 +1,6 @@
 "use client";
 import useDatatable from "@/hooks/useDatatable";
-import API from "@/libs/api/client";
+import { useGetCustomersQuery } from "@/services/users";
 import { AdminCustomerResponse } from "@pawpal/shared";
 import {
   Avatar,
@@ -9,7 +9,6 @@ import {
   Group,
   Text,
 } from "@pawpal/ui/core";
-import { useQuery } from "@tanstack/react-query";
 import { useFormatter, useTranslations } from "next-intl";
 
 const CustomerDatatable = () => {
@@ -22,19 +21,10 @@ const CustomerDatatable = () => {
     },
   });
 
-  const { data, isFetching } = useQuery({
-    queryKey: [
-      "customers",
-      datatable.page,
-      datatable.sortStatus.columnAccessor,
-      datatable.sortStatus.direction,
-    ],
-    queryFn: () =>
-      API.user.getCustomers({
-        page: datatable.page,
-        limit: datatable.limit,
-        sort: datatable.sortStatus,
-      }),
+  const { data, isLoading } = useGetCustomersQuery({
+    page: datatable.page,
+    limit: datatable.limit,
+    sort: datatable.sortStatus,
   });
 
   const columns: DataTableProps<AdminCustomerResponse>["columns"] = [
@@ -89,12 +79,12 @@ const CustomerDatatable = () => {
       maxHeight={1000}
       idAccessor="id"
       columns={columns}
-      records={data?.data.data || []}
-      totalRecords={data?.data.total || 0}
+      records={data?.data || []}
+      totalRecords={data?.total || 0}
       recordsPerPage={15}
       page={datatable.page}
       onPageChange={datatable.setPage}
-      fetching={isFetching}
+      fetching={isLoading}
       sortStatus={datatable.sortStatus}
       onSortStatusChange={datatable.setSortStatus}
     />
