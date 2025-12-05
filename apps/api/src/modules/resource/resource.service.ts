@@ -1,3 +1,4 @@
+import { DatatableQuery } from '@/common/pipes/DatatablePipe';
 import { Injectable } from '@nestjs/common';
 import { DatatableResponse, ResourceResponse } from '@pawpal/shared';
 import { PrismaService } from '../prisma/prisma.service';
@@ -37,20 +38,18 @@ export class ResourceService {
     };
   }
 
-  async findAllResources(params: {
-    page: number;
-    limit: number;
-  }): Promise<DatatableResponse<ResourceResponse>> {
-    const { page, limit } = params;
-    const skip = (page - 1) * limit;
-
+  async findAllResources({
+    skip,
+    take,
+    orderBy,
+  }: DatatableQuery): Promise<DatatableResponse<ResourceResponse>> {
     const total = await this.prisma.resource.count();
+
+    console.log(orderBy);
     const resources = await this.prisma.resource.findMany({
       skip,
-      take: limit,
-      orderBy: {
-        createdAt: 'desc',
-      },
+      take,
+      orderBy,
       select: this.resourceResponseSelect,
     });
 

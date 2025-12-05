@@ -1,6 +1,7 @@
 import { AuthUser } from '@/common/decorators/user.decorator';
 import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
 import { SessionAuthGuard } from '@/common/guards/session-auth.guard';
+import { DatatablePipe, DatatableQuery } from '@/common/pipes/DatatablePipe';
 import { ZodFileValidationPipe } from '@/common/ZodFileValidationPipe';
 import {
   Controller,
@@ -29,13 +30,9 @@ export class ResourcesController {
 
   @Get()
   async findAllResources(
-    @Query('page') page: number = 1,
-    @Query('limit') limit: number = 12,
+    @Query(DatatablePipe) query: DatatableQuery,
   ): Promise<DatatableResponse<ResourceResponse>> {
-    return await this.resourceService.findAllResources({
-      page: Number(page),
-      limit: Number(limit),
-    });
+    return await this.resourceService.findAllResources(query);
   }
 
   @Get(':id')

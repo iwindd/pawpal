@@ -1,6 +1,6 @@
 "use client";
 import useFormValidate from "@/hooks/useFormValidate";
-import API from "@/libs/api/client";
+import { useUploadResourceMutation } from "@/services/resource";
 import { IconUpload } from "@pawpal/icons";
 import { ResourceUploadInput, resourceUploadSchema } from "@pawpal/shared";
 import {
@@ -13,7 +13,6 @@ import {
   Text,
 } from "@pawpal/ui/core";
 import { notify } from "@pawpal/ui/notifications";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useRef, useState } from "react";
 
@@ -27,11 +26,11 @@ export default function UploadImageModal({
   onClose,
 }: Readonly<UploadImageModalProps>) {
   const __ = useTranslations("Resources.UploadModal");
-  const queryClient = useQueryClient();
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const revokeRef = useRef<string | null>(null);
-  const [message, setMessage] = useState<string | null>(null);
+  const [uploadResourceMutation, { isLoading, error }] =
+    useUploadResourceMutation();
 
   useEffect(() => {
     if (file) {
@@ -57,30 +56,22 @@ export default function UploadImageModal({
     },
   });
 
-  const { mutate, isPending } = useMutation({
-    mutationFn: async () => {
-      if (!file) return;
-      const formData = new FormData();
-      formData.append("file", file);
-      return await API.resource.upload(formData);
-    },
-    onSuccess: () => {
-      notify.show({
-        title: __("notify.success.title"),
-        message: __("notify.success.message"),
-        color: "green",
-      });
-      queryClient.invalidateQueries({ queryKey: ["resources"] });
-      handleClose();
-    },
-    onError: () => {
-      setMessage("error");
-    },
-  });
-
   const onSubmit = async (values: ResourceUploadInput) => {
     setFile(values.file);
-    mutate();
+    if (!file) return;
+    const formData = new FormData();
+    formData.append("file", values.file);
+    const resp = await uploadResourceMutation(formData);
+    if (!resp.data || resp.error) return;
+
+    handleClose();
+    setFile(null);
+    setPreviewUrl(null);
+    notify.show({
+      title: __("notify.success.title"),
+      message: __("notify.success.message"),
+      color: "green",
+    });
   };
 
   const handleClose = () => {
@@ -120,18 +111,18 @@ export default function UploadImageModal({
             <Button
               variant="default"
               onClick={handleClose}
-              disabled={isPending}
+              disabled={isLoading}
             >
               {__("cancel")}
             </Button>
-            <Button type="submit" disabled={!canSubmit} loading={isPending}>
+            <Button type="submit" disabled={!canSubmit} loading={isLoading}>
               {__("upload")}
             </Button>
           </Group>
-          {message && (
+          {error && (
             <ErrorMessage
               align="end"
-              message={message}
+              message={"error"}
               formatGroup="Resources.UploadModal"
             />
           )}

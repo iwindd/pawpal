@@ -1,5 +1,5 @@
 import SelectResourceModal from "@/components/Modals/SelectResourceModal";
-import API from "@/libs/api/client";
+import { useLazyGetResourceQuery } from "@/services/resource";
 import { ResourceResponse } from "@pawpal/shared";
 import { useDisclosure } from "@pawpal/ui/hooks";
 import { useEffect, useState } from "react";
@@ -17,23 +17,14 @@ const useResource = ({
 }: UseResourceProps) => {
   const [opened, { open, close }] = useDisclosure(false);
   const [isSelecting, setIsSelecting] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedResource, setSelectedResource] =
     useState<ResourceResponse | null>(null);
+  const [getResourceQuery, { isLoading }] = useLazyGetResourceQuery();
 
   const fetchResource = async (id: string) => {
-    setIsLoading(true);
-
-    try {
-      const response = await API.resource.findOne(id);
-      if (response.success) {
-        setSelectedResource(response.data);
-      }
-    } catch (error) {
-      console.error("Error fetching resource:", error);
-    } finally {
-      setIsLoading(false);
-    }
+    const { data: resource, ...response } = await getResourceQuery(id);
+    if (response.isError || !resource) return;
+    setSelectedResource(resource);
   };
 
   useEffect(() => {

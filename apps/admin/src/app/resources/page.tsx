@@ -1,7 +1,7 @@
 "use client";
 import UploadImageModal from "@/components/Modals/UploadImageModal";
 import ResourceImage from "@/components/ResourceImage";
-import API from "@/libs/api/client";
+import { useGetResourcesQuery } from "@/services/resource";
 import {
   Box,
   Button,
@@ -15,7 +15,6 @@ import {
   Title,
 } from "@pawpal/ui/core";
 import { useDisclosure } from "@pawpal/ui/hooks";
-import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
 const COL_SPAN = {
@@ -29,13 +28,10 @@ const COL_SPAN = {
 const ResourcePage = () => {
   const __ = useTranslations("Resources");
   const [opened, { open, close }] = useDisclosure(false);
-  const { data, isFetching } = useQuery({
-    queryKey: ["resources", "list"],
-    queryFn: () =>
-      API.resource.list({
-        page: 1,
-        limit: 1000, // TODO:: implement pagination
-      }),
+
+  const { data, isLoading } = useGetResourcesQuery({
+    page: 1,
+    limit: 1000, // TODO:: implement pagination
   });
 
   return (
@@ -62,8 +58,8 @@ const ResourcePage = () => {
       <Divider my="xs" />
       <Paper p={5}>
         <Grid gutter={"xs"}>
-          {!isFetching &&
-            data?.data.data.map((resource) => (
+          {!isLoading &&
+            data?.data.map((resource) => (
               <Grid.Col key={resource.id} span={COL_SPAN.xs} p={1}>
                 <Box>
                   <ResourceImage

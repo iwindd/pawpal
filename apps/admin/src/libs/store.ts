@@ -1,4 +1,5 @@
 import { productApi } from "@/services/product";
+import { resourceApi } from "@/services/resource";
 import { transactionApi } from "@/services/transaction";
 import { userApi } from "@/services/users";
 import { configureStore } from "@reduxjs/toolkit";
@@ -9,12 +10,14 @@ export const store = configureStore({
     [transactionApi.reducerPath]: transactionApi.reducer,
     [productApi.reducerPath]: productApi.reducer,
     [userApi.reducerPath]: userApi.reducer,
+    [resourceApi.reducerPath]: resourceApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
       transactionApi.middleware,
       productApi.middleware,
-      userApi.middleware
+      userApi.middleware,
+      resourceApi.middleware
     ),
 });
 
