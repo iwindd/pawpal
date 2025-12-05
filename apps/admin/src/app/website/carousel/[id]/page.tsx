@@ -17,7 +17,7 @@ export default async function CarouselEditPage({
   return (
     <div>
       <PageHeader title={__("edit.title")} />
-      <CarouselView carousel={carousel.data} />;
+      <CarouselView carousel={carousel.data} />
     </div>
   );
 }

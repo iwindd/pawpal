@@ -22,7 +22,8 @@ const CarouselPage = () => {
               component={Link}
               href="/website/carousel/create"
               leftSection={<IconPlus size={17} />}
-              size="sm">
+              size="sm"
+            >
               {__("add-btn")}
             </Button>
           </PageHeader>

@@ -1,6 +1,7 @@
 import CarouselStatusBadge from "@/components/Badges/CarouselStatus";
 import useDatatable from "@/hooks/useDatatable";
 import API from "@/libs/api/client";
+import { useGetCarouselsQuery } from "@/services/carousel";
 import { IconArchive, IconEdit } from "@pawpal/icons";
 import { CarouselResponse } from "@pawpal/shared";
 import {
@@ -11,7 +12,6 @@ import {
   Text,
   Title,
 } from "@pawpal/ui/core";
-import { useQuery } from "@tanstack/react-query";
 import { useFormatter, useTranslations } from "next-intl";
 import { useState } from "react";
 import TableAction from "../action";
@@ -27,21 +27,11 @@ const CarouselDatatable = () => {
     limit: 10,
   });
 
-  const { data, isFetching } = useQuery({
-    queryKey: [
-      "carousels",
-      datatable.page,
-      datatable.limit,
-      datatable.sortStatus,
-      search,
-    ],
-    queryFn: () =>
-      API.carousel.findAll({
-        page: datatable.page,
-        limit: datatable.limit,
-        sort: datatable.sortStatus,
-        search,
-      }),
+  const { data, isLoading } = useGetCarouselsQuery({
+    page: datatable.page,
+    limit: datatable.limit,
+    sort: datatable.sortStatus,
+    search,
   });
 
   const columns: DataTableProps<CarouselResponse>["columns"] = [
@@ -137,9 +127,9 @@ const CarouselDatatable = () => {
         height={670}
         scrollAreaProps={{ type: "never" }}
         columns={columns}
-        fetching={isFetching}
-        records={data?.data.data || []}
-        totalRecords={data?.data.total || 0}
+        fetching={isLoading}
+        records={data?.data || []}
+        totalRecords={data?.total || 0}
         recordsPerPage={datatable.limit}
         onPageChange={datatable.setPage}
         page={datatable.page}

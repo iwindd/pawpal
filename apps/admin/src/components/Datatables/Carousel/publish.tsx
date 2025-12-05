@@ -1,45 +1,27 @@
-import API from "@/libs/api/client";
+import {
+  useGetPublishedCarouselsQuery,
+  useReorderCarouselMutation,
+} from "@/services/carousel";
 import { IconEdit } from "@pawpal/icons";
-import { CarouselReorderInput, CarouselResponse } from "@pawpal/shared";
+import { CarouselResponse } from "@pawpal/shared";
 import { DataTable, DataTableProps, Stack, Text, Title } from "@pawpal/ui/core";
 import { DragDropContext, DropResult } from "@pawpal/ui/draggable";
 import { Notifications } from "@pawpal/ui/notifications";
-import { useMutation, useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
 import { DragRowFactory, DragTableWrapper } from "..";
 import TableAction from "../action";
 import ColumnImage from "./components/ColumnImage";
 
 const PublishDatatable = () => {
-  const [records, setRecords] = useState<CarouselResponse[]>([]);
   const __ = useTranslations("Carousel");
+  const { data: publishedCarousels, isLoading } = useGetPublishedCarouselsQuery(
+    {
+      limit: 100,
+    }
+  );
 
-  const { data, isFetching, refetch } = useQuery({
-    queryKey: ["carousels", "published"],
-    queryFn: () => API.carousel.getPublished(),
-  });
-
-  const { mutate, isPending } = useMutation({
-    mutationFn: async (data: CarouselReorderInput) =>
-      await API.carousel.reorder(data),
-    onSuccess: () => {
-      refetch();
-      Notifications.show({
-        title: __("reorder.success.title"),
-        message: __("reorder.success.message"),
-        color: "green",
-      });
-    },
-    onError: () => {
-      Notifications.show({
-        title: __("reorder.error.title"),
-        message: __("reorder.error.message"),
-        color: "red",
-      });
-    },
-  });
-
+  const [reorderCarouselMutation, { isLoading: isReording }] =
+    useReorderCarouselMutation();
   const columns: DataTableProps<CarouselResponse>["columns"] = [
     {
       accessor: "order",
@@ -97,31 +79,39 @@ const PublishDatatable = () => {
     },
   ];
 
-  useEffect(() => {
-    if (data?.data.data) {
-      setRecords(data.data.data);
-    }
-  }, [data]);
-
-  const handleDragEnd = (result: DropResult) => {
+  const handleDragEnd = async (result: DropResult) => {
     if (!result.destination) return;
     const sourceIndex = result.source.index;
     const destinationIndex = result.destination.index;
-    const carouselId = records[sourceIndex]?.id;
+    const carouselId = publishedCarousels?.data[sourceIndex]?.id;
 
     if (sourceIndex === destinationIndex) return;
-    if (isPending) return;
+    if (isReording) return;
     if (!carouselId) return;
 
-    mutate({
+    const response = await reorderCarouselMutation({
       carousel_id: carouselId,
       fromIndex: sourceIndex,
       toIndex: destinationIndex,
     });
+
+    if (response.error) {
+      return Notifications.show({
+        title: __("reorder.error.title"),
+        message: __("reorder.error.message"),
+        color: "red",
+      });
+    }
+
+    Notifications.show({
+      title: __("reorder.success.title"),
+      message: __("reorder.success.message"),
+      color: "green",
+    });
   };
 
-  if (isFetching && !data) return null;
-  if (!data || data.data.data.length === 0) return null;
+  if (isLoading && !publishedCarousels) return null;
+  if (!publishedCarousels || publishedCarousels.data.length === 0) return null;
 
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
@@ -130,8 +120,8 @@ const PublishDatatable = () => {
         highlightOnHover
         maxHeight={530}
         columns={columns}
-        fetching={isFetching || isPending}
-        records={[...records].sort((a, b) => a.order - b.order)}
+        fetching={isLoading || isReording}
+        records={publishedCarousels.data}
         tableWrapper={DragTableWrapper}
         styles={{
           table: {

@@ -1,10 +1,9 @@
 "use client";
 import ResourceImage from "@/components/ResourceImage";
-import API from "@/libs/api/client";
+import { useGetPublishedCarouselsQuery } from "@/services/carousel";
 import { CarouselResponse } from "@pawpal/shared";
 import { Autoplay, Carousel } from "@pawpal/ui/carousel";
 import { Box, Button, Paper, Stack, Text, Title } from "@pawpal/ui/core";
-import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 import classes from "./style.module.css";
@@ -102,16 +101,13 @@ export function PreviewCarousel() {
   const autoplay = useRef(Autoplay({ delay: 7000 }));
   const __ = useTranslations("Carousel.main");
   const [slides, setSlides] = useState<CarouselResponse[]>([]);
-  const { data } = useQuery({
-    queryKey: ["carousels", "published"],
-    queryFn: () => API.carousel.getPublished(),
-  });
+  const { data: publishedCarousels } = useGetPublishedCarouselsQuery({});
 
   useEffect(() => {
-    if (data?.data.data) {
-      setSlides(data.data.data);
+    if (publishedCarousels?.data) {
+      setSlides(publishedCarousels.data);
     }
-  }, [data]);
+  }, [publishedCarousels]);
 
   if (slides.length === 0)
     return (

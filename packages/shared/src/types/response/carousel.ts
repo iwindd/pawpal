@@ -21,3 +21,5 @@ export interface CarouselResponse {
   updatedAt: string | Date;
   order: number;
 }
+
+export type AdminCarouselResponse = CarouselResponse;
