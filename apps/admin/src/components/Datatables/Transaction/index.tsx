@@ -1,85 +1,36 @@
 "use client";
 import useDatatable from "@/hooks/useDatatable";
-import API from "@/libs/api/client";
+import { useTransactionActions } from "@/hooks/useTransactionActions";
+import { useGetTransactionsQuery } from "@/services/transaction";
 import {
   AdminTransactionResponse,
   ENUM_TRANSACTION_STATUS,
-  TransactionStatus,
 } from "@pawpal/shared";
 import { DataTable, DataTableProps } from "@pawpal/ui/core";
-import { useConfirmation } from "@pawpal/ui/hooks";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useFormatter, useTranslations } from "next-intl";
 import TableAction, { Action } from "../action";
 
 const TransactionDatatable = () => {
-  const format = useFormatter();
   const __ = useTranslations("Datatable.transaction");
-  const { confirm } = useConfirmation();
-  const queryClient = useQueryClient();
-  const { above, ...datatable } = useDatatable<AdminTransactionResponse>({
+  const format = useFormatter();
+  const datatable = useDatatable<AdminTransactionResponse>({
     sortStatus: {
       columnAccessor: "createdAt",
-      direction: "desc",
+      direction: "asc",
     },
   });
 
-  const { data, isFetching, refetch } = useQuery({
-    queryKey: [
-      "transactions",
-      datatable.page,
-      datatable.sortStatus.columnAccessor,
-      datatable.sortStatus.direction,
-    ],
-    queryFn: () =>
-      API.transaction.getPendingTransactions({
-        page: datatable.page,
-        limit: datatable.limit,
-        sort: datatable.sortStatus,
-      }),
+  const { data, isLoading } = useGetTransactionsQuery({
+    page: datatable.page,
+    limit: datatable.limit,
+    sort: datatable.sortStatus,
   });
 
-  const { mutate: changeTransactionStatus } = useMutation({
-    mutationFn: async ({
-      transactionId,
-      status,
-    }: {
-      transactionId: string;
-      status: TransactionStatus;
-    }) => {
-      return API.transaction.changeTransactionStatus(transactionId, status);
-    },
-    onSuccess: () => {
-      refetch();
-      queryClient.invalidateQueries({ queryKey: ["orders"] });
-    },
-  });
-
-  const onActionMakeFailed = async (transactionId: string) => {
-    const confirmed = await confirm({
-      confirmProps: { color: "red" },
-    });
-
-    if (!confirmed) return;
-
-    changeTransactionStatus({
-      transactionId,
-      status: ENUM_TRANSACTION_STATUS.FAILED as TransactionStatus,
-    });
-  };
-
-  const onActionMakeSuccess = async (transactionId: string) => {
-    const confirmed = await confirm({
-      confirmProps: { color: "green" },
-    });
-
-    if (!confirmed) return;
-
-    changeTransactionStatus({
-      transactionId,
-      status: ENUM_TRANSACTION_STATUS.SUCCESS as TransactionStatus,
-    });
-  };
+  const {
+    setFailed,
+    setSuccess,
+    isLoading: isTransactionLoading,
+  } = useTransactionActions();
 
   const columns: DataTableProps<AdminTransactionResponse>["columns"] = [
     {
@@ -144,12 +95,12 @@ const TransactionDatatable = () => {
             {
               label: __("action.make_success"),
               color: "green",
-              action: onActionMakeSuccess.bind(null, records.id),
+              action: () => setFailed(records.id) as unknown,
             },
             {
               label: __("action.make_failed"),
               color: "red",
-              action: onActionMakeFailed.bind(null, records.id),
+              action: () => setSuccess(records.id) as unknown,
             }
           );
         }
@@ -170,12 +121,12 @@ const TransactionDatatable = () => {
       maxHeight={1000}
       idAccessor="id"
       columns={columns}
-      records={data?.data.data ?? []}
-      totalRecords={data?.data.total ?? 0}
+      records={data?.data || []}
+      totalRecords={data?.total || 0}
       recordsPerPage={datatable.limit}
       page={datatable.page}
       onPageChange={datatable.setPage}
-      fetching={isFetching}
+      fetching={isLoading || isTransactionLoading}
       sortStatus={datatable.sortStatus}
       onSortStatusChange={datatable.setSortStatus}
     />

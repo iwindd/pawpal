@@ -2,6 +2,7 @@ import AppLayout from "@/components/layouts/AppLayout";
 import { AuthProvider } from "@/contexts/AuthContext";
 import APISession from "@/libs/api/server";
 import QueryProvider from "@/providers/QueryProvider";
+import StoreProvider from "@/providers/StoreProvider";
 import { ColorSchemeScript, mantineHtmlProps } from "@pawpal/ui/core";
 import lamoon from "@pawpal/ui/fonts/lamoon";
 import sarabun from "@pawpal/ui/fonts/sarabun";
@@ -47,13 +48,15 @@ export default async function RootLayout({
       </head>
       <body>
         <NextIntlClientProvider>
-          <QueryProvider>
-            <UIProvider locale={currentLocale}>
-              <AuthProvider session={session}>
-                {session ? <AppLayout>{children}</AppLayout> : children}
-              </AuthProvider>
-            </UIProvider>
-          </QueryProvider>
+          <StoreProvider>
+            <QueryProvider>
+              <UIProvider locale={currentLocale}>
+                <AuthProvider session={session}>
+                  {session ? <AppLayout>{children}</AppLayout> : children}
+                </AuthProvider>
+              </UIProvider>
+            </QueryProvider>
+          </StoreProvider>
         </NextIntlClientProvider>
       </body>
     </html>

@@ -1,6 +1,16 @@
+import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { SessionAuthGuard } from '@/common/guards/session-auth.guard';
 import { DatatablePipe, DatatableQuery } from '@/common/pipes/DatatablePipe';
 import { ZodPipe } from '@/common/pipes/ZodPipe';
-import { Body, Controller, Get, Param, Patch, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import {
   TransactionStatusInput,
   transactionStatusSchema,
@@ -8,6 +18,7 @@ import {
 import { WalletService } from './wallet.service';
 
 @Controller('admin/wallet')
+@UseGuards(JwtAuthGuard, SessionAuthGuard)
 export class AdminWalletController {
   constructor(private readonly walletService: WalletService) {}
 
