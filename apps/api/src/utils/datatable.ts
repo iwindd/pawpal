@@ -1,7 +1,8 @@
-import { DatatableQueryDto } from '@pawpal/shared';
+import { DatatableInput } from '@pawpal/shared';
 
 const datatableUtils = {
-  buildOrderBy: (sort: DatatableQueryDto['sort']) => {
+  buildOrderBy: (sort: DatatableInput['sort'] | null) => {
+    if (sort == null) return undefined;
     if (!sort?.columnAccessor || !sort?.direction) {
       return { createdAt: 'desc' }; // default
     }

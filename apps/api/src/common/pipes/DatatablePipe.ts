@@ -13,12 +13,16 @@ export class DatatablePipe implements PipeTransform {
   constructor() {}
 
   async transform(value: any) {
+    const sourceSort: any = value && value.sort;
     const parsed = DatatableQuerySchema.parse(value);
 
     return {
       skip: (parsed.page - 1) * parsed.limit,
       take: parsed.limit,
-      orderBy: datatableUtils.buildOrderBy(parsed.sort),
+      orderBy:
+        sourceSort == 'null'
+          ? undefined
+          : datatableUtils.buildOrderBy(parsed.sort),
       ...parsed,
     };
   }
