@@ -5,6 +5,7 @@ const STORAGE_URL = new URL(process.env.NEXT_PUBLIC_STORAGE_URL || "");
 
 const nextConfig: NextConfig = {
   images: {
+    dangerouslyAllowLocalIP: process.env.NODE_ENV !== "production",
     qualities: [25, 50, 75, 100],
     remotePatterns: [
       {
