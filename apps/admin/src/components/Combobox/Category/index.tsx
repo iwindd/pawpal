@@ -1,5 +1,6 @@
 "use client";
-import API from "@/libs/api/client";
+import { useGetCategoriesQuery } from "@/services/category";
+import { AdminCategoryResponse } from "@pawpal/shared";
 import {
   Combobox,
   ComboboxProps,
@@ -8,14 +9,7 @@ import {
   useCombobox,
 } from "@pawpal/ui/core";
 import { useDebouncedValue } from "@pawpal/ui/hooks";
-import { useQuery } from "@tanstack/react-query";
 import { forwardRef, useEffect, useState } from "react";
-
-interface CategoryResponse {
-  id: string;
-  name: string;
-  slug: string;
-}
 
 interface CategoryComboboxProps {
   placeholder?: string;
@@ -47,7 +41,7 @@ const CategoryCombobox = forwardRef<HTMLInputElement, CategoryComboboxProps>(
     const [searchTerm, setSearchTerm] = useState("");
     const [debouncedSearchTerm] = useDebouncedValue(searchTerm, 300);
     const [internalValue, setInternalValue] = useState<string | null>(null);
-    const [categories, setCategories] = useState<CategoryResponse[]>([]);
+    const [categories, setCategories] = useState<AdminCategoryResponse[]>([]);
 
     const combobox = useCombobox({
       onDropdownClose: () => {
@@ -56,21 +50,15 @@ const CategoryCombobox = forwardRef<HTMLInputElement, CategoryComboboxProps>(
       },
     });
 
-    const { data: categoriesResponse, isLoading } = useQuery({
-      queryKey: ["categories", debouncedSearchTerm],
-      queryFn: async () => {
-        const response = await API.category.list({
-          search: debouncedSearchTerm,
-        });
-        return response.data;
-      },
+    const categoriesQuery = useGetCategoriesQuery({
+      search: debouncedSearchTerm,
     });
 
     useEffect(() => {
-      if (categoriesResponse) {
-        setCategories(categoriesResponse);
+      if (categoriesQuery.data) {
+        setCategories(categoriesQuery.data);
       }
-    }, [categoriesResponse]);
+    }, [categoriesQuery.data]);
 
     useEffect(() => {
       setInternalValue(value ?? null);
@@ -87,6 +75,8 @@ const CategoryCombobox = forwardRef<HTMLInputElement, CategoryComboboxProps>(
     );
     const displayValue = selectedCategory?.name || internalValue || value || "";
 
+    console.log(value);
+
     const options = categories.map((category) => (
       <Combobox.Option value={category.id} key={category.id}>
         {category.name}
@@ -94,7 +84,7 @@ const CategoryCombobox = forwardRef<HTMLInputElement, CategoryComboboxProps>(
     ));
 
     const rightSection = () => {
-      if (isLoading) {
+      if (categoriesQuery.isLoading) {
         return <Loader size={18} />;
       }
 
@@ -114,7 +104,7 @@ const CategoryCombobox = forwardRef<HTMLInputElement, CategoryComboboxProps>(
     };
 
     const optionChildren = () => {
-      if (isLoading) {
+      if (categoriesQuery.isLoading) {
         return <Combobox.Empty>Loading...</Combobox.Empty>;
       }
 
@@ -158,7 +148,7 @@ const CategoryCombobox = forwardRef<HTMLInputElement, CategoryComboboxProps>(
             }}
             rightSection={rightSection()}
             rightSectionPointerEvents={
-              clearable && value && !isLoading ? "all" : "none"
+              clearable && value && !categoriesQuery.isLoading ? "all" : "none"
             }
           />
         </Combobox.Target>
