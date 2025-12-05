@@ -1,13 +1,14 @@
 "use client";
 import useFormValidate from "@/hooks/useFormValidate";
-import usePaymentGateway from "@/hooks/usePaymentGateway";
-import API from "@/libs/api/client";
+import {
+  useGetGatewayQuery,
+  useUpdatePromptpayManualMetadataMutation,
+} from "@/services/paymentGateway";
 import { IconDeviceFloppy, IconQrcode } from "@pawpal/icons";
 import { PromptpayManualInput, promptpayManualSchema } from "@pawpal/shared";
 import { Button, Paper, Stack, TextInput } from "@pawpal/ui/core";
 import { useConfirmation } from "@pawpal/ui/hooks";
 import { notify } from "@pawpal/ui/notifications";
-import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useEffect } from "react";
 import classes from "./style.module.css";
@@ -15,53 +16,54 @@ import classes from "./style.module.css";
 const PromptpayManualPage = () => {
   const __ = useTranslations("PaymentGateway.PromptpayManual");
   const { confirmation } = useConfirmation();
-  const paymentGateway = usePaymentGateway("promptpay-manual");
+  const { data: paymentGateway, isLoading } =
+    useGetGatewayQuery("promptpay-manual");
+  const [updatePromptpayManualMetadata, { isLoading: isUpdating }] =
+    useUpdatePromptpayManualMetadataMutation();
 
-  const updatePromptpayManualMetadata = useMutation({
-    mutationKey: ["promptpayManual"],
-    mutationFn: async (values: PromptpayManualInput) =>
-      API.paymentGateway.updatePromptpayManualMetadata(values),
-    onSuccess: () => {
+  const form = useFormValidate<PromptpayManualInput>({
+    schema: promptpayManualSchema,
+    mode: "uncontrolled",
+    enhanceGetInputProps: () => ({
+      disabled: isLoading || isUpdating,
+    }),
+    initialValues: {
+      number: paymentGateway?.metadata.number || "",
+      name: paymentGateway?.metadata.name || "",
+    },
+  });
+
+  const onSubmit = confirmation<PromptpayManualInput>(
+    async (values) => {
+      const response = await updatePromptpayManualMetadata(values);
+
+      if (response.error) {
+        return notify.show({
+          message: __("Errors.try_again"),
+          color: "red",
+        });
+      }
+
       notify.show({
         title: __("notify.updated.title"),
         message: __("notify.updated.message"),
         color: "green",
       });
     },
-    onError: () => {
-      notify.show({
-        message: __("Errors.try_again"),
-        color: "red",
-      });
-    },
-  });
-
-  const form = useFormValidate<PromptpayManualInput>({
-    schema: promptpayManualSchema,
-    mode: "uncontrolled",
-    enhanceGetInputProps: () => ({
-      disabled:
-        updatePromptpayManualMetadata.isPending || paymentGateway.isPending,
-    }),
-    initialValues: {
-      number: paymentGateway.data?.data.metadata.number,
-      name: paymentGateway.data?.data.metadata.name,
-    },
-  });
-
-  const onSubmit = confirmation(updatePromptpayManualMetadata.mutate, {
-    title: __("confirmation.save.title"),
-    message: __("confirmation.save.message"),
-  });
+    {
+      title: __("confirmation.save.title"),
+      message: __("confirmation.save.message"),
+    }
+  );
 
   useEffect(() => {
-    if (paymentGateway.data) {
+    if (paymentGateway) {
       form.setValues({
-        number: paymentGateway.data.data.metadata.number,
-        name: paymentGateway.data.data.metadata.name,
+        number: paymentGateway.metadata.number || "",
+        name: paymentGateway.metadata.name || "",
       });
     }
-  }, [paymentGateway.data]);
+  }, [paymentGateway]);
 
   return (
     <div>
@@ -91,8 +93,8 @@ const PromptpayManualPage = () => {
 
           <div>
             <Button
-              loading={updatePromptpayManualMetadata.isPending}
-              disabled={paymentGateway.isPending}
+              loading={isUpdating}
+              disabled={isLoading}
               leftSection={<IconDeviceFloppy size={20} />}
               type="submit"
               color="save"

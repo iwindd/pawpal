@@ -25,3 +25,11 @@ export interface PaymentChargeCreatedResponse {
   createdAt: string;
   qrcode?: string;
 }
+
+export interface AdminPaymentGatewayResponse {
+  id: string;
+  metadata: {
+    name?: string;
+    number?: string;
+  };
+}
