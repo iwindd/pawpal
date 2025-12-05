@@ -124,15 +124,17 @@ const BaseComboboxInner = <T,>(
 
   const selected = items.find((i) => [internalValue, value].includes(i.id));
   const displayValue = selected?.label || "";
-  const sortedItems = [...items].sort((a, b) => {
-    if (!similaritySort) return a.label.localeCompare(b.label);
+  const sortedItems = [...items]
+    .sort((a, b) => {
+      if (!similaritySort) return a.label.localeCompare(b.label);
 
-    const scoreA = similaritySort(a, debouncedSearchTerm);
-    const scoreB = similaritySort(b, debouncedSearchTerm);
+      const scoreA = similaritySort(a, debouncedSearchTerm);
+      const scoreB = similaritySort(b, debouncedSearchTerm);
 
-    // เรียงจากมาก → น้อย
-    return scoreB - scoreA;
-  });
+      // เรียงจากมาก → น้อย
+      return scoreB - scoreA;
+    })
+    .slice(0, 5);
 
   const options = sortedItems.map((item) => (
     <Combobox.Option value={item.id} key={item.id}>
