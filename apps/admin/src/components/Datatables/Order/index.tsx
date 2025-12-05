@@ -1,7 +1,7 @@
 "use client";
 import { getPath } from "@/configs/route";
 import useDatatable from "@/hooks/useDatatable";
-import API from "@/libs/api/client";
+import { useGetTopupOrdersQuery } from "@/services/orders";
 import { IconEdit } from "@pawpal/icons";
 import { AdminOrderResponse } from "@pawpal/shared";
 import {
@@ -11,7 +11,6 @@ import {
   Text,
   Title,
 } from "@pawpal/ui/core";
-import { useQuery } from "@tanstack/react-query";
 import { useFormatter, useTranslations } from "next-intl";
 import TableAction from "../action";
 
@@ -25,19 +24,10 @@ const OrderDatatable = () => {
     },
   });
 
-  const { data, isFetching } = useQuery({
-    queryKey: [
-      "orders",
-      datatable.page,
-      datatable.sortStatus.columnAccessor,
-      datatable.sortStatus.direction,
-    ],
-    queryFn: () =>
-      API.order.getTopupOrders({
-        page: datatable.page,
-        limit: datatable.limit,
-        sort: datatable.sortStatus,
-      }),
+  const { data, isLoading } = useGetTopupOrdersQuery({
+    page: datatable.page,
+    limit: datatable.limit,
+    sort: datatable.sortStatus,
   });
 
   const columns: DataTableProps<AdminOrderResponse>["columns"] = [
@@ -149,12 +139,12 @@ const OrderDatatable = () => {
       maxHeight={1000}
       idAccessor="id"
       columns={columns}
-      records={data?.data.data ?? []}
-      totalRecords={data?.data.total ?? 0}
+      records={data?.data ?? []}
+      totalRecords={data?.total ?? 0}
       recordsPerPage={datatable.limit}
       page={datatable.page}
       onPageChange={datatable.setPage}
-      fetching={isFetching}
+      fetching={isLoading}
       sortStatus={datatable.sortStatus}
       onSortStatusChange={datatable.setSortStatus}
     />
