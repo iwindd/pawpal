@@ -1,3 +1,4 @@
+import { authApi } from "@/services/auth";
 import { carouselApi } from "@/services/carousel";
 import { categoryApi } from "@/services/category";
 import { fieldApi } from "@/services/field";
@@ -23,6 +24,7 @@ export const store = configureStore({
     [fieldApi.reducerPath]: fieldApi.reducer,
     [categoryApi.reducerPath]: categoryApi.reducer,
     [carouselApi.reducerPath]: carouselApi.reducer,
+    [authApi.reducerPath]: authApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -35,7 +37,8 @@ export const store = configureStore({
       orderApi.middleware,
       fieldApi.middleware,
       categoryApi.middleware,
-      carouselApi.middleware
+      carouselApi.middleware,
+      authApi.middleware
     ),
 });
 

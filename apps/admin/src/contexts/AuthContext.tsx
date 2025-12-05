@@ -1,5 +1,9 @@
 "use client";
-import API from "@/libs/api/client";
+import {
+  useLazyGetProfileQuery,
+  useLoginMutation,
+  useLogoutMutation,
+} from "@/services/auth";
 import { Session, type LoginInput } from "@pawpal/shared";
 import { createContext, ReactNode, useContext, useMemo, useState } from "react";
 
@@ -39,33 +43,34 @@ export const AuthProvider = ({
 }: AuthProviderProps): React.JSX.Element => {
   const [user, setUser] = useState<Session | null>(session);
   const [isLoading, setIsLoading] = useState(false);
+  const [getProfile] = useLazyGetProfileQuery();
+  const [loginMutation] = useLoginMutation();
+  const [logoutMutation] = useLogoutMutation();
 
   const refreshProfile = async (): Promise<Session | null> => {
-    try {
-      const resp = await API.auth.getProfile();
-      if (resp.success) {
-        setUser(resp.data);
-        return resp.data;
-      }
-      return null;
-    } catch (error) {
-      console.error("Failed to refresh profile:", error);
-      return null;
+    const resp = await getProfile();
+
+    if (!resp.error && resp.data) {
+      setUser(resp.data);
+      return resp.data;
     }
+
+    return null;
   };
 
   const login = async (props: LoginProps): Promise<LoginResult> => {
     setIsLoading(true);
 
     try {
-      const resp = await API.auth.login(props.inputs);
+      const resp = await loginMutation(props.inputs);
 
-      if (resp.success) {
+      if (!resp.error) {
         setUser(resp.data);
         return "success";
       }
 
-      if (resp.data.response?.status === 401) return "invalid_credentials";
+      const status = (resp.error as unknown as { status: number }).status;
+      if (status === 401) return "invalid_credentials";
       return "error";
     } catch (error) {
       console.error("Login failed:", error);
@@ -78,10 +83,11 @@ export const AuthProvider = ({
   const logout = async (): Promise<boolean> => {
     setIsLoading(true);
     try {
-      const { success } = await API.auth.logout();
-      if (success) setUser(null);
+      const resp = await logoutMutation();
+      if (resp.error) return false;
 
-      return success;
+      setUser(null);
+      return true;
     } catch (error) {
       console.error("Logout failed:", error);
       throw error;
