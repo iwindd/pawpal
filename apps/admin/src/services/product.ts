@@ -66,6 +66,7 @@ export const productApi = createApi({
 });
 
 export const {
+  useLazyGetProductsQuery,
   useGetProductsQuery,
   useLazyGetProductQuery,
   useCreateProductMutation,

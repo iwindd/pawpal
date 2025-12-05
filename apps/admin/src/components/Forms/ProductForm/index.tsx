@@ -121,9 +121,11 @@ const ProductForm = ({
                   {...form.getInputProps("slug")}
                 />
                 <CategoryCombobox
-                  placeholder={__("fields.product.category.placeholder")}
-                  withAsterisk
-                  size="xs"
+                  inputProps={{
+                    placeholder: __("fields.product.category.placeholder"),
+                    withAsterisk: true,
+                    size: "xs",
+                  }}
                   key={form.key("category_id")}
                   {...form.getInputProps("category_id")}
                 />

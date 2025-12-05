@@ -64,6 +64,7 @@ export {
   type ComboboxProps,
   type GroupProps,
   type ImageProps,
+  type InputBaseProps,
   type MantineTheme,
   type MantineThemeOverride,
   type MenuItemProps,

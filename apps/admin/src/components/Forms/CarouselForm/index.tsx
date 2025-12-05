@@ -95,8 +95,10 @@ const CarouselForm = ({
 
                 <Stack>
                   <ComboboxProduct
-                    label={__("fields.product.label")}
-                    placeholder={__("fields.product.placeholder")}
+                    inputProps={{
+                      label: __("fields.product.label"),
+                      placeholder: __("fields.product.placeholder"),
+                    }}
                     key={form.key("product_id")}
                     {...form.getInputProps("product_id")}
                   />

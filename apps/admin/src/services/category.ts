@@ -4,7 +4,7 @@ import { createApi } from "@reduxjs/toolkit/query/react";
 
 export const categoryApi = createApi({
   reducerPath: "categoryApi",
-  tagTypes: ["Categories"],
+  tagTypes: ["Categories", "Category"],
   baseQuery: baseQuery({
     baseUrl: `/admin/category`,
   }),
@@ -16,7 +16,17 @@ export const categoryApi = createApi({
       }),
       providesTags: ["Categories"],
     }),
+    getCategory: builder.query<AdminCategoryResponse, string>({
+      query: (id) => ({
+        url: `/${id}`,
+      }),
+      providesTags: (result, error, id) => [{ type: "Category", id }],
+    }),
   }),
 });
 
-export const { useGetCategoriesQuery } = categoryApi;
+export const {
+  useLazyGetCategoriesQuery,
+  useGetCategoriesQuery,
+  useLazyGetCategoryQuery,
+} = categoryApi;
