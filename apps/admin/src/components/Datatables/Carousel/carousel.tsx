@@ -1,6 +1,5 @@
 import CarouselStatusBadge from "@/components/Badges/CarouselStatus";
 import useDatatable from "@/hooks/useDatatable";
-import API from "@/libs/api/client";
 import { useGetCarouselsQuery } from "@/services/carousel";
 import { IconArchive, IconEdit } from "@pawpal/icons";
 import { CarouselResponse } from "@pawpal/shared";
@@ -23,7 +22,10 @@ const CarouselDatatable = () => {
   const __ = useTranslations("Datatable.carousel");
   const [search, setSearch] = useState<string>("");
   const { above, ...datatable } = useDatatable<CarouselResponse>({
-    sortStatus: API.carousel.DEFAULT_SORT,
+    sortStatus: {
+      columnAccessor: "status",
+      direction: "asc",
+    },
     limit: 10,
   });
 

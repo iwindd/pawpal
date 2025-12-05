@@ -1,6 +1,6 @@
 import { NavLink, navlinks, othersNavlinks } from "@/configs/navbar";
 import { useActiveRouteConfig } from "@/hooks/useActiveRouteConfig";
-import API from "@/libs/api/client";
+import { useGetNotificationsQuery } from "@/services/notifications";
 import { IconMinus, IconPlus } from "@pawpal/icons";
 import {
   Badge,
@@ -15,7 +15,6 @@ import {
   UnstyledButton,
 } from "@pawpal/ui/core";
 import { useDisclosure } from "@pawpal/ui/hooks";
-import { useQuery } from "@tanstack/react-query";
 import { useFormatter, useTranslations } from "next-intl";
 import Link from "next/link";
 import classes from "./style.module.css";
@@ -27,10 +26,8 @@ interface Props {
 
 export default function Navbar({ opened, toggle }: Readonly<Props>) {
   const activeRoute = useActiveRouteConfig();
-  const { data: badges } = useQuery({
-    queryKey: ["notifications"],
-    queryFn: async () => await API.getNotifications(),
-  });
+
+  const { data: badges } = useGetNotificationsQuery();
 
   return (
     <Stack h="100%" gap={20} px="md" py="lg">
@@ -47,7 +44,7 @@ export default function Navbar({ opened, toggle }: Readonly<Props>) {
             const isActive = activeRoute?.path === path;
 
             return navlink.files.length > 0 ? (
-              <Folder key={navlink.id} {...navlink} badges={badges} />
+              <Folder key={navlink.id} {...navlink} badges={badges || {}} />
             ) : (
               <Flex w="100%" direction="column" align="start" key={navlink.id}>
                 <LinkItem {...navlink} link={path} isActive={isActive} />
