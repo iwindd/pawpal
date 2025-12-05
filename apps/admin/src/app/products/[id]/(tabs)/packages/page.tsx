@@ -1,13 +1,12 @@
 "use client";
 import ProductPackageDatatable from "@/components/Datatables/Product/Package";
 import PackageModal from "@/components/Modals/Package";
-import API from "@/libs/api/client";
+import { useCreateProductPackageMutation } from "@/services/package";
 import { IconPlus } from "@pawpal/icons";
 import { PackageInput } from "@pawpal/shared";
 import { Button, Paper } from "@pawpal/ui/core";
 import { useDisclosure } from "@pawpal/ui/hooks";
 import { notify } from "@pawpal/ui/notifications";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useProduct } from "../../ProductContext";
 
@@ -15,21 +14,24 @@ const PackagePage = () => {
   const product = useProduct();
   const __ = useTranslations("ProductPackage");
   const [modalOpened, { close, open }] = useDisclosure(false);
-  const queryClient = useQueryClient();
+  const [createProductPackage, { isLoading }] =
+    useCreateProductPackageMutation();
 
-  const { mutate, isPending } = useMutation({
-    mutationFn: async (data: PackageInput) =>
-      await API.package.create(product.id, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["packages", product.id] });
-      notify.show({
-        title: __("notify.created.title"),
-        message: __("notify.created.message"),
-        color: "green",
-      });
-      close();
-    },
-  });
+  const onSubmit = async (data: PackageInput) => {
+    const response = await createProductPackage({
+      productId: product.id,
+      payload: data,
+    });
+
+    if (response.error) return;
+
+    notify.show({
+      title: __("notify.created.title"),
+      message: __("notify.created.message"),
+      color: "green",
+    });
+    close();
+  };
 
   return (
     <Paper
@@ -48,10 +50,10 @@ const PackagePage = () => {
     >
       <ProductPackageDatatable productId={product.id} />
       <PackageModal
-        onSubmit={mutate}
+        onSubmit={onSubmit}
         opened={modalOpened}
         onClose={close}
-        isLoading={isPending}
+        isLoading={isLoading}
         title={__("actions.addPackage")}
       />
     </Paper>

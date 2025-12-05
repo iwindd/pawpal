@@ -1,10 +1,9 @@
 "use client";
 import PackageModal from "@/components/Modals/Package";
-import API from "@/libs/api/client";
+import { useUpdatePackageMutation } from "@/services/package";
 import { AdminProductPackageResponse, PackageInput } from "@pawpal/shared";
 import { useDisclosure } from "@pawpal/ui/hooks";
 import { notify } from "@pawpal/ui/notifications";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 
@@ -20,31 +19,29 @@ const EditPackageModal = ({
   onClose,
 }: EditPackageModalProps) => {
   const __ = useTranslations("ProductPackage");
-  const queryClient = useQueryClient();
+  const [updatePackageMutation, { isLoading }] = useUpdatePackageMutation();
 
-  const { mutate, isPending } = useMutation({
-    mutationFn: async (data: PackageInput) =>
-      await API.package.update(pkg!.id, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["packages"] });
-      notify.show({
-        title: __("notify.updated.title"),
-        message: __("notify.updated.message"),
-        color: "green",
-      });
-      onClose();
-    },
-  });
+  const handleSubmit = async (data: PackageInput) => {
+    const response = await updatePackageMutation({
+      packageId: pkg!.id,
+      payload: data,
+    });
 
-  const handleSubmit = (data: PackageInput) => {
-    mutate(data);
+    if (response.error) return;
+
+    notify.show({
+      title: __("notify.updated.title"),
+      message: __("notify.updated.message"),
+      color: "green",
+    });
+    onClose();
   };
 
   return (
     <PackageModal
       onSubmit={handleSubmit}
       onClose={onClose}
-      isLoading={isPending}
+      isLoading={isLoading}
       title={__("actions.editPackage")}
       opened={opened}
       package={pkg}

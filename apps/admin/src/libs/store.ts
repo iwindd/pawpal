@@ -1,3 +1,4 @@
+import { packageApi } from "@/services/package";
 import { paymentGatewayApi } from "@/services/paymentGateway";
 import { productApi } from "@/services/product";
 import { resourceApi } from "@/services/resource";
@@ -13,6 +14,7 @@ export const store = configureStore({
     [userApi.reducerPath]: userApi.reducer,
     [resourceApi.reducerPath]: resourceApi.reducer,
     [paymentGatewayApi.reducerPath]: paymentGatewayApi.reducer,
+    [packageApi.reducerPath]: packageApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -20,7 +22,8 @@ export const store = configureStore({
       productApi.middleware,
       userApi.middleware,
       resourceApi.middleware,
-      paymentGatewayApi.middleware
+      paymentGatewayApi.middleware,
+      packageApi.middleware
     ),
 });
 

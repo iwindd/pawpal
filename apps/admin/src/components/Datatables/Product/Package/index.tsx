@@ -1,10 +1,9 @@
 "use client";
 import useDatatable from "@/hooks/useDatatable";
-import API from "@/libs/api/client";
+import { useGetProductPackagesQuery } from "@/services/package";
 import { IconEdit } from "@pawpal/icons";
 import { AdminProductPackageResponse } from "@pawpal/shared";
 import { DataTable, DataTableProps, Text } from "@pawpal/ui/core";
-import { useQuery } from "@tanstack/react-query";
 import { useFormatter, useTranslations } from "next-intl";
 import TableAction from "../../action";
 import useEditPackageModal from "./edit";
@@ -26,20 +25,13 @@ const ProductPackageDatatable = ({
     },
   });
 
-  const { data, isFetching } = useQuery({
-    queryKey: [
-      "packages",
-      productId,
-      datatable.page,
-      datatable.sortStatus.columnAccessor,
-      datatable.sortStatus.direction,
-    ],
-    queryFn: () =>
-      API.package.getProductPackages(productId, {
-        page: datatable.page,
-        limit: datatable.limit,
-        sort: datatable.sortStatus,
-      }),
+  const { data, isFetching } = useGetProductPackagesQuery({
+    productId,
+    params: {
+      page: datatable.page,
+      limit: datatable.limit,
+      sort: datatable.sortStatus,
+    },
   });
 
   const columns: DataTableProps<AdminProductPackageResponse>["columns"] = [
@@ -96,8 +88,8 @@ const ProductPackageDatatable = ({
         maxHeight={1000}
         idAccessor="id"
         columns={columns}
-        records={data?.data.data ?? []}
-        totalRecords={data?.data.total ?? 0}
+        records={data?.data ?? []}
+        totalRecords={data?.total ?? 0}
         recordsPerPage={datatable.limit}
         page={datatable.page}
         onPageChange={datatable.setPage}
