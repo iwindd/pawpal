@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ENUM_FIELD_TYPE } from "../order/field";
+import { ENUM_FIELD_TYPE } from "../../enums/field";
 
 const baseFieldSchema = z.object({
   label: z.string().min(3).max(50),

@@ -1,7 +1,4 @@
-import {
-  TransactionStatus,
-  TransactionType,
-} from "../../schemas/wallet/transaction";
+import { TransactionStatus, TransactionType } from "../../enums/transaction";
 
 export interface PaymentGatewayResponse {
   id: string;

@@ -1,22 +1,18 @@
-import {
-  Decimal,
-  DecimalJsLike,
-} from "../../../../prisma/generated/client/runtime/client";
-import { FieldType } from "../../schemas/order/field";
-import { DiscountType } from "../../schemas/sale";
+import { FieldType } from "../../enums/field";
+import { DiscountType } from "../../enums/sale";
 
 export interface ProductSaleValue {
   discount: number;
   discountType: DiscountType;
   endAt: string | Date;
   startAt: string | Date;
-  price?: number | DecimalJsLike;
+  price?: number;
 }
 
 export interface ProductPackage {
   id: string;
   name: string;
-  price: number | Decimal;
+  price: number;
   description?: string;
   sale?: ProductSaleValue;
 }

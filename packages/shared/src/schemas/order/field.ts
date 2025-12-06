@@ -1,13 +1,6 @@
 import { z } from "zod";
+import { ENUM_FIELD_TYPE } from "../../enums/field";
 import { ProductField } from "../../types/response/product";
-
-export type FieldType = keyof typeof ENUM_FIELD_TYPE;
-export const ENUM_FIELD_TYPE = {
-  TEXT: "TEXT",
-  EMAIL: "EMAIL",
-  SELECT: "SELECT",
-  PASSWORD: "PASSWORD",
-};
 
 export const buildFieldSchema = (
   fields: ProductField[],

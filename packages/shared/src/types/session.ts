@@ -1,4 +1,4 @@
-import { Role, WalletType } from "@pawpal/prisma";
+import { WalletType } from "../enums/wallet";
 
 export interface Session {
   id: string;
@@ -7,5 +7,5 @@ export interface Session {
   avatar: string | null;
   createdAt: string;
   userWallet: Record<WalletType, number>;
-  roles: Role["name"][];
+  roles: string[];
 }

@@ -13,7 +13,6 @@
     "dev": "tsup src/index.ts --watch --format esm,cjs --dts"
   },
   "dependencies": {
-    "@pawpal/prisma": "workspace:*",
     "@pawpal/typescript-config": "workspace:*",
     "zod": "catalog:"
   },

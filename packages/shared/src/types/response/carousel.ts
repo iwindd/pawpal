@@ -1,4 +1,4 @@
-import { CarouselStatus } from "../../schemas/website/carousel";
+import { CarouselStatus } from "../../enums/carousel";
 
 export interface CarouselResponse {
   id: string;

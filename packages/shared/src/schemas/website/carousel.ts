@@ -1,14 +1,8 @@
 import { z } from "zod";
+import { ENUM_CAROUSEL_STATUS } from "../../enums/carousel";
 
 const MAX_TITLE_LENGTH = 30;
 const MIN_TITLE_LENGTH = 3;
-
-export type CarouselStatus = "DRAFT" | "ARCHIVED" | "PUBLISHED";
-export const ENUM_CAROUSEL_STATUS: Record<CarouselStatus, CarouselStatus> = {
-  DRAFT: "DRAFT",
-  ARCHIVED: "ARCHIVED",
-  PUBLISHED: "PUBLISHED",
-};
 
 export const carouselSchema = z.object({
   resource_id: z.string().min(1, { message: "invalid_resource" }).trim(),

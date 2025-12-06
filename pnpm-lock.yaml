@@ -734,9 +734,6 @@ importers:
 
   packages/shared:
     dependencies:
-      '@pawpal/prisma':
-        specifier: workspace:*
-        version: link:../prisma
       '@pawpal/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config

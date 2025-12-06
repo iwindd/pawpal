@@ -1,4 +1,4 @@
-import { FieldType } from "../../schemas/order/field";
+import { FieldType } from "../../enums/field";
 import { Creator } from "./creator";
 
 export interface AdminFieldResponse {

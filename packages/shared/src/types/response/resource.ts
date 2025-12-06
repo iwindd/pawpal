@@ -1,4 +1,4 @@
-import { ResourceType } from "@pawpal/prisma";
+import { ResourceType } from "../../enums/resource";
 
 export interface ResourceResponse {
   id: string;
