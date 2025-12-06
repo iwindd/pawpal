@@ -6,13 +6,6 @@ import {
 } from "@pawpal/shared";
 import { createApi } from "@reduxjs/toolkit/query/react";
 
-interface FindAllProductInput extends DatatableInput {
-  filters?: {
-    search?: string;
-    category?: string;
-  };
-}
-
 export const productApi = createApi({
   reducerPath: "productApi",
   tagTypes: ["Products"],
@@ -22,7 +15,12 @@ export const productApi = createApi({
   endpoints: (builder) => ({
     getInfiniteProducts: builder.infiniteQuery<
       DatatableResponse<ProductResponse>,
-      FindAllProductInput,
+      DatatableInput & {
+        filters?: {
+          search?: string;
+          category?: string;
+        };
+      },
       number
     >({
       infiniteQueryOptions: {
