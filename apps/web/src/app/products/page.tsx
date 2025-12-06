@@ -1,6 +1,6 @@
 "use client";
 
-import API from "@/libs/api/client";
+import { useGetInfiniteProductsInfiniteQuery } from "@/features/product/productApi";
 import { IconSearch } from "@pawpal/icons";
 import {
   Center,
@@ -14,7 +14,6 @@ import {
   Text,
   TextInput,
 } from "@pawpal/ui/core";
-import { useInfiniteQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useMemo, useState } from "react";
@@ -41,33 +40,22 @@ export default function ProductsPage() {
   // Fetch products with infinite query
   const {
     data,
+    isLoading,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-    isLoading,
     error,
-  } = useInfiniteQuery({
-    queryKey: ["products", state.search],
-    queryFn: async ({ pageParam = 1 }) => {
-      return await API.product.getAllProducts({
-        page: pageParam,
-        limit: 12,
-        search: state.search || undefined,
-        // TODO:: add category filter when backend supports it
-      });
+  } = useGetInfiniteProductsInfiniteQuery({
+    limit: 12,
+    filters: {
+      search: state.search,
+      category: state.category,
     },
-    getNextPageParam: (lastPage, allPages) => {
-      const total = lastPage.data.total;
-      const loaded = allPages.flatMap((p) => p.data.data).length;
-
-      return loaded < total ? allPages.length + 1 : undefined;
-    },
-    initialPageParam: 1,
   });
 
   // Flatten all products from all pages
   const allProducts = useMemo(() => {
-    return data?.pages.flatMap((page) => page.data.data) ?? [];
+    return data?.pages.flatMap((page) => page.data) ?? [];
   }, [data]);
 
   const handleSearch = useCallback((search: string) => {
