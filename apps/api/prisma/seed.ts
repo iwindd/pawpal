@@ -1,22 +1,26 @@
-import { PrismaPg } from "@prisma/adapter-pg";
-import bcrypt from "bcrypt";
-import { env } from "prisma/config";
-import { DiscountType, FieldType, PrismaClient } from "../generated/client";
-import categories from "./seeds/categories.json";
-import paymentGateways from "./seeds/paymentGateways.json";
-import products from "./seeds/products.json";
-import productTags from "./seeds/productTags.json";
-import roles from "./seeds/roles.json";
-import sales from "./seeds/sales.json";
-import users from "./seeds/users.json";
+import { PrismaPg } from '@prisma/adapter-pg';
+import bcrypt from 'bcrypt';
+import { env } from 'prisma/config';
+import {
+  DiscountType,
+  FieldType,
+  PrismaClient,
+} from '../src/generated/prisma/client';
+import categories from './data/categories.json';
+import paymentGateways from './data/paymentGateways.json';
+import products from './data/products.json';
+import productTags from './data/productTags.json';
+import roles from './data/roles.json';
+import sales from './data/sales.json';
+import users from './data/users.json';
 
 const adapter = new PrismaPg({
-  connectionString: env("DATABASE_URL"),
+  connectionString: env('DATABASE_URL'),
 });
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
-  console.log("🌱 Starting seed...");
+  console.log('🌱 Starting seed...');
 
   // Seed permissions
   await prisma.$transaction(async () => {
@@ -150,7 +154,7 @@ async function main() {
       });
 
       console.log(
-        `  - Seeded sale: ${sale.name} including packages (${sale.packages.join(", ")})`
+        `  - Seeded sale: ${sale.name} including packages (${sale.packages.join(', ')})`,
       );
     }
   });
@@ -181,13 +185,13 @@ async function main() {
     `Created ${await prisma.sale.count()} sales\n`,
     `Created ${await prisma.productField.count()} fields\n`,
     `Created ${await prisma.paymentGateway.count()} payment gateways\n`,
-    `--------------------------------\n`
+    `--------------------------------\n`,
   );
 }
 
 main()
   .catch((e) => {
-    console.error("❌ Seed failed:", e);
+    console.error('❌ Seed failed:', e);
     process.exit(1);
   })
   .finally(async () => {

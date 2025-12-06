@@ -1,4 +1,4 @@
-import { Prisma } from '@pawpal/prisma';
+import { Prisma } from '@/generated/prisma/client';
 import { DiscountType, ENUM_DISCOUNT_TYPE } from '@pawpal/shared';
 
 const getPercentDiscount = (

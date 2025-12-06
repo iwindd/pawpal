@@ -1,6 +1,6 @@
+import { Sale } from '@/generated/prisma/client';
 import { Injectable } from '@nestjs/common';
-import { DiscountType, Sale } from '@pawpal/prisma';
-import { DecimalJsLike } from '@pawpal/prisma/generated/client/runtime/client';
+import { ENUM_DISCOUNT_TYPE } from '@pawpal/shared';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
@@ -50,7 +50,7 @@ export class SaleService {
     });
 
     const hasDiscountFixed = sales.some(
-      (sale) => sale.discountType === DiscountType.FIXED,
+      (sale) => sale.discountType === ENUM_DISCOUNT_TYPE.FIXED,
     );
 
     if (hasDiscountFixed) {
@@ -60,16 +60,15 @@ export class SaleService {
         Infinity,
       );
 
-      const parseFixedToPercent = (sale: Sale): DecimalJsLike => {
-        return ((Number(sale.discount) / lowestPrice) *
-          100) as any as DecimalJsLike;
+      const parseFixedToPercent = (sale: Sale) => {
+        return ((Number(sale.discount) / lowestPrice) * 100) as any;
       };
 
       return sales.map((sale) => ({
         ...sale,
-        discountType: DiscountType.PERCENT,
+        discountType: ENUM_DISCOUNT_TYPE.PERCENT,
         discount:
-          sale.discountType === DiscountType.PERCENT
+          sale.discountType === ENUM_DISCOUNT_TYPE.PERCENT
             ? sale.discount
             : parseFixedToPercent(sale),
       }));

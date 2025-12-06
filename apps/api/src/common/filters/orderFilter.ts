@@ -1,4 +1,4 @@
-import { Prisma } from '@pawpal/prisma';
+import { Prisma } from '@/generated/prisma/client';
 import { BaseFilterBuilder } from './BaseFilterBuilder';
 
 export class OrderFilterBuilder extends BaseFilterBuilder<Prisma.OrderWhereInput> {

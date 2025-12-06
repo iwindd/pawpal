@@ -1,6 +1,6 @@
 import { DatatableQuery } from '@/common/pipes/DatatablePipe';
+import { Package, Prisma } from '@/generated/prisma/client';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Package, Prisma } from '@pawpal/prisma';
 import {
   AdminProductPackageResponse,
   DatatableResponse,

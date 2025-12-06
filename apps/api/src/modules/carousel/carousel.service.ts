@@ -1,6 +1,6 @@
+import { CarouselStatus } from '@/generated/prisma/enums';
 import datatableUtils from '@/utils/datatable';
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
-import { CarouselStatus } from '@pawpal/prisma';
 import {
   CarouselInput,
   CarouselReorderInput,

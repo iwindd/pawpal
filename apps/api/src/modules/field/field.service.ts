@@ -1,6 +1,6 @@
 import { DatatableQuery } from '@/common/pipes/DatatablePipe';
+import { Prisma } from '@/generated/prisma/client';
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@pawpal/prisma';
 import {
   FieldInput,
   FieldReorderInput,

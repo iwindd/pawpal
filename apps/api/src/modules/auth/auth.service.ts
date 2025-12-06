@@ -1,3 +1,4 @@
+import { Role, User } from '@/generated/prisma/client';
 import {
   BadRequestException,
   ConflictException,
@@ -6,13 +7,13 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Role, User, WalletType } from '@pawpal/prisma';
 import {
   ChangeEmailInput,
   ChangePasswordInput,
   RegisterInput,
   Session,
   UpdateProfileInput,
+  WalletType,
 } from '@pawpal/shared';
 import bcrypt from 'bcrypt';
 import { JwtPayload } from '../../common/interfaces/jwt-payload.interface';

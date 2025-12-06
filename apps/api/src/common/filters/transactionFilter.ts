@@ -1,4 +1,4 @@
-import { Prisma } from '@pawpal/prisma';
+import { Prisma } from '@/generated/prisma/client';
 import { ENUM_TRANSACTION_STATUS } from '@pawpal/shared';
 import { BaseFilterBuilder } from './BaseFilterBuilder';
 

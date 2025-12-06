@@ -1,14 +1,17 @@
 import { TransactionFilterBuilder } from '@/common/filters/transactionFilter';
 import { DatatableQuery } from '@/common/pipes/DatatablePipe';
 import { Injectable } from '@nestjs/common';
+
 import {
   PaymentGateway,
-  TransactionStatus,
-  TransactionType,
   UserWallet,
   UserWalletTransaction,
+} from '@/generated/prisma/client';
+import {
+  TransactionStatus,
+  TransactionType,
   WalletType,
-} from '@pawpal/prisma';
+} from '@/generated/prisma/enums';
 import { TransactionStatusInput } from '@pawpal/shared';
 import { PrismaService } from '../prisma/prisma.service';
 

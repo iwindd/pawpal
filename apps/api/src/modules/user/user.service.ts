@@ -1,7 +1,7 @@
 import { DatatableQuery } from '@/common/pipes/DatatablePipe';
 import authConfig from '@/config/auth';
+import { Prisma, Role, User } from '@/generated/prisma/client';
 import { Injectable, Logger } from '@nestjs/common';
-import { Prisma, Role, User, WalletType } from '@pawpal/prisma';
 import {
   AdminCustomerResponse,
   AdminEmployeeResponse,
@@ -11,6 +11,7 @@ import {
   RegisterInput,
   Session,
   UpdateProfileInput,
+  WalletType,
 } from '@pawpal/shared';
 import bcrypt from 'bcrypt';
 import { PrismaService } from '../prisma/prisma.service';

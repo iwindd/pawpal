@@ -1,6 +1,6 @@
 // prisma.extension.ts
+import { Prisma } from '@/generated/prisma/client';
 import { Logger } from '@nestjs/common';
-import { Prisma } from '@pawpal/prisma';
 import { performance } from 'node:perf_hooks';
 import * as util from 'node:util';
 

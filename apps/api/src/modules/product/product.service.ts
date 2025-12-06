@@ -351,6 +351,10 @@ export class ProductService {
 
     return {
       ...product,
+      packages: product.packages.map((pkg) => ({
+        ...pkg,
+        price: Number(pkg.price),
+      })),
       packageCount: product._count.packages,
       createdAt: product.createdAt.toISOString(),
     };
@@ -474,6 +478,10 @@ export class ProductService {
         ...product,
         createdAt: product.createdAt.toISOString(),
         packageCount: product._count.packages,
+        packages: product.packages.map((pkg) => ({
+          ...pkg,
+          price: Number(pkg.price),
+        })),
       })),
       total,
     };
