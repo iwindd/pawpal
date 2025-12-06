@@ -1,6 +1,6 @@
 "use client";
 import CarouselForm from "@/components/Forms/CarouselForm";
-import { useUpdateCarouselMutation } from "@/services/carousel";
+import { useUpdateCarouselMutation } from "@/features/carousel/carouselApi";
 import { CarouselInput, CarouselResponse } from "@pawpal/shared";
 import { notify } from "@pawpal/ui/notifications";
 import { useTranslations } from "next-intl";

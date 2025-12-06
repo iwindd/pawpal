@@ -1,9 +1,9 @@
 "use client";
-import useFormValidate from "@/hooks/useFormValidate";
 import {
   useGetGatewayQuery,
   useUpdatePromptpayManualMetadataMutation,
-} from "@/services/paymentGateway";
+} from "@/features/paymentGateway/paymentGatewayApi";
+import useFormValidate from "@/hooks/useFormValidate";
 import { IconDeviceFloppy, IconQrcode } from "@pawpal/icons";
 import { PromptpayManualInput, promptpayManualSchema } from "@pawpal/shared";
 import { Button, Paper, Stack, TextInput } from "@pawpal/ui/core";

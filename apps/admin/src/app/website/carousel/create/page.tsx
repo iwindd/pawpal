@@ -1,7 +1,7 @@
 "use client";
 import CarouselForm from "@/components/Forms/CarouselForm";
 import PageHeader from "@/components/Pages/PageHeader";
-import { useCreateCarouselMutation } from "@/services/carousel";
+import { useCreateCarouselMutation } from "@/features/carousel/carouselApi";
 import { CarouselInput } from "@pawpal/shared";
 import { notify } from "@pawpal/ui/notifications";
 import { useTranslations } from "next-intl";

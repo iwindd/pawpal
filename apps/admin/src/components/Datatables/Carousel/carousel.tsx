@@ -1,6 +1,6 @@
 import CarouselStatusBadge from "@/components/Badges/CarouselStatus";
+import { useGetCarouselsQuery } from "@/features/carousel/carouselApi";
 import useDatatable from "@/hooks/useDatatable";
-import { useGetCarouselsQuery } from "@/services/carousel";
 import { IconArchive, IconEdit } from "@pawpal/icons";
 import { CarouselResponse } from "@pawpal/shared";
 import {

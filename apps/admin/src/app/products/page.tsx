@@ -2,8 +2,8 @@
 import ProductDatatable from "@/components/Datatables/Product";
 import PageHeader from "@/components/Pages/PageHeader";
 import { pather } from "@/configs/route";
+import { useGetProductsQuery } from "@/features/productApi/productApi";
 import useDatatable from "@/hooks/useDatatable";
-import { useGetProductsQuery } from "@/services/product";
 import { IconPlus } from "@pawpal/icons";
 import { AdminProductResponse } from "@pawpal/shared";
 import { Button, Paper } from "@pawpal/ui/core";

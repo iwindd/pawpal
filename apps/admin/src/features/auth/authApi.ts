@@ -3,6 +3,7 @@ import {
   ChangeEmailInput,
   ChangePasswordInput,
   LoginInput,
+  RegisterInput,
   Session,
   UpdateProfileInput,
 } from "@pawpal/shared";
@@ -36,15 +37,22 @@ export const authApi = createApi({
       }),
       invalidatesTags: ["Session"],
     }),
+    register: builder.mutation<Session, RegisterInput>({
+      query: (payload) => ({
+        url: `/register`,
+        method: "POST",
+        body: payload,
+      }),
+      invalidatesTags: ["Session"],
+    }),
     changePassword: builder.mutation<void, ChangePasswordInput>({
       query: (payload) => ({
         url: `/change-password`,
         method: "POST",
         body: payload,
       }),
-      invalidatesTags: ["Session"],
     }),
-    changeEmail: builder.mutation<void, ChangeEmailInput>({
+    changeEmail: builder.mutation<Session, ChangeEmailInput>({
       query: (payload) => ({
         url: `/change-email`,
         method: "POST",
@@ -64,9 +72,11 @@ export const authApi = createApi({
 });
 
 export const {
+  useGetProfileQuery,
   useLazyGetProfileQuery,
   useLoginMutation,
   useLogoutMutation,
+  useRegisterMutation,
   useChangePasswordMutation,
   useChangeEmailMutation,
   useUpdateProfileMutation,

@@ -1,6 +1,6 @@
 "use client";
 import FieldForm from "@/components/Forms/ProductForm/FieldForm";
-import { useUpdateFieldMutation } from "@/services/field";
+import { useUpdateFieldMutation } from "@/features/field/fieldApi";
 import { AdminFieldResponse, FieldInput } from "@pawpal/shared";
 import { Modal } from "@pawpal/ui/core";
 import { useDisclosure } from "@pawpal/ui/hooks";

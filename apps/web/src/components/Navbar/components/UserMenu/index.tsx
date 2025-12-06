@@ -37,28 +37,24 @@ const UserMenu = ({ user }: UserMenuProps) => {
   const format = useFormatter();
 
   const onLogout = async () => {
-    try {
-      //TODO:: USE TRANSLATION
-      backdrop.show({ text: "กำลังออกจากระบบ" });
-      const response = await logoutMutation();
-      if (response.error) {
-        return notify.show({
-          title: __("notify.error.title"),
-          message: __("notify.error.message"),
-          color: "red",
-        });
-      }
+    //TODO:: USE TRANSLATION
+    backdrop.show({ text: "กำลังออกจากระบบ" });
+    const response = await logoutMutation();
+    backdrop.hide();
 
-      notify.show({
-        title: __("notify.success.title"),
-        message: __("notify.success.message"),
-        color: "green",
+    if (response.error) {
+      return notify.show({
+        title: __("notify.error.title"),
+        message: __("notify.error.message"),
+        color: "red",
       });
-    } catch (error) {
-      console.error(error);
-    } finally {
-      backdrop.hide();
     }
+
+    notify.show({
+      title: __("notify.success.title"),
+      message: __("notify.success.message"),
+      color: "green",
+    });
   };
 
   return (

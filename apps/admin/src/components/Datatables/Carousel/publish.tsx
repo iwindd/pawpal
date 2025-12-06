@@ -1,7 +1,7 @@
 import {
   useGetPublishedCarouselsQuery,
   useReorderCarouselMutation,
-} from "@/services/carousel";
+} from "@/features/carousel/carouselApi";
 import { IconEdit } from "@pawpal/icons";
 import { CarouselResponse } from "@pawpal/shared";
 import { DataTable, DataTableProps, Stack, Text, Title } from "@pawpal/ui/core";

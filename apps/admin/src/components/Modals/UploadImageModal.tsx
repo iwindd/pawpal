@@ -1,6 +1,6 @@
 "use client";
+import { useUploadResourceMutation } from "@/features/resource/resourceApi";
 import useFormValidate from "@/hooks/useFormValidate";
-import { useUploadResourceMutation } from "@/services/resource";
 import { IconUpload } from "@pawpal/icons";
 import { ResourceUploadInput, resourceUploadSchema } from "@pawpal/shared";
 import {

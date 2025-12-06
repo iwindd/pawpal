@@ -1,6 +1,6 @@
 "use client";
 import PackageModal from "@/components/Modals/Package";
-import { useUpdatePackageMutation } from "@/services/package";
+import { useUpdatePackageMutation } from "@/features/package/packageApi";
 import { AdminProductPackageResponse, PackageInput } from "@pawpal/shared";
 import { useDisclosure } from "@pawpal/ui/hooks";
 import { notify } from "@pawpal/ui/notifications";

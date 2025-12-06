@@ -1,5 +1,6 @@
 "use client";
 import AppHeader from "@/components/layouts/AppHeader";
+import { useAppSelector } from "@/hooks";
 import { AppShell } from "@pawpal/ui/core";
 import { useDisclosure, useMediaQuery } from "@pawpal/ui/hooks";
 import { useEffect } from "react";
@@ -10,6 +11,7 @@ export default function AppLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const [opened, { toggle }] = useDisclosure();
+  const user = useAppSelector((state) => state.auth.user);
 
   const smallScreen = useMediaQuery("(max-width: --mantine-breakpoint-sm)");
 
@@ -20,6 +22,8 @@ export default function AppLayout({
       document.body.style.overflow = "visible";
     }
   }, [opened, smallScreen]);
+
+  if (!user) return children;
 
   return (
     <AppShell

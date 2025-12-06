@@ -1,4 +1,4 @@
-import { useAuth } from "@/contexts/AuthContext";
+import { useAppSelector } from "@/hooks";
 import { Burger, Flex, Group } from "@pawpal/ui/core";
 import dynamic from "next/dynamic";
 import LocaleSwitcher from "./components/LocaleSwitcher";
@@ -14,7 +14,8 @@ const ThemeSwitcher = dynamic(() => import("./components/ThemeSwitcher"), {
 });
 
 export default function AppHeader({ opened, toggle }: Readonly<Props>) {
-  const { user } = useAuth();
+  const user = useAppSelector((state) => state.auth.user);
+
   return (
     <Group h="100%" px="lg" justify="space-between">
       <Flex align="center" gap={16}>

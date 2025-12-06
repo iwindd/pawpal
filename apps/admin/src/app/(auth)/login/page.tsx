@@ -1,5 +1,8 @@
 "use client";
-import { useAuth } from "@/contexts/AuthContext";
+import { getPath } from "@/configs/route";
+import { useLoginMutation } from "@/features/auth/authApi";
+import { isErrorWithStatus } from "@/features/helpers";
+import { useAppSelector } from "@/hooks";
 import useFormValidate from "@/hooks/useFormValidate";
 import { IconLogin } from "@pawpal/icons";
 import { LoginInput, loginSchema } from "@pawpal/shared";
@@ -18,15 +21,14 @@ import {
 import { notify } from "@pawpal/ui/notifications";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect } from "react";
 import classes from "./style.module.css";
 
 export default function LoginPage() {
-  const { login } = useAuth();
+  const [loginMutation, { isLoading, error }] = useLoginMutation();
+  const user = useAppSelector((state) => state.auth.user);
   const router = useRouter();
   const __ = useTranslations("Auth.login");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const form = useFormValidate<LoginInput>({
     schema: loginSchema,
@@ -39,41 +41,37 @@ export default function LoginPage() {
   });
 
   const onSubmit = async (values: LoginInput) => {
-    setLoading(true);
-    setError(null);
+    const response = await loginMutation(values);
 
-    try {
-      const state = await login({ inputs: values });
+    if (response.error) {
+      const message =
+        isErrorWithStatus(response.error) && response.error.status;
 
-      switch (state) {
-        case "success":
-          notify.show({
-            title: __("notify.success.title"),
-            message: __("notify.success.message"),
-            color: "green",
-          });
-          router.refresh();
-          break;
-        case "invalid_credentials":
-          form.setFieldError("email", "invalid_credentials");
-          break;
-        case "error":
-          setError("error");
-          break;
-        default:
-          break;
+      if (message == 401) {
+        form.setErrors({
+          email: "invalid_credentials",
+        });
       }
-    } catch (error) {
-      console.error(error);
-      notify.show({
-        title: __("errors.login.error"),
-        message: __("errors.login.error"),
-        color: "red",
-      });
-    } finally {
-      setLoading(false);
+
+      return;
     }
+
+    notify.show({
+      title: __("notify.success.title"),
+      message: __("notify.success.message"),
+      color: "green",
+    });
+
+    router.refresh();
   };
+
+  useEffect(() => {
+    if (user) {
+      router.push(getPath("home"));
+    }
+  }, [user]);
+
+  if (user) return null;
 
   return (
     <Container size={420} my={40}>
@@ -117,13 +115,16 @@ export default function LoginPage() {
           fullWidth
           mt="xl"
           radius="md"
-          loading={loading}
+          loading={isLoading}
           leftSection={<IconLogin />}
           type="submit"
         >
           {__("loginButton")}
         </Button>
-        <ErrorMessage message={error} formatGroup="Errors.login" />
+        <ErrorMessage
+          message={(error && !form.errors && "Errors.login.error") || undefined}
+          formatGroup="Errors.login"
+        />
       </Paper>
     </Container>
   );

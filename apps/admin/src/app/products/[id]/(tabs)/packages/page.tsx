@@ -1,7 +1,7 @@
 "use client";
 import ProductPackageDatatable from "@/components/Datatables/Product/Package";
 import PackageModal from "@/components/Modals/Package";
-import { useCreateProductPackageMutation } from "@/services/package";
+import { useCreateProductPackageMutation } from "@/features/package/packageApi";
 import { IconPlus } from "@pawpal/icons";
 import { PackageInput } from "@pawpal/shared";
 import { Button, Paper } from "@pawpal/ui/core";

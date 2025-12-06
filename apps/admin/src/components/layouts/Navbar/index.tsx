@@ -1,6 +1,6 @@
 import { NavLink, navlinks, othersNavlinks } from "@/configs/navbar";
+import { useGetNotificationsQuery } from "@/features/notification/notificationApi";
 import { useActiveRouteConfig } from "@/hooks/useActiveRouteConfig";
-import { useGetNotificationsQuery } from "@/services/notifications";
 import { IconMinus, IconPlus } from "@pawpal/icons";
 import {
   Badge,

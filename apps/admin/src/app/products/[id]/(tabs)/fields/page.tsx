@@ -1,7 +1,7 @@
 "use client";
 import ProductFieldDatatable from "@/components/Datatables/Product/Fields";
 import FieldForm from "@/components/Forms/ProductForm/FieldForm";
-import { useCreateProductFieldMutation } from "@/services/field";
+import { useCreateProductFieldMutation } from "@/features/field/fieldApi";
 import { IconPlus } from "@pawpal/icons";
 import { FieldInput } from "@pawpal/shared";
 import { Button, Modal, Paper } from "@pawpal/ui/core";

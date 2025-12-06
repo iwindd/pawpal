@@ -1,5 +1,5 @@
 import SelectResourceModal from "@/components/Modals/SelectResourceModal";
-import { useLazyGetResourceQuery } from "@/services/resource";
+import { useLazyGetResourceQuery } from "@/features/resource/resourceApi";
 import { ResourceResponse } from "@pawpal/shared";
 import { useDisclosure } from "@pawpal/ui/hooks";
 import { useEffect, useState } from "react";

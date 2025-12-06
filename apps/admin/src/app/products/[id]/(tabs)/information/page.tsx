@@ -2,7 +2,7 @@
 import ProductForm, {
   ProductFormControl,
 } from "@/components/Forms/ProductForm";
-import { useUpdateProductMutation } from "@/services/product";
+import { useUpdateProductMutation } from "@/features/productApi/productApi";
 import { ProductInput } from "@pawpal/shared";
 import { Box } from "@pawpal/ui/core";
 import { notify } from "@pawpal/ui/notifications";

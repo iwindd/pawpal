@@ -1,5 +1,5 @@
 import ResourceImage from "@/components/ResourceImage";
-import { useGetInfiniteResourcesInfiniteQuery } from "@/services/resource";
+import { useGetInfiniteResourcesInfiniteQuery } from "@/features/resource/resourceApi";
 import {
   Box,
   Center,

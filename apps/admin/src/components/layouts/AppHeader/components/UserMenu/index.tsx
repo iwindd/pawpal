@@ -1,5 +1,6 @@
 "use client";
-import { useAuth } from "@/contexts/AuthContext";
+import { getPath } from "@/configs/route";
+import { useLogoutMutation } from "@/features/auth/authApi";
 import { IconLogout, IconSettings } from "@pawpal/icons";
 import { Session } from "@pawpal/shared";
 import { backdrop } from "@pawpal/ui/backdrop";
@@ -26,33 +27,30 @@ interface UserMenuProps {
 
 const UserMenu = ({ user }: UserMenuProps) => {
   const [userMenuOpened, setUserMenuOpened] = useState(false);
-  const { logout } = useAuth();
-  const __ = useTranslations("Navbar.userMenu");
+  const [logoutMutation] = useLogoutMutation();
   const router = useRouter();
+  const __ = useTranslations("Navbar.userMenu");
 
   const onLogout = async () => {
-    try {
-      backdrop.show({ text: "กำลังออกจากระบบ" });
-      const state = await logout();
-      if (!state) {
-        return notify.show({
-          title: __("notify.error.title"),
-          message: __("notify.error.message"),
-          color: "red",
-        });
-      }
+    //TODO:: USE TRANSLATION
+    backdrop.show({ text: "กำลังออกจากระบบ" });
+    const response = await logoutMutation();
+    backdrop.hide();
 
-      notify.show({
-        title: __("notify.success.title"),
-        message: __("notify.success.message"),
-        color: "green",
+    if (response.error) {
+      return notify.show({
+        title: __("notify.error.title"),
+        message: __("notify.error.message"),
+        color: "red",
       });
-      router.refresh();
-    } catch (error) {
-      console.error(error);
-    } finally {
-      backdrop.hide();
     }
+
+    router.push(getPath("login"));
+    notify.show({
+      title: __("notify.success.title"),
+      message: __("notify.success.message"),
+      color: "green",
+    });
   };
 
   return (

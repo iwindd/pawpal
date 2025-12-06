@@ -1,7 +1,7 @@
 import {
   useLazyGetProductQuery,
   useLazyGetProductsQuery,
-} from "@/services/product";
+} from "@/features/productApi/productApi";
 import { AdminProductResponse } from "@pawpal/shared";
 import { BaseCombobox, BaseComboboxProps } from "../BaseCombobox";
 

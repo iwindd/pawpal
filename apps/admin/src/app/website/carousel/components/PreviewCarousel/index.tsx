@@ -1,6 +1,6 @@
 "use client";
 import ResourceImage from "@/components/ResourceImage";
-import { useGetPublishedCarouselsQuery } from "@/services/carousel";
+import { useGetPublishedCarouselsQuery } from "@/features/carousel/carouselApi";
 import { CarouselResponse } from "@pawpal/shared";
 import { Autoplay, Carousel } from "@pawpal/ui/carousel";
 import { Box, Button, Paper, Stack, Text, Title } from "@pawpal/ui/core";

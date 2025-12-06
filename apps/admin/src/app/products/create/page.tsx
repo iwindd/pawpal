@@ -2,7 +2,7 @@
 import ProductForm from "@/components/Forms/ProductForm";
 import PageHeader from "@/components/Pages/PageHeader";
 import { getPath } from "@/configs/route";
-import { useCreateProductMutation } from "@/services/product";
+import { useCreateProductMutation } from "@/features/productApi/productApi";
 import { ProductInput } from "@pawpal/shared";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";

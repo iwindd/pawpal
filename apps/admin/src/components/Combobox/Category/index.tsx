@@ -1,7 +1,7 @@
 import {
   useLazyGetCategoriesQuery,
   useLazyGetCategoryQuery,
-} from "@/services/category";
+} from "@/features/category/categoryApi";
 import { AdminCategoryResponse } from "@pawpal/shared";
 import { useTranslations } from "next-intl";
 import { BaseCombobox, BaseComboboxProps } from "../BaseCombobox";

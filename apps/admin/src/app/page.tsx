@@ -1,10 +1,10 @@
 "use client";
 
-import { useAuth } from "@/contexts/AuthContext";
+import { useAppSelector } from "@/hooks";
 import { useTranslations } from "next-intl";
 
 export default function Home() {
-  const { user } = useAuth();
+  const user = useAppSelector((state) => state.auth.user);
   const t = useTranslations();
 
   if (!user) {

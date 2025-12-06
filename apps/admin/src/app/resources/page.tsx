@@ -1,7 +1,7 @@
 "use client";
 import UploadImageModal from "@/components/Modals/UploadImageModal";
 import ResourceImage from "@/components/ResourceImage";
-import { useGetResourcesQuery } from "@/services/resource";
+import { useGetResourcesQuery } from "@/features/resource/resourceApi";
 import {
   Box,
   Button,

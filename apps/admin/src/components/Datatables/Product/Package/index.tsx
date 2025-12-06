@@ -1,6 +1,6 @@
 "use client";
+import { useGetProductPackagesQuery } from "@/features/package/packageApi";
 import useDatatable from "@/hooks/useDatatable";
-import { useGetProductPackagesQuery } from "@/services/package";
 import { IconEdit } from "@pawpal/icons";
 import { AdminProductPackageResponse } from "@pawpal/shared";
 import { DataTable, DataTableProps, Text } from "@pawpal/ui/core";

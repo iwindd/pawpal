@@ -1,7 +1,7 @@
 import {
   useSetAsFailedMutation,
   useSetAsSucceedMutation,
-} from "@/services/transaction";
+} from "@/features/transaction/transactionApi";
 import { useConfirmation } from "@pawpal/ui/hooks";
 
 export const useTransactionActions = () => {

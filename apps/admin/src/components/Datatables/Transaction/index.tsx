@@ -1,7 +1,7 @@
 "use client";
+import { useGetTransactionsQuery } from "@/features/transaction/transactionApi";
 import useDatatable from "@/hooks/useDatatable";
 import { useTransactionActions } from "@/hooks/useTransactionActions";
-import { useGetTransactionsQuery } from "@/services/transaction";
 import {
   AdminTransactionResponse,
   ENUM_TRANSACTION_STATUS,

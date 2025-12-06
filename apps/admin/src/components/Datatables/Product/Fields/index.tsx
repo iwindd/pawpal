@@ -1,11 +1,11 @@
 "use client";
 import FieldOptionalBadge from "@/components/Badges/FieldOptional";
 import FieldTypeBadge from "@/components/Badges/FieldType";
-import useDatatable from "@/hooks/useDatatable";
 import {
   useGetProductFieldsQuery,
   useReorderProductFieldMutation,
-} from "@/services/field";
+} from "@/features/field/fieldApi";
+import useDatatable from "@/hooks/useDatatable";
 import { IconEdit } from "@pawpal/icons";
 import { AdminFieldResponse } from "@pawpal/shared";
 import { DataTable, DataTableProps, Text, Title } from "@pawpal/ui/core";

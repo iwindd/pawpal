@@ -1,5 +1,4 @@
 import AppLayout from "@/components/layouts/AppLayout";
-import { AuthProvider } from "@/contexts/AuthContext";
 import APISession from "@/libs/api/server";
 import QueryProvider from "@/providers/QueryProvider";
 import StoreProvider from "@/providers/StoreProvider";
@@ -48,12 +47,16 @@ export default async function RootLayout({
       </head>
       <body>
         <NextIntlClientProvider>
-          <StoreProvider>
+          <StoreProvider
+            preloadedState={{
+              auth: {
+                user: session,
+              },
+            }}
+          >
             <QueryProvider>
               <UIProvider locale={currentLocale}>
-                <AuthProvider session={session}>
-                  {session ? <AppLayout>{children}</AppLayout> : children}
-                </AuthProvider>
+                <AppLayout>{children}</AppLayout>
               </UIProvider>
             </QueryProvider>
           </StoreProvider>
