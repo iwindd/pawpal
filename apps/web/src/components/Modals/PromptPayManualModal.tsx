@@ -1,12 +1,9 @@
+import { useAppSelector } from "@/hooks";
 import { Button, Group, Modal, Stack, Text, Title } from "@pawpal/ui/core";
 import { useTranslations } from "next-intl";
 import { QRCodeSVG } from "qrcode.react";
-import { useEffect, useState } from "react";
-import { PaymentChargeCreatedResponse } from "../../../../../packages/shared/dist";
 
 interface PromptPayManualModalProps {
-  qrcode?: string;
-  payment?: PaymentChargeCreatedResponse["payment"]["metadata"];
   opened: boolean;
   onClose: () => void;
 }
@@ -14,15 +11,13 @@ interface PromptPayManualModalProps {
 const PromptPayManualModal = ({
   opened,
   onClose,
-  qrcode,
-  payment,
 }: PromptPayManualModalProps) => {
   const __ = useTranslations("PromptPayManualModal");
-  const [payload, setPayload] = useState<string>(qrcode || "");
+  const currentCharge = useAppSelector((state) => state.payment.currentCharge);
+  const payload = currentCharge?.qrcode;
+  const payment = currentCharge?.payment.metadata;
 
-  useEffect(() => {
-    setPayload(qrcode || "");
-  }, [qrcode]);
+  if (!currentCharge) return null;
 
   return (
     <Modal opened={opened} onClose={onClose} title={__("title")} centered>

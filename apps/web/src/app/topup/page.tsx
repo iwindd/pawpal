@@ -1,7 +1,7 @@
 "use client";
 import PromptPayManualModal from "@/components/Modals/PromptPayManualModal";
+import { useCreateChargeMutation } from "@/features/payment/paymentApi";
 import { useGetActivePaymentGatewayQuery } from "@/features/paymentGateway/paymentGatewayApi";
-import useCreateCharge from "@/hooks/useCreateCharge";
 import useFormValidate from "@/hooks/useFormValidate";
 import {
   PaymentChargeCreateInput,
@@ -21,16 +21,14 @@ import {
 } from "@pawpal/ui/core";
 import { Notifications } from "@pawpal/ui/notifications";
 import { useTranslations } from "next-intl";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import RadioMethod from "./components/RadioMethod";
 
 const TopupPage = () => {
   const __ = useTranslations("Topup");
   const { data: paymentGateways } = useGetActivePaymentGatewayQuery();
-  const { createCharge, latestResponse, promptPayModal, setPromptPayModal } =
-    useCreateCharge();
-
-  const isLoading = createCharge.isPending;
+  const [createChargeMutation, { isLoading }] = useCreateChargeMutation();
+  const [promptPayModal, setPromptPayModal] = useState(false);
 
   const form = useFormValidate<PaymentChargeCreateInput>({
     schema: PaymentChargeCreateSchema,
@@ -52,7 +50,18 @@ const TopupPage = () => {
   }, [paymentGateways]);
 
   const handleSubmit = async (payload: PaymentChargeCreateInput) => {
-    return await createCharge.mutateAsync(payload);
+    setPromptPayModal(false);
+    const response = await createChargeMutation(payload);
+
+    if (response.error) {
+      return Notifications.show({
+        title: __("notify.error.title"),
+        message: __("notify.error.message"),
+        color: "red",
+      });
+    }
+
+    setPromptPayModal(true);
   };
 
   const onClosePromptPayModal = () => {
@@ -156,9 +165,7 @@ const TopupPage = () => {
       </form>
 
       <PromptPayManualModal
-        qrcode={latestResponse?.qrcode}
-        payment={latestResponse?.payment?.metadata || {}}
-        opened={!!latestResponse && promptPayModal}
+        opened={promptPayModal}
         onClose={onClosePromptPayModal}
       />
     </Container>

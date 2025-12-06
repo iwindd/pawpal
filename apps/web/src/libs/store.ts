@@ -1,6 +1,8 @@
 import { authApi } from "@/features/auth/authApi";
 import authReducer, { AuthState } from "@/features/auth/authSlice";
 import { orderApi } from "@/features/order/orderApi";
+import { paymentApi } from "@/features/payment/paymentApi";
+import paymentReducer from "@/features/payment/paymentSlice";
 import { paymentGatewayApi } from "@/features/paymentGateway/paymentGatewayApi";
 import { productApi } from "@/features/product/productApi";
 import { Action, configureStore, ThunkAction } from "@reduxjs/toolkit";
@@ -10,17 +12,20 @@ export const makeStore = (preloadedState: { auth: AuthState }) => {
   const _store = configureStore({
     reducer: {
       auth: authReducer,
+      payment: paymentReducer,
       [authApi.reducerPath]: authApi.reducer,
       [orderApi.reducerPath]: orderApi.reducer,
       [productApi.reducerPath]: productApi.reducer,
       [paymentGatewayApi.reducerPath]: paymentGatewayApi.reducer,
+      [paymentApi.reducerPath]: paymentApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware().concat(
         authApi.middleware,
         orderApi.middleware,
         productApi.middleware,
-        paymentGatewayApi.middleware
+        paymentGatewayApi.middleware,
+        paymentApi.middleware
       ),
     preloadedState,
   });
