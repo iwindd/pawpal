@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "build": "turbo run build",
+    "build:packages": "turbo run build -F @pawpal/shared -F @pawpal/nextjs-middleware -F @pawpal/prisma ",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "db:generate": "turbo run db:generate",
@@ -13,7 +14,9 @@
     "db:seed": "turbo run db:seed",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
-    "chmod:catalog": "pnpx codemod pnpm/catalog"
+    "chmod:catalog": "pnpx codemod pnpm/catalog",
+    "clean": "pnpm -r exec rm -rf node_modules .next dist build generated",
+    "clean:root": "rm -rf node_modules pnpm-lock.yaml"
   },
   "devDependencies": {
     "prettier": "catalog:",
