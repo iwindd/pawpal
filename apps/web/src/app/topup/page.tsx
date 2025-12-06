@@ -1,8 +1,8 @@
 "use client";
 import PromptPayManualModal from "@/components/Modals/PromptPayManualModal";
+import { useGetActivePaymentGatewayQuery } from "@/features/paymentGateway/paymentGatewayApi";
 import useCreateCharge from "@/hooks/useCreateCharge";
 import useFormValidate from "@/hooks/useFormValidate";
-import usePaymentGateway from "@/hooks/usePaymentGateway";
 import {
   PaymentChargeCreateInput,
   PaymentChargeCreateSchema,
@@ -26,7 +26,7 @@ import RadioMethod from "./components/RadioMethod";
 
 const TopupPage = () => {
   const __ = useTranslations("Topup");
-  const paymentGateways = usePaymentGateway();
+  const { data: paymentGateways } = useGetActivePaymentGatewayQuery();
   const { createCharge, latestResponse, promptPayModal, setPromptPayModal } =
     useCreateCharge();
 
@@ -44,12 +44,12 @@ const TopupPage = () => {
   });
 
   useEffect(() => {
-    if (!paymentGateways.defaultPaymentGateway) return;
+    if (!paymentGateways?.[0]) return;
     form.setValues({
       ...form.getValues(),
-      payment_id: paymentGateways.defaultPaymentGateway.id,
+      payment_id: paymentGateways[0].id,
     });
-  }, [paymentGateways.defaultPaymentGateway]);
+  }, [paymentGateways]);
 
   const handleSubmit = async (payload: PaymentChargeCreateInput) => {
     return await createCharge.mutateAsync(payload);
@@ -89,7 +89,7 @@ const TopupPage = () => {
                     {...form.getInputProps("payment_id")}
                   >
                     <Stack gap="xs">
-                      {paymentGateways.data?.map((gateway) => (
+                      {paymentGateways?.map((gateway) => (
                         <RadioMethod
                           key={gateway.id}
                           label={gateway.label}

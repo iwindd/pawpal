@@ -1,5 +1,5 @@
+import { useGetActivePaymentGatewayQuery } from "@/features/paymentGateway/paymentGatewayApi";
 import { useAppSelector } from "@/hooks";
-import usePaymentGateway from "@/hooks/usePaymentGateway";
 import { getPriceWithSale } from "@/utils/pricing";
 import { ENUM_DISCOUNT_TYPE, ProductPackage } from "@pawpal/shared";
 import {
@@ -27,7 +27,7 @@ interface PaymentPartialProp {
 const PaymentPartial = ({ form, selectedPackage }: PaymentPartialProp) => {
   const __ = useTranslations("ProductDetail");
   const format = useFormatter();
-  const { data } = usePaymentGateway();
+  const { data } = useGetActivePaymentGatewayQuery();
   const user = useAppSelector((state) => state.auth.user);
   const basePrice = selectedPackage?.price || 0;
   const amount = form.getValues().amount;
