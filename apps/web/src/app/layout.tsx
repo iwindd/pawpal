@@ -1,7 +1,6 @@
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import APISession from "@/libs/api/server";
-import QueryProvider from "@/providers/QueryProvider";
 import StoreProvider from "@/providers/StoreProvider";
 import { ColorSchemeScript, mantineHtmlProps } from "@pawpal/ui/core";
 import lamoon from "@pawpal/ui/fonts/lamoon";
@@ -55,13 +54,11 @@ export default async function RootLayout({
               },
             }}
           >
-            <QueryProvider>
-              <UIProvider locale={currentLocale}>
-                <Navbar />
-                {children}
-                <Footer />
-              </UIProvider>
-            </QueryProvider>
+            <UIProvider locale={currentLocale}>
+              <Navbar />
+              {children}
+              <Footer />
+            </UIProvider>
           </StoreProvider>
         </NextIntlClientProvider>
       </body>

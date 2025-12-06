@@ -15,8 +15,6 @@
     "@pawpal/shared": "workspace:*",
     "@pawpal/ui": "workspace:*",
     "@reduxjs/toolkit": "catalog:",
-    "@tanstack/react-query": "catalog:",
-    "@tanstack/react-query-devtools": "catalog:",
     "axios": "catalog:",
     "dayjs": "catalog:",
     "next": "catalog:",
