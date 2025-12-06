@@ -1,6 +1,5 @@
 "use client";
 import { RouteItem, ROUTES } from "@/configs/route";
-import { useAuth } from "@/contexts/AuthContext";
 import { useActiveRouteTrail } from "@/hooks/useActiveRouteTrail";
 import {
   Box,
@@ -12,7 +11,6 @@ import {
 } from "@pawpal/ui/core";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { ReactNode } from "react";
 import classes from "./style.module.css";
 
@@ -22,8 +20,6 @@ interface UserLayoutProps {
 
 const UserLayout = ({ children }: UserLayoutProps) => {
   const __ = useTranslations("Routes");
-  const { user } = useAuth();
-  const router = useRouter();
   const trail = useActiveRouteTrail();
   const navigationItems = [
     ROUTES.user as RouteItem,
@@ -32,11 +28,6 @@ const UserLayout = ({ children }: UserLayoutProps) => {
     ROUTES.user?.children?.activity as RouteItem,
   ];
   const activeRoute = trail.at(-1);
-
-  if (!user) {
-    router.push(ROUTES.home?.path as string);
-    return null;
-  }
 
   return (
     <Container size="xl" py="xl">

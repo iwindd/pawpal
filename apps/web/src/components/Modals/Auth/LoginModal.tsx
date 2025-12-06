@@ -1,7 +1,8 @@
 "use client";
 import ErrorMessage from "@/components/ErrorMessage";
 import ActionImage from "@/components/Modals/Auth/components/ActionImage";
-import { useAuth } from "@/contexts/AuthContext";
+import { useLoginMutation } from "@/features/auth/authApi";
+import { isErrorWithStatus } from "@/features/helpers";
 import useFormValidate from "@/hooks/useFormValidate";
 import { IconLogin } from "@pawpal/icons";
 import { LoginInput, loginSchema } from "@pawpal/shared";
@@ -26,10 +27,8 @@ export default function LoginModal({
   onClose,
   onSwitch,
 }: Readonly<{ opened: boolean; onClose: () => void; onSwitch: () => void }>) {
-  const { login } = useAuth();
+  const [loginMutation, { isLoading, error }] = useLoginMutation();
   const __ = useTranslations("Auth.login");
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
 
   const form = useFormValidate<LoginInput>({
     schema: loginSchema,
@@ -44,36 +43,27 @@ export default function LoginModal({
   const [rememberMe, setRememberMe] = useState(false);
 
   const onSubmit = async (inputs: LoginInput) => {
-    setLoading(true);
+    const response = await loginMutation(inputs);
 
-    try {
-      const state = await login({ inputs });
+    if (response.error) {
+      const message =
+        isErrorWithStatus(response.error) && response.error.status;
 
-      switch (state) {
-        case "success":
-          onClose();
-          notify.show({
-            title: __("notify.success.title"),
-            message: __("notify.success.message"),
-            color: "green",
-          });
-          break;
-        case "invalid_credentials":
-          form.setErrors({
-            email: "invalid_credentials",
-          });
-          break;
-        case "error":
-          setMessage("error");
-          break;
-        default:
-          break;
+      if (message == 401) {
+        form.setErrors({
+          email: "invalid_credentials",
+        });
       }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
+
+      return;
     }
+
+    onClose();
+    notify.show({
+      title: __("notify.success.title"),
+      message: __("notify.success.message"),
+      color: "green",
+    });
   };
 
   return (
@@ -126,13 +116,17 @@ export default function LoginModal({
             <Button
               type="submit"
               fullWidth
-              loading={loading}
+              loading={isLoading}
               leftSection={<IconLogin />}
             >
               {__("loginButton")}
             </Button>
 
-            <ErrorMessage message={message && `Errors.login.error`} />
+            <ErrorMessage
+              message={
+                (error && !form.errors && "Errors.login.error") || undefined
+              }
+            />
             <Divider label={__("label_or")} />
 
             <Group justify="center" gap="sm">

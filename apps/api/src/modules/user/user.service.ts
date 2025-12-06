@@ -9,6 +9,7 @@ import {
   ChangePasswordInput,
   DatatableResponse,
   RegisterInput,
+  Session,
   UpdateProfileInput,
 } from '@pawpal/shared';
 import bcrypt from 'bcrypt';
@@ -113,7 +114,7 @@ export class UserService {
   async changeEmail(
     userId: string,
     changeEmailData: ChangeEmailInput,
-  ): Promise<void> {
+  ): Promise<Session> {
     try {
       // First, get the user with password to verify current password
       const user = await this.prisma.user.findUnique({
@@ -144,10 +145,20 @@ export class UserService {
       }
 
       // Update email
-      await this.prisma.user.update({
+      const updatedUser = await this.prisma.user.update({
         where: { id: userId },
         data: { email: changeEmailData.newEmail },
       });
+
+      return {
+        id: updatedUser.id,
+        email: updatedUser.email,
+        displayName: updatedUser.displayName,
+        avatar: updatedUser.avatar,
+        createdAt: updatedUser.createdAt.toISOString(),
+        userWallet: await this.getUserWallets(userId),
+        roles: await this.getUserRoles(userId),
+      };
     } catch (error) {
       this.logger.error(`Failed to change email for user ${userId}:`, error);
       throw error;

@@ -1,6 +1,6 @@
 "use client";
 import navbarLinks from "@/configs/navbar";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAppSelector } from "@/hooks";
 import { useActiveRouteConfig } from "@/hooks/useActiveRouteConfig";
 import {
   Box,
@@ -30,7 +30,7 @@ const Navbar = () => {
   const activeRoute = useActiveRouteConfig();
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
     useDisclosure(false);
-  const { user } = useAuth();
+  const user = useAppSelector((state) => state.auth.user);
   const __ = useTranslations("Routes");
 
   const items = navbarLinks.map((link) => {

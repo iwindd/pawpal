@@ -1,6 +1,7 @@
 "use client";
 import ErrorMessage from "@/components/ErrorMessage";
-import { useAuth } from "@/contexts/AuthContext";
+import { useUpdateProfileMutation } from "@/features/auth/authApi";
+import { useAppSelector } from "@/hooks";
 import useFormValidate from "@/hooks/useFormValidate";
 import { UpdateProfileInput, updateProfileSchema } from "@pawpal/shared";
 import {
@@ -20,10 +21,10 @@ import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 const ProfilePage = () => {
-  const { user, updateProfile } = useAuth();
+  const user = useAppSelector((state) => state.auth.user);
+  const [updateProfileMutation, { error }] = useUpdateProfileMutation();
   const __ = useTranslations("User.Profile");
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
 
   const form = useFormValidate<UpdateProfileInput>({
     schema: updateProfileSchema,
@@ -35,24 +36,14 @@ const ProfilePage = () => {
   });
 
   const handleSave = async (inputs: UpdateProfileInput) => {
-    setLoading(true);
-    try {
-      const result = await updateProfile({ inputs });
+    const response = await updateProfileMutation(inputs);
+    if (response.error) return;
 
-      if (result === "success") {
-        notify.show({
-          title: __("notify.success.title"),
-          message: __("notify.success.message"),
-          color: "green",
-        });
-      } else {
-        setMessage("error");
-      }
-    } catch (error) {
-      console.error("Failed to update profile:", error);
-    } finally {
-      setLoading(false);
-    }
+    notify.show({
+      title: __("notify.success.title"),
+      message: __("notify.success.message"),
+      color: "green",
+    });
   };
 
   return (
@@ -97,7 +88,7 @@ const ProfilePage = () => {
           </Group>
 
           <ErrorMessage
-            message={message && `Errors.updateProfile.${message}`}
+            message={error && `Errors.updateProfile.error`}
             align="end"
           />
         </form>

@@ -1,7 +1,7 @@
 "use client";
 
 import paymentMethods, { PaymentMethod } from "@/configs/payment";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAppSelector } from "@/hooks";
 import { getPriceWithSale, PricingSale } from "@/utils/pricing";
 import {
   Button,
@@ -47,7 +47,7 @@ export default function PurchaseConfirmationModal({
   ...props
 }: Readonly<PurchaseConfirmationModalProps>) {
   const format = useFormatter();
-  const { user } = useAuth();
+  const user = useAppSelector((state) => state.auth.user);
   const __ = useTranslations("PurchaseConfirmation");
   const paymentMethod = paymentMethods.find(
     (p) => p.value === props.paymentMethod

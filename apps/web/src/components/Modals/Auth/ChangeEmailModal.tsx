@@ -1,6 +1,7 @@
 "use client";
 import ErrorMessage from "@/components/ErrorMessage";
-import { useAuth } from "@/contexts/AuthContext";
+import { useChangeEmailMutation } from "@/features/auth/authApi";
+import { isErrorWithData, isErrorWithMessage } from "@/features/helpers";
 import useFormValidate from "@/hooks/useFormValidate";
 import { IconSettings } from "@pawpal/icons";
 import { ChangeEmailInput, changeEmailSchema } from "@pawpal/shared";
@@ -14,16 +15,13 @@ import {
 } from "@pawpal/ui/core";
 import { notify } from "@pawpal/ui/notifications";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
 
 export default function ChangeEmailModal({
   opened,
   onClose,
 }: Readonly<{ opened: boolean; onClose: () => void }>) {
   const __ = useTranslations("Auth.changeEmail");
-  const { changeEmail: changeEmailApi } = useAuth();
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
+  const [changeEmailMutation, { isLoading, error }] = useChangeEmailMutation();
 
   const form = useFormValidate<ChangeEmailInput>({
     schema: changeEmailSchema,
@@ -36,42 +34,40 @@ export default function ChangeEmailModal({
   });
 
   const onSubmit = async (inputs: ChangeEmailInput) => {
-    setLoading(true);
-    setMessage(null);
+    const response = await changeEmailMutation(inputs);
 
-    try {
-      const result = await changeEmailApi({ inputs });
+    if (response.error) {
+      const data = isErrorWithData(response.error) && response.error.data;
+      const message = isErrorWithMessage(data) && data.message;
 
-      if (result === "success") {
-        onClose();
-        form.reset();
-        notify.show({
-          title: __("notify.success.title"),
-          message: __("notify.success.message"),
-          color: "green",
-        });
-      } else if (result === "invalid_password") {
-        form.setErrors({
-          password: "invalid_password",
-        });
-      } else if (result === "email_already_exists") {
-        form.setErrors({
-          newEmail: "email_already_exists",
-        });
-      } else {
-        setMessage("error");
+      switch (message) {
+        case "invalid_password":
+          form.setErrors({
+            password: "invalid_password",
+          });
+          break;
+        case "email_already_exists":
+          form.setErrors({
+            newEmail: "email_already_exists",
+          });
+          break;
+        default:
+          break;
       }
-    } catch (error) {
-      console.error("Change email error:", error);
-      setMessage("error");
-    } finally {
-      setLoading(false);
+      return;
     }
+
+    onClose();
+    form.reset();
+    notify.show({
+      title: __("notify.success.title"),
+      message: __("notify.success.message"),
+      color: "green",
+    });
   };
 
   const handleClose = () => {
     form.reset();
-    setMessage(null);
     onClose();
   };
 
@@ -114,13 +110,13 @@ export default function ChangeEmailModal({
                 type="button"
                 variant="outline"
                 onClick={handleClose}
-                disabled={loading}
+                disabled={isLoading}
               >
                 {__("cancelButton")}
               </Button>
               <Button
                 type="submit"
-                loading={loading}
+                loading={isLoading}
                 leftSection={<IconSettings size={16} />}
               >
                 {__("changeButton")}
@@ -128,7 +124,7 @@ export default function ChangeEmailModal({
             </Group>
 
             <ErrorMessage
-              message={message && `Errors.changeEmail.error`}
+              message={error && `Errors.changeEmail.error`}
               align="end"
             />
           </Stack>

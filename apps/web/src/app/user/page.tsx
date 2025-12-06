@@ -1,7 +1,7 @@
 "use client";
 import ChangeEmailModal from "@/components/Modals/Auth/ChangeEmailModal";
 import ChangePasswordModal from "@/components/Modals/Auth/ChangePasswordModal";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAppSelector } from "@/hooks";
 import {
   Anchor,
   Avatar,
@@ -60,7 +60,7 @@ const GridItem = ({
 };
 
 const AccountPage = () => {
-  const { user } = useAuth();
+  const user = useAppSelector((state) => state.auth.user);
   const __ = useTranslations("User.Account");
   const format = useFormatter();
   const router = useRouter();

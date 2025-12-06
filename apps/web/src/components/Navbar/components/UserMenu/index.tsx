@@ -1,5 +1,5 @@
 "use client";
-import { useAuth } from "@/contexts/AuthContext";
+import { useLogoutMutation } from "@/features/auth/authApi";
 import {
   IconActivity,
   IconCoin,
@@ -32,15 +32,16 @@ interface UserMenuProps {
 
 const UserMenu = ({ user }: UserMenuProps) => {
   const [userMenuOpened, setUserMenuOpened] = useState(false);
-  const { logout } = useAuth();
+  const [logoutMutation] = useLogoutMutation();
   const __ = useTranslations("Navbar.userMenu");
   const format = useFormatter();
 
   const onLogout = async () => {
     try {
+      //TODO:: USE TRANSLATION
       backdrop.show({ text: "กำลังออกจากระบบ" });
-      const state = await logout();
-      if (!state) {
+      const response = await logoutMutation();
+      if (response.error) {
         return notify.show({
           title: __("notify.error.title"),
           message: __("notify.error.message"),

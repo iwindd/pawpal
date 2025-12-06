@@ -4,6 +4,7 @@ import { LocalAuthGuard } from '@/common/guards/local-auth.guard';
 import { SessionAuthGuard } from '@/common/guards/session-auth.guard';
 import { LogoutInterceptor } from '@/common/interceptors/logout.interceptor';
 import { TokenInterceptor } from '@/common/interceptors/token.interceptor';
+import { ZodPipe } from '@/common/pipes/ZodPipe';
 import { ZodValidationPipe } from '@/common/ZodValidationPipe';
 import {
   Body,
@@ -16,7 +17,6 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { User } from '@pawpal/prisma';
 import {
   type ChangeEmailInput,
   changeEmailSchema,
@@ -75,34 +75,28 @@ export class AuthController {
   @Post('register')
   @HttpCode(HttpStatus.CREATED)
   @UseInterceptors(TokenInterceptor)
-  async register(
-    @Body(new ZodValidationPipe(registerSchema)) body: RegisterInput,
-  ): Promise<User> {
+  register(@Body(new ZodPipe(registerSchema)) body: RegisterInput) {
     return this.authService.register(body);
   }
 
   @Post('change-password')
   @UseGuards(SessionAuthGuard, JwtAuthGuard)
-  @HttpCode(HttpStatus.OK)
   async changePassword(
     @AuthUser() user: Session,
-    @Body(new ZodValidationPipe(changePasswordSchema))
+    @Body(new ZodPipe(changePasswordSchema))
     body: ChangePasswordInput,
-  ): Promise<{ message: string }> {
-    await this.authService.changePassword(user.id, body);
-    return { message: 'Password changed successfully' };
+  ) {
+    return this.authService.changePassword(user.id, body);
   }
 
   @Post('change-email')
   @UseGuards(SessionAuthGuard, JwtAuthGuard)
-  @HttpCode(HttpStatus.OK)
-  async changeEmail(
+  changeEmail(
     @AuthUser() user: Session,
-    @Body(new ZodValidationPipe(changeEmailSchema))
+    @Body(new ZodPipe(changeEmailSchema))
     body: ChangeEmailInput,
-  ): Promise<{ message: string }> {
-    await this.authService.changeEmail(user.id, body);
-    return { message: 'Email changed successfully' };
+  ) {
+    return this.authService.changeEmail(user.id, body);
   }
 
   @Post('update-profile')

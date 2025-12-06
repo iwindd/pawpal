@@ -1,22 +1,21 @@
 "use client";
 import ErrorMessage from "@/components/ErrorMessage";
-import { useAuth } from "@/contexts/AuthContext";
+import { useChangePasswordMutation } from "@/features/auth/authApi";
+import { isErrorWithData, isErrorWithMessage } from "@/features/helpers";
 import useFormValidate from "@/hooks/useFormValidate";
 import { IconKey } from "@pawpal/icons";
 import { ChangePasswordInput, changePasswordSchema } from "@pawpal/shared";
 import { Button, Group, Modal, PasswordInput, Stack } from "@pawpal/ui/core";
 import { notify } from "@pawpal/ui/notifications";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
 
 export default function ChangePasswordModal({
   opened,
   onClose,
 }: Readonly<{ opened: boolean; onClose: () => void }>) {
   const __ = useTranslations("Auth.changePassword");
-  const { changePassword: changePasswordApi } = useAuth();
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
+  const [changePasswordMutation, { isLoading, error }] =
+    useChangePasswordMutation();
 
   const form = useFormValidate<ChangePasswordInput>({
     schema: changePasswordSchema,
@@ -30,38 +29,34 @@ export default function ChangePasswordModal({
   });
 
   const onSubmit = async (inputs: ChangePasswordInput) => {
-    setLoading(true);
-    setMessage(null);
+    const response = await changePasswordMutation(inputs);
 
-    try {
-      const result = await changePasswordApi({ inputs });
+    if (response.error) {
+      const message =
+        isErrorWithData(response.error) &&
+        isErrorWithMessage(response.error.data) &&
+        response.error.data.message;
 
-      if (result === "success") {
-        onClose();
-        form.reset();
-        notify.show({
-          title: __("notify.success.title"),
-          message: __("notify.success.message"),
-          color: "green",
-        });
-      } else if (result === "invalid_old_password") {
+      if (message == "invalid_old_password") {
         form.setErrors({
           oldPassword: "invalid_old_password",
         });
-      } else {
-        setMessage("error");
       }
-    } catch (error) {
-      console.error("Change password error:", error);
-      setMessage("error");
-    } finally {
-      setLoading(false);
+
+      return;
     }
+
+    onClose();
+    form.reset();
+    notify.show({
+      title: __("notify.success.title"),
+      message: __("notify.success.message"),
+      color: "green",
+    });
   };
 
   const handleClose = () => {
     form.reset();
-    setMessage(null);
     onClose();
   };
 
@@ -111,13 +106,13 @@ export default function ChangePasswordModal({
                 type="button"
                 variant="outline"
                 onClick={handleClose}
-                disabled={loading}
+                disabled={isLoading}
               >
                 {__("cancelButton")}
               </Button>
               <Button
                 type="submit"
-                loading={loading}
+                loading={isLoading}
                 leftSection={<IconKey size={16} />}
               >
                 {__("changeButton")}
@@ -125,7 +120,7 @@ export default function ChangePasswordModal({
             </Group>
 
             <ErrorMessage
-              message={message && `Errors.changePassword.error`}
+              message={error && `Errors.changePassword.error`}
               align="end"
             />
           </Stack>

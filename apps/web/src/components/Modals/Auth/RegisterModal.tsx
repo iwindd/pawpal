@@ -2,7 +2,8 @@
 import ErrorMessage from "@/components/ErrorMessage";
 import ActionImage from "@/components/Modals/Auth/components/ActionImage";
 import RichText from "@/components/RichText";
-import { useAuth } from "@/contexts/AuthContext";
+import { useRegisterMutation } from "@/features/auth/authApi";
+import { isErrorWithData, isErrorWithMessage } from "@/features/helpers";
 import useFormValidate from "@/hooks/useFormValidate";
 import { IconLogin } from "@pawpal/icons";
 import { RegisterInput, registerSchema } from "@pawpal/shared";
@@ -20,7 +21,6 @@ import {
 } from "@pawpal/ui/core";
 import { notify } from "@pawpal/ui/notifications";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
 
 export default function RegisterModal({
   opened,
@@ -31,10 +31,8 @@ export default function RegisterModal({
   onClose: () => void;
   onSwitch: () => void;
 }>) {
-  const { register } = useAuth();
+  const [registerMutation, { isLoading, error }] = useRegisterMutation();
   const __ = useTranslations("Auth.register");
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
 
   const form = useFormValidate<RegisterInput>({
     schema: registerSchema,
@@ -50,35 +48,29 @@ export default function RegisterModal({
   });
 
   const handleSubmit = async (inputs: RegisterInput) => {
-    try {
-      setLoading(true);
-      const state = await register({ inputs: inputs });
+    const response = await registerMutation(inputs);
 
-      switch (state) {
-        case "success":
-          onClose();
-          notify.show({
-            title: __("notify.success.title"),
-            message: __("notify.success.message"),
-            color: "green",
-          });
-          break;
-        case "email_already_exists":
-          form.setErrors({
-            email: "email_already_exists",
-          });
-          break;
-        case "error":
-          setMessage("error");
-          break;
-        default:
-          break;
+    if (response.error) {
+      const message =
+        isErrorWithData(response.error) &&
+        isErrorWithMessage(response.error.data) &&
+        response.error.data.message;
+
+      if (message == "email_already_exists") {
+        form.setErrors({
+          email: "email_already_exists",
+        });
       }
-    } catch (error) {
-      console.error("Registration failed:", error);
-    } finally {
-      setLoading(false);
+
+      return;
     }
+
+    onClose();
+    notify.show({
+      title: __("notify.success.title"),
+      message: __("notify.success.message"),
+      color: "green",
+    });
   };
 
   return (
@@ -146,13 +138,13 @@ export default function RegisterModal({
             <Button
               type="submit"
               fullWidth
-              loading={loading}
+              loading={isLoading}
               leftSection={<IconLogin />}
             >
               {__("registerButton")}
             </Button>
 
-            <ErrorMessage message={message && `Errors.register.error`} />
+            <ErrorMessage message={error && `Errors.register.error`} />
             <Divider label={__("label_or")} />
 
             <Group justify="center" gap="sm">

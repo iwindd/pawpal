@@ -1,8 +1,8 @@
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
-import { AuthProvider } from "@/contexts/AuthContext";
 import APISession from "@/libs/api/server";
 import QueryProvider from "@/providers/QueryProvider";
+import StoreProvider from "@/providers/StoreProvider";
 import { ColorSchemeScript, mantineHtmlProps } from "@pawpal/ui/core";
 import lamoon from "@pawpal/ui/fonts/lamoon";
 import sarabun from "@pawpal/ui/fonts/sarabun";
@@ -48,15 +48,21 @@ export default async function RootLayout({
       </head>
       <body>
         <NextIntlClientProvider>
-          <QueryProvider>
-            <UIProvider locale={currentLocale}>
-              <AuthProvider session={session}>
+          <StoreProvider
+            preloadedState={{
+              auth: {
+                user: session,
+              },
+            }}
+          >
+            <QueryProvider>
+              <UIProvider locale={currentLocale}>
                 <Navbar />
                 {children}
                 <Footer />
-              </AuthProvider>
-            </UIProvider>
-          </QueryProvider>
+              </UIProvider>
+            </QueryProvider>
+          </StoreProvider>
         </NextIntlClientProvider>
       </body>
     </html>

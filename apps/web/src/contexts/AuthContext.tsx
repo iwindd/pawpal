@@ -1,4 +1,13 @@
 "use client";
+import {
+  useChangePasswordMutation,
+  useLazyGetProfileQuery,
+  useLoginMutation,
+  useLogoutMutation,
+  useRegisterMutation,
+} from "@/features/auth/authApi";
+import { setUser } from "@/features/auth/authSlice";
+import { useAppSelector } from "@/hooks";
 import API from "@/libs/api/client";
 import {
   ChangeEmailInput,
@@ -9,6 +18,7 @@ import {
   type LoginInput,
 } from "@pawpal/shared";
 import { createContext, ReactNode, useContext, useMemo, useState } from "react";
+import { useDispatch } from "react-redux";
 
 // Types
 type LoginResult = "success" | "invalid_credentials" | "error";
@@ -72,35 +82,39 @@ export const AuthProvider = ({
   children,
   session,
 }: AuthProviderProps): React.JSX.Element => {
-  const [user, setUser] = useState<Session | null>(session);
+  const user = useAppSelector((state) => state.auth.user);
   const [isLoading, setIsLoading] = useState(false);
+  const [getProfile] = useLazyGetProfileQuery();
+  const [loginMutation] = useLoginMutation();
+  const [logoutMutation] = useLogoutMutation();
+  const [registerMutation] = useRegisterMutation();
+  const [changePasswordMutation] = useChangePasswordMutation();
+  const dispatch = useDispatch();
 
   const refreshProfile = async (): Promise<Session | null> => {
-    try {
-      const resp = await API.auth.getProfile();
-      if (resp.success) {
-        setUser(resp.data);
-        return resp.data;
-      }
-      return null;
-    } catch (error) {
-      console.error("Failed to refresh profile:", error);
-      return null;
+    const resp = await getProfile();
+
+    if (!resp.error && resp.data) {
+      dispatch(setUser(session));
+      return resp.data;
     }
+
+    return null;
   };
 
   const login = async (props: LoginProps): Promise<LoginResult> => {
     setIsLoading(true);
 
     try {
-      const resp = await API.auth.login(props.inputs);
+      const resp = await loginMutation(props.inputs);
 
-      if (resp.success) {
-        setUser(resp.data);
+      if (!resp.error) {
+        dispatch(setUser(session));
         return "success";
       }
 
-      if (resp.data.response?.status === 401) return "invalid_credentials";
+      const status = (resp.error as unknown as { status: number }).status;
+      if (status === 401) return "invalid_credentials";
       return "error";
     } catch (error) {
       console.error("Login failed:", error);
@@ -114,13 +128,14 @@ export const AuthProvider = ({
     setIsLoading(true);
 
     try {
-      const resp = await API.auth.register(props.inputs);
-      if (resp.success) {
-        setUser(resp.data);
+      const resp = await registerMutation(props.inputs);
+      if (!resp.error) {
+        dispatch(setUser(session));
         return "success";
       }
 
-      if (resp.data.response?.status === 409) return "email_already_exists";
+      const status = (resp.error as unknown as { status: number }).status;
+      if (status === 409) return "email_already_exists";
       return "error";
     } catch (error) {
       console.error("Registration failed:", error);
@@ -136,14 +151,18 @@ export const AuthProvider = ({
     setIsLoading(true);
 
     try {
-      const resp = await API.auth.changePassword(props.inputs);
+      const resp = await changePasswordMutation(props.inputs);
 
-      if (resp.success) {
+      if (!resp.error) {
         return "success";
       }
 
-      if (resp.data.response?.status === 400) {
-        const errorData = resp.data.response?.data as { message?: string };
+      const error = resp.error as unknown as {
+        status: number;
+        data: { message?: string };
+      };
+      if (error.status === 400) {
+        const errorData = error.data as { message?: string };
         if (errorData?.message === "invalid_old_password")
           return errorData.message;
       }
@@ -198,7 +217,7 @@ export const AuthProvider = ({
       const resp = await API.auth.updateProfile(props.inputs);
 
       if (resp.success) {
-        setUser(resp.data);
+        dispatch(setUser(session));
         return "success";
       }
 
@@ -214,10 +233,11 @@ export const AuthProvider = ({
   const logout = async (): Promise<boolean> => {
     setIsLoading(true);
     try {
-      const { success } = await API.auth.logout();
-      if (success) setUser(null);
+      const resp = await logoutMutation();
+      if (resp.error) return false;
 
-      return success;
+      dispatch(setUser(null));
+      return true;
     } catch (error) {
       console.error("Logout failed:", error);
       throw error;

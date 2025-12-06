@@ -76,7 +76,7 @@ export class AuthService {
     }
   }
 
-  async register(user: RegisterInput): Promise<User> {
+  async register(user: RegisterInput): Promise<Session> {
     const existingUser = await this.userService.findByEmail(user.email);
     if (existingUser) {
       throw new ConflictException('email_already_exists');
@@ -84,7 +84,12 @@ export class AuthService {
 
     const newUser = await this.userService.create(user);
     delete newUser.password;
-    return newUser;
+    return {
+      ...newUser,
+      userWallet: await this.userService.getUserWallets(newUser.id),
+      roles: await this.userService.getUserRoles(newUser.id),
+      createdAt: newUser.createdAt.toISOString(),
+    };
   }
 
   signToken(user: Session): string {
@@ -111,12 +116,9 @@ export class AuthService {
     }
   }
 
-  async changeEmail(
-    userId: string,
-    changeEmailData: ChangeEmailInput,
-  ): Promise<void> {
+  async changeEmail(userId: string, changeEmailData: ChangeEmailInput) {
     try {
-      await this.userService.changeEmail(userId, changeEmailData);
+      return await this.userService.changeEmail(userId, changeEmailData);
     } catch (error) {
       if (error instanceof Error && error.message === 'invalid_password') {
         throw new BadRequestException('invalid_password');
