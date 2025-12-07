@@ -7,6 +7,7 @@ import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { CarouselModule } from '../carousel/carousel.module';
 import { CategoryModule } from '../category/category.module';
+import { EventModule } from '../event/event.module';
 import { FieldModule } from '../field/field.module';
 import { NotificationModule } from '../notification/notification.module';
 import { OrderModule } from '../order/order.module';
@@ -27,6 +28,7 @@ import { WalletModule } from '../wallet/wallet.module';
     }),
     ScheduleModule.forRoot(),
     PrismaModule,
+    EventModule,
     AuthModule,
     UserModule,
     ProductModule,
