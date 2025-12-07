@@ -10,12 +10,16 @@ import {
   WalletType,
 } from '@/generated/prisma/enums';
 import { TransactionStatusInput } from '@pawpal/shared';
+import { EventService } from '../event/event.service';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class WalletService {
   private readonly logger = new Logger(WalletService.name);
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly eventService: EventService,
+  ) {}
 
   async createCharge(
     userId: string,
@@ -28,7 +32,7 @@ export class WalletService {
       userId,
       walletType,
     );
-    return await this.prisma.userWalletTransaction.create({
+    const charge = await this.prisma.userWalletTransaction.create({
       data: {
         type: TransactionType.TOPUP,
         wallet_id: wallet.id,
@@ -53,6 +57,9 @@ export class WalletService {
         createdAt: true,
       },
     });
+
+    this.eventService.admin.emit('onNewJobTransaction');
+    return charge;
   }
 
   async validateOrderProceed(orderId: string) {

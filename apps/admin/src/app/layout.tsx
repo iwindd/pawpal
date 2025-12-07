@@ -1,6 +1,7 @@
 import AppLayout from "@/components/layouts/AppLayout";
 import APISession from "@/libs/api/server";
 import StoreProvider from "@/providers/StoreProvider";
+import { WebSocketProvider } from "@/providers/WebSocketProvider";
 import { ColorSchemeScript, mantineHtmlProps } from "@pawpal/ui/core";
 import lamoon from "@pawpal/ui/fonts/lamoon";
 import sarabun from "@pawpal/ui/fonts/sarabun";
@@ -53,9 +54,11 @@ export default async function RootLayout({
               },
             }}
           >
-            <UIProvider locale={currentLocale}>
-              <AppLayout>{children}</AppLayout>
-            </UIProvider>
+            <WebSocketProvider>
+              <UIProvider locale={currentLocale}>
+                <AppLayout>{children}</AppLayout>
+              </UIProvider>
+            </WebSocketProvider>
           </StoreProvider>
         </NextIntlClientProvider>
       </body>
