@@ -5,6 +5,7 @@ import { performance } from 'node:perf_hooks';
 import * as util from 'node:util';
 
 const logger = new Logger('PrismaService');
+const PRISMA_LOGGING = process.env.PRISMA_LOGGING;
 
 // Extension for logging model
 // @see https://github.com/prisma/prisma-client-extensions/blob/4a18f3bf1f5457f7b627d6a4d1850408625bcb8c/query-logging/script.ts#L5
@@ -13,9 +14,12 @@ export const loggingModelExtension = Prisma.defineExtension({
   query: {
     $allModels: {
       async $allOperations({ operation, model, args, query }) {
-        logger.log(
-          `Running ${model}.${operation} with args ${util.inspect(args)}`,
-        );
+        if (PRISMA_LOGGING) {
+          logger.log(
+            `Running ${model}.${operation} with args ${util.inspect(args)}`,
+          );
+        }
+
         const start = performance.now();
         const result = await query(args);
         const end = performance.now();
