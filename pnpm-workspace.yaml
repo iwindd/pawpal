@@ -41,10 +41,12 @@ catalog:
   "@nestjs/mapped-types": "*"
   "@nestjs/passport": ^11.0.5
   "@nestjs/platform-express": ^11.0.1
+  "@nestjs/platform-socket.io": ^11.0.1
   "@nestjs/schedule": ^6.0.1
   "@nestjs/schematics": ^11.0.0
   "@nestjs/swagger": ^11.2.3
   "@nestjs/testing": ^11.0.1
+  "@nestjs/websockets": ^11.0.1
   next: 16.0.5
   "@next/eslint-plugin-next": ^15.5.0
   next-intl: ^4.5.6
@@ -55,9 +57,9 @@ catalog:
   postcss-preset-mantine: ^1.18.0
   postcss-simple-vars: ^7.0.1
   prettier: ^3.6.2
-  prisma: 7.0.1
-  "@prisma/client": 7.0.1
+  prisma: ^7.1.0
   "@prisma/adapter-pg": ^7.1.0
+  "@prisma/client": ^7.1.0
   promptpay-qr: ^0.5.0
   qrcode.react: ^4.2.0
   "@quixo3/prisma-session-store": ^3.1.13
@@ -67,6 +69,8 @@ catalog:
   "@reduxjs/toolkit": ^2.11.0
   reflect-metadata: ^0.2.2
   rxjs: ^7.8.1
+  socket.io: ^4.8.1
+  socket.io-client: ^4.8.1
   source-map-support: ^0.5.21
   supertest: ^7.0.0
   "@tabler/icons-react": ^3.0.0
