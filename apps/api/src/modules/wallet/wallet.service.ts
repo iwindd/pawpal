@@ -2,12 +2,9 @@ import { TransactionFilterBuilder } from '@/common/filters/transactionFilter';
 import { DatatableQuery } from '@/common/pipes/DatatablePipe';
 import { Injectable, Logger } from '@nestjs/common';
 
+import { PaymentGateway } from '@/generated/prisma/client';
 import {
-  PaymentGateway,
-  UserWallet,
-  UserWalletTransaction,
-} from '@/generated/prisma/client';
-import {
+  OrderStatus,
   TransactionStatus,
   TransactionType,
   WalletType,
@@ -20,50 +17,6 @@ export class WalletService {
   private readonly logger = new Logger(WalletService.name);
   constructor(private readonly prisma: PrismaService) {}
 
-  private async getWalletOrCreate(
-    userId: string,
-    walletType: WalletType = WalletType.MAIN,
-  ): Promise<UserWallet> {
-    const userWallet = await this.prisma.userWallet.findFirst({
-      where: {
-        user_id: userId,
-        walletType: walletType,
-      },
-    });
-
-    if (!userWallet) {
-      return this.prisma.userWallet.create({
-        data: {
-          user_id: userId,
-          walletType: walletType,
-          balance: 0,
-        },
-      });
-    }
-
-    return userWallet;
-  }
-
-  private async updateWalletBalance(
-    wallet: UserWallet,
-    amount: number,
-  ): Promise<UserWallet> {
-    return await this.prisma.userWallet.update({
-      where: { id: wallet.id },
-      data: { balance: Number(wallet.balance) + amount },
-    });
-  }
-
-  private async updateTransactionStatus(
-    transactionId: string,
-    status: TransactionStatus,
-  ): Promise<UserWalletTransaction> {
-    return await this.prisma.userWalletTransaction.update({
-      where: { id: transactionId },
-      data: { status: status },
-    });
-  }
-
   async createCharge(
     userId: string,
     amount: number,
@@ -71,7 +24,10 @@ export class WalletService {
     orderId?: string,
     walletType: WalletType = WalletType.MAIN,
   ) {
-    const wallet = await this.getWalletOrCreate(userId, walletType);
+    const wallet = await this.prisma.userWallet.getWalletOrCreate(
+      userId,
+      walletType,
+    );
     return await this.prisma.userWalletTransaction.create({
       data: {
         type: TransactionType.TOPUP,
@@ -101,55 +57,61 @@ export class WalletService {
 
   async validateOrderProceed(orderId: string) {
     const order = await this.prisma.order.findUniqueOrThrow({
-      where: { id: orderId, status: 'PENDING_PAYMENT' },
+      where: { id: orderId, status: OrderStatus.PENDING_PAYMENT },
       select: {
         id: true,
         user_id: true,
         total: true,
       },
     });
-    const missingAmount = await this.getMissingAmount(
+
+    const missingAmount = await this.prisma.userWallet.getMissingAmount(
       +order.total,
       order.user_id,
     );
 
     if (missingAmount > 0) {
-      return await this.prisma.order.update({
-        where: { id: order.id },
-        data: { status: 'CANCELLED' },
-      });
+      return await this.prisma.order.setStatus(order.id, OrderStatus.CANCELLED);
     }
 
-    return await this.prisma.order.update({
-      where: { id: order.id },
-      data: { status: 'PAID' },
-    });
+    return await this.prisma.order.setStatus(order.id, OrderStatus.PAID);
   }
 
   async successCharge(transactionId: string) {
-    this.logger.log(`Success charge transaction ${transactionId}`);
     const transaction =
       await this.prisma.userWalletTransaction.findFirstOrThrow({
         where: { id: transactionId },
         select: {
           id: true,
           amount: true,
-          wallet: true,
           order_id: true,
+          wallet: {
+            select: {
+              balance: true,
+              user_id: true,
+              walletType: true,
+            },
+          },
         },
       });
 
     const originalBalance = +transaction.wallet.balance;
-    const updatedWallet = await this.updateWalletBalance(
-      transaction.wallet,
+
+    // update user wallet balance
+    const updatedWallet = await this.prisma.userWallet.addWalletBalance(
       +transaction.amount,
+      transaction.wallet.user_id,
+      transaction.wallet.walletType,
     );
 
-    const updatedTransaction = await this.updateTransactionStatus(
-      transaction.id,
-      TransactionStatus.SUCCESS,
-    );
+    // update transaction status
+    const updatedTransaction =
+      await this.prisma.userWalletTransaction.setStatus(
+        transaction.id,
+        TransactionStatus.SUCCESS,
+      );
 
+    // validate order proceed
     if (transaction.order_id)
       await this.validateOrderProceed(transaction.order_id);
 
@@ -162,32 +124,13 @@ export class WalletService {
   }
 
   async failedCharge(transactionId: string) {
-    const transaction = await this.updateTransactionStatus(
+    const transaction = await this.prisma.userWalletTransaction.setStatus(
       transactionId,
       TransactionStatus.FAILED,
     );
 
-    if (transaction.order_id) {
-      await this.prisma.order.update({
-        where: { id: transaction.order_id },
-        data: { status: 'CANCELLED' },
-      });
-    }
-  }
-
-  async getMissingAmount(
-    requiredAmount: number,
-    userId: string,
-    walletType: WalletType = WalletType.MAIN,
-  ): Promise<number> {
-    const wallet = await this.getWalletOrCreate(userId, walletType);
-    const currentBalance = +wallet.balance;
-
-    if (currentBalance >= requiredAmount) {
-      return 0;
-    }
-
-    return requiredAmount - currentBalance;
+    if (transaction.order_id)
+      this.prisma.order.setStatus(transaction.order_id, OrderStatus.CANCELLED);
   }
 
   async getPendingTransactions({

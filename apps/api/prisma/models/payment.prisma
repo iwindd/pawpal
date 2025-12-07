@@ -11,6 +11,7 @@ model UserWallet {
 
   userWalletTransactions UserWalletTransaction[] @relation("UserWalletTransactions")
 
+  @@unique([user_id, walletType])
   @@map("user_wallets")
 }
 
