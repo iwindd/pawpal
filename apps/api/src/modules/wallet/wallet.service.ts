@@ -1,6 +1,6 @@
 import { TransactionFilterBuilder } from '@/common/filters/transactionFilter';
 import { DatatableQuery } from '@/common/pipes/DatatablePipe';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 
 import {
   PaymentGateway,
@@ -17,6 +17,7 @@ import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class WalletService {
+  private readonly logger = new Logger(WalletService.name);
   constructor(private readonly prisma: PrismaService) {}
 
   private async getWalletOrCreate(
@@ -50,24 +51,6 @@ export class WalletService {
     return await this.prisma.userWallet.update({
       where: { id: wallet.id },
       data: { balance: Number(wallet.balance) + amount },
-    });
-  }
-
-  private async createTransaction(
-    wallet: UserWallet,
-    amount: number,
-    paymentMethod: string = 'unknown',
-    transactionType: TransactionType = TransactionType.TOPUP,
-  ): Promise<UserWalletTransaction> {
-    return await this.prisma.userWalletTransaction.create({
-      data: {
-        wallet_id: wallet.id,
-        amount: amount,
-        balance_before: wallet.balance,
-        balance_after: Number(wallet.balance) + amount,
-        type: transactionType,
-        status: TransactionStatus.SUCCESS,
-      },
     });
   }
 
@@ -144,6 +127,7 @@ export class WalletService {
   }
 
   async successCharge(transactionId: string) {
+    this.logger.log(`Success charge transaction ${transactionId}`);
     const transaction =
       await this.prisma.userWalletTransaction.findFirstOrThrow({
         where: { id: transactionId },

@@ -95,12 +95,12 @@ const TransactionDatatable = () => {
             {
               label: __("action.make_success"),
               color: "green",
-              action: () => setFailed(records.id) as unknown,
+              action: () => setSuccess(records.id) as unknown,
             },
             {
               label: __("action.make_failed"),
               color: "red",
-              action: () => setSuccess(records.id) as unknown,
+              action: () => setFailed(records.id) as unknown,
             }
           );
         }
