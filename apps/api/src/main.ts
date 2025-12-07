@@ -52,7 +52,7 @@ async function bootstrap(): Promise<void> {
   app.use(passport.session());
 
   app.enableCors({
-    origin: process.env.ALLOWED_ORIGINS?.split(/\s*,\s*/) ?? '*',
+    origin: [process.env.WEB_ADMIN_URL, process.env.WEB_FRONTEND_URL],
     credentials: true,
     exposedHeaders: ['Authorization'],
   });
