@@ -1,4 +1,5 @@
 import { AppModule } from '@/modules/app/app.module';
+import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -7,6 +8,7 @@ import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import passport from 'passport';
 import { join } from 'path';
+import { SocketIoAdapter } from './common/adapters/socket-io-adapter';
 import { ZodFilter } from './common/execeptions/ZodFilter';
 import { DelayInterceptor } from './common/interceptors/delay.interceptor';
 import { PrismaService } from './modules/prisma/prisma.service';
@@ -19,6 +21,9 @@ const ENABLE_DELAY_FLAG = 'true';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const configService = app.get(ConfigService);
+  app.useWebSocketAdapter(new SocketIoAdapter(app, configService));
+
   app.use(cookieParser(process.env.APP_SECRET));
 
   const isDevelopment = process.env.NODE_ENV === DEVELOPMENT_ENV;

@@ -1,19 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { Server } from 'socket.io';
+import { BaseEventService } from '../../common/classes/BaseEventService';
 
 @Injectable()
 export class EventService {
   public admin = new BaseEventService();
-}
-
-class BaseEventService {
-  private io: Server;
-
-  setServer(io: Server) {
-    this.io = io;
-  }
-
-  emit(event: string, data?: any) {
-    this.io?.emit(event, data);
-  }
+  public user = new BaseEventService();
 }

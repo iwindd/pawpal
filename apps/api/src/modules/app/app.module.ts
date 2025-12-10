@@ -1,9 +1,11 @@
+import { WsJwtAdminGuard } from '@/common/guards/ws-jwt/ws-admin-jwt.guard';
 import { AppController } from '@/modules/app/app.controller';
 import { AppService } from '@/modules/app/app.service';
 import { AuthModule } from '@/modules/auth/auth.module';
 import { UserModule } from '@/modules/user/user.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
 import { ScheduleModule } from '@nestjs/schedule';
 import { CarouselModule } from '../carousel/carousel.module';
 import { CategoryModule } from '../category/category.module';
@@ -46,6 +48,12 @@ import { WalletModule } from '../wallet/wallet.module';
     FieldModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: WsJwtAdminGuard,
+    },
+  ],
 })
 export class AppModule {}

@@ -122,6 +122,12 @@ export class WalletService {
     if (transaction.order_id)
       await this.validateOrderProceed(transaction.order_id);
 
+    this.eventService.user.emitToUser(
+      transaction.wallet.user_id,
+      'onOrderAccepted',
+      transaction.id,
+    );
+
     return {
       transaction_id: updatedTransaction.id,
       balance_before: originalBalance,
@@ -138,6 +144,12 @@ export class WalletService {
 
     if (transaction.order_id)
       this.prisma.order.setStatus(transaction.order_id, OrderStatus.CANCELLED);
+
+    this.eventService.user.emitToUser(
+      transaction.wallet.user_id,
+      'onOrderDeclined',
+      transaction.id,
+    );
   }
 
   async getPendingTransactions({

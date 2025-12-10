@@ -18,6 +18,13 @@ export const TransactionExtension = Prisma.defineExtension((client) => {
             data: {
               status,
             },
+            include: {
+              wallet: {
+                select: {
+                  user_id: true,
+                },
+              },
+            },
           });
         },
       },

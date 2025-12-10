@@ -1,12 +1,11 @@
 "use client";
 
-import { transactionApi } from "@/features/transaction/transactionApi";
-import { useAppDispatch, useAppSelector } from "@/hooks";
+import { useAppSelector } from "@/hooks";
 import { createContext, useContext, useEffect } from "react";
 import { io, type Socket } from "socket.io-client";
 
 export interface ISocket extends Socket {}
-export const socket: ISocket = io("http://localhost:8000/admin", {
+export const socket: ISocket = io("http://localhost:8000/user", {
   withCredentials: true,
   autoConnect: false,
 }) as ISocket;
@@ -25,20 +24,22 @@ export const WebSocketProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.auth.user);
 
   useEffect(() => {
     if (user?.id) {
       socket.connect();
 
-      socket.on("onNewJobTransaction", () =>
-        dispatch(transactionApi.util.invalidateTags(["Transactions"]))
-      );
+      socket.on("onOrderAccepted", (transactionId: string) => {
+        console.log(transactionId, "accepted");
+      });
+
+      socket.on("onOrderDeclined", (transactionId: string) => {
+        console.log(transactionId, "declined");
+      });
     }
 
     return () => {
-      socket.off("onNewJobTransaction");
       socket.disconnect();
     };
   }, [socket, user]);

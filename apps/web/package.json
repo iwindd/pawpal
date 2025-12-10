@@ -22,7 +22,8 @@
     "qrcode.react": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "react-redux": "catalog:"
+    "react-redux": "catalog:",
+    "socket.io-client": "catalog:"
   },
   "devDependencies": {
     "@eslint/eslintrc": "catalog:",
