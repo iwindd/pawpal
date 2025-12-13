@@ -129,6 +129,7 @@ export class WalletService {
         id: updatedTransaction.id,
         status: updatedTransaction.status,
         balance: +updatedWallet.balance,
+        walletType: transaction.wallet.walletType,
       },
     );
 
@@ -156,6 +157,7 @@ export class WalletService {
         id: transaction.id,
         status: transaction.status,
         balance: +transaction.wallet.balance,
+        walletType: transaction.wallet.walletType,
       },
     );
   }

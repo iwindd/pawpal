@@ -1,4 +1,4 @@
-import { Session } from "@pawpal/shared";
+import { Session, WalletType } from "@pawpal/shared";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { authApi } from "./authApi";
 
@@ -16,6 +16,17 @@ const authSlice = createSlice({
   reducers: {
     setUser(state, action) {
       state.user = action.payload;
+    },
+    setUserBalance(
+      state,
+      action: PayloadAction<{
+        type: WalletType;
+        balance: number;
+      }>
+    ) {
+      if (state.user) {
+        state.user.userWallet[action.payload.type] = action.payload.balance;
+      }
     },
   },
   extraReducers(builder) {
@@ -55,5 +66,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { setUser } = authSlice.actions;
+export const { setUser, setUserBalance } = authSlice.actions;
 export default authSlice.reducer;

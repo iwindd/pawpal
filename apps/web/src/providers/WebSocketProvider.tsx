@@ -1,6 +1,7 @@
 "use client";
 
-import { useAppSelector } from "@/hooks";
+import { setUserBalance } from "@/features/auth/authSlice";
+import { useAppDispatch, useAppSelector } from "@/hooks";
 import { OnTopupTransactionUpdatedProps } from "@pawpal/shared";
 import { createContext, useContext, useEffect } from "react";
 import { io, type Socket } from "socket.io-client";
@@ -25,6 +26,7 @@ export const WebSocketProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
+  const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.auth.user);
 
   useEffect(() => {
@@ -33,14 +35,19 @@ export const WebSocketProvider = ({
 
       socket.on(
         "onTopupTransactionUpdated",
-        (data: OnTopupTransactionUpdatedProps) => {
-          console.log(data, "accepted");
-        }
+        (data: OnTopupTransactionUpdatedProps) =>
+          dispatch(
+            setUserBalance({
+              type: data.walletType,
+              balance: data.balance,
+            })
+          )
       );
     }
 
     return () => {
       socket.disconnect();
+      socket.off("onTopupTransactionUpdated");
     };
   }, [socket, user]);
 

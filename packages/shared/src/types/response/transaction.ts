@@ -1,4 +1,5 @@
 import { TransactionStatus, TransactionType } from "../../enums/transaction";
+import { WalletType } from "../../enums/wallet";
 
 export interface AdminTransactionResponse {
   id: string;
@@ -18,4 +19,5 @@ export interface OnTopupTransactionUpdatedProps {
   id: string;
   status: TransactionStatus;
   balance: number;
+  walletType: WalletType;
 }
