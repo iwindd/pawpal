@@ -1,5 +1,5 @@
 import { baseQuery } from "@/configs/api";
-import { PurchaseInput } from "@pawpal/shared";
+import { OrderResponseType, PurchaseInput } from "@pawpal/shared";
 import { createApi } from "@reduxjs/toolkit/query/react";
 
 export const orderApi = createApi({
@@ -9,7 +9,7 @@ export const orderApi = createApi({
     baseUrl: `/order/`,
   }),
   endpoints: (builder) => ({
-    createOrder: builder.mutation<void, PurchaseInput>({
+    createOrder: builder.mutation<OrderResponseType, PurchaseInput>({
       query: (payload) => ({
         url: `/`,
         method: "POST",

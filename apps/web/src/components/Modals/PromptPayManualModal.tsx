@@ -1,59 +1,54 @@
 import { useConfirmChargeMutation } from "@/features/payment/paymentApi";
 import { useAppSelector } from "@/hooks";
+import { PaymentChargeCreatedResponse } from "@pawpal/shared";
 import { Button, Group, Modal, Stack, Text, Title } from "@pawpal/ui/core";
-import { Notifications } from "@pawpal/ui/notifications";
+import { SerializedError } from "@reduxjs/toolkit";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { useTranslations } from "next-intl";
 import { QRCodeSVG } from "qrcode.react";
+import { useEffect, useState } from "react";
 
-interface PromptPayManualModalProps {
-  opened: boolean;
-  onClose: () => void;
+interface PromptPayManualModal {
+  onSuccess?: (response: PaymentChargeCreatedResponse) => void;
+  onError?: (error?: FetchBaseQueryError | SerializedError) => void;
 }
 
-const PromptPayManualModal = ({
-  opened,
-  onClose,
-}: PromptPayManualModalProps) => {
+export const PromptPayManualModal = ({
+  onSuccess,
+  onError,
+}: PromptPayManualModal) => {
   const __ = useTranslations("PromptPayManualModal");
+  const [promptPayModal, setPromptPayModal] = useState(false);
   const currentCharge = useAppSelector((state) => state.payment.currentCharge);
   const [confirmChargeMutation, { isLoading }] = useConfirmChargeMutation();
   const payload = currentCharge?.qrcode;
   const payment = currentCharge?.payment.metadata;
   const chargeId = currentCharge?.id;
 
-  if (!currentCharge) return null;
-
   const onSubmit = async () => {
     if (!chargeId) return;
     const response = await confirmChargeMutation(chargeId);
-    onClose();
+    setPromptPayModal(false);
 
     if (response.error) {
       console.error(response.error);
-      Notifications.show({
-        title: __("notify.error.title"),
-        message: __("notify.error.message"),
-        color: "red",
-      });
-
+      onError?.(response.error);
       return;
     }
 
-    Notifications.show({
-      id: `topup-${chargeId}`,
-      title: __("notify.success.title"),
-      message: __("notify.success.message"),
-      color: "pawpink",
-      autoClose: false,
-      withCloseButton: false,
-      loading: true,
-    });
+    onSuccess?.(response.data);
   };
+
+  useEffect(() => {
+    if (currentCharge) {
+      setPromptPayModal(true);
+    }
+  }, [currentCharge]);
 
   return (
     <Modal
-      opened={opened}
-      onClose={onClose}
+      opened={promptPayModal}
+      onClose={() => setPromptPayModal(false)}
       withCloseButton={false}
       closeOnClickOutside={false}
       closeOnEscape={false}

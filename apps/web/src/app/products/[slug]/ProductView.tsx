@@ -1,7 +1,12 @@
 "use client";
 import ProductForm from "@/components/Form/ProductForm";
+import PromptPayManualModal from "@/components/Modals/PromptPayManualModal";
 import { useCreateOrderMutation } from "@/features/order/orderApi";
-import { ProductResponse, PurchaseInput } from "@pawpal/shared";
+import {
+  PaymentChargeCreatedResponse,
+  ProductResponse,
+  PurchaseInput,
+} from "@pawpal/shared";
 import { backdrop } from "@pawpal/ui/backdrop";
 import { Container } from "@pawpal/ui/core";
 import { Notifications } from "@pawpal/ui/notifications";
@@ -28,14 +33,27 @@ const ProductView = ({ product }: ProductViewProps) => {
         message: __("notify.error.message"),
         color: "red",
       });
-
-      return;
     }
+  };
 
+  const onPurchaseSuccess = async (response: PaymentChargeCreatedResponse) => {
+    if (!response.order_id) return;
     Notifications.show({
+      id: `purchase-${response.order_id}`,
       title: __("notify.success.title"),
       message: __("notify.success.message"),
-      color: "green",
+      color: "pawpink",
+      autoClose: false,
+      withCloseButton: false,
+      loading: true,
+    });
+  };
+
+  const onPurchaseError = () => {
+    Notifications.show({
+      title: __("notify.error.title"),
+      message: __("notify.error.message"),
+      color: "red",
     });
   };
 
@@ -45,6 +63,10 @@ const ProductView = ({ product }: ProductViewProps) => {
         product={product}
         onPurchase={handleSubmit}
         isLoading={isLoading}
+      />
+      <PromptPayManualModal
+        onSuccess={onPurchaseSuccess}
+        onError={onPurchaseError}
       />
     </Container>
   );

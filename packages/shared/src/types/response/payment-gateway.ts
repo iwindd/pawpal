@@ -12,6 +12,7 @@ export interface PaymentChargeCreatedResponse {
   type: TransactionType;
   amount: number;
   status: TransactionStatus;
+  order_id?: string;
   payment: {
     id: string;
     metadata?: {

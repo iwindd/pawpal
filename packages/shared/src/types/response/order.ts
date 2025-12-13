@@ -1,3 +1,5 @@
+import { PaymentChargeCreatedResponse } from "./payment-gateway";
+
 export interface AdminOrderResponse {
   id: string;
   total: string;
@@ -27,3 +29,12 @@ export interface AdminOrderResponse {
     };
   }[];
 }
+
+export type OrderResponseType =
+  | {
+      type: "purchase";
+    }
+  | {
+      type: "topup";
+      charge: PaymentChargeCreatedResponse;
+    };

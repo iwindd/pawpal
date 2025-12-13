@@ -3,18 +3,20 @@ import { Injectable } from '@nestjs/common';
 import { OrderFilterBuilder } from '@/common/filters/orderFilter';
 import { DatatableQuery } from '@/common/pipes/DatatablePipe';
 import { FieldAfterParse } from '@/common/pipes/PurchasePipe';
+import { OrderStatus, TransactionType } from '@/generated/prisma/client';
+import { OrderUtil } from '@/utils/orderUtil';
 import { OrderExtension } from '@/utils/prisma/order';
-import { AdminOrderResponse, PurchaseInput } from '@pawpal/shared';
+import { AdminOrderResponse, PurchaseInput, Session } from '@pawpal/shared';
 import { PackageService } from '../package/package.service';
+import { PaymentService } from '../payment/payment.service';
 import { PrismaService } from '../prisma/prisma.service';
-import { WalletService } from '../wallet/wallet.service';
 
 @Injectable()
 export class OrderService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly packageService: PackageService,
-    private readonly walletService: WalletService,
+    private readonly paymentService: PaymentService,
   ) {}
 
   async getProductPackage(packageId: string) {
@@ -25,53 +27,67 @@ export class OrderService {
     });
   }
 
-  async createOrder(userId: string, body: PurchaseInput<FieldAfterParse>) {
-    const pkg = await this.packageService.getPackage(body.packageId);
-    /*     const total = +pkg.price * body.amount;
-
-    console.warn(pkg);
+  async createOrder(user: Session, body: PurchaseInput<FieldAfterParse>) {
+    const _package = await this.prisma.package.getPackage(body.packageId);
+    const connectionData = OrderUtil.getOrderConnection(user, body);
+    const totalPrice = +_package.price;
+    const missingBalance =
+      body.includeWalletBalance &&
+      (await this.prisma.userWallet.getMissingAmount(totalPrice, user.id));
+    const topupAmount = body.includeWalletBalance ? missingBalance : totalPrice;
 
     const order = await this.prisma.order.create({
       data: {
-        user: {
-          connect: {
-            id: userId,
-          },
-        },
-        total: total.toString(),
-        status: OrderStatus.PENDING_PAYMENT,
-        orderPackages: {
-          create: {
-            package: {
-              connect: {
-                id: pkg.id,
-              },
-            },
-            amount: total,
-            price: pkg.price,
-          },
-        },
-        orderFields: {
-          create: body.fields.map((field) => ({
-            field: {
-              connect: {
-                id: field.id,
-              },
-            },
-            value: field.value,
-          })),
-        },
+        total: _package.price.toString(),
+        status: OrderStatus.CREATED,
+        ...connectionData,
       },
     });
 
-    await this.walletService.createChargeIfMissingAmount(
-      userId,
-      total,
-      order.id,
-      'wallet',
-    );
- */
-    return pkg;
+    if (topupAmount > 0) {
+      return {
+        type: 'topup',
+        charge: await this.paymentService.topup(
+          user,
+          topupAmount,
+          body.paymentMethod,
+          order.id,
+        ),
+      };
+    } else {
+      const userWallet = await this.prisma.userWallet.getWalletOrCreate(
+        user.id,
+      );
+
+      const transaction = await this.prisma.userWalletTransaction.create({
+        data: {
+          amount: totalPrice,
+          type: TransactionType.PURCHASE,
+          order: {
+            connect: {
+              id: order.id,
+            },
+          },
+          wallet: {
+            connect: {
+              id: userWallet.id,
+            },
+          },
+          balance_after: +userWallet.balance - totalPrice,
+          balance_before: userWallet.balance,
+          payment: {
+            connect: {
+              id: body.paymentMethod,
+            },
+          },
+        },
+      });
+
+      return {
+        type: 'purchase',
+        transaction,
+      };
+    }
   }
 
   async getTopupOrders({ take, search, orderBy, skip }: DatatableQuery) {

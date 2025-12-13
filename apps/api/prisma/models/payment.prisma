@@ -45,6 +45,7 @@ model UserWalletTransaction {
 
 enum TransactionType {
   TOPUP
+  PURCHASE
 }
 
 enum TransactionStatus {

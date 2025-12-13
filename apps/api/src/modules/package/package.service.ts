@@ -1,5 +1,5 @@
 import { DatatableQuery } from '@/common/pipes/DatatablePipe';
-import { Package, Prisma } from '@/generated/prisma/client';
+import { Prisma } from '@/generated/prisma/client';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import {
   AdminProductPackageResponse,
@@ -12,32 +12,6 @@ import { PrismaService } from '../prisma/prisma.service';
 @Injectable()
 export class PackageService {
   constructor(private readonly prisma: PrismaService) {}
-
-  async getPackage(packageId: string): Promise<Package> {
-    const pkg = await this.prisma.package.findFirst({
-      where: {
-        id: packageId,
-      },
-      include: {
-        sales: {
-          where: {
-            startAt: { lte: new Date() },
-            endAt: { gte: new Date() },
-          },
-          select: {
-            id: true,
-            discount: true,
-            discountType: true,
-            startAt: true,
-            endAt: true,
-          },
-        },
-      },
-    });
-
-    if (!pkg) throw new NotFoundException('invalid_package');
-    return pkg;
-  }
 
   async getFields(packageId: string): Promise<ProductField[]> {
     const product = await this.prisma.package.findUnique({

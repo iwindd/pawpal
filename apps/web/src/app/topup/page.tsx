@@ -4,6 +4,7 @@ import { useCreateChargeMutation } from "@/features/payment/paymentApi";
 import { useGetActivePaymentGatewayQuery } from "@/features/paymentGateway/paymentGatewayApi";
 import useFormValidate from "@/hooks/useFormValidate";
 import {
+  PaymentChargeCreatedResponse,
   PaymentChargeCreateInput,
   PaymentChargeCreateSchema,
 } from "@pawpal/shared";
@@ -21,14 +22,13 @@ import {
 } from "@pawpal/ui/core";
 import { Notifications } from "@pawpal/ui/notifications";
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import RadioMethod from "./components/RadioMethod";
 
 const TopupPage = () => {
   const __ = useTranslations("Topup");
   const { data: paymentGateways } = useGetActivePaymentGatewayQuery();
   const [createChargeMutation, { isLoading }] = useCreateChargeMutation();
-  const [promptPayModal, setPromptPayModal] = useState(false);
 
   const form = useFormValidate<PaymentChargeCreateInput>({
     schema: PaymentChargeCreateSchema,
@@ -49,8 +49,7 @@ const TopupPage = () => {
     });
   }, [paymentGateways]);
 
-  const handleSubmit = async (payload: PaymentChargeCreateInput) => {
-    setPromptPayModal(false);
+  const onConfirmTopup = async (payload: PaymentChargeCreateInput) => {
     const response = await createChargeMutation(payload);
 
     if (response.error) {
@@ -60,12 +59,26 @@ const TopupPage = () => {
         color: "red",
       });
     }
-
-    setPromptPayModal(true);
   };
 
-  const onClosePromptPayModal = () => {
-    setPromptPayModal(false);
+  const onTopupSuccess = async (response: PaymentChargeCreatedResponse) => {
+    Notifications.show({
+      id: `topup-${response.id}`,
+      title: __("notify.success.title"),
+      message: __("notify.success.message"),
+      color: "pawpink",
+      autoClose: false,
+      withCloseButton: false,
+      loading: true,
+    });
+  };
+
+  const onTopupError = () => {
+    Notifications.show({
+      title: __("notify.error.title"),
+      message: __("notify.error.message"),
+      color: "red",
+    });
   };
 
   return (
@@ -78,7 +91,7 @@ const TopupPage = () => {
           {__("subtitle")}
         </Text>
       </Card>
-      <form onSubmit={form.onSubmit(handleSubmit)}>
+      <form onSubmit={form.onSubmit(onConfirmTopup)}>
         <Grid gutter="sm">
           <Grid.Col span={{ base: 12, md: 8 }} order={{ base: 2, md: 1 }}>
             <Stack gap="sm">
@@ -159,10 +172,7 @@ const TopupPage = () => {
         </Grid>
       </form>
 
-      <PromptPayManualModal
-        opened={promptPayModal}
-        onClose={onClosePromptPayModal}
-      />
+      <PromptPayManualModal onSuccess={onTopupSuccess} onError={onTopupError} />
     </Container>
   );
 };

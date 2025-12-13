@@ -24,7 +24,7 @@ export class WalletService {
   async createCharge(
     userId: string,
     amount: number,
-    paymentMethod: Pick<PaymentGateway, 'id'>,
+    paymentGatewayId: Pick<PaymentGateway, 'id'>,
     orderId?: string,
     status: TransactionStatus = TransactionStatus.CREATED,
     walletType: WalletType = WalletType.MAIN,
@@ -40,7 +40,7 @@ export class WalletService {
         amount: amount,
         balance_before: wallet.balance,
         balance_after: Number(wallet.balance) + amount,
-        payment_gateway_id: paymentMethod.id,
+        payment_gateway_id: paymentGatewayId.id,
         status,
         ...(orderId ? { order_id: orderId } : {}),
       },
@@ -56,6 +56,11 @@ export class WalletService {
           },
         },
         createdAt: true,
+        order: {
+          select: {
+            id: true,
+          },
+        },
       },
     });
 
@@ -74,7 +79,7 @@ export class WalletService {
 
   async validateOrderProceed(orderId: string) {
     const order = await this.prisma.order.findUniqueOrThrow({
-      where: { id: orderId, status: OrderStatus.PENDING_PAYMENT },
+      where: { id: orderId, status: OrderStatus.PENDING },
       select: {
         id: true,
         user_id: true,
@@ -91,7 +96,7 @@ export class WalletService {
       return await this.prisma.order.setStatus(order.id, OrderStatus.CANCELLED);
     }
 
-    return await this.prisma.order.setStatus(order.id, OrderStatus.PAID);
+    return await this.prisma.order.setStatus(order.id, OrderStatus.PENDING);
   }
 
   async successCharge(transactionId: string) {

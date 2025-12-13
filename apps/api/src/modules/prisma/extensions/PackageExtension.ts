@@ -13,9 +13,9 @@ const getPercentDiscount = (
   return basePrice ? (discount / 100) * basePrice : 0;
 };
 
-export const packageSaleExtension = Prisma.defineExtension((client) => {
+export const PackageExtension = Prisma.defineExtension((client) => {
   return client.$extends({
-    name: 'packageSaleExtension',
+    name: 'packageExtension',
     model: {
       package: {
         findMostSaleByProduct: async (productSlugOrId: string) => {
@@ -66,6 +66,30 @@ export const packageSaleExtension = Prisma.defineExtension((client) => {
           }, sales[0]);
 
           return mostDiscountedSale;
+        },
+        getPackage: async (packageId: string) => {
+          const _package = await client.package.findUniqueOrThrow({
+            where: {
+              id: packageId,
+            },
+            include: {
+              sales: {
+                where: {
+                  startAt: { lte: new Date() },
+                  endAt: { gte: new Date() },
+                },
+                select: {
+                  id: true,
+                  discount: true,
+                  discountType: true,
+                  startAt: true,
+                  endAt: true,
+                },
+              },
+            },
+          });
+
+          return _package;
         },
       },
     },

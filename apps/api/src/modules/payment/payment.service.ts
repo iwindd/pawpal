@@ -13,20 +13,18 @@ export class PaymentService {
     private readonly paymentGatewayService: PaymentGatewayService,
   ) {}
 
-  async topup(user: Session, amount: number, paymentId: string) {
+  async topup(
+    user: Session,
+    amount: number,
+    paymentId: string,
+    orderId?: string,
+  ) {
     const isActive = await this.paymentGatewayService.isActive(paymentId);
     if (!isActive) throw new BadGatewayException(`${paymentId} is not active`);
 
     switch (paymentId) {
       case 'promptpay-manual':
-        return this.createPromptpayManualCharge(user, amount);
-      case 'true-money-wallet-voucher':
-        this.logger.warn(
-          `Processing top-up of ${amount} for user ${user.id} via TrueMoney Wallet Voucher`,
-        );
-        throw new BadGatewayException(
-          `Payment method ${paymentId} is not supported.`,
-        );
+        return this.createPromptpayManualCharge(user, amount, orderId);
       default:
         this.logger.error(
           `Payment method ${paymentId} is not supported. Falling back to default.`,
@@ -49,7 +47,11 @@ export class PaymentService {
     });
   }
 
-  private async createPromptpayManualCharge(user: Session, amount: number) {
+  private async createPromptpayManualCharge(
+    user: Session,
+    amount: number,
+    orderId?: string,
+  ) {
     const gateway =
       await this.paymentGatewayService.getGateway('promptpay-manual');
 
@@ -63,6 +65,7 @@ export class PaymentService {
       user.id,
       amount,
       gateway,
+      orderId,
     );
 
     return {
