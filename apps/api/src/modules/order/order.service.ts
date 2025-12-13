@@ -10,6 +10,7 @@ import { AdminOrderResponse, PurchaseInput, Session } from '@pawpal/shared';
 import { PackageService } from '../package/package.service';
 import { PaymentService } from '../payment/payment.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { WalletRepository } from '../wallet/wallet.repository';
 
 @Injectable()
 export class OrderService {
@@ -17,6 +18,7 @@ export class OrderService {
     private readonly prisma: PrismaService,
     private readonly packageService: PackageService,
     private readonly paymentService: PaymentService,
+    private readonly walletRepository: WalletRepository,
   ) {}
 
   async getProductPackage(packageId: string) {
@@ -28,23 +30,22 @@ export class OrderService {
   }
 
   async createOrder(user: Session, body: PurchaseInput<FieldAfterParse>) {
-    const _package = await this.prisma.package.getPackage(body.packageId);
+    const productPackage = await this.prisma.package.getPackage(body.packageId);
     const connectionData = OrderUtil.getOrderConnection(user, body);
-    const totalPrice = +_package.price;
-    const missingBalance =
-      body.includeWalletBalance &&
-      (await this.prisma.userWallet.getMissingAmount(totalPrice, user.id));
-    const topupAmount = body.includeWalletBalance ? missingBalance : totalPrice;
+    const userWallet = await this.walletRepository.getWallet(user.id);
+    const topupAmount = body.includeWalletBalance
+      ? await userWallet.getMissingAmount(productPackage.price)
+      : productPackage.price;
 
     const order = await this.prisma.order.create({
       data: {
-        total: _package.price.toString(),
+        total: productPackage.price.toString(),
         status: OrderStatus.CREATED,
         ...connectionData,
       },
     });
 
-    if (topupAmount > 0) {
+    if (topupAmount.greaterThan(0)) {
       return {
         type: 'topup',
         charge: await this.paymentService.topup(
@@ -55,14 +56,15 @@ export class OrderService {
         ),
       };
     } else {
-      const userWallet = await this.prisma.userWallet.getWalletOrCreate(
-        user.id,
-      );
+      const balanceAfter = userWallet.balance.minus(productPackage.price);
 
       const transaction = await this.prisma.userWalletTransaction.create({
         data: {
           amount: totalPrice,
           type: TransactionType.PURCHASE,
+          balance_after: balanceAfter,
+          balance_before: userWallet.balance,
+          status: TransactionStatus.SUCCESS,
           order: {
             connect: {
               id: order.id,
@@ -73,8 +75,6 @@ export class OrderService {
               id: userWallet.id,
             },
           },
-          balance_after: +userWallet.balance - totalPrice,
-          balance_before: userWallet.balance,
           payment: {
             connect: {
               id: body.paymentMethod,
@@ -83,6 +83,7 @@ export class OrderService {
         },
       });
 
+      await userWallet.updateBalance(balanceAfter);
       return {
         type: 'purchase',
         transaction,

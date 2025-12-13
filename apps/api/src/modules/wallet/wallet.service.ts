@@ -19,27 +19,25 @@ export class WalletService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly eventService: EventService,
+    private readonly walletRepository: WalletRepository,
   ) {}
 
   async createCharge(
     userId: string,
-    amount: number,
+    amount: Decimal,
     paymentGatewayId: Pick<PaymentGateway, 'id'>,
     orderId?: string,
     status: TransactionStatus = TransactionStatus.CREATED,
     walletType: WalletType = WalletType.MAIN,
   ) {
-    const wallet = await this.prisma.userWallet.getWalletOrCreate(
-      userId,
-      walletType,
-    );
+    const wallet = await this.walletRepository.getWallet(userId, walletType);
     const charge = await this.prisma.userWalletTransaction.create({
       data: {
         type: TransactionType.TOPUP,
         wallet_id: wallet.id,
         amount: amount,
         balance_before: wallet.balance,
-        balance_after: Number(wallet.balance) + amount,
+        balance_after: wallet.balance.plus(amount),
         payment_gateway_id: paymentGatewayId.id,
         status,
         ...(orderId ? { order_id: orderId } : {}),

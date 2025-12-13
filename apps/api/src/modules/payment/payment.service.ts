@@ -1,6 +1,7 @@
 import { TransactionStatus } from '@/generated/prisma/enums';
 import { BadGatewayException, Injectable, Logger } from '@nestjs/common';
 import { Session } from '@pawpal/shared';
+import { Decimal } from '@prisma/client/runtime/client';
 import generatePayload from 'promptpay-qr';
 import { PaymentGatewayService } from '../payment-gateway/payment-gateway.service';
 import { WalletService } from '../wallet/wallet.service';
@@ -15,7 +16,7 @@ export class PaymentService {
 
   async topup(
     user: Session,
-    amount: number,
+    amount: Decimal,
     paymentId: string,
     orderId?: string,
   ) {
@@ -49,7 +50,7 @@ export class PaymentService {
 
   private async createPromptpayManualCharge(
     user: Session,
-    amount: number,
+    amount: Decimal,
     orderId?: string,
   ) {
     const gateway =
@@ -71,7 +72,7 @@ export class PaymentService {
     return {
       ...charge,
       qrcode: generatePayload(metadata.number, {
-        amount: amount,
+        amount: amount.toNumber(),
       }),
     };
   }

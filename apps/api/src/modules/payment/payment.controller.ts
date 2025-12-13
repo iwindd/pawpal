@@ -15,6 +15,7 @@ import {
   PaymentChargeCreateSchema,
   Session,
 } from '@pawpal/shared';
+import { Decimal } from '@prisma/client/runtime/client';
 import { PaymentService } from './payment.service';
 
 @Controller('payment')
@@ -28,7 +29,11 @@ export class PaymentController {
     payload: PaymentChargeCreateInput,
     @AuthUser() user: Session,
   ) {
-    return this.paymentService.topup(user, payload.amount, payload.payment_id);
+    return this.paymentService.topup(
+      user,
+      new Decimal(payload.amount),
+      payload.payment_id,
+    );
   }
 
   @Patch('topup/:chargeId')
