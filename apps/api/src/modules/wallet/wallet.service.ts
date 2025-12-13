@@ -1,190 +1,93 @@
 import { TransactionFilterBuilder } from '@/common/filters/transactionFilter';
 import { DatatableQuery } from '@/common/pipes/DatatablePipe';
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
-import { PaymentGateway } from '@/generated/prisma/client';
 import {
   OrderStatus,
   TransactionStatus,
   TransactionType,
-  WalletType,
 } from '@/generated/prisma/enums';
 import { TransactionStatusInput } from '@pawpal/shared';
-import { EventService } from '../event/event.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { UserWalletTransactionRepository } from './repositories/userWalletTransaction.repository';
 
 @Injectable()
 export class WalletService {
-  private readonly logger = new Logger(WalletService.name);
   constructor(
     private readonly prisma: PrismaService,
-    private readonly eventService: EventService,
-    private readonly walletRepository: WalletRepository,
+    private readonly userWalletTransactionRepo: UserWalletTransactionRepository,
   ) {}
-
-  async createCharge(
-    userId: string,
-    amount: Decimal,
-    paymentGatewayId: Pick<PaymentGateway, 'id'>,
-    orderId?: string,
-    status: TransactionStatus = TransactionStatus.CREATED,
-    walletType: WalletType = WalletType.MAIN,
-  ) {
-    const wallet = await this.walletRepository.getWallet(userId, walletType);
-    const charge = await this.prisma.userWalletTransaction.create({
-      data: {
-        type: TransactionType.TOPUP,
-        wallet_id: wallet.id,
-        balance_before: wallet.balance,
-        balance_after: wallet.balance.plus(amount),
-        payment_gateway_id: paymentGatewayId.id,
-        status,
-        ...(orderId ? { order_id: orderId } : {}),
-      },
-      select: {
-        id: true,
-        type: true,
-        amount: true,
-        status: true,
-        payment: {
-          select: {
-            id: true,
-            metadata: true,
-          },
-        },
-        createdAt: true,
-        order: {
-          select: {
-            id: true,
-          },
-        },
-      },
-    });
-
-    if (status != TransactionStatus.CREATED) {
-      this.eventService.admin.emit('onNewJobTransaction');
-    }
-
-    return charge;
-  }
-
-  async getChargeById(chargeId: string) {
-    return this.prisma.userWalletTransaction.findUniqueOrThrow({
-      where: { id: chargeId },
-    });
-  }
-
-  async validateOrderProceed(orderId: string) {
-    const order = await this.prisma.order.findUniqueOrThrow({
-      where: { id: orderId, status: OrderStatus.PENDING },
-      select: {
-        id: true,
-        user_id: true,
-        total: true,
-      },
-    });
-
-    const missingAmount = await this.prisma.userWallet.getMissingAmount(
-      +order.total,
-      order.user_id,
-    );
-
-    if (missingAmount > 0) {
-      return await this.prisma.order.setStatus(order.id, OrderStatus.CANCELLED);
-    }
-
-    return await this.prisma.order.setStatus(order.id, OrderStatus.PENDING);
-  }
 
   async successCharge(transactionId: string) {
     const transaction =
-      await this.prisma.userWalletTransaction.findFirstOrThrow({
-        where: { id: transactionId },
-        select: {
-          id: true,
-          amount: true,
-          order_id: true,
+      await this.userWalletTransactionRepo.find(transactionId);
+
+    await transaction.updateStatus(TransactionStatus.SUCCESS);
+    await transaction.updateWalletBalance();
+
+    switch (transaction.type) {
+      case TransactionType.TOPUP: {
+        await transaction.emitTopupTransactionUpdated();
+
+        break;
+      }
+      case TransactionType.PURCHASE: {
+        // TODO: handle purchase transaction
+
+        break;
+      }
+      case TransactionType.TOPUP_FOR_PURCHASE: {
+        await transaction.order.updateStatus(OrderStatus.PENDING);
+
+        // create new purchase transaction
+        await this.userWalletTransactionRepo.create({
+          balance_before: transaction.balanceAfter,
+          balance_after: transaction.order.total.minus(
+            transaction.balanceAfter,
+          ),
+          type: TransactionType.PURCHASE,
+          status: TransactionStatus.SUCCESS,
           wallet: {
-            select: {
-              balance: true,
-              user_id: true,
-              walletType: true,
+            connect: {
+              id: transaction.wallet.id,
             },
           },
-        },
-      });
+          order: {
+            connect: {
+              id: transaction.order.id,
+            },
+          },
+        });
 
-    const originalBalance = +transaction.wallet.balance;
-
-    // update user wallet balance
-    const updatedWallet = await this.prisma.userWallet.addWalletBalance(
-      +transaction.amount,
-      transaction.wallet.user_id,
-      transaction.wallet.walletType,
-    );
-
-    // update transaction status
-    const updatedTransaction =
-      await this.prisma.userWalletTransaction.setStatus(
-        transaction.id,
-        TransactionStatus.SUCCESS,
-      );
-
-    // validate order proceed
-    if (transaction.order_id)
-      await this.validateOrderProceed(transaction.order_id);
-
-    this.eventService.user.emitToUser(
-      transaction.wallet.user_id,
-      'onTopupTransactionUpdated',
-      {
-        id: updatedTransaction.id,
-        status: updatedTransaction.status,
-        balance: +updatedWallet.balance,
-        walletType: transaction.wallet.walletType,
-      },
-    );
+        break;
+      }
+      default:
+        break;
+    }
 
     return {
-      transaction_id: updatedTransaction.id,
-      balance_before: originalBalance,
-      balance_after: +updatedWallet.balance,
-      balance: +updatedWallet.balance,
+      transaction_id: transaction.id,
+      balance_before: transaction.balanceBefore,
+      balance_after: transaction.balanceAfter,
+      balance: transaction.balanceAfter,
     };
   }
 
   async failedCharge(transactionId: string) {
-    const transaction = await this.prisma.userWalletTransaction.setStatus(
-      transactionId,
-      TransactionStatus.FAILED,
-    );
+    const transaction =
+      await this.userWalletTransactionRepo.find(transactionId);
 
-    if (transaction.order_id)
-      this.prisma.order.setStatus(transaction.order_id, OrderStatus.CANCELLED);
-
-    this.eventService.user.emitToUser(
-      transaction.wallet.user_id,
-      'onTopupTransactionUpdated',
-      {
-        id: transaction.id,
-        status: transaction.status,
-        balance: +transaction.wallet.balance,
-        walletType: transaction.wallet.walletType,
-      },
-    );
+    await transaction.updateStatus(TransactionStatus.FAILED);
+    await transaction.order?.updateStatus(OrderStatus.CANCELLED);
+    transaction.emitTopupTransactionUpdated();
   }
 
   async pendingCharge(transactionId: string) {
-    const transaction = await this.prisma.userWalletTransaction.setStatus(
-      transactionId,
-      TransactionStatus.PENDING,
-    );
+    const transaction =
+      await this.userWalletTransactionRepo.find(transactionId);
 
-    if (transaction.status != TransactionStatus.CREATED) {
-      this.eventService.admin.emit('onNewJobTransaction');
-    }
-
-    return transaction;
+    await transaction.updateStatus(TransactionStatus.PENDING);
+    transaction.emitNewJobTransaction();
   }
 
   async getPendingTransactions({

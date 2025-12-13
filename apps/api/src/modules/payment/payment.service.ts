@@ -3,15 +3,19 @@ import { BadGatewayException, Injectable, Logger } from '@nestjs/common';
 import { Session } from '@pawpal/shared';
 import { Decimal } from '@prisma/client/runtime/client';
 import generatePayload from 'promptpay-qr';
+import { EventService } from '../event/event.service';
 import { PaymentGatewayService } from '../payment-gateway/payment-gateway.service';
-import { WalletService } from '../wallet/wallet.service';
+import { UserWalletTransactionRepository } from '../wallet/repositories/userWalletTransaction.repository';
+import { WalletRepository } from '../wallet/repositories/wallet.repository';
 
 @Injectable()
 export class PaymentService {
   private readonly logger = new Logger(PaymentService.name);
   constructor(
-    private readonly walletService: WalletService,
     private readonly paymentGatewayService: PaymentGatewayService,
+    private readonly walletRepo: WalletRepository,
+    private readonly userWalletTransactionRepo: UserWalletTransactionRepository,
+    private readonly eventService: EventService,
   ) {}
 
   async topup(
@@ -37,15 +41,12 @@ export class PaymentService {
   }
 
   async confirm(chargeId: string) {
-    const charge = await this.walletService.getChargeById(chargeId);
-    if (!charge) throw new BadGatewayException('Charge not found');
+    const charge = await this.userWalletTransactionRepo.find(chargeId);
 
     if (charge.status !== TransactionStatus.CREATED)
       throw new BadGatewayException('Charge is already processed');
 
-    return this.walletService.changeTransactionStatus(chargeId, {
-      status: TransactionStatus.PENDING,
-    });
+    return charge.updateStatus(TransactionStatus.PENDING);
   }
 
   private async createPromptpayManualCharge(
@@ -62,12 +63,12 @@ export class PaymentService {
     if (!metadata.number) throw new BadGatewayException('Metadata not found');
     if (!metadata.name) throw new BadGatewayException('Metadata not found');
 
-    const charge = await this.walletService.createCharge(
-      user.id,
-      amount,
-      gateway,
-      orderId,
-    );
+    const wallet = await this.walletRepo.find(user.id);
+    const charge = await wallet.createCharge(amount, gateway.id, orderId);
+
+    if (charge.status != TransactionStatus.CREATED) {
+      this.eventService.admin.emit('onNewJobTransaction');
+    }
 
     return {
       ...charge,
