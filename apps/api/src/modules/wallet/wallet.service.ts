@@ -35,7 +35,6 @@ export class WalletService {
       data: {
         type: TransactionType.TOPUP,
         wallet_id: wallet.id,
-        amount: amount,
         balance_before: wallet.balance,
         balance_after: wallet.balance.plus(amount),
         payment_gateway_id: paymentGatewayId.id,

@@ -29,6 +29,22 @@ export const walletExtension = Prisma.defineExtension((client) => {
         },
       },
     },
+    result: {
+      userWalletTransaction: {
+        amount: {
+          needs: {
+            balance_before: true,
+            balance_after: true,
+          },
+          compute(userWalletTransaction: {
+            balance_before: Decimal;
+            balance_after: Decimal;
+          }) {
+            return Math.abs(
+              Number(userWalletTransaction.balance_after) -
+                Number(userWalletTransaction.balance_before),
+            );
+          },
         },
       },
     },

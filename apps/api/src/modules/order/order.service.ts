@@ -60,7 +60,6 @@ export class OrderService {
 
       const transaction = await this.prisma.userWalletTransaction.create({
         data: {
-          amount: totalPrice,
           type: TransactionType.PURCHASE,
           balance_after: balanceAfter,
           balance_before: userWallet.balance,

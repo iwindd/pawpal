@@ -24,7 +24,6 @@ model UserWalletTransaction {
   type           TransactionType   @default(TOPUP)
   wallet_id      String
   wallet         UserWallet        @relation("UserWalletTransactions", fields: [wallet_id], references: [id])
-  amount         Decimal           @db.Decimal(10, 2)
   balance_before Decimal           @db.Decimal(10, 2)
   balance_after  Decimal           @db.Decimal(10, 2)
   status         TransactionStatus @default(CREATED)
