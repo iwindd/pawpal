@@ -1,6 +1,7 @@
 "use client";
 
 import { useAppSelector } from "@/hooks";
+import { OnTopupTransactionUpdatedProps } from "@pawpal/shared";
 import { createContext, useContext, useEffect } from "react";
 import { io, type Socket } from "socket.io-client";
 
@@ -30,13 +31,12 @@ export const WebSocketProvider = ({
     if (user?.id) {
       socket.connect();
 
-      socket.on("onOrderAccepted", (transactionId: string) => {
-        console.log(transactionId, "accepted");
-      });
-
-      socket.on("onOrderDeclined", (transactionId: string) => {
-        console.log(transactionId, "declined");
-      });
+      socket.on(
+        "onTopupTransactionUpdated",
+        (data: OnTopupTransactionUpdatedProps) => {
+          console.log(data, "accepted");
+        }
+      );
     }
 
     return () => {

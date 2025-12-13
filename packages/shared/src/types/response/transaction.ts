@@ -13,3 +13,9 @@ export interface AdminTransactionResponse {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface OnTopupTransactionUpdatedProps {
+  id: string;
+  status: TransactionStatus;
+  balance: number;
+}

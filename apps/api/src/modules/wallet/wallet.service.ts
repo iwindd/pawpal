@@ -124,8 +124,12 @@ export class WalletService {
 
     this.eventService.user.emitToUser(
       transaction.wallet.user_id,
-      'onOrderAccepted',
-      transaction.id,
+      'onTopupTransactionUpdated',
+      {
+        id: updatedTransaction.id,
+        status: updatedTransaction.status,
+        balance: +updatedWallet.balance,
+      },
     );
 
     return {
@@ -147,8 +151,12 @@ export class WalletService {
 
     this.eventService.user.emitToUser(
       transaction.wallet.user_id,
-      'onOrderDeclined',
-      transaction.id,
+      'onTopupTransactionUpdated',
+      {
+        id: transaction.id,
+        status: transaction.status,
+        balance: +transaction.wallet.balance,
+      },
     );
   }
 
