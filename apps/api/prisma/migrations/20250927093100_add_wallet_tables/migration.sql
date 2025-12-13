@@ -11,7 +11,7 @@ CREATE TYPE "public"."WalletType" AS ENUM ('MAIN');
 CREATE TYPE "public"."TransactionType" AS ENUM ('TOPUP');
 
 -- CreateEnum
-CREATE TYPE "public"."TransactionStatus" AS ENUM ('PENDING', 'SUCCESS', 'FAILED');
+CREATE TYPE "public"."TransactionStatus" AS ENUM ('CREATED', 'PENDING', 'SUCCESS', 'FAILED');
 
 -- AlterTable
 ALTER TABLE "public"."users" DROP COLUMN "coins";
@@ -38,7 +38,7 @@ CREATE TABLE "public"."user_wallet_transactions" (
     "balance_before" DECIMAL(10,2) NOT NULL,
     "balance_after" DECIMAL(10,2) NOT NULL,
     "reference" TEXT,
-    "status" "public"."TransactionStatus" NOT NULL DEFAULT 'PENDING',
+    "status" "public"."TransactionStatus" NOT NULL DEFAULT 'CREATED',
     "currency" TEXT NOT NULL DEFAULT 'THB',
     "payment_method" TEXT NOT NULL DEFAULT 'unknown',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,

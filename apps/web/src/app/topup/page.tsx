@@ -66,11 +66,6 @@ const TopupPage = () => {
 
   const onClosePromptPayModal = () => {
     setPromptPayModal(false);
-    Notifications.show({
-      title: __("notify.success.title"),
-      message: __("notify.success.message"),
-      color: "green",
-    });
   };
 
   return (

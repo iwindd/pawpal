@@ -2,7 +2,10 @@
 
 import { setUserBalance } from "@/features/auth/authSlice";
 import { useAppDispatch, useAppSelector } from "@/hooks";
+import { IconCheck } from "@pawpal/icons";
 import { OnTopupTransactionUpdatedProps } from "@pawpal/shared";
+import { Notifications } from "@pawpal/ui/notifications";
+import { useTranslations } from "next-intl";
 import { createContext, useContext, useEffect } from "react";
 import { io, type Socket } from "socket.io-client";
 
@@ -26,6 +29,7 @@ export const WebSocketProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
+  const __ = useTranslations();
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.auth.user);
 
@@ -35,13 +39,36 @@ export const WebSocketProvider = ({
 
       socket.on(
         "onTopupTransactionUpdated",
-        (data: OnTopupTransactionUpdatedProps) =>
+        (data: OnTopupTransactionUpdatedProps) => {
           dispatch(
             setUserBalance({
               type: data.walletType,
               balance: data.balance,
             })
-          )
+          );
+
+          if (data.status === "SUCCESS") {
+            Notifications.update({
+              id: `topup-${data.id}`,
+              color: "teal",
+              title: __("PromptPayManualModal.notify.success.title"),
+              message: __("PromptPayManualModal.notify.success.message"),
+              icon: <IconCheck size={18} />,
+              loading: false,
+              autoClose: 2000,
+            });
+          } else {
+            Notifications.update({
+              id: `topup-${data.id}`,
+              color: "red",
+              title: __("PromptPayManualModal.notify.failed.title"),
+              message: __("PromptPayManualModal.notify.failed.message"),
+              icon: <IconCheck size={18} />,
+              loading: false,
+              autoClose: 2000,
+            });
+          }
+        }
       );
     }
 

@@ -26,6 +26,7 @@ export class WalletService {
     amount: number,
     paymentMethod: Pick<PaymentGateway, 'id'>,
     orderId?: string,
+    status: TransactionStatus = TransactionStatus.CREATED,
     walletType: WalletType = WalletType.MAIN,
   ) {
     const wallet = await this.prisma.userWallet.getWalletOrCreate(
@@ -39,8 +40,8 @@ export class WalletService {
         amount: amount,
         balance_before: wallet.balance,
         balance_after: Number(wallet.balance) + amount,
-        status: TransactionStatus.PENDING,
         payment_gateway_id: paymentMethod.id,
+        status,
         ...(orderId ? { order_id: orderId } : {}),
       },
       select: {
@@ -58,8 +59,17 @@ export class WalletService {
       },
     });
 
-    this.eventService.admin.emit('onNewJobTransaction');
+    if (status != TransactionStatus.CREATED) {
+      this.eventService.admin.emit('onNewJobTransaction');
+    }
+
     return charge;
+  }
+
+  async getChargeById(chargeId: string) {
+    return this.prisma.userWalletTransaction.findUniqueOrThrow({
+      where: { id: chargeId },
+    });
   }
 
   async validateOrderProceed(orderId: string) {
@@ -162,6 +172,19 @@ export class WalletService {
     );
   }
 
+  async pendingCharge(transactionId: string) {
+    const transaction = await this.prisma.userWalletTransaction.setStatus(
+      transactionId,
+      TransactionStatus.PENDING,
+    );
+
+    if (transaction.status != TransactionStatus.CREATED) {
+      this.eventService.admin.emit('onNewJobTransaction');
+    }
+
+    return transaction;
+  }
+
   async getPendingTransactions({
     skip,
     take,
@@ -193,6 +216,8 @@ export class WalletService {
         return this.successCharge(transactionId);
       case TransactionStatus.FAILED:
         return this.failedCharge(transactionId);
+      case TransactionStatus.PENDING:
+        return this.pendingCharge(transactionId);
       default:
         throw new Error('Invalid status');
     }

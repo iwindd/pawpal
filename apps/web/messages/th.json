@@ -369,6 +369,24 @@
   "PromptPayManualModal": {
     "title": "QR PromptPay",
     "description": "หมายเลข: {number}",
-    "submit-btn": "แจ้งโอนเงิน"
+    "submit-btn": "แจ้งโอนเงิน",
+    "notify": {
+      "error": {
+        "title": "ผิดพลาด",
+        "message": "กรุณาลองใหม่อีกครั้งภายหลัง!"
+      },
+      "confirm": {
+        "title": "แจ้งรายการเติมเงินแล้ว",
+        "message": "กำลังดำเนินการเติมเงินของคุณ กรุณารอสักครู่"
+      },
+      "success": {
+        "title": "สำเร็จ",
+        "message": "รายการเติมเงินของคุณสำเร็จแล้ว!"
+      },
+      "failed": {
+        "title": "ไม่สำเร็จ",
+        "message": "รายการเติมเงินของคุณถูกปฏิเสธ!"
+      }
+    }
   }
 }

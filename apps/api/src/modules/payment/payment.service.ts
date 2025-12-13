@@ -1,3 +1,4 @@
+import { TransactionStatus } from '@/generated/prisma/enums';
 import { BadGatewayException, Injectable, Logger } from '@nestjs/common';
 import { Session } from '@pawpal/shared';
 import generatePayload from 'promptpay-qr';
@@ -34,6 +35,18 @@ export class PaymentService {
           `Payment method ${paymentId} is not supported.`,
         );
     }
+  }
+
+  async confirm(chargeId: string) {
+    const charge = await this.walletService.getChargeById(chargeId);
+    if (!charge) throw new BadGatewayException('Charge not found');
+
+    if (charge.status !== TransactionStatus.CREATED)
+      throw new BadGatewayException('Charge is already processed');
+
+    return this.walletService.changeTransactionStatus(chargeId, {
+      status: TransactionStatus.PENDING,
+    });
   }
 
   private async createPromptpayManualCharge(user: Session, amount: number) {

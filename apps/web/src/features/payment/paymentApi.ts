@@ -21,7 +21,13 @@ export const paymentApi = createApi({
         body: payload,
       }),
     }),
+    confirmCharge: builder.mutation<PaymentChargeCreatedResponse, string>({
+      query: (payload) => ({
+        url: `/topup/${payload}`,
+        method: "PATCH",
+      }),
+    }),
   }),
 });
 
-export const { useCreateChargeMutation } = paymentApi;
+export const { useCreateChargeMutation, useConfirmChargeMutation } = paymentApi;

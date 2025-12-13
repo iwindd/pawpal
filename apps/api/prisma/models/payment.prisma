@@ -27,7 +27,7 @@ model UserWalletTransaction {
   amount         Decimal           @db.Decimal(10, 2)
   balance_before Decimal           @db.Decimal(10, 2)
   balance_after  Decimal           @db.Decimal(10, 2)
-  status         TransactionStatus @default(PENDING)
+  status         TransactionStatus @default(CREATED)
   currency       String            @default("THB")
   createdAt      DateTime          @default(now())
   updatedAt      DateTime          @updatedAt
@@ -48,6 +48,7 @@ enum TransactionType {
 }
 
 enum TransactionStatus {
+  CREATED
   PENDING
   SUCCESS
   FAILED
