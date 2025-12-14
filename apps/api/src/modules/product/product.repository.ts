@@ -1,8 +1,8 @@
 import { Prisma } from '@/generated/prisma/client';
 import { Injectable, Logger } from '@nestjs/common';
 import { ProductCollection } from '../../common/collections/product.collection';
+import { ProductEntity } from '../../common/entities/product.entity';
 import { PrismaService } from '../prisma/prisma.service';
-import { ProductEntity } from './product.entity';
 
 export const DEFAULT_PRODUCT_SELECT = () =>
   ({

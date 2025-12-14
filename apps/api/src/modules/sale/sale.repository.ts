@@ -1,7 +1,7 @@
 import { Prisma } from '@/generated/prisma/client';
 import { Injectable, Logger } from '@nestjs/common';
+import { SaleEntity } from '../../common/entities/sale.entity';
 import { PrismaService } from '../prisma/prisma.service';
-import { SaleEntity } from './sale.entity';
 
 export const DEFAULT_SALE_SELECT = {
   discount: true,

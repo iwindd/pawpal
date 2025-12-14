@@ -1,9 +1,9 @@
+import { OrderEntity } from '@/common/entities/order.entity';
 import { Prisma, TransactionStatus } from '@/generated/prisma/client';
-import { OrderEntity } from '@/modules/order/order.entity';
 import {
   DEFAULT_WALLET_TRANSACTION_SELECT,
   UserWalletTransactionRepository,
-} from '../repositories/userWalletTransaction.repository';
+} from '../../modules/wallet/repositories/userWalletTransaction.repository';
 import { WalletEntity } from './wallet.entity';
 
 export type UserWalletTransactionEntityProps =

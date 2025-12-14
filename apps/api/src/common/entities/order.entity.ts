@@ -1,5 +1,8 @@
 import { OrderStatus, Prisma } from '@/generated/prisma/client';
-import { DEFAULT_ORDER_SELECT, OrderRepository } from './order.repository';
+import {
+  DEFAULT_ORDER_SELECT,
+  OrderRepository,
+} from '../../modules/order/order.repository';
 
 export type OrderEntityProps = Prisma.OrderGetPayload<{
   select: typeof DEFAULT_ORDER_SELECT;

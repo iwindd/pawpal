@@ -1,4 +1,4 @@
 import { BaseCollection } from '@/common/classes/BaseCollection';
-import { ProductEntity } from '../../modules/product/product.entity';
+import { ProductEntity } from '../entities/product.entity';
 
 export class ProductCollection extends BaseCollection<ProductEntity> {}

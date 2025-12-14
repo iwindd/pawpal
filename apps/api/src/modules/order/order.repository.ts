@@ -1,7 +1,7 @@
 import { OrderStatus, Prisma } from '@/generated/prisma/client';
 import { Injectable, Logger } from '@nestjs/common';
+import { OrderEntity } from '../../common/entities/order.entity';
 import { PrismaService } from '../prisma/prisma.service';
-import { OrderEntity } from './order.entity';
 
 export const DEFAULT_ORDER_SELECT = {
   id: true,

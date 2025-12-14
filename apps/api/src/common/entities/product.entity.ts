@@ -3,7 +3,7 @@ import { SaleUtil } from '@/utils/saleUtil';
 import {
   DEFAULT_PRODUCT_SELECT,
   ProductRepository,
-} from './product.repository';
+} from '../../modules/product/product.repository';
 
 export type ProductEntityProps = Prisma.ProductGetPayload<{
   select: ReturnType<typeof DEFAULT_PRODUCT_SELECT>;

@@ -5,8 +5,8 @@ import {
   OrderRepository,
 } from '@/modules/order/order.repository';
 import { Injectable, Logger } from '@nestjs/common';
+import { UserWalletTransactionEntity } from '../../../common/entities/user-wallet-transaction.entity';
 import { PrismaService } from '../../prisma/prisma.service';
-import { UserWalletTransactionEntity } from '../entities/user-wallet-transaction.entity';
 import { DEFAULT_WALLET_SELECT, WalletRepository } from './wallet.repository';
 
 export const DEFAULT_WALLET_TRANSACTION_SELECT = {

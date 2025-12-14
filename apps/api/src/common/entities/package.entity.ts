@@ -2,7 +2,7 @@ import { Prisma } from '@/generated/prisma/client';
 import {
   DEFAULT_PACKAGE_SELECT,
   PackageRepository,
-} from './package.repository';
+} from '@/modules/package/package.repository';
 
 export type PackageEntityProps = Prisma.PackageGetPayload<{
   select: typeof DEFAULT_PACKAGE_SELECT;

@@ -1,7 +1,7 @@
+import { PackageEntity } from '@/common/entities/package.entity';
 import { Prisma } from '@/generated/prisma/client';
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { PackageEntity } from './package.entity';
 
 export const DEFAULT_PACKAGE_SELECT = {
   id: true,

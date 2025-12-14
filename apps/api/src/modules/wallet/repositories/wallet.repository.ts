@@ -6,8 +6,8 @@ import {
 } from '@/generated/prisma/enums';
 import { Injectable, Logger } from '@nestjs/common';
 import { Decimal } from '@prisma/client/runtime/client';
+import { WalletEntity } from '../../../common/entities/wallet.entity';
 import { PrismaService } from '../../prisma/prisma.service';
-import { WalletEntity } from '../entities/wallet.entity';
 
 export const DEFAULT_WALLET_SELECT = {
   id: true,

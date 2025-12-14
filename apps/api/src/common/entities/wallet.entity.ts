@@ -3,7 +3,7 @@ import { Decimal } from '@prisma/client/runtime/client';
 import {
   DEFAULT_WALLET_SELECT,
   WalletRepository,
-} from '../repositories/wallet.repository';
+} from '../../modules/wallet/repositories/wallet.repository';
 
 export type WalletEntityProps = Prisma.UserWalletGetPayload<{
   select: typeof DEFAULT_WALLET_SELECT;
