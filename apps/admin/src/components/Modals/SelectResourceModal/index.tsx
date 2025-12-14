@@ -1,4 +1,5 @@
 "use client";
+import { ResourceResponse } from "@pawpal/shared";
 import {
   Button,
   Divider,
@@ -10,7 +11,6 @@ import {
 } from "@pawpal/ui/core";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { ResourceResponse } from "../../../../../../packages/shared/dist/types/response/resource";
 import BrowseTab from "./tabs/Browse";
 import UploadTab from "./tabs/Upload";
 

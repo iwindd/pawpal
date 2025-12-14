@@ -19,7 +19,7 @@ export default function ProductsPage() {
   const { data, isLoading } = useGetProductsQuery({
     page: datatable.page,
     limit: datatable.limit,
-    sort: datatable.sortStatus,
+    sort: datatable.sort,
   });
 
   return (

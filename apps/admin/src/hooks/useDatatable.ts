@@ -37,6 +37,7 @@ const useDatatable = <T>(
     setLimit,
     sortStatus,
     setSortStatus: handleSortStatusChange,
+    sort: JSON.stringify(sortStatus),
     above: {
       xs: (theme: MantineTheme) => `(min-width: ${theme.breakpoints.xs})`,
       sm: (theme: MantineTheme) => `(min-width: ${theme.breakpoints.sm})`,

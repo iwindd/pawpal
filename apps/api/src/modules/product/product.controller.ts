@@ -24,8 +24,10 @@ export class ProductController {
   }
 
   @Get()
-  async getAllProducts(@Query(FindProductPipe) query: FindProductQuery) {
-    return this.productService.getAllProducts(query);
+  async getAllProductDatatable(
+    @Query(FindProductPipe) query: FindProductQuery,
+  ) {
+    return this.productService.getAllProductDatatable(query);
   }
 
   @Get(':slug')

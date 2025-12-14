@@ -15,12 +15,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import {
-  DatatableResponse,
-  MulterFileSchema,
-  ResourceResponse,
-  Session,
-} from '@pawpal/shared';
+import { MulterFileSchema, ResourceResponse, Session } from '@pawpal/shared';
 import { ResourceService } from './resource.service';
 
 @Controller('admin/resource')
@@ -29,10 +24,8 @@ export class ResourcesController {
   constructor(private readonly resourceService: ResourceService) {}
 
   @Get()
-  async findAllResources(
-    @Query(DatatablePipe) query: DatatableQuery,
-  ): Promise<DatatableResponse<ResourceResponse>> {
-    return await this.resourceService.findAllResources(query);
+  async getAllResourceDatatable(@Query(DatatablePipe) query: DatatableQuery) {
+    return await this.resourceService.getAllResourceDatatable(query);
   }
 
   @Get(':id')

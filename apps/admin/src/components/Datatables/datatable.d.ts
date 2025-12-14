@@ -17,6 +17,7 @@ export interface UseDatatableReturnProps<T> {
   setPage: BaseDatatableProps<T>["setPage"];
   setLimit: BaseDatatableProps<T>["setLimit"];
   setSortStatus: BaseDatatableProps<T>["setSortStatus"];
+  sort: string;
 
   above: Record<string, (theme: MantineTheme) => string>;
 }

@@ -38,11 +38,11 @@ export class AdminFieldController {
   }
 
   @Get('/product/:id')
-  getProductFields(
+  getProductFieldDatatable(
     @Param('id') id: string,
     @Query(DatatablePipe) query: DatatableQuery,
   ) {
-    return this.fieldService.getProductFields(id, query);
+    return this.fieldService.getProductFieldDatatable(id, query);
   }
 
   @Post('/product/:productId/reorder')

@@ -1,12 +1,10 @@
+import { DatatableQuery } from '@/common/pipes/DatatablePipe';
 import { CarouselStatus } from '@/generated/prisma/enums';
-import datatableUtils from '@/utils/datatable';
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import {
   CarouselInput,
   CarouselReorderInput,
   CarouselResponse,
-  DatatableQueryDto,
-  DatatableResponse,
   Session,
 } from '@pawpal/shared';
 import { PrismaService } from '../prisma/prisma.service';
@@ -65,39 +63,52 @@ export class CarouselService {
     };
   }
 
-  async findAll(
-    queryParams: DatatableQueryDto,
-  ): Promise<DatatableResponse<CarouselResponse>> {
-    const { page, limit, sort, search } = queryParams;
-    const skip = (page - 1) * limit;
-
-    const where: any = {
-      status: { not: CarouselStatus.PUBLISHED },
-    };
-
-    if (search) {
-      where.OR = [
-        { title: { contains: search, mode: 'insensitive' } },
-        { product: { name: { contains: search, mode: 'insensitive' } } },
-        { creator: { displayName: { contains: search, mode: 'insensitive' } } },
-      ];
-    }
-
-    const total = await this.prisma.carousel.count({ where });
-    const carousels = await this.prisma.carousel.findMany({
-      where,
-      skip,
-      take: limit,
-      orderBy: datatableUtils.buildOrderBy(sort),
+  /**
+   * Get all carousel datatable
+   * @param query datatable query
+   * @returns datatable response
+   */
+  async getAllCarouselDatatable(query: DatatableQuery) {
+    return await this.prisma.carousel.getDatatable({
       select: {
         ...this.carouselResponseSelect,
       },
+      search: {
+        title: 'insensitive',
+        'product.name': 'insensitive',
+        'creator.displayName': 'insensitive',
+      },
+      query: {
+        ...query,
+        where: {
+          status: {
+            not: CarouselStatus.PUBLISHED,
+          },
+        },
+      },
     });
+  }
 
-    return {
-      data: carousels,
-      total: total,
-    };
+  /**
+   * Get published carousel
+   * @returns datatable response
+   */
+  async getPublishedCarousel() {
+    return await this.prisma.carousel.getDatatable({
+      select: {
+        ...this.carouselResponseSelect,
+      },
+      query: {
+        orderBy: {
+          order: 'asc',
+        },
+        where: {
+          status: CarouselStatus.PUBLISHED,
+        },
+        skip: 0,
+        take: 10,
+      },
+    });
   }
 
   async findOne(id: string): Promise<CarouselResponse> {
@@ -109,26 +120,6 @@ export class CarouselService {
     });
     if (!carousel) throw new BadRequestException('carousel_not_found');
     return carousel;
-  }
-
-  async findAllPublished(): Promise<DatatableResponse<CarouselResponse>> {
-    const carousels = await this.prisma.carousel.findMany({
-      take: 10,
-      where: {
-        status: { equals: CarouselStatus.PUBLISHED },
-      },
-      orderBy: {
-        order: 'asc',
-      },
-      select: {
-        ...this.carouselResponseSelect,
-      },
-    });
-
-    return {
-      data: carousels,
-      total: carousels.length,
-    };
   }
 
   async update(id: string, payload: CarouselInput): Promise<CarouselResponse> {

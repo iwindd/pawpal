@@ -1,6 +1,6 @@
 import { DatatableQuery } from '@/common/pipes/DatatablePipe';
 import { Injectable } from '@nestjs/common';
-import { DatatableResponse, ResourceResponse } from '@pawpal/shared';
+import { ResourceResponse } from '@pawpal/shared';
 import { PrismaService } from '../prisma/prisma.service';
 import { LocalStorageService } from './local-storage.service';
 
@@ -38,28 +38,11 @@ export class ResourceService {
     };
   }
 
-  async findAllResources({
-    skip,
-    take,
-    orderBy,
-  }: DatatableQuery): Promise<DatatableResponse<ResourceResponse>> {
-    const total = await this.prisma.resource.count();
-
-    console.log(orderBy);
-    const resources = await this.prisma.resource.findMany({
-      skip,
-      take,
-      orderBy,
+  async getAllResourceDatatable(query: DatatableQuery) {
+    return await this.prisma.resource.getDatatable({
+      query,
       select: this.resourceResponseSelect,
     });
-
-    return {
-      total,
-      data: resources.map((resource) => ({
-        ...resource,
-        createdAt: resource.createdAt.toISOString(),
-      })),
-    };
   }
 
   async uploadResource(

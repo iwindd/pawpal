@@ -1,11 +1,8 @@
-import { FindProductQuery } from '@/common/pipes/FindProductPipe';
-import datatableUtils from '@/utils/datatable';
+import { DatatableQuery } from '@/common/pipes/DatatablePipe';
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import {
   AdminProductEditResponse,
   AdminProductResponse,
-  DatatableQueryDto,
-  DatatableResponse,
   ProductInput,
 } from '@pawpal/shared';
 import { PrismaService } from '../prisma/prisma.service';
@@ -113,26 +110,16 @@ export class ProductService {
     };
   }
 
-  async getAllProducts({ take, skip, orderBy, search }: FindProductQuery) {
-    // Build where clause
-    const where: any = {};
-
-    if (search) {
-      where.name = {
-        contains: search,
-        mode: 'insensitive',
-      };
-    }
-
-    // Category filter will be implemented when category filtering is needed
-
-    const total = await this.prisma.product.count({ where });
-    const products = await this.prisma.product.findMany({
-      where,
-      orderBy,
-      skip,
-      take,
+  /**
+   * Get all products with datatable
+   * @param query Datatable query
+   * @returns Datatable response
+   */
+  async getAllProductDatatable(query: DatatableQuery) {
+    return this.prisma.product.getDatatable({
+      query,
       select: {
+        id: true,
         slug: true,
         name: true,
         description: true,
@@ -171,16 +158,18 @@ export class ProductService {
         },
         MOST_SALE: true,
       },
+      search: {
+        name: 'insensitive',
+        slug: 'insensitive',
+        description: 'insensitive',
+        ['category.name']: 'insensitive',
+        ['category.slug']: 'insensitive',
+        ['productTags.name']: 'insensitive',
+        ['productTags.slug']: 'insensitive',
+        ['packages.name']: 'insensitive',
+        ['packages.description']: 'insensitive',
+      },
     });
-
-    return {
-      data: products.map((product) => ({
-        slug: product.slug,
-        name: product.name,
-        sale: product.MOST_SALE,
-      })),
-      total,
-    };
   }
 
   async findOneForEdit(id: string): Promise<AdminProductEditResponse | null> {
@@ -345,28 +334,9 @@ export class ProductService {
     };
   }
 
-  async getProducts(
-    queryParams: DatatableQueryDto,
-  ): Promise<DatatableResponse<AdminProductResponse>> {
-    const { page, limit, sort } = queryParams;
-    const skip = (page - 1) * limit;
-
-    const search = queryParams.search;
-    const where: any = {};
-
-    if (search) {
-      where.name = {
-        contains: search,
-        mode: 'insensitive',
-      };
-    }
-
-    const total = await this.prisma.product.count({ where });
-    const products = await this.prisma.product.findMany({
-      where,
-      skip,
-      take: limit,
-      orderBy: datatableUtils.buildOrderBy(sort),
+  getProducts(query: DatatableQuery) {
+    return this.prisma.product.getDatatable({
+      query,
       select: {
         id: true,
         slug: true,
@@ -403,20 +373,11 @@ export class ProductService {
           },
         },
       },
+      search: {
+        name: 'insensitive',
+        slug: 'insensitive',
+      },
     });
-
-    return {
-      data: products.map((product) => ({
-        ...product,
-        createdAt: product.createdAt.toISOString(),
-        packageCount: product._count.packages,
-        packages: product.packages.map((pkg) => ({
-          ...pkg,
-          price: Number(pkg.price),
-        })),
-      })),
-      total,
-    };
   }
 
   async create(payload: ProductInput) {

@@ -1,6 +1,7 @@
 import { AuthUser } from '@/common/decorators/user.decorator';
 import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
 import { SessionAuthGuard } from '@/common/guards/session-auth.guard';
+import { DatatablePipe, DatatableQuery } from '@/common/pipes/DatatablePipe';
 import { ZodValidationPipe } from '@/common/ZodValidationPipe';
 import {
   Body,
@@ -12,16 +13,12 @@ import {
   Post,
   Query,
   UseGuards,
-  UsePipes,
 } from '@nestjs/common';
 import {
   CarouselInput,
   CarouselReorderInput,
   carouselReorderSchema,
   CarouselResponse,
-  DatatableQueryDto,
-  DatatableQuerySchema,
-  DatatableResponse,
   Session,
 } from '@pawpal/shared';
 import { CarouselService } from './carousel.service';
@@ -40,16 +37,13 @@ export class AdminCarouselController {
   }
 
   @Get()
-  @UsePipes(new ZodValidationPipe(DatatableQuerySchema))
-  async get(
-    @Query() params: DatatableQueryDto,
-  ): Promise<DatatableResponse<CarouselResponse>> {
-    return await this.carouselService.findAll(params);
+  async getAllCarouselDatatable(@Query(DatatablePipe) query: DatatableQuery) {
+    return await this.carouselService.getAllCarouselDatatable(query);
   }
 
   @Get('published')
-  async findAllPublished() {
-    return await this.carouselService.findAllPublished();
+  async getPublishedCarousel() {
+    return await this.carouselService.getPublishedCarousel();
   }
 
   @Get(':id')

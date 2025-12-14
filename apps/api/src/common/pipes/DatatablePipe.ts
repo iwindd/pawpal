@@ -1,4 +1,4 @@
-import datatableUtils from '@/utils/datatable';
+import { DatatableUtil } from '@/utils/datatable';
 import { Injectable, PipeTransform } from '@nestjs/common';
 import { DatatableInput, DatatableQuerySchema } from '@pawpal/shared';
 
@@ -22,7 +22,7 @@ export class DatatablePipe implements PipeTransform {
       orderBy:
         sourceSort == 'null'
           ? undefined
-          : datatableUtils.buildOrderBy(parsed.sort),
+          : DatatableUtil.buildOrderBy(parsed.sort),
       ...parsed,
     };
   }

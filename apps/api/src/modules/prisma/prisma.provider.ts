@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '../../generated/prisma/client';
+import { DatatableExtension } from './extensions/DatatableExtension';
 import { loggingModelExtension } from './extensions/LoggingExtension';
 import { PackageExtension } from './extensions/PackageExtension';
 import { walletExtension } from './extensions/WalletExtension';
@@ -16,6 +17,7 @@ export class PrismaProvider extends PrismaClient {
 
   withExtensions() {
     return this.$extends(loggingModelExtension)
+      .$extends(DatatableExtension)
       .$extends(PackageExtension)
       .$extends(walletExtension);
   }

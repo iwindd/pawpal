@@ -2,37 +2,42 @@ import { z } from "zod";
 
 export const DatatableQuerySchema = z
   .object({
-    page: z
-      .union([z.string(), z.number()])
-      .optional()
-      .transform((v) => (v ? Number(v) : 1)),
-    limit: z
-      .union([z.string(), z.number()])
-      .optional()
-      .transform((v) => (v ? Number(v) : 15)),
+    page: z.union([z.string(), z.number()]).optional(),
+    limit: z.union([z.string(), z.number()]).optional(),
     search: z.string().optional(),
 
-    "sort[columnAccessor]": z.string().optional(),
-    "sort[direction]": z.enum(["asc", "desc"]).optional(),
+    sort: z.string().optional(),
   })
-  .transform((data) => ({
-    page: data.page,
-    limit: data.limit,
-    search: data.search,
-    sort: {
-      columnAccessor: data["sort[columnAccessor]"] ?? "createdAt",
-      direction: data["sort[direction]"] ?? "desc",
-    },
-  }));
+  .transform((data) => {
+    let sort = {
+      columnAccessor: "createdAt",
+      direction: "desc",
+    };
+
+    if (data.sort) {
+      try {
+        sort = JSON.parse(data.sort);
+      } catch {}
+    }
+
+    return {
+      page: data.page ? Number(data.page) : 1,
+      limit: data.limit ? Number(data.limit) : 15,
+      search: data.search,
+      sort,
+    };
+  });
 
 export type DatatableInput = {
   page?: number;
   limit?: number;
   search?: string;
-  sort?: {
-    columnAccessor: string;
-    direction: "asc" | "desc";
-  };
+  sort?: string;
+};
+
+export type DatatableSortParsed = {
+  columnAccessor: string;
+  direction: string;
 };
 
 /** @deprecated Use `DatatableInput` for input OR `DatatableQuery` for query */

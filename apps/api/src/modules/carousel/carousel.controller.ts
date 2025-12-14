@@ -7,6 +7,6 @@ export class CarouselController {
 
   @Get()
   async findAllPublished() {
-    return await this.carouselService.findAllPublished();
+    return await this.carouselService.getPublishedCarousel();
   }
 }

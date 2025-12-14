@@ -1,4 +1,4 @@
-import datatableUtils from '@/utils/datatable';
+import { DatatableUtil } from '@/utils/datatable';
 import { Injectable, PipeTransform } from '@nestjs/common';
 import { DatatableInput, DatatableQuerySchema } from '@pawpal/shared';
 
@@ -18,7 +18,7 @@ export class FindProductPipe implements PipeTransform {
     return {
       skip: (parsed.page - 1) * parsed.limit,
       take: parsed.limit,
-      orderBy: datatableUtils.buildOrderBy(parsed.sort),
+      orderBy: DatatableUtil.buildOrderBy(parsed.sort),
       ...parsed,
     };
   }

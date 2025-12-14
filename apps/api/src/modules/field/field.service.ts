@@ -1,5 +1,4 @@
 import { DatatableQuery } from '@/common/pipes/DatatablePipe';
-import { Prisma } from '@/generated/prisma/client';
 import { Injectable } from '@nestjs/common';
 import {
   FieldInput,
@@ -57,36 +56,22 @@ export class FieldService {
     });
   }
 
-  async getProductFields(
-    productId: string,
-    { skip, take, orderBy, search }: DatatableQuery,
-  ) {
-    const where: Prisma.ProductFieldWhereInput = {
-      product_id: productId,
-      ...(search
-        ? {
-            OR: [
-              { label: { contains: search, mode: 'insensitive' } },
-              { placeholder: { contains: search, mode: 'insensitive' } },
-              {
-                creator: {
-                  displayName: { contains: search, mode: 'insensitive' },
-                },
-              },
-            ],
-          }
-        : {}),
-    };
-
-    const total = await this.prismaService.productField.count({ where });
-    const fields = await this.prismaService.productField.findMany({
-      where,
-      skip,
-      take,
-      orderBy: orderBy,
+  /**
+   * Get product field datatable
+   * @param productId
+   * @param query
+   * @returns
+   */
+  async getProductFieldDatatable(productId: string, query: DatatableQuery) {
+    return this.prismaService.productField.getDatatable({
+      query: {
+        ...query,
+        where: {
+          product_id: productId,
+        },
+      },
       select: {
         id: true,
-        order: true,
         label: true,
         placeholder: true,
         type: true,
@@ -100,12 +85,12 @@ export class FieldService {
           },
         },
       },
+      search: {
+        label: 'insensitive',
+        placeholder: 'insensitive',
+        ['creator.displayName']: 'insensitive',
+      },
     });
-
-    return {
-      data: fields,
-      total: total,
-    };
   }
 
   async reorderProductField(
