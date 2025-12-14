@@ -18,8 +18,6 @@ const MainCarousel = ({ carousels }: MainCarouselProps) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const __ = useTranslations("Home.CardCarousel");
 
-  console.log(carousels);
-
   const currentItem = items[activeIndex];
 
   return (
