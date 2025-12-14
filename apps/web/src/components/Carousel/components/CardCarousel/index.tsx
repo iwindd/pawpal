@@ -19,7 +19,7 @@ const CardCarousel = ({ alt, src }: Readonly<CardCarouselProps>) => {
           height={530}
           width={1920}
           className={classes.image}
-          priority={true}
+          preload={true}
           src={src}
           fallbackSrc="/assets/images/fallback-carousel.jpg"
         />

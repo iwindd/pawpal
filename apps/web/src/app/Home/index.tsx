@@ -1,5 +1,5 @@
+import Carousel from "@/components/Carousel";
 import APISession from "@/libs/api/server";
-import MainCarousel from "./components/MainCarousel";
 import ProductSections from "./components/ProductSections";
 
 export default async function HomePage() {
@@ -9,7 +9,7 @@ export default async function HomePage() {
 
   return (
     <>
-      <MainCarousel carousels={carousels} />
+      <Carousel carousels={carousels} />
       <ProductSections />
     </>
   );

@@ -1,24 +1,28 @@
 "use client";
 import { CarouselResponse } from "@pawpal/shared";
-import { Autoplay, Carousel } from "@pawpal/ui/carousel";
+import { Autoplay, Carousel as CarouselUI } from "@pawpal/ui/carousel";
 import { Box, Button, Flex, Group, Stack, Text, Title } from "@pawpal/ui/core";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useRef, useState } from "react";
-import CardCarousel from "../CardCarousel";
+import CardCarousel from "./components/CardCarousel";
 import classes from "./style.module.css";
 
-interface MainCarouselProps {
+interface CarouselProps {
   carousels: CarouselResponse[];
 }
 
-const MainCarousel = ({ carousels }: MainCarouselProps) => {
+const Carousel = ({ carousels }: CarouselProps) => {
   const autoplay = useRef(Autoplay({ delay: 7000 }));
   const [items] = useState(carousels);
   const [activeIndex, setActiveIndex] = useState(0);
   const __ = useTranslations("Home.CardCarousel");
 
   const currentItem = items[activeIndex];
+
+  if (items.length === 0) {
+    return null;
+  }
 
   return (
     <Group className={classes.wrapper}>
@@ -50,7 +54,7 @@ const MainCarousel = ({ carousels }: MainCarouselProps) => {
           </Flex>
         </Box>
       </Group>
-      <Carousel
+      <CarouselUI
         classNames={classes}
         withControls={false}
         withIndicators={true}
@@ -61,13 +65,13 @@ const MainCarousel = ({ carousels }: MainCarouselProps) => {
         plugins={[autoplay.current]}
       >
         {items.map((item) => (
-          <Carousel.Slide key={item.id} style={{ width: "100%" }}>
+          <CarouselUI.Slide key={item.id} style={{ width: "100%" }}>
             <CardCarousel alt={item.title} src={item.image.url} />
-          </Carousel.Slide>
+          </CarouselUI.Slide>
         ))}
-      </Carousel>
+      </CarouselUI>
     </Group>
   );
 };
 
-export default MainCarousel;
+export default Carousel;
