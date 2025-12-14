@@ -1,118 +1,50 @@
 import { FindProductQuery } from '@/common/pipes/FindProductPipe';
 import datatableUtils from '@/utils/datatable';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import {
   AdminProductEditResponse,
   AdminProductResponse,
   DatatableQueryDto,
   DatatableResponse,
   ProductInput,
-  ProductListItem,
 } from '@pawpal/shared';
 import { PrismaService } from '../prisma/prisma.service';
 import { SaleService } from '../sale/sale.service';
+import { ProductRepository } from './product.repository';
 
 @Injectable()
 export class ProductService {
+  private readonly logger = new Logger(ProductService.name);
   constructor(
     private readonly prisma: PrismaService,
     private readonly saleService: SaleService,
+    private readonly productRepository: ProductRepository,
   ) {}
 
-  async getNewProducts(limit?: number): Promise<ProductListItem[]> {
-    const DEFAULT_LIMIT = 4;
-    const productLimit = limit || DEFAULT_LIMIT;
-
-    const newProducts = await this.prisma.product.findMany({
-      orderBy: {
-        createdAt: 'desc',
-      },
-      select: {
-        slug: true,
-        name: true,
-        packages: {
-          select: {
-            sales: {
-              where: {
-                startAt: { lte: new Date() },
-                endAt: { gte: new Date() },
-              },
-              select: {
-                discount: true,
-                discountType: true,
-                startAt: true,
-                endAt: true,
-              },
-            },
-          },
-        },
-        MOST_SALE: true,
-      },
-      take: productLimit,
+  /**
+   * Get new products
+   * @param limit Number of products to return
+   * @returns Array of products
+   */
+  async getNewProducts(limit: number = 4) {
+    const products = await this.productRepository.getLatest({
+      take: limit,
     });
 
-    return newProducts.map((product) => {
-      return {
-        slug: product.slug,
-        name: product.name,
-        sale: product.MOST_SALE,
-      };
-    });
+    return products.toJSON();
   }
 
-  async getSaleProducts(limit?: number): Promise<ProductListItem[]> {
-    const DEFAULT_LIMIT = 4;
-    const productLimit = limit || DEFAULT_LIMIT;
-
-    const currentSale = await this.prisma.product.findMany({
-      where: {
-        packages: {
-          some: {
-            sales: {
-              some: {
-                startAt: { lte: new Date() },
-                endAt: { gte: new Date() },
-              },
-            },
-          },
-        },
-      },
-      select: {
-        slug: true,
-        name: true,
-        packages: {
-          select: {
-            sales: {
-              where: {
-                startAt: { lte: new Date() },
-                endAt: { gte: new Date() },
-              },
-              select: {
-                discount: true,
-                discountType: true,
-                startAt: true,
-                endAt: true,
-              },
-            },
-          },
-        },
-        MOST_SALE: true,
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-      take: productLimit,
+  /**
+   * Get sale products
+   * @param limit Number of products to return
+   * @returns Array of products
+   */
+  async getSaleProducts(limit: number = 4) {
+    const products = await this.productRepository.getHasSale({
+      take: limit,
     });
 
-    if (!currentSale.length) return [];
-
-    return currentSale.map((product) => {
-      return {
-        slug: product.slug,
-        name: product.name,
-        sale: product.MOST_SALE,
-      };
-    });
+    return products.toJSON();
   }
 
   async getProductBySlug(slug: string) {

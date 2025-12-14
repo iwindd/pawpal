@@ -5,7 +5,7 @@ import AuthApi from "./services/Auth";
 import CarouselApi from "./services/Carousel";
 import ProductApi from "./services/Product";
 
-class ServerApi extends PawApi {
+export class ServerApi extends PawApi {
   public readonly auth: AuthApi;
   public readonly product: ProductApi;
   public readonly carousel: CarouselApi;

@@ -2,8 +2,7 @@ import {
   FindProductPipe,
   FindProductQuery,
 } from '@/common/pipes/FindProductPipe';
-import { Controller, Get, Param, Query } from '@nestjs/common';
-import { ProductListItem } from '@pawpal/shared';
+import { Controller, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
 import { ProductService } from './product.service';
 
 @Controller('product')
@@ -11,17 +10,17 @@ export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Get('/new')
-  async getNewProducts(
-    @Query('limit') limit: number,
-  ): Promise<ProductListItem[]> {
-    return this.productService.getNewProducts(Number(limit));
+  getNewProducts(
+    @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
+  ) {
+    return this.productService.getNewProducts(Math.min(limit || 4, 100));
   }
 
   @Get('/sale')
-  async getSaleProducts(
-    @Query('limit') limit: number,
-  ): Promise<ProductListItem[]> {
-    return this.productService.getSaleProducts(Number(limit));
+  getSaleProducts(
+    @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
+  ) {
+    return this.productService.getSaleProducts(Math.min(limit || 4, 100));
   }
 
   @Get()

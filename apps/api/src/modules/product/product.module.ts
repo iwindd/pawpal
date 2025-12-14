@@ -1,12 +1,13 @@
 import { Global, Module } from '@nestjs/common';
 import { AdminProductController } from './admin-product.controller';
 import { ProductController } from './product.controller';
+import { ProductRepository } from './product.repository';
 import { ProductService } from './product.service';
 
 @Global()
 @Module({
   controllers: [ProductController, AdminProductController],
-  providers: [ProductService],
-  exports: [ProductService],
+  providers: [ProductService, ProductRepository],
+  exports: [ProductService, ProductRepository],
 })
 export class ProductModule {}
