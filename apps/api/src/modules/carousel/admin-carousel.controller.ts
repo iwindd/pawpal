@@ -43,7 +43,7 @@ export class AdminCarouselController {
 
   @Get('published')
   async getPublishedCarousel() {
-    return await this.carouselService.getPublishedCarousel();
+    return await this.carouselService.getPublishedCarouselDatatable();
   }
 
   @Get(':id')
