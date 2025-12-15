@@ -1,4 +1,3 @@
-import { TransactionFilterBuilder } from '@/common/filters/transactionFilter';
 import { DatatableQuery } from '@/common/pipes/DatatablePipe';
 import { Injectable } from '@nestjs/common';
 
@@ -90,26 +89,33 @@ export class WalletService {
     transaction.emitNewJobTransaction();
   }
 
-  async getPendingTransactions({
-    skip,
-    take,
-    orderBy,
-    search,
-  }: DatatableQuery) {
-    const where = new TransactionFilterBuilder()
-      .onlyPendingStatus()
-      .searchUser(search)
-      .build();
-
-    return {
-      total: await this.prisma.userWalletTransaction.count({ where }),
-      data: await this.prisma.userWalletTransaction.findMany({
-        where,
-        skip,
-        take,
-        orderBy,
-      }),
-    };
+  /**
+   * Get pending transactions datatable
+   * @param query datatable query
+   * @returns datatable response
+   */
+  async getPendingTransactionsDatatable(query: DatatableQuery) {
+    return this.prisma.userWalletTransaction.getDatatable({
+      select: {
+        id: true,
+        type: true,
+        amount: true,
+        balance_before: true,
+        balance_after: true,
+        status: true,
+        currency: true,
+        payment_gateway_id: true,
+        order_id: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+      query: {
+        ...query,
+        where: {
+          status: TransactionStatus.PENDING,
+        },
+      },
+    });
   }
 
   changeTransactionStatus(

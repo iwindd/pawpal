@@ -27,7 +27,7 @@ const OrderDatatable = () => {
   const { data, isLoading } = useGetTopupOrdersQuery({
     page: datatable.page,
     limit: datatable.limit,
-    sort: datatable.sortStatus,
+    sort: datatable.sort,
   });
 
   const columns: DataTableProps<AdminOrderResponse>["columns"] = [

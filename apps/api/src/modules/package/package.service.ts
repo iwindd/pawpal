@@ -1,12 +1,6 @@
 import { DatatableQuery } from '@/common/pipes/DatatablePipe';
-import { Prisma } from '@/generated/prisma/client';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import {
-  AdminProductPackageResponse,
-  DatatableResponse,
-  PackageInput,
-  ProductField,
-} from '@pawpal/shared';
+import { PackageInput, ProductField } from '@pawpal/shared';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
@@ -42,26 +36,14 @@ export class PackageService {
     return product.product.fields;
   }
 
-  async getProductPackages(
-    productId: string,
-    { skip, take, orderBy, search }: DatatableQuery,
-  ): Promise<DatatableResponse<AdminProductPackageResponse>> {
-    const where: Prisma.PackageWhereInput = {
-      product_id: productId,
-      ...(search && {
-        OR: [
-          { name: { contains: search, mode: 'insensitive' } },
-          { description: { contains: search, mode: 'insensitive' } },
-        ],
-      }),
-    };
-
-    const total = await this.prisma.package.count({ where });
-    const packages = await this.prisma.package.findMany({
-      where,
-      skip,
-      take,
-      orderBy,
+  /**
+   * Get product packages datatable
+   * @param productId
+   * @param query
+   * @returns
+   */
+  async getProductPackageDatatable(productId: string, query: DatatableQuery) {
+    return this.prisma.package.getDatatable({
       select: {
         id: true,
         name: true,
@@ -69,18 +51,17 @@ export class PackageService {
         price: true,
         createdAt: true,
       },
+      search: {
+        name: 'insensitive',
+        description: 'insensitive',
+      },
+      query: {
+        ...query,
+        where: {
+          product_id: productId,
+        },
+      },
     });
-
-    return {
-      total: total,
-      data: packages.map((pkg) => ({
-        id: pkg.id,
-        name: pkg.name,
-        description: pkg.description,
-        price: pkg.price.toString(),
-        createdAt: pkg.createdAt,
-      })),
-    };
   }
 
   async createPackageForProduct(productId: string, payload: PackageInput) {

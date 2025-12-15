@@ -24,7 +24,7 @@ const EmployeeDatatable = () => {
   const { data, isLoading } = useGetEmployeesQuery({
     page: datatable.page,
     limit: datatable.limit,
-    sort: datatable.sortStatus,
+    sort: datatable.sort,
   });
 
   const columns: DataTableProps<AdminEmployeeResponse>["columns"] = [

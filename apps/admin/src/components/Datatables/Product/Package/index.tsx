@@ -30,7 +30,7 @@ const ProductPackageDatatable = ({
     params: {
       page: datatable.page,
       limit: datatable.limit,
-      sort: datatable.sortStatus,
+      sort: datatable.sort,
     },
   });
 

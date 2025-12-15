@@ -7,8 +7,8 @@ export class AdminOrderController {
   constructor(private readonly orderService: OrderService) {}
 
   @Get('/topup')
-  getTopupOrders(@Query(DatatablePipe) query: DatatableQuery) {
-    return this.orderService.getTopupOrders(query);
+  getTopupOrderDatatable(@Query(DatatablePipe) query: DatatableQuery) {
+    return this.orderService.getTopupOrderDatatable(query);
   }
 
   @Get(':id')

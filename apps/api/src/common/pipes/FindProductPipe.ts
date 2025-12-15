@@ -1,13 +1,9 @@
 import { DatatableUtil } from '@/utils/datatable';
 import { Injectable, PipeTransform } from '@nestjs/common';
-import { DatatableInput, DatatableQuerySchema } from '@pawpal/shared';
+import { DatatableQuerySchema } from '@pawpal/shared';
+import { DatatableQuery } from './DatatablePipe';
 
-export interface FindProductQuery extends DatatableInput {
-  skip: number;
-  take: number;
-  orderBy: any;
-}
-
+export type FindProductQuery = DatatableQuery;
 @Injectable()
 export class FindProductPipe implements PipeTransform {
   constructor() {}

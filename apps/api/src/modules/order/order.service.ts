@@ -1,6 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
 
-import { OrderFilterBuilder } from '@/common/filters/orderFilter';
 import { DatatableQuery } from '@/common/pipes/DatatablePipe';
 import { FieldAfterParse } from '@/common/pipes/PurchasePipe';
 import {
@@ -9,7 +8,6 @@ import {
   TransactionType,
 } from '@/generated/prisma/client';
 import { OrderUtil } from '@/utils/orderUtil';
-import { OrderExtension } from '@/utils/prisma/order';
 import { AdminOrderResponse, PurchaseInput, Session } from '@pawpal/shared';
 import { PaymentService } from '../payment/payment.service';
 import { PrismaService } from '../prisma/prisma.service';
@@ -95,26 +93,58 @@ export class OrderService {
     }
   }
 
-  async getTopupOrders({ take, search, orderBy, skip }: DatatableQuery) {
-    const where = new OrderFilterBuilder()
-      .onlyActiveStatuses()
-      .searchUser(search)
-      .build();
-
-    const orders = await this.prisma.order.findMany({
-      where,
-      skip,
-      take,
-      orderBy,
-      include: {
-        ...OrderExtension.withUserAndPackages(),
+  /**
+   * Get topup order datatable
+   * @param query datatable query
+   * @returns datatable response
+   */
+  async getTopupOrderDatatable(query: DatatableQuery) {
+    return this.prisma.order.getDatatable({
+      select: {
+        id: true,
+        total: true,
+        status: true,
+        createdAt: true,
+        updatedAt: true,
+        user: {
+          select: {
+            id: true,
+            email: true,
+            displayName: true,
+          },
+        },
+        orderPackages: {
+          include: {
+            package: {
+              include: {
+                product: {
+                  include: {
+                    category: {
+                      select: {
+                        id: true,
+                        name: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      query: {
+        ...query,
+        where: {
+          status: OrderStatus.PENDING,
+        },
+      },
+      search: {
+        total: 'insensitive',
+        'user.displayName': 'insensitive',
+        'user.email': 'insensitive',
+        'orderPackages.package.product.name': 'insensitive',
       },
     });
-
-    return {
-      data: orders,
-      total: await this.prisma.order.count({ where }),
-    };
   }
 
   async findOne(id: string): Promise<AdminOrderResponse> {

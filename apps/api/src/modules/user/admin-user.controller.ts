@@ -9,12 +9,12 @@ export class AdminUserController {
   @Get('/customer')
   @UsePipes(DatatablePipe)
   getUsers(@Query() queryParams: DatatableQuery) {
-    return this.userService.getUsers(queryParams);
+    return this.userService.getUserDatatable(queryParams);
   }
 
   @Get('/employee')
   @UsePipes(DatatablePipe)
   getEmployees(@Query() queryParams: DatatableQuery) {
-    return this.userService.getEmployees(queryParams);
+    return this.userService.getEmployeeDatatable(queryParams);
   }
 }

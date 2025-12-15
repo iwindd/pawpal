@@ -17,11 +17,11 @@ export class AdminPackageController {
   constructor(private readonly packageService: PackageService) {}
 
   @Get('product/:id')
-  getProductPackages(
+  getProductPackageDatatable(
     @Param('id') id: string,
     @Query(DatatablePipe) query: DatatableQuery,
   ) {
-    return this.packageService.getProductPackages(id, query);
+    return this.packageService.getProductPackageDatatable(id, query);
   }
 
   @Post('product/:id')

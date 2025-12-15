@@ -1,13 +1,10 @@
 import { DatatableQuery } from '@/common/pipes/DatatablePipe';
 import authConfig from '@/config/auth';
-import { Prisma, Role, User } from '@/generated/prisma/client';
+import { Role, User } from '@/generated/prisma/client';
 import { Injectable, Logger } from '@nestjs/common';
 import {
-  AdminCustomerResponse,
-  AdminEmployeeResponse,
   ChangeEmailInput,
   ChangePasswordInput,
-  DatatableResponse,
   RegisterInput,
   Session,
   UpdateProfileInput,
@@ -212,33 +209,23 @@ export class UserService {
     return roles.map((role) => role.name);
   }
 
-  async getUsers({
-    skip,
-    take,
-    orderBy,
-    search,
-  }: DatatableQuery): Promise<DatatableResponse<AdminCustomerResponse>> {
-    const where: Prisma.UserWhereInput = {
-      roles: {
-        some: {
-          name: 'User',
+  /**
+   * Get user datatable
+   * @param query
+   * @returns
+   */
+  async getUserDatatable(query: DatatableQuery) {
+    return this.prisma.user.getDatatable({
+      query: {
+        ...query,
+        where: {
+          roles: {
+            some: {
+              name: 'User',
+            },
+          },
         },
       },
-    };
-
-    if (search) {
-      where.OR = [
-        { email: { contains: search, mode: 'insensitive' } },
-        { displayName: { contains: search, mode: 'insensitive' } },
-      ];
-    }
-
-    const total = await this.prisma.user.count({ where });
-    const users = await this.prisma.user.findMany({
-      where,
-      skip,
-      take,
-      orderBy,
       select: {
         id: true,
         email: true,
@@ -259,51 +246,30 @@ export class UserService {
           },
         },
       },
+      search: {
+        email: 'insensitive',
+        displayName: 'insensitive',
+      },
     });
-
-    return {
-      data: users.map((user) => ({
-        id: user.id,
-        email: user.email,
-        displayName: user.displayName,
-        avatar: user.avatar,
-        createdAt: user.createdAt.toISOString(),
-        updatedAt: user.updatedAt.toISOString(),
-        roles: user.roles,
-        walletCount: user._count.userWallets,
-        orderCount: user._count.orders,
-      })),
-      total,
-    };
   }
 
-  async getEmployees({
-    skip,
-    take,
-    orderBy,
-    search,
-  }: DatatableQuery): Promise<DatatableResponse<AdminEmployeeResponse>> {
-    const where: Prisma.UserWhereInput = {
-      roles: {
-        some: {
-          name: 'Admin',
+  /**
+   * Get employee datatable
+   * @param query
+   * @returns
+   */
+  async getEmployeeDatatable(query: DatatableQuery) {
+    return this.prisma.user.getDatatable({
+      query: {
+        ...query,
+        where: {
+          roles: {
+            some: {
+              name: 'Admin',
+            },
+          },
         },
       },
-    };
-
-    if (search) {
-      where.OR = [
-        { email: { contains: search, mode: 'insensitive' } },
-        { displayName: { contains: search, mode: 'insensitive' } },
-      ];
-    }
-
-    const total = await this.prisma.user.count({ where });
-    const users = await this.prisma.user.findMany({
-      where,
-      skip,
-      take,
-      orderBy,
       select: {
         id: true,
         email: true,
@@ -324,21 +290,10 @@ export class UserService {
           },
         },
       },
+      search: {
+        email: 'insensitive',
+        displayName: 'insensitive',
+      },
     });
-
-    return {
-      data: users.map((user) => ({
-        id: user.id,
-        email: user.email,
-        displayName: user.displayName,
-        avatar: user.avatar,
-        createdAt: user.createdAt.toISOString(),
-        updatedAt: user.updatedAt.toISOString(),
-        roles: user.roles,
-        walletCount: user._count.userWallets,
-        orderCount: user._count.orders,
-      })),
-      total,
-    };
   }
 }
