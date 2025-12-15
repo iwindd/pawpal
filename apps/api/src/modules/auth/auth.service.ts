@@ -1,6 +1,4 @@
-import { Role, User } from '@/generated/prisma/client';
 import {
-  BadRequestException,
   ConflictException,
   Injectable,
   Logger,
@@ -13,17 +11,15 @@ import {
   RegisterInput,
   Session,
   UpdateProfileInput,
-  WalletType,
 } from '@pawpal/shared';
-import bcrypt from 'bcrypt';
 import { JwtPayload } from '../../common/interfaces/jwt-payload.interface';
-import { UserService } from '../user/user.service';
+import { UserRepository } from '../user/user.repository';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
-    private readonly userService: UserService,
+    private readonly userRepo: UserRepository,
   ) {}
 
   /**
@@ -32,133 +28,98 @@ export class AuthService {
    * @returns The user
    */
   async verifyPayload(payload: JwtPayload): Promise<Session> {
-    let user: User;
-    let wallet: Record<WalletType, number>;
-    let roles: Role['name'][];
     try {
-      user = await this.userService.findById(payload.sub);
-      wallet = await this.userService.getUserWallets(user.id);
-      roles = await this.userService.getUserRoles(user.id);
-      delete user.password;
+      const user = await this.userRepo.find(payload.sub);
+
+      return user.toJSON();
     } catch (error) {
       Logger.error('Verify payload failed : ', error);
       throw new UnauthorizedException('invalid_credentials');
     }
-
-    return {
-      ...user,
-      userWallet: wallet,
-      roles: roles,
-      createdAt: user.createdAt.toISOString(),
-    };
   }
 
+  /**
+   * Login a user
+   * @param email user email
+   * @param password user password
+   * @returns user session
+   */
   async login(email: string, password: string): Promise<Session> {
-    try {
-      const user = await this.userService.findByEmail(email);
-      if (!user) {
-        throw new UnauthorizedException(`invalid_credentials`);
-      }
+    const user = await this.userRepo.findByEmail(email);
+    if (!(await user.isValidPassword(password)))
+      throw new UnauthorizedException(`invalid_credentials`);
 
-      const isPasswordValid = await bcrypt.compare(password, user.password);
-      if (!isPasswordValid) {
-        throw new UnauthorizedException(`invalid_credentials`);
-      }
-
-      return {
-        ...user,
-        userWallet: await this.userService.getUserWallets(user.id),
-        roles: await this.userService.getUserRoles(user.id),
-        createdAt: user.createdAt.toISOString(),
-      };
-    } catch (error) {
-      Logger.error('Login failed : ', error);
-      throw new UnauthorizedException(`error`);
-    }
+    return user.toJSON();
   }
 
-  async register(user: RegisterInput): Promise<Session> {
-    const existingUser = await this.userService.findByEmail(user.email);
-    if (existingUser) {
+  /**
+   * Register a new user
+   * @param userPayload user payload
+   * @returns user session
+   */
+  async register(userPayload: RegisterInput): Promise<Session> {
+    if (await this.userRepo.isAlreadyExist(userPayload.email))
       throw new ConflictException('email_already_exists');
-    }
 
-    const newUser = await this.userService.create(user);
-    delete newUser.password;
-    return {
-      ...newUser,
-      userWallet: await this.userService.getUserWallets(newUser.id),
-      roles: await this.userService.getUserRoles(newUser.id),
-      createdAt: newUser.createdAt.toISOString(),
-    };
+    const user = await this.userRepo.create(userPayload);
+
+    return user.toJSON();
   }
 
+  /**
+   * Sign a JWT token
+   * @param user user session
+   * @returns JWT token
+   */
   signToken(user: Session): string {
     return this.jwtService.sign({
       sub: user.id,
     });
   }
 
-  async changePassword(
-    userId: string,
-    changePasswordData: ChangePasswordInput,
-  ): Promise<void> {
-    try {
-      await this.userService.changePassword(userId, changePasswordData);
-    } catch (error) {
-      if (error instanceof Error && error.message === 'invalid_old_password') {
-        throw new BadRequestException('invalid_old_password');
-      }
-      if (error instanceof Error && error.message === 'User not found') {
-        throw new UnauthorizedException('invalid_credentials');
-      }
-      Logger.error('Change password failed:', error);
-      throw new BadRequestException('error');
-    }
+  /**
+   * Change user password
+   * @param userId user id
+   * @param payload change password payload
+   */
+  async changePassword(userId: string, payload: ChangePasswordInput) {
+    const user = await this.userRepo.find(userId);
+
+    if (!(await user.isValidPassword(payload.oldPassword)))
+      throw new UnauthorizedException('invalid_old_password');
+
+    user.updatePassword(payload.newPassword);
   }
 
-  async changeEmail(userId: string, changeEmailData: ChangeEmailInput) {
-    try {
-      return await this.userService.changeEmail(userId, changeEmailData);
-    } catch (error) {
-      if (error instanceof Error && error.message === 'invalid_password') {
-        throw new BadRequestException('invalid_password');
-      }
-      if (error instanceof Error && error.message === 'email_already_exists') {
-        throw new ConflictException('email_already_exists');
-      }
-      if (error instanceof Error && error.message === 'User not found') {
-        throw new UnauthorizedException('invalid_credentials');
-      }
-      Logger.error('Change email failed:', error);
-      throw new BadRequestException('error');
-    }
+  /**
+   * Change user email
+   * @param userId user id
+   * @param payload change email payload
+   * @returns user session
+   */
+  async changeEmail(userId: string, payload: ChangeEmailInput) {
+    if (await this.userRepo.isAlreadyExist(payload.newEmail))
+      throw new ConflictException('email_already_exists');
+
+    const user = await this.userRepo.find(userId);
+    if (!(await user.isValidPassword(payload.password)))
+      throw new UnauthorizedException('invalid_old_password');
+
+    user.updateEmail(payload.newEmail);
+
+    return user.toJSON();
   }
 
-  async updateProfile(
-    userId: string,
-    updateProfileData: UpdateProfileInput,
-  ): Promise<Session> {
-    try {
-      const updatedUser = await this.userService.updateProfile(
-        userId,
-        updateProfileData,
-      );
-      return {
-        id: updatedUser.id,
-        email: updatedUser.email,
-        displayName: updatedUser.displayName,
-        avatar: updatedUser.avatar,
-        createdAt: updatedUser.createdAt.toISOString(),
-        userWallet: await this.userService.getUserWallets(userId),
-        roles: await this.userService.getUserRoles(userId),
-      };
-    } catch (error) {
-      if (error instanceof Error && error.message === 'User not found') {
-        throw new UnauthorizedException('invalid_credentials');
-      }
-      Logger.error('Update profile failed:', error);
-      throw new BadRequestException('error');
-    }
+  /**
+   * Update user profile
+   * @param userId user id
+   * @param updateProfileData update profile data
+   * @returns user session
+   */
+  async updateProfile(userId: string, payload: UpdateProfileInput) {
+    const user = await this.userRepo.find(userId);
+    user.updateProfile(payload);
+
+    return user.toJSON();
   }
 }

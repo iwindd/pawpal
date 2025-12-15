@@ -5,7 +5,6 @@ import { SessionAuthGuard } from '@/common/guards/session-auth.guard';
 import { LogoutInterceptor } from '@/common/interceptors/logout.interceptor';
 import { TokenInterceptor } from '@/common/interceptors/token.interceptor';
 import { ZodPipe } from '@/common/pipes/ZodPipe';
-import { ZodValidationPipe } from '@/common/ZodValidationPipe';
 import {
   Body,
   Controller,
@@ -104,7 +103,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async updateProfile(
     @AuthUser() user: Session,
-    @Body(new ZodValidationPipe(updateProfileSchema))
+    @Body(new ZodPipe(updateProfileSchema))
     body: UpdateProfileInput,
   ): Promise<Session> {
     return this.authService.updateProfile(user.id, body);
