@@ -6,7 +6,7 @@ export class CarouselController {
   constructor(private readonly carouselService: CarouselService) {}
 
   @Get()
-  async findAllPublished() {
-    return await this.carouselService.getPublishedCarousel();
+  async getPublishedCarouselDatatable() {
+    return await this.carouselService.getPublishedCarouselDatatable();
   }
 }

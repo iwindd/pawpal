@@ -93,7 +93,7 @@ export class CarouselService {
    * Get published carousel
    * @returns datatable response
    */
-  async getPublishedCarousel() {
+  async getPublishedCarouselDatatable() {
     return await this.prisma.carousel.getDatatable({
       select: {
         ...this.carouselResponseSelect,
