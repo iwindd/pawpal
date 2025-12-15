@@ -1,12 +1,12 @@
 -- CreateEnum
-CREATE TYPE "public"."OrderStatus" AS ENUM ('PENDING_PAYMENT', 'PAID', 'PROCESSING', 'COMPLETED', 'CANCELLED');
+CREATE TYPE "public"."OrderStatus" AS ENUM ('CREATED', 'PENDING', 'COMPLETED', 'CANCELLED');
 
 -- CreateTable
 CREATE TABLE "public"."orders" (
     "id" TEXT NOT NULL,
     "user_id" TEXT NOT NULL,
     "total" DECIMAL(10,2) NOT NULL,
-    "status" "public"."OrderStatus" NOT NULL DEFAULT 'PENDING_PAYMENT',
+    "status" "public"."OrderStatus" NOT NULL DEFAULT 'CREATED',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
