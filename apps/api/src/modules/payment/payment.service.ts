@@ -87,8 +87,23 @@ export class PaymentService {
         status,
         ...(orderId && { order: { connect: { id: orderId } } }),
       },
-      select: TransactionRepository.DEFAULT_SELECT,
+      select: {
+        id: true,
+        type: true,
+        amount: true,
+        status: true,
+        order_id: true,
+        payment: {
+          select: {
+            id: true,
+            metadata: true,
+          },
+        },
+        createdAt: true,
+      },
     });
+
+    return charge;
   }
 
   async confirm(chargeId: string) {
@@ -134,7 +149,7 @@ export class PaymentService {
     );
 
     return {
-      charge,
+      ...charge,
       qrcode: generatePayload(metadata.number, {
         amount: amount.toNumber(),
       }),

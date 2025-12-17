@@ -11,7 +11,7 @@ export const transactionApi = createApi({
   reducerPath: "trasactionApi",
   tagTypes: ["Transactions"],
   baseQuery: baseQuery({
-    baseUrl: `/admin/wallet`,
+    baseUrl: `/admin/transaction`,
   }),
   endpoints: (builder) => ({
     getTransactions: builder.query<
