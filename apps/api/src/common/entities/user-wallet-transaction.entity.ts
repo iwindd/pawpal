@@ -1,20 +1,15 @@
-import { OrderEntity } from '@/common/entities/order.entity';
-import { Prisma, TransactionStatus } from '@/generated/prisma/client';
-import { UserWalletTransactionRepository } from '../../modules/wallet/repositories/userWalletTransaction.repository';
-import { WalletEntity } from './wallet.entity';
+import { Prisma } from '@/generated/prisma/client';
+import { TransactionRepository } from '@/modules/transaction/transaction.repository';
+import { AdminTransactionResponse } from '@pawpal/shared';
 
-export type UserWalletTransactionEntityProps =
-  Prisma.UserWalletTransactionGetPayload<{
-    select: typeof UserWalletTransactionEntity.SELECT;
-  }> & {
-    wallet: WalletEntity;
-    order: OrderEntity;
-  };
+export type TransactionEntityProps = Prisma.UserWalletTransactionGetPayload<{
+  select: typeof TransactionEntity.SELECT;
+}>;
 
-export class UserWalletTransactionEntity {
+export class TransactionEntity {
   constructor(
-    private readonly userWalletTransaction: UserWalletTransactionEntityProps,
-    private readonly repo: UserWalletTransactionRepository,
+    private readonly transaction: TransactionEntityProps,
+    private readonly repo: TransactionRepository,
   ) {}
 
   static get SELECT() {
@@ -24,74 +19,120 @@ export class UserWalletTransactionEntity {
       balance_before: true,
       type: true,
       status: true,
+      currency: true,
+      createdAt: true,
+      updatedAt: true,
+      payment_gateway_id: true,
+      order: {
+        select: {
+          id: true,
+          total: true,
+        },
+      },
+      wallet: {
+        select: {
+          id: true,
+          user_id: true,
+          walletType: true,
+        },
+      },
     } satisfies Prisma.UserWalletTransactionSelect;
   }
 
   get id() {
-    return this.userWalletTransaction.id;
-  }
-
-  get wallet() {
-    return this.userWalletTransaction.wallet;
-  }
-
-  get order() {
-    return this.userWalletTransaction.order;
+    return this.transaction.id;
   }
 
   get type() {
-    return this.userWalletTransaction.type;
+    return this.transaction.type;
   }
 
   get amount() {
-    const diff = this.userWalletTransaction.balance_after.minus(
-      this.userWalletTransaction.balance_before,
+    const diff = this.transaction.balance_after.minus(
+      this.transaction.balance_before,
     );
 
     return diff.abs();
   }
 
   get status() {
-    return this.userWalletTransaction.status;
+    return this.transaction.status;
   }
 
   get balanceBefore() {
-    return this.userWalletTransaction.balance_before;
+    return this.transaction.balance_before;
   }
 
   get balanceAfter() {
-    return this.userWalletTransaction.balance_after;
+    return this.transaction.balance_after;
   }
 
-  public async updateStatus(status: TransactionStatus) {
-    this.userWalletTransaction.status = status;
-
-    return await this.repo.updateStatusOrThrow(
-      this.userWalletTransaction.id,
-      status,
-    );
+  get userId() {
+    return this.transaction.wallet.user_id;
   }
 
-  public async updateWalletBalance() {
-    return await this.wallet.updateBalance(this.amount);
+  get walletId() {
+    return this.transaction.wallet.id;
   }
 
-  public async emitTopupTransactionUpdated() {
-    return this.repo.emitTopupTransactionUpdated(this);
+  get walletType() {
+    return this.transaction.wallet.walletType;
   }
 
-  public async emitNewJobTransaction() {
-    return this.repo.emitNewJobTransaction(this);
+  get orderId() {
+    return this.transaction.order.id;
   }
 
-  public toJson() {
+  get total() {
+    return this.transaction.order.total;
+  }
+
+  public toJson(): AdminTransactionResponse {
+    return TransactionEntity.toJson(this.transaction);
+  }
+
+  static toJson(
+    transaction: Prisma.UserWalletTransactionGetPayload<{
+      select: {
+        id: true;
+        type: true;
+        balance_before: true;
+        balance_after: true;
+        status: true;
+        currency: true;
+        createdAt: true;
+        updatedAt: true;
+        payment_gateway_id: true;
+        order: {
+          select: {
+            id: true;
+            total: true;
+          };
+        };
+        wallet: {
+          select: {
+            id: true;
+            user_id: true;
+            walletType: true;
+          };
+        };
+      };
+    }>,
+  ) {
     return {
-      id: this.id,
-      balanceBefore: this.balanceBefore,
-      balanceAfter: this.balanceAfter,
-      type: this.type,
-      amount: this.amount,
-      status: this.status,
+      id: transaction.id,
+      type: transaction.type,
+      amount: Math.abs(
+        transaction.balance_after.minus(transaction.balance_before).toNumber(),
+      ),
+      balance_before: transaction.balance_before.toNumber(),
+      balance_after: transaction.balance_after.toNumber(),
+      status: transaction.status,
+      currency: transaction.currency,
+      payment_gateway_id: transaction.payment_gateway_id,
+      order_id: transaction.order.id,
+      createdAt: transaction.createdAt.toISOString(),
+      updatedAt: transaction.updatedAt.toISOString(),
     };
   }
 }

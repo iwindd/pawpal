@@ -21,6 +21,7 @@ import { ProductModule } from '../product/product.module';
 import { ProductTagModule } from '../productTags/product-tag.module';
 import { ResourceModule } from '../resource/resource.module';
 import { SaleModule } from '../sale/sale.module';
+import { TransactionModule } from '../transaction/transaction.module';
 import { WalletModule } from '../wallet/wallet.module';
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { WalletModule } from '../wallet/wallet.module';
     SaleModule,
     PaymentModule,
     PaymentGatewayModule,
+    TransactionModule,
     WalletModule,
     OrderModule,
     PackageModule,

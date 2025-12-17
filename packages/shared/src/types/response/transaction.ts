@@ -8,7 +8,7 @@ export interface AdminTransactionResponse {
   balance_before: number;
   balance_after: number;
   status: TransactionStatus;
-  currency: "THB";
+  currency: string;
   payment_gateway_id: string;
   order_id?: string;
   createdAt: string;

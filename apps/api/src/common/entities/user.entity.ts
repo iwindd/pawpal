@@ -5,9 +5,7 @@ import { WalletCollection } from '../collections/wallet.collection';
 
 export type UserEntityProps = Prisma.UserGetPayload<{
   select: typeof UserEntity.SELECT;
-}> & {
-  userWallets: WalletCollection;
-};
+}>;
 
 export class UserEntity {
   constructor(
@@ -23,6 +21,12 @@ export class UserEntity {
       avatar: true,
       createdAt: true,
       roles: true,
+      userWallets: {
+        select: {
+          walletType: true,
+          balance: true,
+        },
+      },
     } satisfies Prisma.UserSelect;
   }
 
@@ -47,7 +51,7 @@ export class UserEntity {
   }
 
   public get userWallet() {
-    return this.user.userWallets.toObject();
+    return WalletCollection.toObject(this.user.userWallets);
   }
 
   public get roles() {

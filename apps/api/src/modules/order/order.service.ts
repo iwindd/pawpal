@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 
+import { TransactionEntity } from '@/common/entities/user-wallet-transaction.entity';
 import { OrderResponseMapper } from '@/common/mappers/OrderResponseMapper';
 import { DatatableQuery } from '@/common/pipes/DatatablePipe';
 import { FieldAfterParse } from '@/common/pipes/PurchasePipe';
@@ -12,8 +13,7 @@ import { OrderUtil } from '@/utils/orderUtil';
 import { AdminOrderResponse, PurchaseInput, Session } from '@pawpal/shared';
 import { PaymentService } from '../payment/payment.service';
 import { PrismaService } from '../prisma/prisma.service';
-import { UserWalletTransactionRepository } from '../wallet/repositories/userWalletTransaction.repository';
-import { WalletRepository } from '../wallet/repositories/wallet.repository';
+import { WalletRepository } from '../wallet/wallet.repository';
 import { OrderRepository } from './order.repository';
 
 @Injectable()
@@ -24,7 +24,6 @@ export class OrderService {
     private readonly paymentService: PaymentService,
     private readonly walletRepo: WalletRepository,
     private readonly orderRepo: OrderRepository,
-    private readonly userWalletTransactionRepo: UserWalletTransactionRepository,
   ) {}
 
   async getProductPackage(packageId: string) {
@@ -63,35 +62,37 @@ export class OrderService {
       };
     } else {
       const balanceAfter = userWallet.balance.minus(productPackage.price);
-
-      const transaction = await this.userWalletTransactionRepo.create({
-        type: TransactionType.PURCHASE,
-        balance_after: balanceAfter,
-        balance_before: userWallet.balance,
-        status: TransactionStatus.SUCCESS,
-        order: {
-          connect: {
-            id: order.id,
+      const transaction = await this.prisma.userWalletTransaction.create({
+        data: {
+          type: TransactionType.PURCHASE,
+          balance_after: balanceAfter,
+          balance_before: userWallet.balance,
+          status: TransactionStatus.SUCCESS,
+          wallet: {
+            connect: {
+              id: userWallet.id,
+            },
+          },
+          payment: {
+            connect: {
+              id: body.paymentMethod,
+            },
+          },
+          order: {
+            connect: {
+              id: order.id,
+            },
           },
         },
-        wallet: {
-          connect: {
-            id: userWallet.id,
-          },
-        },
-        payment: {
-          connect: {
-            id: body.paymentMethod,
-          },
-        },
+        select: TransactionEntity.SELECT,
       });
 
       await userWallet.updateBalance(balanceAfter);
-      await transaction.order.updateStatus(OrderStatus.PENDING);
+      await this.orderRepo.updateStatusOrThrow(order.id, OrderStatus.PENDING);
 
       return {
         type: 'purchase',
-        transaction,
+        transaction: TransactionEntity.toJson(transaction),
       };
     }
   }

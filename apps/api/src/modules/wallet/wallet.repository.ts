@@ -1,14 +1,10 @@
 import { WalletCollection } from '@/common/collections/wallet.collection';
 import { Prisma } from '@/generated/prisma/client';
-import {
-  TransactionStatus,
-  TransactionType,
-  WalletType,
-} from '@/generated/prisma/enums';
+import { WalletType } from '@/generated/prisma/enums';
 import { Injectable, Logger } from '@nestjs/common';
 import { Decimal } from '@prisma/client/runtime/client';
-import { WalletEntity } from '../../../common/entities/wallet.entity';
-import { PrismaService } from '../../prisma/prisma.service';
+import { WalletEntity } from '../../common/entities/wallet.entity';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class WalletRepository {
@@ -135,59 +131,5 @@ export class WalletRepository {
       return new Decimal(0);
 
     return requiredAmount.minus(userWallet.balance);
-  }
-
-  /**
-   * Create charge
-   * @param userId user id
-   * @param amount amount to charge
-   * @param paymentGatewayId payment gateway id
-   * @param orderId order id (optional)
-   * @param status transaction status (default: CREATED)
-   * @param walletType wallet type (default: MAIN)
-   * @returns created charge
-   */
-  public async createCharge(
-    userId: string,
-    amount: Decimal,
-    paymentGatewayId: string,
-    orderId?: string,
-    status: TransactionStatus = TransactionStatus.CREATED,
-    walletType: WalletType = WalletType.MAIN,
-  ) {
-    const wallet = await this.find(userId, walletType);
-    const charge = await this.prisma.userWalletTransaction.create({
-      data: {
-        type: orderId
-          ? TransactionType.TOPUP_FOR_PURCHASE
-          : TransactionType.TOPUP,
-        wallet_id: wallet.id,
-        balance_before: wallet.balance,
-        balance_after: wallet.balance.plus(amount),
-        payment_gateway_id: paymentGatewayId,
-        status,
-        ...(orderId ? { order_id: orderId } : {}),
-      },
-      select: {
-        id: true,
-        type: true,
-        amount: true,
-        status: true,
-        payment: {
-          select: {
-            id: true,
-            metadata: true,
-          },
-        },
-        createdAt: true,
-        order: {
-          select: {
-            id: true,
-          },
-        },
-      },
-    });
-
-    return charge;
   }
 }

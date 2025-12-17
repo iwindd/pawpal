@@ -15,18 +15,18 @@ import {
   TransactionStatusInput,
   transactionStatusSchema,
 } from '@pawpal/shared';
-import { WalletService } from './wallet.service';
+import { TransactionService } from './transaction.service';
 
-@Controller('admin/wallet')
+@Controller('admin/transaction')
 @UseGuards(JwtAuthGuard, SessionAuthGuard)
-export class AdminWalletController {
-  constructor(private readonly walletService: WalletService) {}
+export class AdminTransactionController {
+  constructor(private readonly transactionService: TransactionService) {}
 
   @Get('pending')
   async getPendingTransactionsDatatable(
     @Query(DatatablePipe) query: DatatableQuery,
   ) {
-    return this.walletService.getPendingTransactionsDatatable(query);
+    return this.transactionService.getPendingTransactionsDatatable(query);
   }
 
   @Patch('pending/:transactionId')
@@ -34,6 +34,9 @@ export class AdminWalletController {
     @Param('transactionId') transactionId: string,
     @Body(new ZodPipe(transactionStatusSchema)) payload: TransactionStatusInput,
   ) {
-    return this.walletService.changeTransactionStatus(transactionId, payload);
+    return this.transactionService.changeTransactionStatus(
+      transactionId,
+      payload,
+    );
   }
 }

@@ -5,7 +5,11 @@ import { WalletEntity } from '../entities/wallet.entity';
 
 export class WalletCollection extends BaseCollection<WalletEntity> {
   toObject() {
-    return this.items.reduce(
+    return WalletCollection.toObject(this.items);
+  }
+
+  static toObject(items: { walletType: WalletType; balance: Decimal }[]) {
+    return items.reduce(
       (acc, wallet) => {
         acc[wallet.walletType] = wallet.balance;
         return acc;

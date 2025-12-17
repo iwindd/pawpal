@@ -1,6 +1,6 @@
-import { Prisma, TransactionStatus } from '@/generated/prisma/client';
+import { Prisma } from '@/generated/prisma/client';
 import { Decimal } from '@prisma/client/runtime/client';
-import { WalletRepository } from '../../modules/wallet/repositories/wallet.repository';
+import { WalletRepository } from '../../modules/wallet/wallet.repository';
 
 export type WalletEntityProps = Prisma.UserWalletGetPayload<{
   select: typeof WalletEntity.SELECT;
@@ -62,28 +62,6 @@ export class WalletEntity {
       requiredAmount,
       this.userWallet.user_id,
       this.userWallet.walletType,
-    );
-  }
-
-  /**
-   * Create charge
-   * @param amount amount to charge
-   * @param paymentGatewayId payment gateway id
-   * @param orderId order id (optional)
-   * @returns created charge
-   */
-  public async createCharge(
-    amount: Decimal,
-    paymentGatewayId: string,
-    orderId?: string,
-    status: TransactionStatus = TransactionStatus.CREATED,
-  ) {
-    return this.repo.createCharge(
-      this.userWallet.user_id,
-      amount,
-      paymentGatewayId,
-      orderId,
-      status,
     );
   }
 }

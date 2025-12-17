@@ -1,15 +1,10 @@
 import { Global, Module } from '@nestjs/common';
-import { OrderModule } from '../order/order.module';
-import { AdminWalletController } from './admin-wallet.controller';
-import { UserWalletTransactionRepository } from './repositories/userWalletTransaction.repository';
-import { WalletRepository } from './repositories/wallet.repository';
+import { WalletRepository } from './wallet.repository';
 import { WalletService } from './wallet.service';
 
 @Global()
 @Module({
-  controllers: [AdminWalletController],
-  exports: [WalletService, WalletRepository, UserWalletTransactionRepository],
-  providers: [WalletService, WalletRepository, UserWalletTransactionRepository],
-  imports: [OrderModule],
+  exports: [WalletService, WalletRepository],
+  providers: [WalletService, WalletRepository],
 })
 export class WalletModule {}

@@ -4,15 +4,11 @@ import { Injectable, Logger } from '@nestjs/common';
 import { UpdateProfileInput } from '@pawpal/shared';
 import bcrypt from 'bcrypt';
 import { PrismaService } from '../prisma/prisma.service';
-import { WalletRepository } from '../wallet/repositories/wallet.repository';
 
 @Injectable()
 export class UserRepository {
   private readonly logger = new Logger(UserRepository.name);
-  constructor(
-    private readonly prisma: PrismaService,
-    private readonly walletRepo: WalletRepository,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   static get DEFAULT_SELECT() {
     return {
@@ -30,18 +26,7 @@ export class UserRepository {
       select: typeof UserRepository.DEFAULT_SELECT;
     }>,
   ) {
-    return new UserEntity(
-      {
-        id: user.id,
-        email: user.email,
-        displayName: user.displayName,
-        avatar: user.avatar,
-        createdAt: user.createdAt,
-        roles: user.roles,
-        userWallets: await this.walletRepo.findAll(user.id),
-      },
-      this,
-    );
+    return new UserEntity(user, this);
   }
 
   /**

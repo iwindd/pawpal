@@ -1,21 +1,27 @@
-import { TransactionStatus } from '@/generated/prisma/enums';
+import { TransactionEntity } from '@/common/entities/user-wallet-transaction.entity';
+import {
+  TransactionStatus,
+  TransactionType,
+  WalletType,
+} from '@/generated/prisma/enums';
 import { BadGatewayException, Injectable, Logger } from '@nestjs/common';
 import { Session } from '@pawpal/shared';
 import { Decimal } from '@prisma/client/runtime/client';
 import generatePayload from 'promptpay-qr';
 import { EventService } from '../event/event.service';
 import { PaymentGatewayService } from '../payment-gateway/payment-gateway.service';
-import { UserWalletTransactionRepository } from '../wallet/repositories/userWalletTransaction.repository';
-import { WalletRepository } from '../wallet/repositories/wallet.repository';
+import { PrismaService } from '../prisma/prisma.service';
+import { TransactionRepository } from '../transaction/transaction.repository';
+import { WalletRepository } from '../wallet/wallet.repository';
 
 @Injectable()
 export class PaymentService {
   private readonly logger = new Logger(PaymentService.name);
   constructor(
+    private readonly prisma: PrismaService,
     private readonly paymentGatewayService: PaymentGatewayService,
-    private readonly walletRepo: WalletRepository,
-    private readonly userWalletTransactionRepo: UserWalletTransactionRepository,
     private readonly eventService: EventService,
+    private readonly walletRepo: WalletRepository,
   ) {}
 
   async topup(
@@ -40,16 +46,67 @@ export class PaymentService {
     }
   }
 
+  /**
+   * Create charge
+   * @param userId user id
+   * @param amount amount to charge
+   * @param paymentGatewayId payment gateway id
+   * @param orderId order id (optional)
+   * @param status transaction status (default: CREATED)
+   * @param walletType wallet type (default: MAIN)
+   * @returns created charge
+   */
+  public async createCharge(
+    userId: string,
+    amount: Decimal,
+    paymentGatewayId: string,
+    orderId?: string,
+    status: TransactionStatus = TransactionStatus.CREATED,
+    walletType: WalletType = WalletType.MAIN,
+  ) {
+    const type = orderId
+      ? TransactionType.TOPUP_FOR_PURCHASE
+      : TransactionType.TOPUP;
+
+    const wallet = await this.walletRepo.find(userId, walletType);
+    const charge = await this.prisma.userWalletTransaction.create({
+      data: {
+        type,
+        wallet: {
+          connect: {
+            id: wallet.id,
+          },
+        },
+        payment: {
+          connect: {
+            id: paymentGatewayId,
+          },
+        },
+        balance_before: wallet.balance,
+        balance_after: wallet.balance.plus(amount),
+        status,
+        ...(orderId && { order: { connect: { id: orderId } } }),
+      },
+      select: TransactionRepository.DEFAULT_SELECT,
+    });
+  }
+
   async confirm(chargeId: string) {
-    const charge = await this.userWalletTransactionRepo.find(chargeId);
+    const charge = await this.prisma.userWalletTransaction.update({
+      where: {
+        id: chargeId,
+        status: TransactionStatus.CREATED,
+      },
+      data: {
+        status: TransactionStatus.PENDING,
+      },
+      select: TransactionRepository.DEFAULT_SELECT,
+    });
 
-    if (charge.status !== TransactionStatus.CREATED)
-      throw new BadGatewayException('Charge is already processed');
+    const result = TransactionEntity.toJson(charge);
 
-    await charge.updateStatus(TransactionStatus.PENDING);
-    this.eventService.admin.onNewJobTransaction();
-
-    return charge.toJson();
+    this.eventService.admin.onNewJobTransaction(result);
+    return result;
   }
 
   private async createPromptpayManualCharge(
@@ -67,14 +124,17 @@ export class PaymentService {
     if (!metadata.name) throw new BadGatewayException('Metadata not found');
 
     const wallet = await this.walletRepo.find(user.id);
-    const charge = await wallet.createCharge(amount, gateway.id, orderId);
-
-    if (charge.status != TransactionStatus.CREATED) {
-      this.eventService.admin.onNewJobTransaction();
-    }
+    const charge = await this.createCharge(
+      user.id,
+      amount,
+      gateway.id,
+      orderId,
+      TransactionStatus.CREATED,
+      wallet.walletType,
+    );
 
     return {
-      ...charge,
+      charge,
       qrcode: generatePayload(metadata.number, {
         amount: amount.toNumber(),
       }),
