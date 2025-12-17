@@ -1,4 +1,5 @@
 "use client";
+import TransactionTypeBadge from "@/components/Badges/TransactionType";
 import { useGetTransactionsQuery } from "@/features/transaction/transactionApi";
 import useDatatable from "@/hooks/useDatatable";
 import { useTransactionActions } from "@/hooks/useTransactionActions";
@@ -45,7 +46,7 @@ const TransactionDatatable = () => {
       noWrap: true,
       sortable: true,
       title: __("type"),
-      render: (record) => __(`types.${record.type.toLowerCase()}`),
+      render: (record) => <TransactionTypeBadge type={record.type} />,
     },
     {
       accessor: "amount",
