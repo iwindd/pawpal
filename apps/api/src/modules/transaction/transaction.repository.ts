@@ -1,13 +1,13 @@
-import {WalletEntity} from '@/common/entities/wallet.entity';
+import { WalletEntity } from '@/common/entities/wallet.entity';
 import {
   Prisma,
   TransactionStatus,
   TransactionType,
 } from '@/generated/prisma/client';
-import {Injectable, Logger} from '@nestjs/common';
-import {Decimal} from '@prisma/client/runtime/client';
-import {TransactionEntity} from '../../common/entities/user-wallet-transaction.entity';
-import {PrismaService} from '../prisma/prisma.service';
+import { Injectable, Logger } from '@nestjs/common';
+import { Decimal } from '@prisma/client/runtime/client';
+import { TransactionEntity } from '../../common/entities/transaction.entity';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class TransactionRepository {

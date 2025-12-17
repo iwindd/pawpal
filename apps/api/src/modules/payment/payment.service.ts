@@ -1,4 +1,4 @@
-import { TransactionEntity } from '@/common/entities/user-wallet-transaction.entity';
+import { TransactionEntity } from '@/common/entities/transaction.entity';
 import {
   TransactionStatus,
   TransactionType,
