@@ -35,6 +35,4 @@ export class OrderEntity {
     this.order.status = status;
     return this.repo.updateStatusOrThrow(this.order.id, status);
   }
-
-  public async refundPurchaseTransaction() {}
 }

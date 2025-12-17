@@ -1,4 +1,5 @@
 "use client";
+import OrderStatusBadge from "@/components/Badges/OrderStatus";
 import { getPath } from "@/configs/route";
 import { useGetTopupOrdersQuery } from "@/features/order/orderApi";
 import useDatatable from "@/hooks/useDatatable";
@@ -39,25 +40,25 @@ const OrderDatatable = () => {
       render: (record) => `#${record.id.slice(-8)}`,
     },
     {
-      accessor: "user.displayName",
+      accessor: "customer.displayName",
       noWrap: true,
       sortable: true,
       title: __("customer"),
-      render: (record) => (
+      render: ({ customer }) => (
         <div>
-          <Title order={6}>{record.user.displayName}</Title>
+          <Title order={6}>{customer.displayName}</Title>
           <Text size="xs" c="dimmed">
-            {record.user.email}
+            {customer.email}
           </Text>
         </div>
       ),
     },
     {
-      accessor: "orderPackages",
+      accessor: "cart",
       noWrap: true,
       title: __("items"),
-      render: (record) => {
-        const mainPackage = record.orderPackages[0];
+      render: ({ cart }) => {
+        const mainPackage = cart[0];
         if (!mainPackage) return <Text size="sm">-</Text>;
 
         return (
@@ -70,11 +71,11 @@ const OrderDatatable = () => {
             </Breadcrumbs>
             <Breadcrumbs separator="|" separatorMargin={"xs"}>
               <Text c="dimmed" size="xs">
-                {mainPackage.package.product.category.name}
+                {mainPackage.category.name}
               </Text>
               <Text c="dimmed" size="xs">
-                {mainPackage.package.product.name}
-                {record.orderPackages.length > 1 && "..."}
+                {mainPackage.product.name}
+                {cart.length > 1 && "..."}
               </Text>
             </Breadcrumbs>
           </div>
@@ -87,8 +88,8 @@ const OrderDatatable = () => {
       noWrap: true,
       sortable: true,
       title: __("total"),
-      render: (record) =>
-        format.number(+record.total, {
+      render: ({ total }) =>
+        format.number(+total, {
           style: "currency",
           currency: "THB",
         }),
@@ -98,6 +99,7 @@ const OrderDatatable = () => {
       noWrap: true,
       sortable: true,
       title: __("status"),
+      render: ({ status }) => <OrderStatusBadge status={status} />,
     },
     {
       accessor: "createdAt",

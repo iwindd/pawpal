@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 
+import { OrderResponseMapper } from '@/common/mappers/OrderResponseMapper';
 import { DatatableQuery } from '@/common/pipes/DatatablePipe';
 import { FieldAfterParse } from '@/common/pipes/PurchasePipe';
 import {
@@ -101,7 +102,7 @@ export class OrderService {
    * @returns datatable response
    */
   async getTopupOrderDatatable(query: DatatableQuery) {
-    return this.prisma.order.getDatatable({
+    const datatable = await this.prisma.order.getDatatable({
       select: {
         id: true,
         total: true,
@@ -116,11 +117,18 @@ export class OrderService {
           },
         },
         orderPackages: {
-          include: {
+          select: {
+            id: true,
+            amount: true,
+            price: true,
             package: {
-              include: {
+              select: {
+                id: true,
+                name: true,
                 product: {
-                  include: {
+                  select: {
+                    id: true,
+                    name: true,
                     category: {
                       select: {
                         id: true,
@@ -129,6 +137,35 @@ export class OrderService {
                     },
                   },
                 },
+              },
+            },
+          },
+        },
+        orderFields: {
+          select: {
+            field: {
+              select: {
+                label: true,
+                metadata: true,
+                placeholder: true,
+                type: true,
+              },
+            },
+            value: true,
+          },
+        },
+        userWalletTransactions: {
+          select: {
+            id: true,
+            type: true,
+            status: true,
+            balance_before: true,
+            balance_after: true,
+            createdAt: true,
+            payment: {
+              select: {
+                id: true,
+                name: true,
               },
             },
           },
@@ -147,6 +184,11 @@ export class OrderService {
         'orderPackages.package.product.name': 'insensitive',
       },
     });
+
+    return {
+      data: datatable.data.map(OrderResponseMapper.fromQuery),
+      total: datatable.total,
+    };
   }
 
   /**
@@ -233,52 +275,7 @@ export class OrderService {
       throw new BadRequestException('Order not found');
     }
 
-    return {
-      id: order.id,
-      total: order.total.toNumber(),
-      status: order.status,
-      createdAt: order.createdAt.toISOString(),
-      updatedAt: order.updatedAt.toISOString(),
-      customer: order.user,
-      cart: order.orderPackages.map((op) => ({
-        id: op.id,
-        amount: op.amount,
-        price: op.price.toNumber(),
-        package: {
-          id: op.package.id,
-          name: op.package.name,
-        },
-        product: {
-          id: op.package.product.id,
-          name: op.package.product.name,
-        },
-        category: {
-          id: op.package.product.category.id,
-          name: op.package.product.category.name,
-        },
-      })),
-      fields: order.orderFields.map((of) => ({
-        label: of.field.label,
-        metadata: of.field.metadata,
-        placeholder: of.field.placeholder,
-        type: of.field.type,
-        value: of.value,
-      })),
-      transactions: order.userWalletTransactions.map((tx) => ({
-        id: tx.id,
-        type: tx.type,
-        status: tx.status,
-        balance_before: tx.balance_before.toNumber(),
-        balance_after: tx.balance_after.toNumber(),
-        createdAt: tx.createdAt.toISOString(),
-        payment: tx.payment
-          ? {
-              id: tx.payment.id,
-              name: tx.payment.name,
-            }
-          : null,
-      })),
-    };
+    return OrderResponseMapper.fromQuery(order);
   }
 
   /**
