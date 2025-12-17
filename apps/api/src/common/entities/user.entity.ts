@@ -1,20 +1,30 @@
 import { Prisma } from '@/generated/prisma/client';
-import {
-  DEFAULT_USER_SELECT,
-  UserRepository,
-} from '@/modules/user/user.repository';
-import { Session, UpdateProfileInput, WalletType } from '@pawpal/shared';
-import { Decimal } from '@prisma/client/runtime/client';
+import { UserRepository } from '@/modules/user/user.repository';
+import { Session, UpdateProfileInput } from '@pawpal/shared';
+import { WalletCollection } from '../collections/wallet.collection';
 
 export type UserEntityProps = Prisma.UserGetPayload<{
-  select: typeof DEFAULT_USER_SELECT;
-}>;
+  select: typeof UserEntity.SELECT;
+}> & {
+  userWallets: WalletCollection;
+};
 
 export class UserEntity {
   constructor(
     private readonly user: UserEntityProps,
     private readonly repo: UserRepository,
   ) {}
+
+  static get SELECT() {
+    return {
+      id: true,
+      email: true,
+      displayName: true,
+      avatar: true,
+      createdAt: true,
+      roles: true,
+    } satisfies Prisma.UserSelect;
+  }
 
   public get id() {
     return this.user.id;
@@ -37,13 +47,7 @@ export class UserEntity {
   }
 
   public get userWallet() {
-    return this.user.userWallets.reduce(
-      (acc, wallet) => {
-        acc[wallet.walletType] = wallet.balance;
-        return acc;
-      },
-      {} as Record<WalletType, Decimal>,
-    );
+    return this.user.userWallets.toObject();
   }
 
   public get roles() {

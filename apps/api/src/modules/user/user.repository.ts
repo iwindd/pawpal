@@ -1,29 +1,29 @@
+import { WalletCollection } from '@/common/collections/wallet.collection';
 import { UserEntity } from '@/common/entities/user.entity';
+import { WalletEntity } from '@/common/entities/wallet.entity';
 import { Prisma } from '@/generated/prisma/client';
 import { Injectable, Logger } from '@nestjs/common';
 import { UpdateProfileInput } from '@pawpal/shared';
 import bcrypt from 'bcrypt';
 import { PrismaService } from '../prisma/prisma.service';
-
-export const DEFAULT_USER_SELECT = {
-  id: true,
-  email: true,
-  displayName: true,
-  avatar: true,
-  createdAt: true,
-  userWallets: {
-    select: {
-      walletType: true,
-      balance: true,
-    },
-  },
-  roles: true,
-} satisfies Prisma.UserSelect;
+import { WalletRepository } from '../wallet/repositories/wallet.repository';
 
 @Injectable()
 export class UserRepository {
   private readonly logger = new Logger(UserRepository.name);
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly walletRepo: WalletRepository,
+  ) {}
+
+  static get DEFAULT_SELECT() {
+    return {
+      ...UserEntity.SELECT,
+      userWallets: {
+        select: WalletEntity.SELECT,
+      },
+    } satisfies Prisma.UserSelect;
+  }
 
   /**
    * Create a UserEntity from a Prisma.UserGetPayload
@@ -32,10 +32,23 @@ export class UserRepository {
    */
   public from(
     user: Prisma.UserGetPayload<{
-      select: typeof DEFAULT_USER_SELECT;
+      select: typeof UserRepository.DEFAULT_SELECT;
     }>,
   ) {
-    return new UserEntity(user, this);
+    return new UserEntity(
+      {
+        id: user.id,
+        email: user.email,
+        displayName: user.displayName,
+        avatar: user.avatar,
+        createdAt: user.createdAt,
+        roles: user.roles,
+        userWallets: new WalletCollection(
+          user.userWallets.map((wallet) => this.walletRepo.from(wallet)),
+        ),
+      },
+      this,
+    );
   }
 
   /**
@@ -46,7 +59,7 @@ export class UserRepository {
   public async find(id: string) {
     const user = await this.prisma.user.findFirstOrThrow({
       where: { id },
-      select: DEFAULT_USER_SELECT,
+      select: UserRepository.DEFAULT_SELECT,
     });
 
     return user ? this.from(user) : null;
@@ -60,7 +73,7 @@ export class UserRepository {
   public async findByEmail(email: string) {
     const user = await this.prisma.user.findFirstOrThrow({
       where: { email },
-      select: DEFAULT_USER_SELECT,
+      select: UserRepository.DEFAULT_SELECT,
     });
 
     return user ? this.from(user) : null;
@@ -74,7 +87,7 @@ export class UserRepository {
   public async create(user: Prisma.UserCreateInput) {
     const newUser = await this.prisma.user.create({
       data: user,
-      select: DEFAULT_USER_SELECT,
+      select: UserRepository.DEFAULT_SELECT,
     });
 
     return this.from(newUser);

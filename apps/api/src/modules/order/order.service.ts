@@ -13,6 +13,7 @@ import { PaymentService } from '../payment/payment.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { UserWalletTransactionRepository } from '../wallet/repositories/userWalletTransaction.repository';
 import { WalletRepository } from '../wallet/repositories/wallet.repository';
+import { OrderRepository } from './order.repository';
 
 @Injectable()
 export class OrderService {
@@ -21,6 +22,7 @@ export class OrderService {
     private readonly prisma: PrismaService,
     private readonly paymentService: PaymentService,
     private readonly walletRepo: WalletRepository,
+    private readonly orderRepo: OrderRepository,
     private readonly userWalletTransactionRepo: UserWalletTransactionRepository,
   ) {}
 
@@ -280,27 +282,37 @@ export class OrderService {
   }
 
   /**
-   * Update order status
+   * Complete Order
    * @param id order id
    * @param status order status
    * @returns updated order
    */
-  async updateStatus(
-    id: string,
-    status: OrderStatus,
-  ): Promise<AdminOrderResponse> {
+  async completeOrder(id: string): Promise<AdminOrderResponse> {
     try {
-      const order = await this.prisma.order.update({
-        where: {
-          id,
-          status: OrderStatus.PENDING,
-        },
-        data: {
-          status,
-        },
+      const order = await this.orderRepo.find(id, {
+        status: OrderStatus.PENDING,
       });
+      await order.updateStatus(OrderStatus.COMPLETED);
 
-      this.logger.log(`Order ${order.id} updated to ${status}`);
+      this.logger.log(`Completed order ${order.id}`);
+      return this.findOne(order.id);
+    } catch (error) {
+      this.logger.error(error);
+      throw new BadRequestException('invalid_order');
+    }
+  }
+
+  /**
+   * Cancel Order
+   * @param id order id
+   * @returns updated order
+   */
+  async cancelOrder(id: string): Promise<AdminOrderResponse> {
+    try {
+      const order = await this.orderRepo.find(id);
+      await order.updateStatus(OrderStatus.CANCELLED);
+
+      this.logger.log(`Canceling order ${order.id}`);
       return this.findOne(order.id);
     } catch (error) {
       this.logger.error(error);

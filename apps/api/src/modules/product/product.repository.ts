@@ -4,34 +4,14 @@ import { ProductCollection } from '../../common/collections/product.collection';
 import { ProductEntity } from '../../common/entities/product.entity';
 import { PrismaService } from '../prisma/prisma.service';
 
-export const DEFAULT_PRODUCT_SELECT = () =>
-  ({
-    id: true,
-    slug: true,
-    name: true,
-    packages: {
-      select: {
-        price: true,
-        sales: {
-          where: {
-            startAt: { lte: new Date() },
-            endAt: { gte: new Date() },
-          },
-          select: {
-            discount: true,
-            discountType: true,
-            startAt: true,
-            endAt: true,
-          },
-        },
-      },
-    },
-  }) satisfies Prisma.ProductSelect;
-
 @Injectable()
 export class ProductRepository {
   private readonly logger = new Logger(ProductRepository.name);
   constructor(private readonly prisma: PrismaService) {}
+
+  static get DEFAULT_SELECT() {
+    return ProductEntity.SELECT satisfies Prisma.ProductSelect;
+  }
 
   /**
    * Create a UserWalletTransactionEntity from a Prisma.UserWalletTransactionGetPayload
@@ -40,7 +20,7 @@ export class ProductRepository {
    */
   public from(
     product: Prisma.ProductGetPayload<{
-      select: ReturnType<typeof DEFAULT_PRODUCT_SELECT>;
+      select: typeof ProductRepository.DEFAULT_SELECT;
     }>,
   ) {
     return new ProductEntity(product, this);
@@ -62,7 +42,7 @@ export class ProductRepository {
         createdAt: 'desc',
       },
       ...args,
-      select: DEFAULT_PRODUCT_SELECT(),
+      select: ProductRepository.DEFAULT_SELECT,
     });
 
     return new ProductCollection(products.map((p) => this.from(p)));
@@ -81,7 +61,7 @@ export class ProductRepository {
   ) {
     const now = new Date();
     const products = await this.prisma.product.findMany({
-      select: DEFAULT_PRODUCT_SELECT(),
+      select: ProductRepository.DEFAULT_SELECT,
       orderBy: {
         createdAt: 'desc',
       },

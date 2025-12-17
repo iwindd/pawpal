@@ -1,12 +1,9 @@
 import { Prisma } from '@/generated/prisma/client';
 import { SaleUtil } from '@/utils/saleUtil';
-import {
-  DEFAULT_PRODUCT_SELECT,
-  ProductRepository,
-} from '../../modules/product/product.repository';
+import { ProductRepository } from '../../modules/product/product.repository';
 
 export type ProductEntityProps = Prisma.ProductGetPayload<{
-  select: ReturnType<typeof DEFAULT_PRODUCT_SELECT>;
+  select: typeof ProductEntity.SELECT;
 }>;
 
 export class ProductEntity {
@@ -14,6 +11,31 @@ export class ProductEntity {
     private readonly product: ProductEntityProps,
     private readonly repo: ProductRepository,
   ) {}
+
+  static get SELECT() {
+    return {
+      id: true,
+      slug: true,
+      name: true,
+      packages: {
+        select: {
+          price: true,
+          sales: {
+            where: {
+              startAt: { lte: new Date() },
+              endAt: { gte: new Date() },
+            },
+            select: {
+              discount: true,
+              discountType: true,
+              startAt: true,
+              endAt: true,
+            },
+          },
+        },
+      },
+    } satisfies Prisma.ProductSelect;
+  }
 
   public get id() {
     return this.product.id;

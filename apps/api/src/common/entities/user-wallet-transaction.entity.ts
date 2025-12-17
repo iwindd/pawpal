@@ -1,14 +1,11 @@
 import { OrderEntity } from '@/common/entities/order.entity';
 import { Prisma, TransactionStatus } from '@/generated/prisma/client';
-import {
-  DEFAULT_WALLET_TRANSACTION_SELECT,
-  UserWalletTransactionRepository,
-} from '../../modules/wallet/repositories/userWalletTransaction.repository';
+import { UserWalletTransactionRepository } from '../../modules/wallet/repositories/userWalletTransaction.repository';
 import { WalletEntity } from './wallet.entity';
 
 export type UserWalletTransactionEntityProps =
   Prisma.UserWalletTransactionGetPayload<{
-    select: Omit<typeof DEFAULT_WALLET_TRANSACTION_SELECT, 'wallet' | 'order'>;
+    select: typeof UserWalletTransactionEntity.SELECT;
   }> & {
     wallet: WalletEntity;
     order: OrderEntity;
@@ -19,6 +16,16 @@ export class UserWalletTransactionEntity {
     private readonly userWalletTransaction: UserWalletTransactionEntityProps,
     private readonly repo: UserWalletTransactionRepository,
   ) {}
+
+  static get SELECT() {
+    return {
+      id: true,
+      balance_after: true,
+      balance_before: true,
+      type: true,
+      status: true,
+    } satisfies Prisma.UserWalletTransactionSelect;
+  }
 
   get id() {
     return this.userWalletTransaction.id;

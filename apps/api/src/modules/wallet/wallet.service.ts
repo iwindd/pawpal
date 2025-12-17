@@ -45,7 +45,7 @@ export class WalletService {
             transaction.balanceAfter,
           ),
           type: TransactionType.PURCHASE,
-          status: TransactionStatus.SUCCESS,
+          status: TransactionStatus.PENDING,
           wallet: {
             connect: {
               id: transaction.wallet.id,
@@ -113,6 +113,9 @@ export class WalletService {
         ...query,
         where: {
           status: TransactionStatus.PENDING,
+          type: {
+            not: TransactionType.PURCHASE,
+          },
         },
       },
     });

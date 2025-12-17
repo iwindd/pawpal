@@ -1,6 +1,5 @@
 import { DatatablePipe, DatatableQuery } from '@/common/pipes/DatatablePipe';
-import { OrderStatus } from '@/generated/prisma/client';
-import { Body, Controller, Get, Param, Patch, Query } from '@nestjs/common';
+import { Controller, Get, Param, Patch, Query } from '@nestjs/common';
 import { OrderService } from './order.service';
 
 @Controller('admin/order')
@@ -17,8 +16,13 @@ export class AdminOrderController {
     return this.orderService.findOne(id);
   }
 
-  @Patch(':id/status')
-  updateStatus(@Param('id') id: string, @Body('status') status: OrderStatus) {
-    return this.orderService.updateStatus(id, status);
+  @Patch(':id/completed')
+  completeOrder(@Param('id') id: string) {
+    return this.orderService.completeOrder(id);
+  }
+
+  @Patch(':id/cancelled')
+  cancelOrder(@Param('id') id: string) {
+    return this.orderService.cancelOrder(id);
   }
 }

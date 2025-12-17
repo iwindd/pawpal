@@ -3,17 +3,14 @@ import { Injectable, Logger } from '@nestjs/common';
 import { SaleEntity } from '../../common/entities/sale.entity';
 import { PrismaService } from '../prisma/prisma.service';
 
-export const DEFAULT_SALE_SELECT = {
-  discount: true,
-  discountType: true,
-  startAt: true,
-  endAt: true,
-} satisfies Prisma.SaleSelect;
-
 @Injectable()
 export class SaleRepository {
   private readonly logger = new Logger(SaleRepository.name);
   constructor(private readonly prisma: PrismaService) {}
+
+  static get DEFAULT_SELECT() {
+    return SaleEntity.SELECT satisfies Prisma.SaleSelect;
+  }
 
   /**
    * Create a UserWalletTransactionEntity from a Prisma.UserWalletTransactionGetPayload
@@ -22,7 +19,7 @@ export class SaleRepository {
    */
   public from(
     sale: Prisma.SaleGetPayload<{
-      select: typeof DEFAULT_SALE_SELECT;
+      select: typeof SaleRepository.DEFAULT_SELECT;
     }>,
   ) {
     return new SaleEntity(sale, this);

@@ -1,11 +1,8 @@
 import { OrderStatus, Prisma } from '@/generated/prisma/client';
-import {
-  DEFAULT_ORDER_SELECT,
-  OrderRepository,
-} from '../../modules/order/order.repository';
+import { OrderRepository } from '../../modules/order/order.repository';
 
 export type OrderEntityProps = Prisma.OrderGetPayload<{
-  select: typeof DEFAULT_ORDER_SELECT;
+  select: typeof OrderEntity.SELECT;
 }>;
 
 export class OrderEntity {
@@ -13,6 +10,14 @@ export class OrderEntity {
     private readonly order: OrderEntityProps,
     private readonly repo: OrderRepository,
   ) {}
+
+  static get SELECT() {
+    return {
+      id: true,
+      status: true,
+      total: true,
+    } satisfies Prisma.OrderSelect;
+  }
 
   public get id() {
     return this.order.id;
@@ -22,8 +27,14 @@ export class OrderEntity {
     return this.order.total;
   }
 
+  public get status() {
+    return this.order.status;
+  }
+
   public async updateStatus(status: OrderStatus) {
     this.order.status = status;
     return this.repo.updateStatusOrThrow(this.order.id, status);
   }
+
+  public async refundPurchaseTransaction() {}
 }

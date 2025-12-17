@@ -3,14 +3,14 @@ import { Prisma } from '@/generated/prisma/client';
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 
-export const DEFAULT_PACKAGE_SELECT = {
-  id: true,
-} satisfies Prisma.PackageSelect;
-
 @Injectable()
 export class PackageRepository {
   private readonly logger = new Logger(PackageRepository.name);
   constructor(private readonly prisma: PrismaService) {}
+
+  static get DEFAULT_SELECT() {
+    return PackageEntity.SELECT satisfies Prisma.PackageSelect;
+  }
 
   /**
    * Create a PackageEntity from a Prisma.PackageGetPayload
@@ -19,7 +19,7 @@ export class PackageRepository {
    */
   public from(
     productPackage: Prisma.PackageGetPayload<{
-      select: typeof DEFAULT_PACKAGE_SELECT;
+      select: typeof PackageRepository.DEFAULT_SELECT;
     }>,
   ) {
     return new PackageEntity(productPackage, this);
@@ -35,7 +35,7 @@ export class PackageRepository {
       where: {
         id: packageId,
       },
-      select: DEFAULT_PACKAGE_SELECT,
+      select: PackageRepository.DEFAULT_SELECT,
     });
 
     return this.from(productPackage);

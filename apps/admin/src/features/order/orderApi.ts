@@ -3,7 +3,6 @@ import {
   AdminOrderResponse,
   DatatableInput,
   DatatableResponse,
-  ENUM_ORDER_STATUS,
 } from "@pawpal/shared";
 import { createApi } from "@reduxjs/toolkit/query/react";
 
@@ -26,17 +25,15 @@ export const orderApi = createApi({
     }),
     confirmTopupOrder: builder.mutation<AdminOrderResponse, string>({
       query: (orderId) => ({
-        url: `/${orderId}/status`,
+        url: `/${orderId}/completed`,
         method: "PATCH",
-        body: { status: ENUM_ORDER_STATUS.COMPLETED },
       }),
       invalidatesTags: ["Orders"],
     }),
     cancelTopupOrder: builder.mutation<AdminOrderResponse, string>({
       query: (orderId) => ({
-        url: `/${orderId}/status`,
+        url: `/${orderId}/cancelled`,
         method: "PATCH",
-        body: { status: ENUM_ORDER_STATUS.CANCELLED },
       }),
       invalidatesTags: ["Orders"],
     }),

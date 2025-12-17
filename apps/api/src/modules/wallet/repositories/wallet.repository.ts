@@ -9,17 +9,14 @@ import { Decimal } from '@prisma/client/runtime/client';
 import { WalletEntity } from '../../../common/entities/wallet.entity';
 import { PrismaService } from '../../prisma/prisma.service';
 
-export const DEFAULT_WALLET_SELECT = {
-  id: true,
-  balance: true,
-  walletType: true,
-  user_id: true,
-} satisfies Prisma.UserWalletSelect;
-
 @Injectable()
 export class WalletRepository {
   private readonly logger = new Logger(WalletRepository.name);
   constructor(private readonly prisma: PrismaService) {}
+
+  static get DEFAULT_SELECT() {
+    return WalletEntity.SELECT satisfies Prisma.UserWalletSelect;
+  }
 
   /**
    * Create wallet entity from user wallet
@@ -28,7 +25,7 @@ export class WalletRepository {
    */
   public from(
     userWallet: Prisma.UserWalletGetPayload<{
-      select: typeof DEFAULT_WALLET_SELECT;
+      select: typeof WalletRepository.DEFAULT_SELECT;
     }>,
   ) {
     return new WalletEntity(userWallet, this);
@@ -46,7 +43,7 @@ export class WalletRepository {
         user_id: userId,
         walletType: walletType,
       },
-      select: DEFAULT_WALLET_SELECT,
+      select: WalletRepository.DEFAULT_SELECT,
     });
 
     if (!userWallet) {
@@ -57,7 +54,7 @@ export class WalletRepository {
             walletType: walletType,
             balance: 0,
           },
-          select: DEFAULT_WALLET_SELECT,
+          select: WalletRepository.DEFAULT_SELECT,
         }),
       );
     }

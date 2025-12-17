@@ -1,27 +1,12 @@
+import { OrderEntity } from '@/common/entities/order.entity';
+import { WalletEntity } from '@/common/entities/wallet.entity';
 import { Prisma, TransactionStatus } from '@/generated/prisma/client';
 import { EventService } from '@/modules/event/event.service';
-import {
-  DEFAULT_ORDER_SELECT,
-  OrderRepository,
-} from '@/modules/order/order.repository';
+import { OrderRepository } from '@/modules/order/order.repository';
 import { Injectable, Logger } from '@nestjs/common';
 import { UserWalletTransactionEntity } from '../../../common/entities/user-wallet-transaction.entity';
 import { PrismaService } from '../../prisma/prisma.service';
-import { DEFAULT_WALLET_SELECT, WalletRepository } from './wallet.repository';
-
-export const DEFAULT_WALLET_TRANSACTION_SELECT = {
-  id: true,
-  balance_after: true,
-  balance_before: true,
-  type: true,
-  status: true,
-  wallet: {
-    select: DEFAULT_WALLET_SELECT,
-  },
-  order: {
-    select: DEFAULT_ORDER_SELECT,
-  },
-} satisfies Prisma.UserWalletTransactionSelect;
+import { WalletRepository } from './wallet.repository';
 
 @Injectable()
 export class UserWalletTransactionRepository {
@@ -33,6 +18,23 @@ export class UserWalletTransactionRepository {
     private readonly eventService: EventService,
   ) {}
 
+  static get DEFAULT_SELECT() {
+    return {
+      ...UserWalletTransactionEntity.SELECT,
+      wallet: {
+        select: WalletEntity.SELECT,
+      },
+      order: {
+        select: {
+          ...OrderEntity.SELECT,
+          userWalletTransactions: {
+            select: WalletEntity.SELECT,
+          },
+        },
+      },
+    } satisfies Prisma.UserWalletTransactionSelect;
+  }
+
   /**
    * Create a UserWalletTransactionEntity from a Prisma.UserWalletTransactionGetPayload
    * @param transaction Prisma.UserWalletTransactionGetPayload
@@ -40,14 +42,20 @@ export class UserWalletTransactionRepository {
    */
   public from(
     transaction: Prisma.UserWalletTransactionGetPayload<{
-      select: typeof DEFAULT_WALLET_TRANSACTION_SELECT;
+      select: typeof UserWalletTransactionRepository.DEFAULT_SELECT;
     }>,
   ) {
     return new UserWalletTransactionEntity(
       {
-        ...transaction,
+        id: transaction.id,
+        balance_after: transaction.balance_after,
+        balance_before: transaction.balance_before,
+        type: transaction.type,
+        status: transaction.status,
         wallet: this.walletRepo.from(transaction.wallet),
-        order: this.orderRepo.from(transaction.order),
+        order: transaction.order
+          ? this.orderRepo.from(transaction.order)
+          : null,
       },
       this,
     );
@@ -64,7 +72,7 @@ export class UserWalletTransactionRepository {
         where: {
           id: transactionId,
         },
-        select: DEFAULT_WALLET_TRANSACTION_SELECT,
+        select: UserWalletTransactionRepository.DEFAULT_SELECT,
       });
 
     return this.from(transaction);
@@ -78,7 +86,7 @@ export class UserWalletTransactionRepository {
   public async create(data: Prisma.UserWalletTransactionCreateInput) {
     const transaction = await this.prisma.userWalletTransaction.create({
       data,
-      select: DEFAULT_WALLET_TRANSACTION_SELECT,
+      select: UserWalletTransactionRepository.DEFAULT_SELECT,
     });
 
     return this.from(transaction);

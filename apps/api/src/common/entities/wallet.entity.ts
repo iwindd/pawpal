@@ -1,12 +1,9 @@
 import { Prisma, TransactionStatus } from '@/generated/prisma/client';
 import { Decimal } from '@prisma/client/runtime/client';
-import {
-  DEFAULT_WALLET_SELECT,
-  WalletRepository,
-} from '../../modules/wallet/repositories/wallet.repository';
+import { WalletRepository } from '../../modules/wallet/repositories/wallet.repository';
 
 export type WalletEntityProps = Prisma.UserWalletGetPayload<{
-  select: typeof DEFAULT_WALLET_SELECT;
+  select: typeof WalletEntity.SELECT;
 }>;
 
 export class WalletEntity {
@@ -14,6 +11,15 @@ export class WalletEntity {
     private readonly userWallet: WalletEntityProps,
     private readonly repo: WalletRepository,
   ) {}
+
+  static get SELECT() {
+    return {
+      id: true,
+      balance: true,
+      walletType: true,
+      user_id: true,
+    } satisfies Prisma.UserWalletSelect;
+  }
 
   get id() {
     return this.userWallet.id;
@@ -79,5 +85,9 @@ export class WalletEntity {
       orderId,
       status,
     );
+  }
+
+  public toJSON() {
+    return {};
   }
 }
