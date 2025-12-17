@@ -28,7 +28,7 @@ export class Colorization {
       case ENUM_TRANSACTION_TYPE.PURCHASE:
         return "pawpink";
       case ENUM_TRANSACTION_TYPE.TOPUP_FOR_PURCHASE:
-        return "orange";
+        return "yellow";
       default:
         return "gray";
     }
