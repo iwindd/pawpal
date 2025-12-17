@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 
 import { DatatableQuery } from '@/common/pipes/DatatablePipe';
 import { FieldAfterParse } from '@/common/pipes/PurchasePipe';
@@ -147,12 +147,22 @@ export class OrderService {
     });
   }
 
+  /**
+   * Get order by id
+   * @param id order id
+   * @returns order
+   */
   async findOne(id: string): Promise<AdminOrderResponse> {
     const order = await this.prisma.order.findUnique({
       where: {
         id,
       },
-      include: {
+      select: {
+        id: true,
+        total: true,
+        status: true,
+        createdAt: true,
+        updatedAt: true,
         user: {
           select: {
             id: true,
@@ -161,11 +171,18 @@ export class OrderService {
           },
         },
         orderPackages: {
-          include: {
+          select: {
+            id: true,
+            amount: true,
+            price: true,
             package: {
-              include: {
+              select: {
+                id: true,
+                name: true,
                 product: {
-                  include: {
+                  select: {
+                    id: true,
+                    name: true,
                     category: {
                       select: {
                         id: true,
@@ -178,16 +195,116 @@ export class OrderService {
             },
           },
         },
+        orderFields: {
+          select: {
+            field: {
+              select: {
+                label: true,
+                metadata: true,
+                placeholder: true,
+                type: true,
+              },
+            },
+            value: true,
+          },
+        },
+        userWalletTransactions: {
+          select: {
+            id: true,
+            type: true,
+            status: true,
+            balance_before: true,
+            balance_after: true,
+            createdAt: true,
+            payment: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
       },
     });
 
+    if (!order) {
+      throw new BadRequestException('Order not found');
+    }
+
     return {
-      ...order,
-      total: order.total.toString(),
-      orderPackages: order.orderPackages.map((op) => ({
-        ...op,
-        price: op.price.toString(),
+      id: order.id,
+      total: order.total.toNumber(),
+      status: order.status,
+      createdAt: order.createdAt.toISOString(),
+      updatedAt: order.updatedAt.toISOString(),
+      customer: order.user,
+      cart: order.orderPackages.map((op) => ({
+        id: op.id,
+        amount: op.amount,
+        price: op.price.toNumber(),
+        package: {
+          id: op.package.id,
+          name: op.package.name,
+        },
+        product: {
+          id: op.package.product.id,
+          name: op.package.product.name,
+        },
+        category: {
+          id: op.package.product.category.id,
+          name: op.package.product.category.name,
+        },
       })),
-    } as AdminOrderResponse;
+      fields: order.orderFields.map((of) => ({
+        label: of.field.label,
+        metadata: of.field.metadata,
+        placeholder: of.field.placeholder,
+        type: of.field.type,
+        value: of.value,
+      })),
+      transactions: order.userWalletTransactions.map((tx) => ({
+        id: tx.id,
+        type: tx.type,
+        status: tx.status,
+        balance_before: tx.balance_before.toNumber(),
+        balance_after: tx.balance_after.toNumber(),
+        createdAt: tx.createdAt.toISOString(),
+        payment: tx.payment
+          ? {
+              id: tx.payment.id,
+              name: tx.payment.name,
+            }
+          : null,
+      })),
+    };
+  }
+
+  /**
+   * Update order status
+   * @param id order id
+   * @param status order status
+   * @returns updated order
+   */
+  async updateStatus(
+    id: string,
+    status: OrderStatus,
+  ): Promise<AdminOrderResponse> {
+    try {
+      const order = await this.prisma.order.update({
+        where: {
+          id,
+          status: OrderStatus.PENDING,
+        },
+        data: {
+          status,
+        },
+      });
+
+      this.logger.log(`Order ${order.id} updated to ${status}`);
+      return this.findOne(order.id);
+    } catch (error) {
+      this.logger.error(error);
+      throw new BadRequestException('invalid_order');
+    }
   }
 }

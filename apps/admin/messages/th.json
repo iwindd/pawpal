@@ -354,6 +354,66 @@
     },
     "edit": {
       "title": "คำสั่งซื้อ #{id}"
+    },
+    "view": {
+      "title": "คำสั่งซื้อ #{id}",
+      "sections": {
+        "items": "รายการสินค้า",
+        "transactions": "ประวัติการทำธุรกรรม",
+        "customer": "ข้อมูลลูกค้า",
+        "additional": "ข้อมูลเพิ่มเติม",
+        "summary": "สรุปรายการ"
+      },
+      "table": {
+        "product": "สินค้า",
+        "package": "แพ็กเกจ",
+        "price": "ราคา",
+        "amount": "จำนวน",
+        "total": "รวม",
+        "type": "ประเภท",
+        "status": "สถานะ",
+        "paymentMethod": "ช่องทางชำระเงิน",
+        "transferTime": "เวลาโอน",
+        "amountChange": "จำนวนเงิน"
+      },
+      "summary": {
+        "subtotal": "ยอดรวม",
+        "total": "ยอดสุทธิ"
+      },
+      "actions": {
+        "confirm": "เติมเงินเสร็จสิ้น",
+        "cancel": "ยกเลิก"
+      },
+      "notify": {
+        "success": {
+          "title": "สำเร็จ",
+          "message": "อัพเดทสถานะคำสั่งซื้อแล้ว"
+        },
+        "error": {
+          "title": "ผิดพลาด",
+          "message": "ไม่สามารถอัพเดทสถานะได้"
+        }
+      },
+      "confirmation": {
+        "complete": {
+          "title": "สำเร็จการเติมเงิน",
+          "message": "คุณต้องการเติมเงินเสร็จสิ้นหรือไม่?"
+        },
+        "cancel": {
+          "title": "ยืนยันการยกเลิก",
+          "message": "คุณต้องการยกเลิกหรือไม่?"
+        }
+      },
+      "backdrop": {
+        "completing": "เสร็จสิ้นรายการ",
+        "canceling": "ยกเลิกรายการ"
+      }
+    },
+    "status": {
+      "created": "กำลังตรวจสอบ",
+      "pending": "กำลังรอดำเนินการ",
+      "completed": "เสร็จสิ้น",
+      "cancelled": "ยกเลิก"
     }
   },
   "Carousel": {
@@ -503,6 +563,17 @@
   "Transaction": {
     "main": {
       "title": "ธุรกรรม"
+    },
+    "status": {
+      "created": "กำลังตรวจสอบ",
+      "pending": "กำลังรอดำเนินการ",
+      "success": "สำเร็จ",
+      "failed": "ไม่สำเร็จ"
+    },
+    "type": {
+      "topup": "เติมเงิน",
+      "purchase": "ซื้อสินค้า",
+      "topup_for_purchase": "เติมเงินสำหรับซื้อสินค้า"
     }
   },
   "PaymentGateway": {

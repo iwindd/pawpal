@@ -2,6 +2,7 @@ export { ZodError, type ZodType } from "zod";
 export * from "./configs/payment";
 export * from "./enums/carousel";
 export * from "./enums/field";
+export * from "./enums/order";
 export * from "./enums/sale";
 export * from "./enums/transaction";
 export * from "./enums/wallet";

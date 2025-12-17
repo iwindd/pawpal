@@ -1,32 +1,55 @@
+import { FieldType } from "../../enums/field";
+import { OrderStatus } from "../../enums/order";
+import { TransactionStatus, TransactionType } from "../../enums/transaction";
 import { PaymentChargeCreatedResponse } from "./payment-gateway";
 
 export interface AdminOrderResponse {
   id: string;
-  total: string;
-  status: "PAID" | "PROCESSING" | "COMPLETED" | "CANCELLED";
-  createdAt: Date;
-  updatedAt: Date;
-  user: {
+  total: number;
+  status: OrderStatus;
+  createdAt: string;
+  updatedAt: string;
+
+  customer: {
     id: string;
     email: string;
     displayName: string;
   };
-  orderPackages: {
+  cart: {
     id: string;
     amount: number;
-    price: string;
+    price: number;
     package: {
       id: string;
       name: string;
-      product: {
-        id: string;
-        name: string;
-        category: {
-          id: string;
-          name: string;
-        };
-      };
     };
+    product: {
+      id: string;
+      name: string;
+    };
+    category: {
+      id: string;
+      name: string;
+    };
+  }[];
+  fields: {
+    label: string;
+    metadata: any;
+    placeholder: string;
+    type: FieldType;
+    value: string;
+  }[];
+  transactions: {
+    id: string;
+    type: TransactionType;
+    status: TransactionStatus;
+    balance_before: number;
+    balance_after: number;
+    createdAt: string;
+    payment?: {
+      id: string;
+      name: string;
+    } | null;
   }[];
 }
 
