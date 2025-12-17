@@ -46,7 +46,10 @@ export class PaymentService {
     if (charge.status !== TransactionStatus.CREATED)
       throw new BadGatewayException('Charge is already processed');
 
-    return charge.updateStatus(TransactionStatus.PENDING);
+    await charge.updateStatus(TransactionStatus.PENDING);
+    this.eventService.admin.onNewJobTransaction();
+
+    return charge.toJson();
   }
 
   private async createPromptpayManualCharge(
@@ -67,7 +70,7 @@ export class PaymentService {
     const charge = await wallet.createCharge(amount, gateway.id, orderId);
 
     if (charge.status != TransactionStatus.CREATED) {
-      this.eventService.admin.emit('onNewJobTransaction');
+      this.eventService.admin.onNewJobTransaction();
     }
 
     return {

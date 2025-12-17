@@ -113,13 +113,12 @@ export class UserWalletTransactionRepository {
   public async emitTopupTransactionUpdated(
     transaction: UserWalletTransactionEntity,
   ) {
-    return this.eventService.user.emitToUser(
+    return this.eventService.user.onTopupTransactionUpdated(
       transaction.wallet.userId,
-      'onTopupTransactionUpdated',
       {
         id: transaction.id,
         status: transaction.status,
-        balance: transaction.wallet.balance,
+        balance: transaction.wallet.balance.toNumber(),
         walletType: transaction.wallet.walletType,
       },
     );
@@ -128,6 +127,6 @@ export class UserWalletTransactionRepository {
   public async emitNewJobTransaction(transaction: UserWalletTransactionEntity) {
     if (transaction.status !== TransactionStatus.CREATED) return;
 
-    return this.eventService.admin.emit('onNewJobTransaction');
+    return this.eventService.admin.onNewJobTransaction();
   }
 }

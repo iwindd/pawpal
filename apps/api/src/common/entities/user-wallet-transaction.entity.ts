@@ -83,4 +83,15 @@ export class UserWalletTransactionEntity {
   public async emitNewJobTransaction() {
     return this.repo.emitNewJobTransaction(this);
   }
+
+  public toJson() {
+    return {
+      id: this.id,
+      balanceBefore: this.balanceBefore,
+      balanceAfter: this.balanceAfter,
+      type: this.type,
+      amount: this.amount,
+      status: this.status,
+    };
+  }
 }
