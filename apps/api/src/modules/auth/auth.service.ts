@@ -57,13 +57,20 @@ export class AuthService {
    * @param userPayload user payload
    * @returns user session
    */
-  async register(userPayload: RegisterInput): Promise<Session> {
-    if (await this.userRepo.isAlreadyExist(userPayload.email))
+  async register(payload: RegisterInput): Promise<Session> {
+    if (await this.userRepo.isAlreadyExist(payload.email))
       throw new ConflictException('email_already_exists');
 
-    delete userPayload.password_confirmation;
-    delete userPayload.accept_conditions;
-    const user = await this.userRepo.create(userPayload);
+    const user = await this.userRepo.create({
+      displayName: payload.displayName,
+      email: payload.email,
+      password: payload.password,
+      roles: {
+        connect: {
+          name: 'User',
+        },
+      },
+    });
 
     return user.toJSON();
   }

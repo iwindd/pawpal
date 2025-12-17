@@ -79,7 +79,10 @@ export class UserRepository {
    */
   public async create(user: Prisma.UserCreateInput) {
     const newUser = await this.prisma.user.create({
-      data: user,
+      data: {
+        ...user,
+        password: await bcrypt.hash(user.password, 12),
+      },
       select: UserRepository.DEFAULT_SELECT,
     });
 
@@ -110,7 +113,7 @@ export class UserRepository {
   public async updatePassword(userId: string, password: string) {
     return this.prisma.user.update({
       where: { id: userId },
-      data: { password: await bcrypt.hash(password, 10) },
+      data: { password: await bcrypt.hash(password, 12) },
     });
   }
 
