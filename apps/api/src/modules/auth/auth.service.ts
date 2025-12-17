@@ -61,6 +61,8 @@ export class AuthService {
     if (await this.userRepo.isAlreadyExist(userPayload.email))
       throw new ConflictException('email_already_exists');
 
+    delete userPayload.password_confirmation;
+    delete userPayload.accept_conditions;
     const user = await this.userRepo.create(userPayload);
 
     return user.toJSON();
