@@ -86,8 +86,4 @@ export class WalletEntity {
       status,
     );
   }
-
-  public toJSON() {
-    return {};
-  }
 }
