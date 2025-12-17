@@ -1,6 +1,5 @@
-import { WalletCollection } from '@/common/collections/wallet.collection';
 import { UserEntity } from '@/common/entities/user.entity';
-import { Prisma, WalletType } from '@/generated/prisma/client';
+import { Prisma } from '@/generated/prisma/client';
 import { Injectable, Logger } from '@nestjs/common';
 import { UpdateProfileInput } from '@pawpal/shared';
 import bcrypt from 'bcrypt';
@@ -31,8 +30,6 @@ export class UserRepository {
       select: typeof UserRepository.DEFAULT_SELECT;
     }>,
   ) {
-    const userWallets = [await this.walletRepo.find(user.id, WalletType.MAIN)];
-
     return new UserEntity(
       {
         id: user.id,
@@ -41,7 +38,7 @@ export class UserRepository {
         avatar: user.avatar,
         createdAt: user.createdAt,
         roles: user.roles,
-        userWallets: new WalletCollection(userWallets),
+        userWallets: await this.walletRepo.findAll(user.id),
       },
       this,
     );

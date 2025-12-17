@@ -1,3 +1,4 @@
+import { WalletCollection } from '@/common/collections/wallet.collection';
 import { Prisma } from '@/generated/prisma/client';
 import {
   TransactionStatus,
@@ -60,6 +61,28 @@ export class WalletRepository {
     }
 
     return this.from(userWallet);
+  }
+
+  /**
+   * Get all wallets by user id
+   * @param userId user id
+   * @returns wallets
+   */
+  public async findAll(userId: string) {
+    const userWallets = await this.prisma.userWallet.findMany({
+      where: {
+        user_id: userId,
+      },
+      select: WalletRepository.DEFAULT_SELECT,
+    });
+
+    if (userWallets.length <= 0) {
+      return new WalletCollection([await this.find(userId, WalletType.MAIN)]);
+    }
+
+    return new WalletCollection(
+      userWallets.map((userWallet) => this.from(userWallet)),
+    );
   }
 
   /**
