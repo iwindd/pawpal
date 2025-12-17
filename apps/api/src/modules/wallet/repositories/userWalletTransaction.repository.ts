@@ -25,12 +25,7 @@ export class UserWalletTransactionRepository {
         select: WalletEntity.SELECT,
       },
       order: {
-        select: {
-          ...OrderEntity.SELECT,
-          userWalletTransactions: {
-            select: WalletEntity.SELECT,
-          },
-        },
+        select: OrderEntity.SELECT,
       },
     } satisfies Prisma.UserWalletTransactionSelect;
   }

@@ -1,4 +1,3 @@
-import { WalletEntity } from '@/common/entities/wallet.entity';
 import { OrderStatus, Prisma } from '@/generated/prisma/client';
 import { Injectable, Logger } from '@nestjs/common';
 import { OrderEntity } from '../../common/entities/order.entity';
@@ -10,12 +9,7 @@ export class OrderRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   static get DEFAULT_SELECT() {
-    return {
-      ...OrderEntity.SELECT,
-      userWalletTransactions: {
-        select: WalletEntity.SELECT,
-      },
-    } satisfies Prisma.OrderSelect;
+    return OrderEntity.SELECT satisfies Prisma.OrderSelect;
   }
 
   /**
@@ -25,7 +19,7 @@ export class OrderRepository {
    */
   public from(
     order: Prisma.OrderGetPayload<{
-      select: typeof OrderRepository.DEFAULT_SELECT;
+      select: typeof OrderEntity.SELECT;
     }>,
   ) {
     return new OrderEntity(order, this);
