@@ -39,14 +39,15 @@ export class OrderService {
   async createOrder(user: Session, body: PurchaseInput<FieldAfterParse>) {
     const productPackage = await this.prisma.package.getPackage(body.packageId);
     const connectionData = OrderUtil.getOrderConnection(user, body);
+    const totalPrice = productPackage.price.mul(body.amount);
     const userWallet = await this.walletRepo.find(user.id);
     const topupAmount = body.includeWalletBalance
-      ? await userWallet.getMissingAmount(productPackage.price)
-      : productPackage.price;
+      ? await userWallet.getMissingAmount(totalPrice)
+      : totalPrice;
 
     const order = await this.prisma.order.create({
       data: {
-        total: productPackage.price.toString(),
+        total: totalPrice.toString(),
         status: OrderStatus.CREATED,
         ...connectionData,
       },
@@ -64,7 +65,7 @@ export class OrderService {
         ),
       };
     } else {
-      const balanceAfter = userWallet.balance.minus(productPackage.price);
+      const balanceAfter = userWallet.balance.minus(totalPrice);
       const transaction = await this.prisma.userWalletTransaction.create({
         data: {
           type: TransactionType.PURCHASE,
