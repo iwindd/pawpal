@@ -5,8 +5,7 @@ import {
   TransactionStatus,
   TransactionType,
 } from '@/generated/prisma/enums';
-import { Injectable } from '@nestjs/common';
-import { TransactionStatusInput } from '@pawpal/shared';
+import { Injectable, Logger } from '@nestjs/common';
 import { EventService } from '../event/event.service';
 import { OrderRepository } from '../order/order.repository';
 import { PrismaService } from '../prisma/prisma.service';
@@ -15,6 +14,8 @@ import { TransactionRepository } from './transaction.repository';
 
 @Injectable()
 export class TransactionService {
+  private readonly logger = new Logger(TransactionService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly eventService: EventService,
@@ -23,32 +24,37 @@ export class TransactionService {
     private readonly transactionRepo: TransactionRepository,
   ) {}
 
+  /**
+   * Success charge transaction
+   * @param transactionId transaction id
+   * @returns success charge transaction response
+   */
   async successCharge(transactionId: string) {
     const transaction = await this.transactionRepo.find(transactionId);
+
+    if (transaction.type == TransactionType.PURCHASE)
+      throw new Error('Transaction is not topup transaction');
+
     this.transactionRepo.updateStatusOrThrow(
       transactionId,
       TransactionStatus.SUCCESS,
     );
 
-    this.walletRepo.updateWalletBalanceOrThrow(
-      transaction.amount,
-      transaction.userId,
-      transaction.walletType,
-    );
-
     switch (transaction.type) {
       case TransactionType.TOPUP: {
+        this.walletRepo.updateWalletBalanceOrThrow(
+          transaction.balanceAfter,
+          transaction.userId,
+          transaction.walletType,
+        );
+
+        this.eventService.admin.onFinishedJobTransaction(transaction.toJson());
         this.eventService.user.onTopupTransactionUpdated(transaction.userId, {
           id: transaction.id,
-          status: transaction.status,
+          status: TransactionStatus.SUCCESS,
           balance: transaction.balanceAfter.toNumber(),
           walletType: transaction.walletType,
         });
-
-        break;
-      }
-      case TransactionType.PURCHASE: {
-        // TODO: handle purchase transaction
 
         break;
       }
@@ -59,9 +65,10 @@ export class TransactionService {
         );
 
         // create new purchase transaction
+        const total = transaction.total.minus(transaction.balanceAfter).abs();
         await this.transactionRepo.create({
           balance_before: transaction.balanceAfter,
-          balance_after: transaction.total.minus(transaction.balanceAfter),
+          balance_after: total,
           type: TransactionType.PURCHASE,
           status: TransactionStatus.PENDING,
           wallet: {
@@ -76,6 +83,12 @@ export class TransactionService {
           },
         });
 
+        this.walletRepo.updateWalletBalanceOrThrow(
+          total,
+          transaction.userId,
+          transaction.walletType,
+        );
+
         const order = await this.prisma.order.findUniqueOrThrow({
           where: {
             id: transaction.orderId,
@@ -89,8 +102,6 @@ export class TransactionService {
 
         break;
       }
-      default:
-        break;
     }
 
     return {
@@ -101,6 +112,10 @@ export class TransactionService {
     };
   }
 
+  /**
+   * Failed charge transaction
+   * @param transactionId transaction id
+   */
   async failedCharge(transactionId: string) {
     const transaction = await this.transactionRepo.find(transactionId);
 
@@ -116,23 +131,13 @@ export class TransactionService {
         OrderStatus.CANCELLED,
       );
 
+    this.eventService.admin.onFinishedJobTransaction(transaction.toJson());
     this.eventService.user.onTopupTransactionUpdated(transaction.userId, {
       id: transaction.id,
-      status: transaction.status,
-      balance: transaction.balanceAfter.toNumber(),
+      status: TransactionStatus.FAILED,
+      balance: transaction.balanceBefore.toNumber(),
       walletType: transaction.walletType,
     });
-  }
-
-  async pendingCharge(transactionId: string) {
-    const transaction = await this.transactionRepo.find(transactionId);
-
-    await this.transactionRepo.updateStatusOrThrow(
-      transactionId,
-      TransactionStatus.PENDING,
-    );
-
-    this.eventService.admin.onNewJobTransaction(transaction.toJson());
   }
 
   /**
@@ -165,21 +170,5 @@ export class TransactionService {
         },
       },
     });
-  }
-
-  changeTransactionStatus(
-    transactionId: string,
-    { status }: TransactionStatusInput,
-  ) {
-    switch (status) {
-      case TransactionStatus.SUCCESS:
-        return this.successCharge(transactionId);
-      case TransactionStatus.FAILED:
-        return this.failedCharge(transactionId);
-      case TransactionStatus.PENDING:
-        return this.pendingCharge(transactionId);
-      default:
-        throw new Error('Invalid status');
-    }
   }
 }

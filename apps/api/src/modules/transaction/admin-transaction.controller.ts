@@ -2,7 +2,9 @@ import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
 import { SessionAuthGuard } from '@/common/guards/session-auth.guard';
 import { DatatablePipe, DatatableQuery } from '@/common/pipes/DatatablePipe';
 import { ZodPipe } from '@/common/pipes/ZodPipe';
+import { TransactionStatus } from '@/generated/prisma/enums';
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -30,13 +32,17 @@ export class AdminTransactionController {
   }
 
   @Patch('pending/:transactionId')
-  changeTransactionStatus(
+  async changeTransactionStatus(
     @Param('transactionId') transactionId: string,
     @Body(new ZodPipe(transactionStatusSchema)) payload: TransactionStatusInput,
   ) {
-    return this.transactionService.changeTransactionStatus(
-      transactionId,
-      payload,
-    );
+    switch (payload.status) {
+      case TransactionStatus.SUCCESS:
+        return await this.transactionService.successCharge(transactionId);
+      case TransactionStatus.FAILED:
+        return await this.transactionService.failedCharge(transactionId);
+      default:
+        throw new BadRequestException('invalid_status');
+    }
   }
 }

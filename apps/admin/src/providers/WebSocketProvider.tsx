@@ -1,8 +1,13 @@
 "use client";
 
-import { orderApi } from "@/features/order/orderApi";
-import { transactionApi } from "@/features/transaction/transactionApi";
+import {
+  addOrder,
+  addTransaction,
+  finishedOrder,
+  finishedTransaction,
+} from "@/features/job/jobSlice";
 import { useAppDispatch, useAppSelector } from "@/hooks";
+import { AdminOrderResponse, AdminTransactionResponse } from "@pawpal/shared";
 import { createContext, useContext, useEffect } from "react";
 import { io, type Socket } from "socket.io-client";
 
@@ -33,18 +38,34 @@ export const WebSocketProvider = ({
     if (user?.id) {
       socket.connect();
 
-      socket.on("onNewJobTransaction", () =>
-        dispatch(transactionApi.util.invalidateTags(["Transactions"]))
+      socket.on(
+        "onNewJobTransaction",
+        (transaction: AdminTransactionResponse) => {
+          dispatch(addTransaction(transaction));
+        }
       );
 
-      socket.on("onNewJobOrder", () =>
-        dispatch(orderApi.util.invalidateTags(["Orders"]))
+      socket.on(
+        "onFinishedJobTransaction",
+        (transaction: AdminTransactionResponse) => {
+          dispatch(finishedTransaction(transaction));
+        }
       );
+
+      socket.on("onNewJobOrder", (order: AdminOrderResponse) => {
+        dispatch(addOrder(order));
+      });
+
+      socket.on("onFinishedJobOrder", (order: AdminOrderResponse) => {
+        dispatch(finishedOrder(order));
+      });
     }
 
     return () => {
       socket.off("onNewJobTransaction");
+      socket.off("onFinishedJobTransaction");
       socket.off("onNewJobOrder");
+      socket.off("onFinishedJobOrder");
       socket.disconnect();
     };
   }, [socket, user]);

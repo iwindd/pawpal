@@ -16,8 +16,8 @@ export class AdminEventService extends BaseEventService {
   /**
    * Emit a finished job transaction event
    */
-  public async onFinishedJobTransaction() {
-    return this.emit('onFinishedJobTransaction');
+  public async onFinishedJobTransaction(payload: AdminTransactionResponse) {
+    return this.emit('onFinishedJobTransaction', payload);
   }
 
   /**
@@ -30,21 +30,7 @@ export class AdminEventService extends BaseEventService {
   /**
    * Emit a finished job order event
    */
-  public async onFinishedJobOrder() {
-    return this.emit('onFinishedJobOrder');
-  }
-
-  /**
-   * Emit a new order event
-   */
-  public async onNewOrder() {
-    return this.emit('onNewOrder');
-  }
-
-  /**
-   * Emit a finished order event
-   */
-  public async onFinishedOrder() {
-    return this.emit('onFinishedOrder');
+  public async onFinishedJobOrder(payload: AdminOrderResponse) {
+    return this.emit('onFinishedJobOrder', payload);
   }
 }

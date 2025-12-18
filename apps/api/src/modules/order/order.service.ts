@@ -11,6 +11,7 @@ import {
 } from '@/generated/prisma/client';
 import { OrderUtil } from '@/utils/orderUtil';
 import { AdminOrderResponse, PurchaseInput, Session } from '@pawpal/shared';
+import { EventService } from '../event/event.service';
 import { PaymentService } from '../payment/payment.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { WalletRepository } from '../wallet/wallet.repository';
@@ -22,6 +23,7 @@ export class OrderService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly paymentService: PaymentService,
+    private readonly eventService: EventService,
     private readonly walletRepo: WalletRepository,
     private readonly orderRepo: OrderRepository,
   ) {}
@@ -48,6 +50,7 @@ export class OrderService {
         status: OrderStatus.CREATED,
         ...connectionData,
       },
+      select: OrderResponseMapper.SELECT,
     });
 
     if (topupAmount.greaterThan(0)) {
@@ -67,7 +70,7 @@ export class OrderService {
           type: TransactionType.PURCHASE,
           balance_after: balanceAfter,
           balance_before: userWallet.balance,
-          status: TransactionStatus.SUCCESS,
+          status: TransactionStatus.PENDING,
           wallet: {
             connect: {
               id: userWallet.id,
@@ -89,10 +92,19 @@ export class OrderService {
 
       await userWallet.updateBalance(balanceAfter);
       await this.orderRepo.updateStatusOrThrow(order.id, OrderStatus.PENDING);
+      order.status = OrderStatus.PENDING;
+
+      this.eventService.admin.onNewJobOrder(
+        OrderResponseMapper.fromQuery(order),
+      );
 
       return {
         type: 'purchase',
         transaction: TransactionResponseMapper.fromQuery(transaction),
+        wallet: {
+          balance: userWallet.balance.toNumber(),
+          type: userWallet.walletType,
+        },
       };
     }
   }
@@ -286,18 +298,37 @@ export class OrderService {
    * @returns updated order
    */
   async completeOrder(id: string): Promise<AdminOrderResponse> {
-    try {
-      const order = await this.orderRepo.find(id, {
-        status: OrderStatus.PENDING,
-      });
-      await order.updateStatus(OrderStatus.COMPLETED);
+    const order = await this.orderRepo.find(id, {
+      status: OrderStatus.PENDING,
+    });
+    if (!order) throw new BadRequestException('invalid_order');
 
-      this.logger.log(`Completed order ${order.id}`);
-      return this.findOne(order.id);
-    } catch (error) {
-      this.logger.error(error);
-      throw new BadRequestException('invalid_order');
-    }
+    const purchaseTransaction = order.purchaseTransaction;
+    if (!purchaseTransaction) throw new BadRequestException('invalid_order');
+
+    await this.prisma.userWalletTransaction.update({
+      where: {
+        id: purchaseTransaction.id,
+      },
+      data: {
+        status: TransactionStatus.SUCCESS,
+      },
+    });
+
+    await order.updateStatus(OrderStatus.COMPLETED);
+    const orderResponse = await this.orderRepo.toOrderResponse(order.id);
+    this.eventService.admin.onFinishedJobOrder(orderResponse);
+    this.eventService.user.onPurchaseTransactionUpdated(order.userId, {
+      id: order.id,
+      status: OrderStatus.COMPLETED,
+      wallet: {
+        balance: purchaseTransaction.balanceAfter.toNumber(),
+        type: purchaseTransaction.wallet.walletType,
+      },
+    });
+
+    this.logger.log(`Completed order ${order.id}`);
+    return this.findOne(order.id);
   }
 
   /**
@@ -306,15 +337,37 @@ export class OrderService {
    * @returns updated order
    */
   async cancelOrder(id: string): Promise<AdminOrderResponse> {
-    try {
-      const order = await this.orderRepo.find(id);
-      await order.updateStatus(OrderStatus.CANCELLED);
+    const order = await this.orderRepo.find(id);
+    if (!order) throw new BadRequestException('invalid_order');
 
-      this.logger.log(`Canceling order ${order.id}`);
-      return this.findOne(order.id);
-    } catch (error) {
-      this.logger.error(error);
-      throw new BadRequestException('invalid_order');
-    }
+    const purchaseTransaction = order.purchaseTransaction;
+    if (!purchaseTransaction) throw new BadRequestException('invalid_order');
+
+    await this.prisma.userWalletTransaction.update({
+      where: {
+        id: purchaseTransaction.id,
+      },
+      data: {
+        status: TransactionStatus.FAILED,
+      },
+    });
+
+    await this.walletRepo.updateWalletBalanceOrThrow(
+      purchaseTransaction.balanceBefore,
+      order.userId,
+      purchaseTransaction.wallet.walletType,
+    );
+    await order.updateStatus(OrderStatus.CANCELLED);
+    this.eventService.user.onPurchaseTransactionUpdated(order.userId, {
+      id: order.id,
+      status: OrderStatus.CANCELLED,
+      wallet: {
+        balance: purchaseTransaction.balanceBefore.toNumber(),
+        type: purchaseTransaction.wallet.walletType,
+      },
+    });
+
+    this.logger.log(`Canceling order ${order.id}`);
+    return this.findOne(order.id);
   }
 }

@@ -2,6 +2,7 @@
 import OrderStatusBadge from "@/components/Badges/OrderStatus";
 import { getPath } from "@/configs/route";
 import { useGetTopupOrdersQuery } from "@/features/order/orderApi";
+import { useAppSelector } from "@/hooks";
 import useDatatable from "@/hooks/useDatatable";
 import { IconEdit } from "@pawpal/icons";
 import { AdminOrderResponse } from "@pawpal/shared";
@@ -23,14 +24,16 @@ const OrderDatatable = () => {
       columnAccessor: "createdAt",
       direction: "desc",
     },
+    limit: 100,
   });
 
-  const { data, isLoading } = useGetTopupOrdersQuery({
+  const { isLoading } = useGetTopupOrdersQuery({
     page: datatable.page,
     limit: datatable.limit,
     sort: datatable.sort,
   });
 
+  const orders = useAppSelector((state) => state.job.orders);
   const columns: DataTableProps<AdminOrderResponse>["columns"] = [
     {
       accessor: "id",
@@ -141,8 +144,8 @@ const OrderDatatable = () => {
       maxHeight={1000}
       idAccessor="id"
       columns={columns}
-      records={data?.data ?? []}
-      totalRecords={data?.total ?? 0}
+      records={orders}
+      totalRecords={orders.length}
       recordsPerPage={datatable.limit}
       page={datatable.page}
       onPageChange={datatable.setPage}

@@ -1,6 +1,7 @@
 import { Prisma } from '@/generated/prisma/client';
 import { TransactionRepository } from '@/modules/transaction/transaction.repository';
 import { AdminTransactionResponse } from '@pawpal/shared';
+import { TransactionResponseMapper } from '../mappers/TransactionResponseMapper';
 
 export type TransactionEntityProps = Prisma.UserWalletTransactionGetPayload<{
   select: typeof TransactionEntity.SELECT;
@@ -80,26 +81,25 @@ export class TransactionEntity {
   }
 
   get orderId() {
+    if (!this.transaction.order) {
+      return null;
+    }
+
     return this.transaction.order.id;
   }
 
   get total() {
+    if (!this.transaction.order) {
+      return null;
+    }
+
     return this.transaction.order.total;
   }
 
   public toJson(): AdminTransactionResponse {
-    return {
-      id: this.id,
-      type: this.type,
-      amount: Math.abs(this.balanceAfter.minus(this.balanceBefore).toNumber()),
-      balance_before: this.balanceBefore.toNumber(),
-      balance_after: this.balanceAfter.toNumber(),
-      status: this.status,
-      currency: this.transaction.currency,
-      payment_gateway_id: this.transaction.payment_gateway_id,
-      order_id: this.transaction.order.id,
-      createdAt: this.transaction.createdAt.toISOString(),
-      updatedAt: this.transaction.updatedAt.toISOString(),
-    };
+    return TransactionResponseMapper.fromQuery({
+      ...this.transaction,
+      order_id: this.orderId,
+    });
   }
 }

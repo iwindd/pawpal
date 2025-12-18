@@ -1,6 +1,7 @@
 "use client";
 import TransactionTypeBadge from "@/components/Badges/TransactionType";
 import { useGetTransactionsQuery } from "@/features/transaction/transactionApi";
+import { useAppSelector } from "@/hooks";
 import useDatatable from "@/hooks/useDatatable";
 import { useTransactionActions } from "@/hooks/useTransactionActions";
 import {
@@ -21,11 +22,13 @@ const TransactionDatatable = () => {
     },
   });
 
-  const { data, isLoading } = useGetTransactionsQuery({
+  const { isLoading } = useGetTransactionsQuery({
     page: datatable.page,
     limit: datatable.limit,
     sort: datatable.sort,
   });
+
+  const transactions = useAppSelector((state) => state.job.transactions);
 
   const {
     setFailed,
@@ -122,8 +125,8 @@ const TransactionDatatable = () => {
       maxHeight={1000}
       idAccessor="id"
       columns={columns}
-      records={data?.data || []}
-      totalRecords={data?.total || 0}
+      records={transactions}
+      totalRecords={transactions.length}
       recordsPerPage={datatable.limit}
       page={datatable.page}
       onPageChange={datatable.setPage}

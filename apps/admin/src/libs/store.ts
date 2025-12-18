@@ -3,6 +3,7 @@ import authReducer, { AuthState } from "@/features/auth/authSlice";
 import { carouselApi } from "@/features/carousel/carouselApi";
 import { categoryApi } from "@/features/category/categoryApi";
 import { fieldApi } from "@/features/field/fieldApi";
+import jobReducer from "@/features/job/jobSlice";
 import { notificationApi } from "@/features/notification/notificationApi";
 import { orderApi } from "@/features/order/orderApi";
 import { packageApi } from "@/features/package/packageApi";
@@ -18,6 +19,7 @@ export const makeStore = (preloadedState: { auth: AuthState }) => {
   const _store = configureStore({
     reducer: {
       auth: authReducer,
+      job: jobReducer,
       [transactionApi.reducerPath]: transactionApi.reducer,
       [productApi.reducerPath]: productApi.reducer,
       [userApi.reducerPath]: userApi.reducer,

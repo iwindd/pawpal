@@ -1,7 +1,9 @@
 import { FieldType } from "../../enums/field";
 import { OrderStatus } from "../../enums/order";
 import { TransactionStatus, TransactionType } from "../../enums/transaction";
+import { WalletType } from "../../enums/wallet";
 import { PaymentChargeCreatedResponse } from "./payment-gateway";
+import { AdminTransactionResponse } from "./transaction";
 
 export interface AdminOrderResponse {
   id: string;
@@ -56,8 +58,22 @@ export interface AdminOrderResponse {
 export type OrderResponseType =
   | {
       type: "purchase";
+      wallet: {
+        balance: number;
+        type: WalletType;
+      };
+      transaction: AdminTransactionResponse;
     }
   | {
       type: "topup";
       charge: PaymentChargeCreatedResponse;
     };
+
+export interface OnPurchaseTransactionUpdatedProps {
+  id: string;
+  status: OrderStatus;
+  wallet: {
+    balance: number;
+    type: WalletType;
+  };
+}

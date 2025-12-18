@@ -24,14 +24,28 @@ const ProductView = ({ product }: ProductViewProps) => {
     backdrop.show({
       text: __("processing"),
     });
-    const response = await createOrderMutation(values);
+    const { error, data } = await createOrderMutation(values);
     backdrop.hide();
 
-    if (response.error) {
-      Notifications.show({
+    if (error || !data) {
+      return Notifications.show({
         title: __("notify.error.title"),
         message: __("notify.error.message"),
         color: "red",
+      });
+    }
+
+    if (data.type == "topup") return;
+
+    if (data.type == "purchase") {
+      Notifications.show({
+        id: `order-${data.transaction.order_id}`,
+        title: __("notify.success.title"),
+        message: __("notify.success.message"),
+        color: "pawpink",
+        autoClose: false,
+        withCloseButton: false,
+        loading: true,
       });
     }
   };
@@ -39,7 +53,7 @@ const ProductView = ({ product }: ProductViewProps) => {
   const onPurchaseSuccess = async (response: PaymentChargeCreatedResponse) => {
     if (!response.order_id) return;
     Notifications.show({
-      id: `purchase-${response.order_id}`,
+      id: `order-${response.order_id}`,
       title: __("notify.success.title"),
       message: __("notify.success.message"),
       color: "pawpink",

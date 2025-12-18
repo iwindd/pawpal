@@ -1,3 +1,4 @@
+import { OrderResponseMapper } from '@/common/mappers/OrderResponseMapper';
 import { OrderStatus, Prisma } from '@/generated/prisma/client';
 import { Injectable, Logger } from '@nestjs/common';
 import { OrderEntity } from '../../common/entities/order.entity';
@@ -31,7 +32,7 @@ export class OrderRepository {
    * @returns
    */
   public async find(orderId: string, where?: Prisma.OrderWhereInput) {
-    const order = await this.prisma.order.findFirstOrThrow({
+    const order = await this.prisma.order.findUnique({
       where: {
         ...where,
         id: orderId,
@@ -58,5 +59,21 @@ export class OrderRepository {
         status,
       },
     });
+  }
+
+  /**
+   * Convert order to admin order response
+   * @param orderId order id
+   * @returns admin order response
+   */
+  public async toOrderResponse(orderId: string) {
+    const order = await this.prisma.order.findFirstOrThrow({
+      where: {
+        id: orderId,
+      },
+      select: OrderResponseMapper.SELECT,
+    });
+
+    return OrderResponseMapper.fromQuery(order);
   }
 }

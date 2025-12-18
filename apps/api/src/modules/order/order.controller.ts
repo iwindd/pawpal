@@ -23,26 +23,6 @@ export class OrderController {
     @AuthUser() user: Session,
   ) {
     return this.orderService.createOrder(user, body);
-    /*     const [canPurchase, missingAmount] = await this.walletService.canPurchase(
-      user.id,
-      body.amount,
-      true,
-    );
-    if (!canPurchase) {
-      return {
-        type: 'create_charge',
-        ...(await this.paymentService.topup(
-          user,
-          missingAmount,
-          body.paymentMethod,
-        )),
-      };
-    }
-
-    return {
-      type: 'create_order',
-      ...(await this.orderService.createOrder(user.id, body)),
-    }; */
   }
 
   @Get('admin/test')
