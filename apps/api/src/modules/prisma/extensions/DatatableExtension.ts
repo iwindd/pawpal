@@ -22,7 +22,7 @@ export const DatatableExtension = Prisma.defineExtension((client) => {
             search?: Record<string, SearchMode>;
             query?: {
               where?: any;
-            } & DatatableQuery;
+            } & Pick<DatatableQuery, 'search' | 'skip' | 'take' | 'orderBy'>;
           },
         ) {
           const { select, search, query } = args;
