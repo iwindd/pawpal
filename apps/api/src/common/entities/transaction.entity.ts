@@ -88,51 +88,18 @@ export class TransactionEntity {
   }
 
   public toJson(): AdminTransactionResponse {
-    return TransactionEntity.toJson(this.transaction);
-  }
-
-  static toJson(
-    transaction: Prisma.UserWalletTransactionGetPayload<{
-      select: {
-        id: true;
-        type: true;
-        balance_before: true;
-        balance_after: true;
-        status: true;
-        currency: true;
-        createdAt: true;
-        updatedAt: true;
-        payment_gateway_id: true;
-        order: {
-          select: {
-            id: true;
-            total: true;
-          };
-        };
-        wallet: {
-          select: {
-            id: true;
-            user_id: true;
-            walletType: true;
-          };
-        };
-      };
-    }>,
-  ) {
     return {
-      id: transaction.id,
-      type: transaction.type,
-      amount: Math.abs(
-        transaction.balance_after.minus(transaction.balance_before).toNumber(),
-      ),
-      balance_before: transaction.balance_before.toNumber(),
-      balance_after: transaction.balance_after.toNumber(),
-      status: transaction.status,
-      currency: transaction.currency,
-      payment_gateway_id: transaction.payment_gateway_id,
-      order_id: transaction.order.id,
-      createdAt: transaction.createdAt.toISOString(),
-      updatedAt: transaction.updatedAt.toISOString(),
+      id: this.id,
+      type: this.type,
+      amount: Math.abs(this.balanceAfter.minus(this.balanceBefore).toNumber()),
+      balance_before: this.balanceBefore.toNumber(),
+      balance_after: this.balanceAfter.toNumber(),
+      status: this.status,
+      currency: this.transaction.currency,
+      payment_gateway_id: this.transaction.payment_gateway_id,
+      order_id: this.transaction.order.id,
+      createdAt: this.transaction.createdAt.toISOString(),
+      updatedAt: this.transaction.updatedAt.toISOString(),
     };
   }
 }

@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 
-import { TransactionEntity } from '@/common/entities/transaction.entity';
 import { OrderResponseMapper } from '@/common/mappers/OrderResponseMapper';
+import { TransactionResponseMapper } from '@/common/mappers/TransactionResponseMapper';
 import { DatatableQuery } from '@/common/pipes/DatatablePipe';
 import { FieldAfterParse } from '@/common/pipes/PurchasePipe';
 import {
@@ -84,7 +84,7 @@ export class OrderService {
             },
           },
         },
-        select: TransactionEntity.SELECT,
+        select: TransactionResponseMapper.SELECT,
       });
 
       await userWallet.updateBalance(balanceAfter);
@@ -92,7 +92,7 @@ export class OrderService {
 
       return {
         type: 'purchase',
-        transaction: TransactionEntity.toJson(transaction),
+        transaction: TransactionResponseMapper.fromQuery(transaction),
       };
     }
   }

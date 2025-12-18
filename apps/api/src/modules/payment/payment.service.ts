@@ -1,4 +1,4 @@
-import { TransactionEntity } from '@/common/entities/transaction.entity';
+import { TransactionResponseMapper } from '@/common/mappers/TransactionResponseMapper';
 import {
   TransactionStatus,
   TransactionType,
@@ -11,7 +11,6 @@ import generatePayload from 'promptpay-qr';
 import { EventService } from '../event/event.service';
 import { PaymentGatewayService } from '../payment-gateway/payment-gateway.service';
 import { PrismaService } from '../prisma/prisma.service';
-import { TransactionRepository } from '../transaction/transaction.repository';
 import { WalletRepository } from '../wallet/wallet.repository';
 
 @Injectable()
@@ -115,10 +114,10 @@ export class PaymentService {
       data: {
         status: TransactionStatus.PENDING,
       },
-      select: TransactionRepository.DEFAULT_SELECT,
+      select: TransactionResponseMapper.SELECT,
     });
 
-    const result = TransactionEntity.toJson(charge);
+    const result = TransactionResponseMapper.fromQuery(charge);
 
     this.eventService.admin.onNewJobTransaction(result);
     return result;
