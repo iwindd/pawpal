@@ -2,76 +2,80 @@ import { Prisma } from '@/generated/prisma/client';
 
 // order.response.ts
 export class OrderResponseMapper {
+  static get SELECT() {
+    return {
+      id: true,
+      total: true,
+      status: true,
+      createdAt: true,
+      updatedAt: true,
+      user: {
+        select: {
+          id: true,
+          email: true,
+          displayName: true,
+        },
+      },
+      orderPackages: {
+        select: {
+          id: true,
+          amount: true,
+          price: true,
+          package: {
+            select: {
+              id: true,
+              name: true,
+              product: {
+                select: {
+                  id: true,
+                  name: true,
+                  category: {
+                    select: {
+                      id: true,
+                      name: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      orderFields: {
+        select: {
+          field: {
+            select: {
+              label: true,
+              metadata: true,
+              placeholder: true,
+              type: true,
+            },
+          },
+          value: true,
+        },
+      },
+      userWalletTransactions: {
+        select: {
+          id: true,
+          type: true,
+          status: true,
+          balance_before: true,
+          balance_after: true,
+          createdAt: true,
+          payment: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      },
+    } satisfies Prisma.OrderSelect;
+  }
+
   static fromQuery(
     order: Prisma.OrderGetPayload<{
-      select: {
-        id: true;
-        total: true;
-        status: true;
-        createdAt: true;
-        updatedAt: true;
-        user: {
-          select: {
-            id: true;
-            email: true;
-            displayName: true;
-          };
-        };
-        orderPackages: {
-          select: {
-            id: true;
-            amount: true;
-            price: true;
-            package: {
-              select: {
-                id: true;
-                name: true;
-                product: {
-                  select: {
-                    id: true;
-                    name: true;
-                    category: {
-                      select: {
-                        id: true;
-                        name: true;
-                      };
-                    };
-                  };
-                };
-              };
-            };
-          };
-        };
-        orderFields: {
-          select: {
-            field: {
-              select: {
-                label: true;
-                metadata: true;
-                placeholder: true;
-                type: true;
-              };
-            };
-            value: true;
-          };
-        };
-        userWalletTransactions: {
-          select: {
-            id: true;
-            type: true;
-            status: true;
-            balance_before: true;
-            balance_after: true;
-            createdAt: true;
-            payment: {
-              select: {
-                id: true;
-                name: true;
-              };
-            };
-          };
-        };
-      };
+      select: typeof OrderResponseMapper.SELECT;
     }>,
   ) {
     return {
