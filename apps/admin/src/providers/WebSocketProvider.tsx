@@ -1,5 +1,6 @@
 "use client";
 
+import { orderApi } from "@/features/order/orderApi";
 import { transactionApi } from "@/features/transaction/transactionApi";
 import { useAppDispatch, useAppSelector } from "@/hooks";
 import { createContext, useContext, useEffect } from "react";
@@ -35,10 +36,15 @@ export const WebSocketProvider = ({
       socket.on("onNewJobTransaction", () =>
         dispatch(transactionApi.util.invalidateTags(["Transactions"]))
       );
+
+      socket.on("onNewJobOrder", () =>
+        dispatch(orderApi.util.invalidateTags(["Orders"]))
+      );
     }
 
     return () => {
       socket.off("onNewJobTransaction");
+      socket.off("onNewJobOrder");
       socket.disconnect();
     };
   }, [socket, user]);

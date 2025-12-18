@@ -1,5 +1,5 @@
 import { BaseEventService } from '@/common/classes/BaseEventService';
-import { AdminTransactionResponse } from '@pawpal/shared';
+import { AdminOrderResponse, AdminTransactionResponse } from '@pawpal/shared';
 
 export class AdminEventService extends BaseEventService {
   constructor() {
@@ -18,6 +18,20 @@ export class AdminEventService extends BaseEventService {
    */
   public async onFinishedJobTransaction() {
     return this.emit('onFinishedJobTransaction');
+  }
+
+  /**
+   * Emit a new job order event
+   */
+  public async onNewJobOrder(payload: AdminOrderResponse) {
+    return this.emit('onNewJobOrder', payload);
+  }
+
+  /**
+   * Emit a finished job order event
+   */
+  public async onFinishedJobOrder() {
+    return this.emit('onFinishedJobOrder');
   }
 
   /**

@@ -1,3 +1,4 @@
+import { OrderResponseMapper } from '@/common/mappers/OrderResponseMapper';
 import { DatatableQuery } from '@/common/pipes/DatatablePipe';
 import {
   OrderStatus,
@@ -74,6 +75,17 @@ export class TransactionService {
             },
           },
         });
+
+        const order = await this.prisma.order.findUniqueOrThrow({
+          where: {
+            id: transaction.orderId,
+          },
+          select: OrderResponseMapper.SELECT,
+        });
+
+        this.eventService.admin.onNewJobOrder(
+          OrderResponseMapper.fromQuery(order),
+        );
 
         break;
       }
