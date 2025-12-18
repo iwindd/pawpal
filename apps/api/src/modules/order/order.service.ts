@@ -9,7 +9,6 @@ import {
   TransactionStatus,
   TransactionType,
 } from '@/generated/prisma/client';
-import { OrderUtil } from '@/utils/orderUtil';
 import { AdminOrderResponse, PurchaseInput, Session } from '@pawpal/shared';
 import { EventService } from '../event/event.service';
 import { PaymentService } from '../payment/payment.service';
@@ -38,7 +37,6 @@ export class OrderService {
 
   async createOrder(user: Session, body: PurchaseInput<FieldAfterParse>) {
     const productPackage = await this.prisma.package.getPackage(body.packageId);
-    const connectionData = OrderUtil.getOrderConnection(user, body);
     const totalPrice = productPackage.price.mul(body.amount);
     const userWallet = await this.walletRepo.find(user.id);
     const topupAmount = body.includeWalletBalance
@@ -49,7 +47,32 @@ export class OrderService {
       data: {
         total: totalPrice.toString(),
         status: OrderStatus.CREATED,
-        ...connectionData,
+        user: {
+          connect: {
+            id: user.id,
+          },
+        },
+        orderPackages: {
+          create: {
+            amount: body.amount,
+            price: productPackage.price,
+            package: {
+              connect: {
+                id: productPackage.id,
+              },
+            },
+          },
+        },
+        orderFields: {
+          create: body.fields.map((field) => ({
+            field: {
+              connect: {
+                id: field.id,
+              },
+            },
+            value: field.value,
+          })),
+        },
       },
       select: OrderResponseMapper.SELECT,
     });
