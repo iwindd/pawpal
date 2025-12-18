@@ -27,7 +27,7 @@ export type PurchaseFormInput = Omit<PurchaseInput, "fields"> & {
 
 interface ProductFormProps {
   product: ProductResponse;
-  onPurchase: (values: PurchaseInput) => Promise<void>;
+  onPurchase: (values: PurchaseInput) => void;
   isLoading: boolean;
 }
 
