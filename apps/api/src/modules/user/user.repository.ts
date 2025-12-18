@@ -32,15 +32,31 @@ export class UserRepository {
   /**
    * Find user by id
    * @param id user id
+   * @returns user | null
+   */
+  public async find(id: string): Promise<UserEntity | null> {
+    const user = await this.prisma.user.findFirst({
+      where: { id },
+      select: UserRepository.DEFAULT_SELECT,
+    });
+
+    if (!user) return null;
+
+    return this.from(user);
+  }
+
+  /**
+   * Get user by id
+   * @param id user id
    * @returns user
    */
-  public async find(id: string) {
+  public async getUserById(id: string) {
     const user = await this.prisma.user.findFirstOrThrow({
       where: { id },
       select: UserRepository.DEFAULT_SELECT,
     });
 
-    return user ? this.from(user) : null;
+    return this.from(user);
   }
 
   /**
@@ -49,7 +65,7 @@ export class UserRepository {
    * @returns user
    */
   public async findByEmail(email: string) {
-    const user = await this.prisma.user.findFirstOrThrow({
+    const user = await this.prisma.user.findFirst({
       where: { email },
       select: UserRepository.DEFAULT_SELECT,
     });

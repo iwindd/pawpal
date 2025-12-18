@@ -1,7 +1,6 @@
 import {
   ConflictException,
   Injectable,
-  Logger,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -28,14 +27,11 @@ export class AuthService {
    * @returns The user
    */
   async verifyPayload(payload: JwtPayload): Promise<Session> {
-    try {
-      const user = await this.userRepo.find(payload.sub);
+    const user = await this.userRepo.find(payload.sub);
 
-      return user.toJSON();
-    } catch (error) {
-      Logger.error('Verify payload failed : ', error);
-      throw new UnauthorizedException('invalid_credentials');
-    }
+    if (!user) throw new UnauthorizedException('invalid_credentials');
+
+    return user.toJSON();
   }
 
   /**
@@ -46,7 +42,12 @@ export class AuthService {
    */
   async login(email: string, password: string): Promise<Session> {
     const user = await this.userRepo.findByEmail(email);
-    if (!(await user.isValidPassword(password)))
+
+    if (!user) throw new UnauthorizedException(`invalid_credentials`);
+
+    const isValidPassword = await user.isValidPassword(password);
+
+    if (!isValidPassword)
       throw new UnauthorizedException(`invalid_credentials`);
 
     return user.toJSON();
@@ -94,7 +95,11 @@ export class AuthService {
   async changePassword(userId: string, payload: ChangePasswordInput) {
     const user = await this.userRepo.find(userId);
 
-    if (!(await user.isValidPassword(payload.oldPassword)))
+    if (!user) throw new UnauthorizedException('invalid_credentials');
+
+    const isValidPassword = await user.isValidPassword(payload.oldPassword);
+
+    if (!isValidPassword)
       throw new UnauthorizedException('invalid_old_password');
 
     user.updatePassword(payload.newPassword);
@@ -107,11 +112,17 @@ export class AuthService {
    * @returns user session
    */
   async changeEmail(userId: string, payload: ChangeEmailInput) {
-    if (await this.userRepo.isAlreadyExist(payload.newEmail))
-      throw new ConflictException('email_already_exists');
+    const isAlreadyExist = await this.userRepo.isAlreadyExist(payload.newEmail);
+
+    if (isAlreadyExist) throw new ConflictException('email_already_exists');
 
     const user = await this.userRepo.find(userId);
-    if (!(await user.isValidPassword(payload.password)))
+
+    if (!user) throw new UnauthorizedException('invalid_credentials');
+
+    const isValidPassword = await user.isValidPassword(payload.password);
+
+    if (!isValidPassword)
       throw new UnauthorizedException('invalid_old_password');
 
     user.updateEmail(payload.newEmail);
