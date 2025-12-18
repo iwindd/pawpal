@@ -52,8 +52,8 @@ export class TransactionService {
         break;
       }
       case TransactionType.TOPUP_FOR_PURCHASE: {
-        await this.transactionRepo.updateStatusOrThrow(
-          transactionId,
+        await this.orderRepo.updateStatusOrThrow(
+          transaction.orderId,
           OrderStatus.PENDING,
         );
 
