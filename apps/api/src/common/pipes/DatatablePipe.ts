@@ -7,6 +7,7 @@ export interface DatatableQuery {
   take: number;
   orderBy: any;
   search?: string;
+  filter?: string;
 }
 
 @Injectable()
