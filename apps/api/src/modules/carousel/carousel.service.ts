@@ -73,17 +73,21 @@ export class CarouselService {
       select: {
         ...this.carouselResponseSelect,
       },
-      search: {
+      searchable: {
         title: 'insensitive',
-        'product.name': 'insensitive',
-        'creator.displayName': 'insensitive',
-      },
-      query: {
-        ...query,
-        where: {
-          status: {
-            not: CarouselStatus.PUBLISHED,
+        product: {
+          name: {
+            mode: 'insensitive',
           },
+        },
+        creator: {
+          displayName: 'insensitive',
+        },
+      },
+      query: query,
+      where: {
+        status: {
+          not: CarouselStatus.PUBLISHED,
         },
       },
     });
@@ -98,12 +102,12 @@ export class CarouselService {
       select: {
         ...this.carouselResponseSelect,
       },
+      where: {
+        status: CarouselStatus.PUBLISHED,
+      },
       query: {
         orderBy: {
           order: 'asc',
-        },
-        where: {
-          status: CarouselStatus.PUBLISHED,
         },
         skip: 0,
         take: 10,

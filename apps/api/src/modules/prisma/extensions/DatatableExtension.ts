@@ -1,43 +1,44 @@
 import { DatatableQuery } from '@/common/pipes/DatatablePipe';
 import { Prisma } from '@/generated/prisma/client';
-import { DatatableUtil, SearchMode } from '@/utils/datatable';
+import { DatatableUtil } from '@/utils/datatable';
+import { Logger } from '@nestjs/common';
 
-type AnyPrismaDelegate = {
-  findMany(args?: any): Promise<any[]>;
-  count(args?: any): Promise<number | any>;
-};
+const logger = new Logger('test');
 
 export const DatatableExtension = Prisma.defineExtension((client) => {
   return client.$extends({
     name: 'datatable',
     model: {
       $allModels: {
-        async getDatatable<
-          TDelegate extends AnyPrismaDelegate,
-          TSelect extends Record<string, any>,
-        >(
-          this: TDelegate,
+        async getDatatable<T>(
+          this: T,
           args: {
-            select: TSelect;
-            search?: Record<string, SearchMode>;
-            query?: {
-              where?: any;
-            } & Pick<DatatableQuery, 'search' | 'skip' | 'take' | 'orderBy'>;
+            select: Prisma.Args<T, 'findMany'>['select'];
+            searchable?: Prisma.Args<T, 'findMany'>['where'];
+            where?: Prisma.Args<T, 'findMany'>['where'];
+            query?: Pick<
+              DatatableQuery,
+              'search' | 'skip' | 'take' | 'orderBy'
+            >;
           },
         ) {
-          const { select, search, query } = args;
+          const context = Prisma.getExtensionContext(this) as any;
+          const { select, searchable, query } = args;
 
-          const where: any = { AND: [] };
+          const where: Prisma.Args<T, 'findMany'>['where'] = { AND: [] };
 
-          if (search && query?.search) {
-            where.OR = DatatableUtil.buildPrismaSearchOr(query.search, search);
+          if (searchable && query?.search) {
+            where.OR = DatatableUtil.buildPrismaSearchOr(
+              query.search,
+              searchable,
+            );
           }
 
-          if (query?.where) {
-            where.AND.push(query.where);
+          if (args?.where) {
+            where.AND.push(args.where);
           }
 
-          const data = await this.findMany({
+          const data = await context.findMany({
             where,
             skip: query?.skip,
             take: query?.take,
@@ -45,7 +46,7 @@ export const DatatableExtension = Prisma.defineExtension((client) => {
             select,
           });
 
-          const count = await this.count({
+          const count = await context.count({
             where: {
               AND: where.AND,
             },

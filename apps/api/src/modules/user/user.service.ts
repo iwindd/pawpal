@@ -13,13 +13,11 @@ export class UserService {
    */
   async getUserDatatable(query: DatatableQuery) {
     return this.prisma.user.getDatatable({
-      query: {
-        ...query,
-        where: {
-          roles: {
-            some: {
-              name: 'User',
-            },
+      query: query,
+      where: {
+        roles: {
+          some: {
+            name: 'User',
           },
         },
       },
@@ -43,9 +41,9 @@ export class UserService {
           },
         },
       },
-      search: {
-        email: 'insensitive',
-        displayName: 'insensitive',
+      searchable: {
+        email: { mode: 'insensitive' },
+        displayName: { mode: 'insensitive' },
       },
     });
   }
@@ -57,13 +55,11 @@ export class UserService {
    */
   async getEmployeeDatatable(query: DatatableQuery) {
     return this.prisma.user.getDatatable({
-      query: {
-        ...query,
-        where: {
-          roles: {
-            some: {
-              name: 'Admin',
-            },
+      query: query,
+      where: {
+        roles: {
+          some: {
+            name: 'Admin',
           },
         },
       },
@@ -87,9 +83,9 @@ export class UserService {
           },
         },
       },
-      search: {
-        email: 'insensitive',
-        displayName: 'insensitive',
+      searchable: {
+        email: { mode: 'insensitive' },
+        displayName: { mode: 'insensitive' },
       },
     });
   }

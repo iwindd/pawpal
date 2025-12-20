@@ -64,11 +64,9 @@ export class FieldService {
    */
   async getProductFieldDatatable(productId: string, query: DatatableQuery) {
     return this.prismaService.productField.getDatatable({
-      query: {
-        ...query,
-        where: {
-          product_id: productId,
-        },
+      query: query,
+      where: {
+        product_id: productId,
       },
       select: {
         id: true,
@@ -85,10 +83,12 @@ export class FieldService {
           },
         },
       },
-      search: {
-        label: 'insensitive',
-        placeholder: 'insensitive',
-        ['creator.displayName']: 'insensitive',
+      searchable: {
+        label: { mode: 'insensitive' },
+        placeholder: { mode: 'insensitive' },
+        creator: {
+          displayName: { mode: 'insensitive' },
+        },
       },
     });
   }

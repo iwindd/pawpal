@@ -150,6 +150,7 @@ export class TransactionService {
     delete query.take;
 
     return this.prisma.userWalletTransaction.getDatatable({
+      query: query,
       select: {
         id: true,
         type: true,
@@ -163,20 +164,17 @@ export class TransactionService {
         createdAt: true,
         updatedAt: true,
       },
-      query: {
-        ...query,
-        where: {
-          OR: [
-            {
-              status: TransactionStatus.PENDING,
-            },
-            {
-              status: TransactionStatus.CREATED,
-            },
-          ],
-          type: {
-            not: TransactionType.PURCHASE,
+      where: {
+        OR: [
+          {
+            status: TransactionStatus.PENDING,
           },
+          {
+            status: TransactionStatus.CREATED,
+          },
+        ],
+        type: {
+          not: TransactionType.PURCHASE,
         },
       },
     });

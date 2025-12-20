@@ -158,16 +158,26 @@ export class ProductService {
         },
         MOST_SALE: true,
       },
-      search: {
-        name: 'insensitive',
-        slug: 'insensitive',
-        description: 'insensitive',
-        ['category.name']: 'insensitive',
-        ['category.slug']: 'insensitive',
-        ['productTags.name']: 'insensitive',
-        ['productTags.slug']: 'insensitive',
-        ['packages.name']: 'insensitive',
-        ['packages.description']: 'insensitive',
+      searchable: {
+        name: { mode: 'insensitive' },
+        slug: { mode: 'insensitive' },
+        description: { mode: 'insensitive' },
+        category: {
+          name: { mode: 'insensitive' },
+          slug: { mode: 'insensitive' },
+        },
+        productTags: {
+          some: {
+            name: { mode: 'insensitive' },
+            slug: { mode: 'insensitive' },
+          },
+        },
+        packages: {
+          some: {
+            name: { mode: 'insensitive' },
+            description: { mode: 'insensitive' },
+          },
+        },
       },
     });
   }
@@ -373,9 +383,9 @@ export class ProductService {
           },
         },
       },
-      search: {
-        name: 'insensitive',
-        slug: 'insensitive',
+      searchable: {
+        name: { mode: 'insensitive' },
+        slug: { mode: 'insensitive' },
       },
     });
   }

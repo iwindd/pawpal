@@ -208,17 +208,30 @@ export class OrderService {
           },
         },
       },
-      query: {
-        ...query,
-        where: {
-          status: OrderStatus.PENDING,
-        },
+      query: query,
+      where: {
+        status: OrderStatus.PENDING,
       },
-      search: {
-        total: 'insensitive',
-        'user.displayName': 'insensitive',
-        'user.email': 'insensitive',
-        'orderPackages.package.product.name': 'insensitive',
+      searchable: {
+        user: {
+          displayName: {
+            mode: 'insensitive',
+          },
+          email: {
+            mode: 'insensitive',
+          },
+        },
+        orderPackages: {
+          some: {
+            package: {
+              product: {
+                name: {
+                  mode: 'insensitive',
+                },
+              },
+            },
+          },
+        },
       },
     });
 
