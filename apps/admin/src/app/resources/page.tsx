@@ -1,7 +1,7 @@
 "use client";
-import UploadImageModal from "@/components/Modals/UploadImageModal";
 import ResourceImage from "@/components/ResourceImage";
 import { useGetResourcesQuery } from "@/features/resource/resourceApi";
+import useUploadImage from "@/hooks/useUploadImage";
 import {
   Box,
   Button,
@@ -14,7 +14,6 @@ import {
   Text,
   Title,
 } from "@pawpal/ui/core";
-import { useDisclosure } from "@pawpal/ui/hooks";
 import { useTranslations } from "next-intl";
 
 const COL_SPAN = {
@@ -27,7 +26,7 @@ const COL_SPAN = {
 
 const ResourcePage = () => {
   const __ = useTranslations("Resources");
-  const [opened, { open, close }] = useDisclosure(false);
+  const uploadImage = useUploadImage();
 
   const { data, isLoading } = useGetResourcesQuery({
     page: 1,
@@ -40,7 +39,7 @@ const ResourcePage = () => {
         <Stack gap="0">
           <Group>
             <Title order={2}>{__("title")}</Title>
-            <Button size="xs" variant="outline" onClick={open}>
+            <Button size="xs" variant="outline" onClick={uploadImage.open}>
               {__("upload")}
             </Button>
           </Group>
@@ -74,7 +73,7 @@ const ResourcePage = () => {
         </Grid>
       </Paper>
 
-      <UploadImageModal opened={opened} onClose={close} />
+      {uploadImage.input}
     </div>
   );
 };
