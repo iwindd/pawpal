@@ -22,6 +22,7 @@ const paymentSlice = createSlice({
   reducers: {
     clearCurrentCharge(state) {
       state.currentCharge = null;
+      state.chargeType = null;
     },
   },
   extraReducers(builder) {
@@ -34,6 +35,13 @@ const paymentSlice = createSlice({
     );
     builder.addMatcher(
       paymentApi.endpoints.createCharge.matchRejected,
+      (state) => {
+        state.currentCharge = null;
+        state.chargeType = null;
+      }
+    );
+    builder.addMatcher(
+      paymentApi.endpoints.confirmCharge.matchFulfilled,
       (state) => {
         state.currentCharge = null;
         state.chargeType = null;
