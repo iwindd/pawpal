@@ -21,7 +21,6 @@ export const PromptPayManualModal = ({
   const [promptPayModal, setPromptPayModal] = useState(false);
   const currentCharge = useAppSelector((state) => state.payment.currentCharge);
   const [confirmChargeMutation, { isLoading }] = useConfirmChargeMutation();
-  console.log(currentCharge);
   const payload = currentCharge?.qrcode;
   const payment = currentCharge?.payment.metadata;
   const chargeId = currentCharge?.id;
@@ -41,9 +40,7 @@ export const PromptPayManualModal = ({
   };
 
   useEffect(() => {
-    if (currentCharge) {
-      setPromptPayModal(true);
-    }
+    setPromptPayModal(currentCharge != null);
   }, [currentCharge]);
 
   return (
