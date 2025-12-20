@@ -6,10 +6,16 @@ import { DatatableQuery } from '@/common/pipes/DatatablePipe';
 import { FieldAfterParse } from '@/common/pipes/PurchasePipe';
 import {
   OrderStatus,
+  Prisma,
   TransactionStatus,
   TransactionType,
 } from '@/generated/prisma/client';
-import { AdminOrderResponse, PurchaseInput, Session } from '@pawpal/shared';
+import {
+  AdminOrderResponse,
+  ENUM_ORDER_STATUS,
+  PurchaseInput,
+  Session,
+} from '@pawpal/shared';
 import { EventService } from '../event/event.service';
 import { PaymentService } from '../payment/payment.service';
 import { PrismaService } from '../prisma/prisma.service';
@@ -406,5 +412,57 @@ export class OrderService {
 
     this.logger.log(`Canceling order ${order.id}`);
     return this.findOne(order.id);
+  }
+
+  /**
+   * Get order history datatable
+   * @param userId user id
+   * @param query datatable query
+   * @returns order history datatable
+   */
+  async getOrderHistoryDatatable(userId: string, query?: DatatableQuery) {
+    this.logger.debug(query);
+
+    const where: Prisma.OrderWhereInput = {
+      user: {
+        id: userId,
+      },
+    };
+
+    if (
+      query.filter &&
+      Object.values(ENUM_ORDER_STATUS).includes(query.filter)
+    ) {
+      where.status = query.filter as OrderStatus;
+    }
+
+    const { data, total } = await this.prisma.order.getDatatable({
+      query: query,
+      select: OrderResponseMapper.SELECT,
+      searchable: {
+        orderPackages: {
+          some: {
+            package: {
+              product: {
+                name: {
+                  mode: 'insensitive',
+                },
+                category: {
+                  name: {
+                    mode: 'insensitive',
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      where,
+    });
+
+    return {
+      data: data.map(OrderResponseMapper.fromQuery),
+      total,
+    };
   }
 }

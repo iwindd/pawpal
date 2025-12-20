@@ -38,6 +38,7 @@ export {
   Modal,
   NumberInput,
   Overlay,
+  Pagination,
   PasswordInput,
   Radio,
   rem,

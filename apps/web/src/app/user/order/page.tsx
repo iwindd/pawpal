@@ -1,82 +1,46 @@
 "use client";
-import { Badge, Box, Card, Group, Stack, Text, Title } from "@pawpal/ui/core";
+import FilterOrderStatusSelect from "@/components/Select/FilterOrderStatus";
+import OrderStatusBadge from "@/components/ฺฺBadges/OrderStatus";
+import { useGetOrderHistoryQuery } from "@/features/order/orderApi";
+import { OrderStatus } from "@pawpal/shared";
+import {
+  Box,
+  Card,
+  Group,
+  Loader,
+  Pagination,
+  Stack,
+  Text,
+  TextInput,
+  Title,
+} from "@pawpal/ui/core";
 import { useFormatter, useTranslations } from "next-intl";
+import { useState } from "react";
+
+const LIMIT_ORDER = 5;
 
 const OrderPage = () => {
   const __ = useTranslations("User.Orders");
   const format = useFormatter();
+  const [page, setPage] = useState(1);
+  const [filter, setFilter] = useState<OrderStatus | null>(null);
 
-  // Mock order data
-  const orders = [
-    {
-      id: "ORD-001",
-      date: new Date("2024-01-15"),
-      items: "Premium Dog Food (2x), Cat Litter (1x)",
-      status: "delivered",
-      total: 1250,
-    },
-    {
-      id: "ORD-002",
-      date: new Date("2024-01-10"),
-      items: "Dog Toy Set, Cat Scratching Post",
-      status: "shipped",
-      total: 890,
-    },
-    {
-      id: "ORD-003",
-      date: new Date("2024-01-05"),
-      items: "Pet Grooming Kit, Fish Food",
-      status: "processing",
-      total: 450,
-    },
-    {
-      id: "ORD-004",
-      date: new Date("2023-12-28"),
-      items: "Bird Cage, Hamster Wheel",
-      status: "delivered",
-      total: 2100,
-    },
-    {
-      id: "ORD-005",
-      date: new Date("2023-12-20"),
-      items: "Dog Leash, Cat Carrier",
-      status: "cancelled",
-      total: 320,
-    },
-  ];
+  const { data: orders, isLoading } = useGetOrderHistoryQuery({
+    limit: LIMIT_ORDER,
+    page: page,
+    filter: filter || undefined,
+  });
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "delivered":
-        return "green";
-      case "shipped":
-        return "blue";
-      case "processing":
-        return "yellow";
-      case "cancelled":
-        return "red";
-      default:
-        return "gray";
-    }
-  };
+  if (isLoading) {
+    return <Loader />;
+  }
 
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case "delivered":
-        return __("status.delivered");
-      case "shipped":
-        return __("status.shipped");
-      case "processing":
-        return __("status.processing");
-      case "cancelled":
-        return __("status.cancelled");
-      default:
-        return status;
-    }
-  };
+  if (!orders) {
+    return null;
+  }
 
   return (
-    <Stack gap="xl">
+    <Stack>
       <Box>
         <Title order={1} size="h2">
           {__("title")}
@@ -86,31 +50,31 @@ const OrderPage = () => {
         </Text>
       </Box>
 
+      <Group justify="space-between">
+        <TextInput placeholder={__("search")} />
+        <FilterOrderStatusSelect
+          value={filter}
+          onChange={(value) => setFilter(value as OrderStatus)}
+        />
+      </Group>
+
       {/* Desktop View */}
       <Stack gap="md">
-        {orders.map((order) => (
+        {orders.data.map((order) => (
           <Card key={order.id} shadow="sm" padding="md" radius="md">
             <Stack gap={0}>
               <Group justify="space-between" align="flex-start">
                 <Group>
                   <Text fw={500} size="lg">
-                    {order.id}
+                    {order.cart
+                      .map((item) => `${item.product.name} [${item.amount}]`)
+                      .join(", ")}
                   </Text>
                   <Text size="sm" c="dimmed">
-                    {format.dateTime(order.date, {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}
+                    {format.dateTime(new Date(order.createdAt), "dateTime")}
                   </Text>
                 </Group>
-                <Badge
-                  color={getStatusColor(order.status)}
-                  variant="light"
-                  size="sm"
-                >
-                  {getStatusText(order.status)}
-                </Badge>
+                <OrderStatusBadge status={order.status} />
               </Group>
 
               <Group align="center">
@@ -120,14 +84,26 @@ const OrderPage = () => {
                     currency: "THB",
                   })}
                 </Text>
-                <Text size="sm" lineClamp={2}>
-                  {order.items}
-                </Text>
               </Group>
             </Stack>
           </Card>
         ))}
       </Stack>
+
+      <Group justify="space-between">
+        <Text c="dimmed">
+          {__("page", {
+            from: page * LIMIT_ORDER - LIMIT_ORDER + 1,
+            to: Math.min(page * LIMIT_ORDER, orders.total),
+            total: orders.total,
+          })}
+        </Text>
+        <Pagination
+          total={Math.ceil(orders.total / LIMIT_ORDER)}
+          value={page}
+          onChange={setPage}
+        />
+      </Group>
     </Stack>
   );
 };

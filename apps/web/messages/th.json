@@ -263,12 +263,8 @@
       "items": "รายการ",
       "status_label": "สถานะ",
       "total": "รวม",
-      "status": {
-        "delivered": "จัดส่งแล้ว",
-        "shipped": "กำลังจัดส่ง",
-        "processing": "กำลังดำเนินการ",
-        "cancelled": "ยกเลิก"
-      }
+      "page": "แสดง {from}-{to} จาก {total} รายการ",
+      "search": "ค้นหา"
     },
     "Activity": {
       "title": "กิจกรรม",
@@ -323,6 +319,7 @@
     "loadMore": "ดูเพิ่มเติม",
     "error": "กรุณาลองใหม่อีกครั้งภายหลัง!"
   },
+
   "ProductDetail": {
     "selectPackage": "เลือกแพ็กเกจ",
     "gameAccount": "บัญชีเกม",
@@ -379,6 +376,15 @@
         "title": "ไม่สำเร็จ",
         "message": "รายการเติมเงินของคุณถูกปฏิเสธ!"
       }
+    }
+  },
+  "Order": {
+    "filter": "ตัวกรอง",
+    "status": {
+      "created": "รอยืนยัน",
+      "pending": "กำลังตรวจสอบ",
+      "completed": "เสร็จสิ้นแล้ว",
+      "cancelled": "ถูกยกเลิก"
     }
   }
 }

@@ -1,5 +1,11 @@
 import { baseQuery } from "@/configs/api";
-import { OrderResponseType, PurchaseInput } from "@pawpal/shared";
+import {
+  DatatableInput,
+  DatatableResponse,
+  OrderResponse,
+  OrderResponseType,
+  PurchaseInput,
+} from "@pawpal/shared";
 import { createApi } from "@reduxjs/toolkit/query/react";
 
 export const orderApi = createApi({
@@ -9,6 +15,16 @@ export const orderApi = createApi({
     baseUrl: `/order/`,
   }),
   endpoints: (builder) => ({
+    getOrderHistory: builder.query<
+      DatatableResponse<OrderResponse>,
+      DatatableInput
+    >({
+      query: (params) => ({
+        url: `/`,
+        params,
+      }),
+      providesTags: ["Orders"],
+    }),
     createOrder: builder.mutation<OrderResponseType, PurchaseInput>({
       query: (payload) => ({
         url: `/`,
@@ -19,4 +35,4 @@ export const orderApi = createApi({
   }),
 });
 
-export const { useCreateOrderMutation } = orderApi;
+export const { useCreateOrderMutation, useGetOrderHistoryQuery } = orderApi;

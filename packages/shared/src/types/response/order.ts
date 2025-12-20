@@ -5,6 +5,8 @@ import { WalletType } from "../../enums/wallet";
 import { PaymentChargeCreatedResponse } from "./payment-gateway";
 import { AdminTransactionResponse } from "./transaction";
 
+export type OrderResponse = AdminOrderResponse;
+
 export interface AdminOrderResponse {
   id: string;
   total: number;
