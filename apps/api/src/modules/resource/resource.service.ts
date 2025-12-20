@@ -1,8 +1,8 @@
 import { DatatableQuery } from '@/common/pipes/DatatablePipe';
 import { Injectable } from '@nestjs/common';
 import { ResourceResponse } from '@pawpal/shared';
+import { CloudflareService } from '../cloudflare/cloudflare.service';
 import { PrismaService } from '../prisma/prisma.service';
-import { LocalStorageService } from './local-storage.service';
 
 @Injectable()
 export class ResourceService {
@@ -21,7 +21,7 @@ export class ResourceService {
 
   constructor(
     private readonly prisma: PrismaService,
-    private readonly storage: LocalStorageService,
+    private readonly storage: CloudflareService,
   ) {}
 
   async findOne(id: string): Promise<ResourceResponse | null> {
@@ -45,15 +45,25 @@ export class ResourceService {
     });
   }
 
+  /**
+   * Upload resource image to cloudflare
+   * @param file file to upload
+   * @param user_id user id
+   * @returns resource response
+   */
   async uploadResource(
     file: Express.Multer.File,
     user_id: string,
   ): Promise<ResourceResponse> {
-    const { key } = await this.storage.uploadFile(file);
+    const { key } = await this.storage.uploadResourceImage(file);
     const resource = await this.prisma.resource.create({
       data: {
         url: key,
-        user_id,
+        user: {
+          connect: {
+            id: user_id,
+          },
+        },
       },
       select: this.resourceResponseSelect,
     });

@@ -1,12 +1,13 @@
 import { Global, Module } from '@nestjs/common';
-import { LocalStorageService } from './local-storage.service';
+import { CloudflareModule } from '../cloudflare/cloudflare.module';
 import { ResourcesController } from './resource.controller';
 import { ResourceService } from './resource.service';
 
 @Global()
 @Module({
+  imports: [CloudflareModule],
   controllers: [ResourcesController],
-  providers: [LocalStorageService, ResourceService],
+  providers: [ResourceService],
   exports: [ResourceService],
 })
 export class ResourceModule {}

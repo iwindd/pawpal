@@ -17,8 +17,8 @@ const nextConfig: NextConfig = {
       {
         protocol: STORAGE_URL.protocol === "http:" ? "http" : "https",
         hostname: STORAGE_URL.hostname,
-        port: STORAGE_URL.port || "8000",
-        pathname: `${STORAGE_URL.pathname}/**`,
+        port: STORAGE_URL.port,
+        pathname: `${STORAGE_URL.pathname}**`,
       },
     ],
   },
