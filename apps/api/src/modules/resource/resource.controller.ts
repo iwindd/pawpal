@@ -1,6 +1,6 @@
 import { AuthUser } from '@/common/decorators/user.decorator';
-import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
-import { SessionAuthGuard } from '@/common/guards/session-auth.guard';
+import { JwtAuthGuard } from '@/common/guards/auth/jwt-auth.guard';
+import { SessionAuthGuard } from '@/common/guards/auth/session-auth.guard';
 import { DatatablePipe, DatatableQuery } from '@/common/pipes/DatatablePipe';
 import { ZodFileValidationPipe } from '@/common/ZodFileValidationPipe';
 import {

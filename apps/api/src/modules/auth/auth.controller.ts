@@ -1,7 +1,7 @@
 import { AuthUser } from '@/common/decorators/user.decorator';
-import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
-import { LocalAuthGuard } from '@/common/guards/local-auth.guard';
-import { SessionAuthGuard } from '@/common/guards/session-auth.guard';
+import { JwtAuthGuard } from '@/common/guards/auth/jwt-auth.guard';
+import { LocalAuthGuard } from '@/common/guards/auth/local-auth.guard';
+import { SessionAuthGuard } from '@/common/guards/auth/session-auth.guard';
 import { LogoutInterceptor } from '@/common/interceptors/logout.interceptor';
 import { TokenInterceptor } from '@/common/interceptors/token.interceptor';
 import { ZodPipe } from '@/common/pipes/ZodPipe';
