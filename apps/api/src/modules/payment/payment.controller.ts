@@ -1,5 +1,6 @@
 import { AuthUser } from '@/common/decorators/user.decorator';
 import { JwtAuthGuard } from '@/common/guards/auth/jwt-auth.guard';
+import { NoProgressGuard } from '@/common/guards/auth/no-progress-guard.guard';
 import { SessionAuthGuard } from '@/common/guards/auth/session-auth.guard';
 import { ZodPipe } from '@/common/pipes/ZodPipe';
 import {
@@ -24,6 +25,7 @@ export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
 
   @Post('topup')
+  @UseGuards(NoProgressGuard)
   createPayment(
     @Body(new ZodPipe(PaymentChargeCreateSchema))
     payload: PaymentChargeCreateInput,
