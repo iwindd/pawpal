@@ -73,4 +73,37 @@ export class ResourceService {
       createdAt: resource.createdAt.toISOString(),
     };
   }
+
+  /**
+   * Upload resource images to cloudflare
+   * @param files files to upload
+   * @param user_id user id
+   * @returns array of resource responses
+   */
+  async uploadResources(
+    files: Array<Express.Multer.File>,
+    user_id: string,
+  ): Promise<ResourceResponse[]> {
+    const promises = files.map(async (file) => {
+      const { key } = await this.storage.uploadResourceImage(file);
+      return this.prisma.resource.create({
+        data: {
+          url: key,
+          user: {
+            connect: {
+              id: user_id,
+            },
+          },
+        },
+        select: this.resourceResponseSelect,
+      });
+    });
+
+    const resources = await Promise.all(promises);
+
+    return resources.map((resource) => ({
+      ...resource,
+      createdAt: resource.createdAt.toISOString(),
+    }));
+  }
 }

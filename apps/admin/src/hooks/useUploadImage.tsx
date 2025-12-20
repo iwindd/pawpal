@@ -22,17 +22,22 @@ const useUploadImage = () => {
         message: __("notify.error.message"),
         color: "red",
       });
-      return;
+      return false;
     }
 
-    return schema.data;
+    return true;
   };
 
-  const upload = async (file: File) => {
-    if (!validate(file)) return;
-
+  const upload = async (files: FileList) => {
     const formData = new FormData();
-    formData.append("file", file);
+    // Validate all files first
+    for (let i = 0; i < files.length; i++) {
+      const file = files.item(i);
+      if (file) {
+        if (!validate(file)) return;
+        formData.append("files", file);
+      }
+    }
 
     backdrop.show("Uploading...");
     const resp = await uploadResourceMutation(formData);
@@ -59,16 +64,22 @@ const useUploadImage = () => {
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      upload(file);
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      upload(files);
     }
   };
 
   return {
     open,
     input: (
-      <input ref={inputRef} type="file" hidden onChange={handleFileChange} />
+      <input
+        ref={inputRef}
+        type="file"
+        multiple
+        hidden
+        onChange={handleFileChange}
+      />
     ),
   };
 };

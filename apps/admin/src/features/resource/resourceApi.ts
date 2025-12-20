@@ -53,7 +53,7 @@ export const resourceApi = createApi({
       }),
       providesTags: (result, error, id) => [{ type: "Resource", id: id }],
     }),
-    uploadResource: builder.mutation<ResourceResponse, FormData>({
+    uploadResource: builder.mutation<ResourceResponse[], FormData>({
       query: (formData) => ({
         url: "/",
         method: "POST",
