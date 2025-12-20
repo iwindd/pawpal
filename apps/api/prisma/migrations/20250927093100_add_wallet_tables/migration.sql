@@ -8,7 +8,7 @@
 CREATE TYPE "public"."WalletType" AS ENUM ('MAIN');
 
 -- CreateEnum
-CREATE TYPE "public"."TransactionType" AS ENUM ('TOPUP');
+CREATE TYPE "public"."TransactionType" AS ENUM ('TOPUP', 'PURCHASE', 'TOPUP_FOR_PURCHASE');
 
 -- CreateEnum
 CREATE TYPE "public"."TransactionStatus" AS ENUM ('CREATED', 'PENDING', 'SUCCESS', 'FAILED');
@@ -34,7 +34,6 @@ CREATE TABLE "public"."user_wallet_transactions" (
     "id" TEXT NOT NULL,
     "type" "public"."TransactionType" NOT NULL DEFAULT 'TOPUP',
     "wallet_id" TEXT NOT NULL,
-    "amount" DECIMAL(10,2) NOT NULL,
     "balance_before" DECIMAL(10,2) NOT NULL,
     "balance_after" DECIMAL(10,2) NOT NULL,
     "reference" TEXT,
