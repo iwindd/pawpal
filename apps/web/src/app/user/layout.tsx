@@ -30,7 +30,6 @@ const UserLayout = ({ children }: UserLayoutProps) => {
     ROUTES.user as RouteItem,
     ROUTES.user?.children?.profile as RouteItem,
     ROUTES.user?.children?.order as RouteItem,
-    ROUTES.user?.children?.activity as RouteItem,
   ];
   const activeRoute = trail.at(-1);
 

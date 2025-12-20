@@ -14,6 +14,7 @@ export type RouteItem = {
   label: string;
   icon?: React.ComponentType<any>;
   children?: Record<string, RouteItem>;
+  disabled?: boolean;
 };
 
 export const ROUTES: Record<string, RouteItem> = {
@@ -46,6 +47,7 @@ export const ROUTES: Record<string, RouteItem> = {
         path: "/user/activity",
         label: "user.activity",
         icon: IconActivity,
+        disabled: true,
       },
     },
   },

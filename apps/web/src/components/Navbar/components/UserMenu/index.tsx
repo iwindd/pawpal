@@ -1,12 +1,6 @@
 "use client";
 import { useLogoutMutation } from "@/features/auth/authApi";
-import {
-  IconActivity,
-  IconCoin,
-  IconHistory,
-  IconLogout,
-  IconSettings,
-} from "@pawpal/icons";
+import { IconCoin, IconHistory, IconLogout, IconSettings } from "@pawpal/icons";
 import { Session } from "@pawpal/shared";
 import { backdrop } from "@pawpal/ui/backdrop";
 import { clsx } from "@pawpal/ui/clsx";
@@ -133,13 +127,6 @@ const UserMenu = ({ user }: UserMenuProps) => {
           href="/user/order"
         >
           {__("orders")}
-        </Menu.Item>
-        <Menu.Item
-          leftSection={<IconActivity size={16} stroke={1.5} />}
-          component={Link}
-          href="/user/activity"
-        >
-          {__("activities")}
         </Menu.Item>
         <Menu.Item
           leftSection={<IconLogout size={16} stroke={1.5} />}
