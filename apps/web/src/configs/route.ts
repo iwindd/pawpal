@@ -66,5 +66,6 @@ export const ROUTES: Record<string, RouteItem> = {
     path: "/help",
     label: "help",
     icon: IconHelp,
+    disabled: true,
   },
 };
