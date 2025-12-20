@@ -1,12 +1,11 @@
 "use client";
 
 import { setUserBalance } from "@/features/auth/authSlice";
+import { clearCurrentCharge } from "@/features/payment/paymentSlice";
 import { useAppDispatch, useAppSelector } from "@/hooks";
 import { IconCheck } from "@pawpal/icons";
 import {
-  ENUM_ORDER_STATUS,
   ENUM_TRANSACTION_STATUS,
-  OnPurchaseTransactionUpdatedProps,
   OnTopupTransactionUpdatedProps,
 } from "@pawpal/shared";
 import { Notifications } from "@pawpal/ui/notifications";
@@ -52,60 +51,31 @@ export const WebSocketProvider = ({
             })
           );
 
-          if (data.status === ENUM_TRANSACTION_STATUS.SUCCESS) {
-            Notifications.update({
-              id: `topup-${data.id}`,
-              color: "teal",
-              title: __("PromptPayManualModal.notify.success.title"),
-              message: __("PromptPayManualModal.notify.success.message"),
-              icon: <IconCheck size={18} />,
-              loading: false,
-              autoClose: 2000,
-            });
-          } else {
-            Notifications.update({
-              id: `topup-${data.id}`,
-              color: "red",
-              title: __("PromptPayManualModal.notify.failed.title"),
-              message: __("PromptPayManualModal.notify.failed.message"),
-              icon: <IconCheck size={18} />,
-              loading: false,
-              autoClose: 2000,
-            });
-          }
-        }
-      );
+          dispatch(clearCurrentCharge());
 
-      socket.on(
-        "onPurchaseTransactionUpdated",
-        (data: OnPurchaseTransactionUpdatedProps) => {
-          dispatch(
-            setUserBalance({
-              type: data.wallet.type,
-              balance: data.wallet.balance,
-            })
-          );
-
-          if (data.status === ENUM_ORDER_STATUS.COMPLETED) {
-            Notifications.update({
-              id: `order-${data.id}`,
-              color: "teal",
-              title: __("PromptPayManualModal.notify.success.title"),
-              message: __("PromptPayManualModal.notify.success.message"),
-              icon: <IconCheck size={18} />,
-              loading: false,
-              autoClose: 2000,
-            });
-          } else {
-            Notifications.update({
-              id: `order-${data.id}`,
-              color: "red",
-              title: __("PromptPayManualModal.notify.failed.title"),
-              message: __("PromptPayManualModal.notify.failed.message"),
-              icon: <IconCheck size={18} />,
-              loading: false,
-              autoClose: 2000,
-            });
+          switch (data.status) {
+            case ENUM_TRANSACTION_STATUS.SUCCESS:
+              return Notifications.update({
+                id: `topup-${data.id}`,
+                color: "teal",
+                title: __("PromptPayManualModal.notify.success.title"),
+                message: __("PromptPayManualModal.notify.success.message"),
+                icon: <IconCheck size={18} />,
+                loading: false,
+                autoClose: 2000,
+              });
+            case ENUM_TRANSACTION_STATUS.FAILED:
+              return Notifications.update({
+                id: `topup-${data.id}`,
+                color: "red",
+                title: __("PromptPayManualModal.notify.failed.title"),
+                message: __("PromptPayManualModal.notify.failed.message"),
+                icon: <IconCheck size={18} />,
+                loading: false,
+                autoClose: 2000,
+              });
+            default:
+              break;
           }
         }
       );

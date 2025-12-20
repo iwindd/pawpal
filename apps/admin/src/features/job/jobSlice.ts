@@ -18,7 +18,15 @@ const jobSlice = createSlice({
   initialState,
   reducers: {
     addOrder(state, action: PayloadAction<AdminOrderResponse>) {
-      state.orders.push(action.payload);
+      const orderIndex = state.orders.findIndex(
+        (order) => order.id === action.payload.id
+      );
+
+      if (orderIndex === -1) {
+        state.orders.push(action.payload);
+      } else {
+        state.orders[orderIndex] = action.payload;
+      }
     },
     finishedOrder(state, action: PayloadAction<AdminOrderResponse>) {
       state.orders = state.orders.filter(
@@ -26,7 +34,15 @@ const jobSlice = createSlice({
       );
     },
     addTransaction(state, action: PayloadAction<AdminTransactionResponse>) {
-      state.transactions.push(action.payload);
+      const transactionIndex = state.transactions.findIndex(
+        (transaction) => transaction.id === action.payload.id
+      );
+
+      if (transactionIndex === -1) {
+        state.transactions.push(action.payload);
+      } else {
+        state.transactions[transactionIndex] = action.payload;
+      }
     },
     finishedTransaction(
       state,
