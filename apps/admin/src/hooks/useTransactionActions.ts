@@ -1,22 +1,24 @@
 import {
-  useSetAsFailedMutation,
-  useSetAsSucceedMutation,
+  useFailJobTransactionMutation,
+  useSuccessJobTransactionMutation,
 } from "@/features/transaction/transactionApi";
 import { useConfirmation } from "@pawpal/ui/hooks";
 
 export const useTransactionActions = () => {
   const { confirmation } = useConfirmation();
 
-  const [setAsFailed, { isLoading: isSetAsFailed }] = useSetAsFailedMutation();
-  const [setAsSucceed, { isLoading: isSetAsSucceed }] =
-    useSetAsSucceedMutation();
+  const [successJobTransaction, { isLoading: isSuccessJobTransaction }] =
+    useSuccessJobTransactionMutation();
+
+  const [failJobTransaction, { isLoading: isFailJobTransaction }] =
+    useFailJobTransactionMutation();
 
   return {
-    isLoading: isSetAsFailed || isSetAsSucceed,
-    setSuccess: confirmation<string>(setAsSucceed, {
+    isLoading: isSuccessJobTransaction || isFailJobTransaction,
+    successJobTransaction: confirmation<string>(successJobTransaction, {
       confirmProps: { color: "green" },
     }),
-    setFailed: confirmation<string>(setAsFailed, {
+    failJobTransaction: confirmation<string>(failJobTransaction, {
       confirmProps: { color: "red" },
     }),
   };

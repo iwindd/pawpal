@@ -116,7 +116,7 @@ export class TransactionService {
    * Failed charge transaction
    * @param transactionId transaction id
    */
-  async failedCharge(transactionId: string) {
+  async failCharge(transactionId: string) {
     const transaction = await this.transactionRepo.find(transactionId);
 
     await this.transactionRepo.updateStatusOrThrow(
@@ -145,7 +145,10 @@ export class TransactionService {
    * @param query datatable query
    * @returns datatable response
    */
-  async getPendingTransactionsDatatable(query: DatatableQuery) {
+  async getJobTransactionsDatatable(query: DatatableQuery) {
+    delete query.skip;
+    delete query.take;
+
     return this.prisma.userWalletTransaction.getDatatable({
       select: {
         id: true,
@@ -163,7 +166,14 @@ export class TransactionService {
       query: {
         ...query,
         where: {
-          status: TransactionStatus.PENDING,
+          OR: [
+            {
+              status: TransactionStatus.PENDING,
+            },
+            {
+              status: TransactionStatus.CREATED,
+            },
+          ],
           type: {
             not: TransactionType.PURCHASE,
           },

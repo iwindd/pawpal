@@ -3,7 +3,6 @@ import {
   AdminTransactionResponse,
   DatatableInput,
   DatatableResponse,
-  ENUM_TRANSACTION_STATUS,
 } from "@pawpal/shared";
 import { createApi } from "@reduxjs/toolkit/query/react";
 
@@ -19,28 +18,22 @@ export const transactionApi = createApi({
       DatatableInput
     >({
       query: (params) => ({
-        url: "/pending",
+        url: "/job",
         params,
       }),
       providesTags: ["Transactions"],
     }),
-    setAsSucceed: builder.mutation<void, string>({
+    successJobTransaction: builder.mutation<void, string>({
       query: (transactionId) => ({
-        url: `/pending/${transactionId}`,
+        url: `/job/${transactionId}/success`,
         method: "PATCH",
-        body: {
-          status: ENUM_TRANSACTION_STATUS.SUCCESS,
-        },
       }),
       invalidatesTags: ["Transactions"],
     }),
-    setAsFailed: builder.mutation<void, string>({
+    failJobTransaction: builder.mutation<void, string>({
       query: (transactionId) => ({
-        url: `/pending/${transactionId}`,
+        url: `/job/${transactionId}/fail`,
         method: "PATCH",
-        body: {
-          status: ENUM_TRANSACTION_STATUS.FAILED,
-        },
       }),
       invalidatesTags: ["Transactions"],
     }),
@@ -49,6 +42,6 @@ export const transactionApi = createApi({
 
 export const {
   useGetTransactionsQuery,
-  useSetAsFailedMutation,
-  useSetAsSucceedMutation,
+  useSuccessJobTransactionMutation,
+  useFailJobTransactionMutation,
 } = transactionApi;

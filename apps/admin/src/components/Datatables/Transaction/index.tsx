@@ -1,4 +1,5 @@
 "use client";
+import TransactionStatusBadge from "@/components/Badges/TransactionStatus";
 import TransactionTypeBadge from "@/components/Badges/TransactionType";
 import { useGetTransactionsQuery } from "@/features/transaction/transactionApi";
 import { useAppSelector } from "@/hooks";
@@ -9,7 +10,9 @@ import {
   ENUM_TRANSACTION_STATUS,
 } from "@pawpal/shared";
 import { DataTable, DataTableProps } from "@pawpal/ui/core";
+import { sortBy } from "lodash";
 import { useFormatter, useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
 import TableAction, { Action } from "../action";
 
 const TransactionDatatable = () => {
@@ -22,17 +25,14 @@ const TransactionDatatable = () => {
     },
   });
 
-  const { isLoading } = useGetTransactionsQuery({
-    page: datatable.page,
-    limit: datatable.limit,
-    sort: datatable.sort,
-  });
+  const { isLoading } = useGetTransactionsQuery({});
 
   const transactions = useAppSelector((state) => state.job.transactions);
+  const [records, setRecords] = useState<AdminTransactionResponse[]>([]);
 
   const {
-    setFailed,
-    setSuccess,
+    successJobTransaction,
+    failJobTransaction,
     isLoading: isTransactionLoading,
   } = useTransactionActions();
 
@@ -50,6 +50,12 @@ const TransactionDatatable = () => {
       sortable: true,
       title: __("type"),
       render: (record) => <TransactionTypeBadge type={record.type} />,
+    },
+    {
+      accessor: "status",
+      noWrap: true,
+      title: __("status"),
+      render: (record) => <TransactionStatusBadge status={record.status} />,
     },
     {
       accessor: "amount",
@@ -92,27 +98,39 @@ const TransactionDatatable = () => {
       noWrap: true,
       title: __("actions"),
       render: (records) => {
-        const actions: Action[] = [];
-
-        if (records.status === ENUM_TRANSACTION_STATUS.PENDING) {
-          actions.push(
-            {
-              label: __("action.make_success"),
-              color: "green",
-              action: () => setSuccess(records.id) as unknown,
-            },
-            {
-              label: __("action.make_failed"),
-              color: "red",
-              action: () => setFailed(records.id) as unknown,
-            }
-          );
-        }
+        const actions: Action[] = [
+          {
+            label: __("action.make_success"),
+            color: "green",
+            action: () => successJobTransaction(records.id) as unknown,
+          },
+          {
+            label: __("action.make_fail"),
+            color: "red",
+            action: () => failJobTransaction(records.id) as unknown,
+          },
+        ];
 
         return <TableAction label={__("actions")} actions={actions} />;
       },
     },
   ];
+
+  useEffect(() => {
+    const data = sortBy(transactions, datatable.sortStatus.columnAccessor);
+    const sortedData =
+      datatable.sortStatus.direction === "desc" ? [...data].reverse() : data;
+
+    const createdData = sortedData.filter(
+      (t) => t.status == ENUM_TRANSACTION_STATUS.CREATED
+    );
+
+    const pendingData = sortedData.filter(
+      (t) => t.status == ENUM_TRANSACTION_STATUS.PENDING
+    );
+
+    setRecords([...pendingData, ...createdData]);
+  }, [transactions, datatable.sortStatus]);
 
   return (
     <DataTable
@@ -120,16 +138,12 @@ const TransactionDatatable = () => {
       borderRadius="sm"
       striped
       highlightOnHover
-      height="83.4dvh"
+      height="80dvh"
       minHeight={400}
       maxHeight={1000}
       idAccessor="id"
       columns={columns}
-      records={transactions}
-      totalRecords={transactions.length}
-      recordsPerPage={datatable.limit}
-      page={datatable.page}
-      onPageChange={datatable.setPage}
+      records={records}
       fetching={isLoading || isTransactionLoading}
       sortStatus={datatable.sortStatus}
       onSortStatusChange={datatable.setSortStatus}

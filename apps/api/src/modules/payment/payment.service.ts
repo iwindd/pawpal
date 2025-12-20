@@ -87,25 +87,21 @@ export class PaymentService {
         ...(orderId && { order: { connect: { id: orderId } } }),
       },
       select: {
-        id: true,
-        type: true,
+        ...TransactionResponseMapper.SELECT,
         amount: true,
-        status: true,
-        order_id: true,
         payment: {
           select: {
             id: true,
             metadata: true,
           },
         },
-        createdAt: true,
       },
     });
 
     return charge;
   }
 
-  async confirm(chargeId: string) {
+  public async confirm(chargeId: string) {
     const charge = await this.prisma.userWalletTransaction.update({
       where: {
         id: chargeId,
@@ -123,7 +119,7 @@ export class PaymentService {
     return result;
   }
 
-  private async createPromptpayManualCharge(
+  public async createPromptpayManualCharge(
     user: Session,
     amount: Decimal,
     orderId?: string,
@@ -145,6 +141,10 @@ export class PaymentService {
       orderId,
       TransactionStatus.CREATED,
       wallet.walletType,
+    );
+
+    this.eventService.admin.onNewJobTransaction(
+      TransactionResponseMapper.fromQuery(charge),
     );
 
     return {
