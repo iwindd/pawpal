@@ -3,7 +3,7 @@ import CategoryCombobox from "@/components/Combobox/Category";
 import useFormValidate from "@/hooks/useFormValidate";
 import DropzoneTrigger from "@/hooks/useResource/triggers/DropzoneTriggger";
 import {
-  AdminProductEditResponse,
+  AdminProductResponse,
   ProductInput,
   productSchema,
   slugify,
@@ -24,7 +24,7 @@ import classes from "./style.module.css";
 export type ProductFormControl = UseFormReturnType<ProductInput>;
 
 interface ProductFormProps {
-  product?: AdminProductEditResponse;
+  product?: AdminProductResponse;
   onSubmit: (values: ProductInput, form: ProductFormControl) => void;
   isLoading?: boolean;
   errorMessage?: string | null;
@@ -49,7 +49,7 @@ const ProductForm = ({
       name: product?.name || "",
       slug: product?.slug || "",
       description: product?.description || "",
-      category_id: product?.category.id || "",
+      category_id: product?.categories?.[0]?.id || "",
       image_id: product?.image?.id || "",
     },
     onValuesChange: (current, prev) => {

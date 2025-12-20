@@ -23,11 +23,6 @@ export interface ProductCategory {
   slug: string;
 }
 
-export interface ProductTag {
-  slug: string;
-  name: string;
-}
-
 export interface ProductListItem {
   slug: string;
   name: string;
@@ -49,7 +44,6 @@ export interface ProductResponse {
   description?: string;
   createdAt: string | Date;
   category: ProductCategory;
-  productTags: ProductTag[];
   packages: ProductPackage[];
   sales: ProductSaleValue | null;
   fields: ProductField[];
@@ -60,28 +54,18 @@ export interface AdminProductResponse {
   slug: string;
   name: string;
   description?: string;
-  createdAt: string;
-  category: ProductCategory;
-  productTags: ProductTag[];
-  packages: ProductPackage[];
+  tags: {
+    id: string;
+    name: string;
+  }[];
+  categories: {
+    id: string;
+    name: string;
+  }[];
   packageCount: number;
   image: {
     id: string;
     url: string;
-  } | null;
-}
-
-export interface AdminProductEditResponse {
-  id: string;
-  slug: string;
-  name: string;
-  description?: string;
+  };
   createdAt: string;
-  category: ProductCategory;
-  productTags: ProductTag[];
-  packages: ProductPackage[];
-  image: {
-    id: string;
-    url: string;
-  } | null;
 }

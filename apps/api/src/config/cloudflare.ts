@@ -1,7 +1,8 @@
 const cloudflareConfig = {
   r2Storage: {
     paths: {
-      resource: 'images',
+      resource: 'resources',
+      product: 'products',
     },
   },
 };

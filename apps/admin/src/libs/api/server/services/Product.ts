@@ -1,11 +1,13 @@
-import { AdminProductEditResponse } from "@pawpal/shared";
+import { AdminProductResponse } from "@pawpal/shared";
 import { AxiosError, AxiosInstance } from "axios";
 import { PawApiResponse } from "../../api";
 
 class ProductApi {
   constructor(private readonly client: AxiosInstance) {}
 
-  public async findOne(id: string): Promise<PawApiResponse<AdminProductEditResponse>> {
+  public async findOne(
+    id: string
+  ): Promise<PawApiResponse<AdminProductResponse>> {
     try {
       const response = await this.client.get(`/admin/product/${id}`);
 

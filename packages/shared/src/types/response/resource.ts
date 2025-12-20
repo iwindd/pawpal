@@ -1,6 +1,6 @@
 import { ResourceType } from "../../enums/resource";
 
-export interface ResourceResponse {
+export interface AdminResourceResponse {
   id: string;
   url: string;
   createdAt: string;

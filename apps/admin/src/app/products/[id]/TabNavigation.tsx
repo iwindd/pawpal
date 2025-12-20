@@ -8,7 +8,7 @@ import { useProduct } from "./ProductContext";
 
 const Tab = ({ routeName }: { routeName: string }) => {
   const route = getRoute(routeName);
-  const product = useProduct();
+  const { product } = useProduct();
   const __ = useTranslations("Navbar.links");
 
   return (

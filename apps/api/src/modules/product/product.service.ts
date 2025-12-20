@@ -1,12 +1,11 @@
+import { ProductResponseMapper } from '@/common/mappers/ProductResponseMapper';
 import { DatatableQuery } from '@/common/pipes/DatatablePipe';
+import { Prisma } from '@/generated/prisma/client';
+import { ResourceType } from '@/generated/prisma/enums';
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
-import {
-  AdminProductEditResponse,
-  AdminProductResponse,
-  ProductInput,
-} from '@pawpal/shared';
+import { ProductInput } from '@pawpal/shared';
 import { PrismaService } from '../prisma/prisma.service';
-import { SaleService } from '../sale/sale.service';
+import { ResourceService } from '../resource/resource.service';
 import { ProductRepository } from './product.repository';
 
 @Injectable()
@@ -14,8 +13,8 @@ export class ProductService {
   private readonly logger = new Logger(ProductService.name);
   constructor(
     private readonly prisma: PrismaService,
-    private readonly saleService: SaleService,
     private readonly productRepository: ProductRepository,
+    private readonly resourceService: ResourceService,
   ) {}
 
   /**
@@ -182,207 +181,31 @@ export class ProductService {
     });
   }
 
-  async findOneForEdit(id: string): Promise<AdminProductEditResponse | null> {
+  /**
+   * Get a product by id
+   * @param id Product id
+   * @returns Product
+   */
+  async findOne(id: string) {
     const product = await this.prisma.product.findUnique({
       where: { id },
-      select: {
-        id: true,
-        slug: true,
-        name: true,
-        description: true,
-        createdAt: true,
-        category: {
-          select: {
-            id: true,
-            name: true,
-            slug: true,
-          },
-        },
-        productTags: {
-          select: {
-            slug: true,
-            name: true,
-          },
-        },
-        packages: {
-          select: {
-            id: true,
-            name: true,
-            price: true,
-            description: true,
-          },
-        },
-        image: {
-          select: {
-            id: true,
-            url: true,
-          },
-        },
-      },
-    });
-
-    if (!product) return null;
-
-    return {
-      ...product,
-      createdAt: product.createdAt.toISOString(),
-      packages: product.packages.map((pkg) => ({
-        id: pkg.id,
-        name: pkg.name,
-        price: Number(pkg.price),
-        description: pkg.description,
-      })),
-    };
-  }
-
-  // TODO:: Refactor types
-  async findOneCombobox(id: string): Promise<AdminProductResponse | null> {
-    const product = await this.prisma.product.findUnique({
-      where: { id },
-      select: {
-        id: true,
-        slug: true,
-        name: true,
-        description: true,
-        createdAt: true,
-        _count: {
-          select: { packages: true },
-        },
-        category: {
-          select: {
-            id: true,
-            name: true,
-            slug: true,
-          },
-        },
-        productTags: {
-          select: {
-            slug: true,
-            name: true,
-          },
-        },
-        packages: {
-          select: {
-            id: true,
-            name: true,
-            price: true,
-            description: true,
-          },
-        },
-        image: {
-          select: {
-            id: true,
-            url: true,
-          },
-        },
-      },
+      select: ProductResponseMapper.SELECT,
     });
 
     if (!product) throw new BadRequestException('product_not_found');
 
-    return {
-      ...product,
-      packages: product.packages.map((pkg) => ({
-        ...pkg,
-        price: Number(pkg.price),
-      })),
-      packageCount: product._count.packages,
-      createdAt: product.createdAt.toISOString(),
-    };
+    return ProductResponseMapper.fromQuery(product);
   }
 
-  async findOne(id: string): Promise<AdminProductEditResponse | null> {
-    const product = await this.prisma.product.findUnique({
-      where: { id },
-      select: {
-        id: true,
-        slug: true,
-        name: true,
-        description: true,
-        createdAt: true,
-        category: {
-          select: {
-            id: true,
-            name: true,
-            slug: true,
-          },
-        },
-        productTags: {
-          select: {
-            slug: true,
-            name: true,
-          },
-        },
-        packages: {
-          select: {
-            id: true,
-            name: true,
-            price: true,
-            description: true,
-          },
-        },
-        image: {
-          select: {
-            id: true,
-            url: true,
-          },
-        },
-      },
-    });
-
-    if (!product) throw new BadRequestException('product_not_found');
-
-    return {
-      ...product,
-      createdAt: product.createdAt.toISOString(),
-      packages: product.packages.map((pkg) => ({
-        id: pkg.id,
-        name: pkg.name,
-        price: Number(pkg.price),
-        description: pkg.description,
-      })),
-    };
-  }
-
-  getProducts(query: DatatableQuery) {
+  /**
+   * Get products datatable
+   * @param query Datatable query
+   * @returns Datatable response
+   */
+  async getProductDatatable(query: DatatableQuery) {
     return this.prisma.product.getDatatable({
       query,
-      select: {
-        id: true,
-        slug: true,
-        name: true,
-        createdAt: true,
-        _count: {
-          select: { packages: true },
-        },
-        category: {
-          select: {
-            id: true,
-            name: true,
-            slug: true,
-          },
-        },
-        productTags: {
-          select: {
-            slug: true,
-            name: true,
-          },
-        },
-        packages: {
-          select: {
-            id: true,
-            name: true,
-            price: true,
-            description: true,
-          },
-        },
-        image: {
-          select: {
-            id: true,
-            url: true,
-          },
-        },
-      },
+      select: ProductResponseMapper.SELECT,
       searchable: {
         name: { mode: 'insensitive' },
         slug: { mode: 'insensitive' },
@@ -390,24 +213,92 @@ export class ProductService {
     });
   }
 
-  async create(payload: ProductInput) {
-    return await this.prisma.product.create({
-      data: payload,
+  /**
+   * Create a new product
+   * @param payload Product data
+   * @param userId User ID
+   * @returns Created product
+   */
+  async createProduct(payload: ProductInput, userId: string) {
+    const { image_id, category_id, ...rest } = payload;
+
+    const image = await this.resourceService.copyResourceToProduct(image_id);
+
+    const product = await this.prisma.product.create({
+      data: {
+        ...rest,
+        image: {
+          create: {
+            url: image.key,
+            type: ResourceType.PRODUCT_IMAGE,
+            user: {
+              connect: {
+                id: userId,
+              },
+            },
+          },
+        },
+        category: {
+          connect: {
+            id: category_id,
+          },
+        },
+      },
     });
+
+    return product;
   }
 
-  async update(id: string, payload: ProductInput) {
-    return await this.prisma.product.update({
+  /**
+   * Update a product
+   * @param id Product ID
+   * @param payload Product data
+   * @param userId User ID
+   * @returns Updated product
+   */
+  async updateProduct(id: string, payload: ProductInput, userId: string) {
+    const product = await this.prisma.product.findUnique({
       where: { id },
-      data: payload,
+      select: {
+        image_id: true,
+        category_id: true,
+      },
     });
-  }
 
-  async remove(id: string): Promise<{ success: boolean }> {
-    await this.prisma.product.delete({
+    if (!product) throw new BadRequestException('product_not_found');
+
+    const { image_id, category_id, ...rest } = payload;
+
+    let image: Prisma.ProductUpdateInput['image'] = {};
+
+    if (product.image_id !== image_id) {
+      image = {
+        create: {
+          url: (await this.resourceService.copyResourceToProduct(image_id)).key,
+          type: ResourceType.PRODUCT_IMAGE,
+          user: {
+            connect: {
+              id: userId,
+            },
+          },
+        },
+      };
+    }
+
+    const updatedProduct = await this.prisma.product.update({
       where: { id },
+      data: {
+        ...rest,
+        image: image,
+        category: {
+          connect: {
+            id: category_id,
+          },
+        },
+      },
+      select: ProductResponseMapper.SELECT,
     });
 
-    return { success: true };
+    return ProductResponseMapper.fromQuery(updatedProduct);
   }
 }

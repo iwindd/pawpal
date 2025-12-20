@@ -1,7 +1,7 @@
 model Resource {
   id        String       @id @default(cuid())
   url       String
-  type      ResourceType @default(IMAGE)
+  type      ResourceType @default(RESOURCE_IMAGE)
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
 
@@ -15,7 +15,8 @@ model Resource {
 }
 
 enum ResourceType {
-  IMAGE
+  RESOURCE_IMAGE
+  PRODUCT_IMAGE
 }
 
 model Carousel {

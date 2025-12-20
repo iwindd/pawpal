@@ -1,48 +1,53 @@
+import { ResourceResponseMapper } from '@/common/mappers/ResourceResponseMapper';
 import { DatatableQuery } from '@/common/pipes/DatatablePipe';
-import { Injectable } from '@nestjs/common';
-import { ResourceResponse } from '@pawpal/shared';
+import { ResourceType } from '@/generated/prisma/enums';
+import { CloudflareUtil } from '@/utils/cloudflareUtil';
+import { Utils } from '@/utils/utils';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { v4 as uuidv4 } from 'uuid';
 import { CloudflareService } from '../cloudflare/cloudflare.service';
 import { PrismaService } from '../prisma/prisma.service';
-
 @Injectable()
 export class ResourceService {
-  private readonly resourceResponseSelect = {
-    id: true,
-    url: true,
-    createdAt: true,
-    type: true,
-    user: {
-      select: {
-        id: true,
-        displayName: true,
-      },
-    },
-  };
-
   constructor(
     private readonly prisma: PrismaService,
     private readonly storage: CloudflareService,
   ) {}
 
-  async findOne(id: string): Promise<ResourceResponse | null> {
+  /**
+   * Get resource by id
+   * @param id resource id
+   * @returns resource response
+   */
+  async findOne(id: string) {
     const resource = await this.prisma.resource.findUnique({
       where: { id },
-      select: this.resourceResponseSelect,
+      select: ResourceResponseMapper.SELECT,
     });
 
     if (!resource) throw new Error('resource_not_found');
 
-    return {
-      ...resource,
-      createdAt: resource.createdAt.toISOString(),
-    };
+    return ResourceResponseMapper.fromQuery(resource);
   }
 
+  /**
+   * Get all resources datatable
+   * @param query datatable query
+   * @returns datatable response
+   */
   async getAllResourceDatatable(query: DatatableQuery) {
-    return await this.prisma.resource.getDatatable({
+    const { data, total } = await this.prisma.resource.getDatatable({
       query,
-      select: this.resourceResponseSelect,
+      select: ResourceResponseMapper.SELECT,
+      where: {
+        type: ResourceType.RESOURCE_IMAGE,
+      },
     });
+
+    return {
+      data: data.map(ResourceResponseMapper.fromQuery),
+      total,
+    };
   }
 
   /**
@@ -51,10 +56,7 @@ export class ResourceService {
    * @param user_id user id
    * @returns resource response
    */
-  async uploadResource(
-    file: Express.Multer.File,
-    user_id: string,
-  ): Promise<ResourceResponse> {
+  async uploadResource(file: Express.Multer.File, user_id: string) {
     const { key } = await this.storage.uploadResourceImage(file);
     const resource = await this.prisma.resource.create({
       data: {
@@ -65,13 +67,10 @@ export class ResourceService {
           },
         },
       },
-      select: this.resourceResponseSelect,
+      select: ResourceResponseMapper.SELECT,
     });
 
-    return {
-      ...resource,
-      createdAt: resource.createdAt.toISOString(),
-    };
+    return ResourceResponseMapper.fromQuery(resource);
   }
 
   /**
@@ -80,10 +79,7 @@ export class ResourceService {
    * @param user_id user id
    * @returns array of resource responses
    */
-  async uploadResources(
-    files: Array<Express.Multer.File>,
-    user_id: string,
-  ): Promise<ResourceResponse[]> {
+  async uploadResources(files: Array<Express.Multer.File>, user_id: string) {
     const promises = files.map(async (file) => {
       const { key } = await this.storage.uploadResourceImage(file);
       return this.prisma.resource.create({
@@ -94,16 +90,42 @@ export class ResourceService {
               id: user_id,
             },
           },
+          type: ResourceType.RESOURCE_IMAGE,
         },
-        select: this.resourceResponseSelect,
+        select: ResourceResponseMapper.SELECT,
       });
     });
 
     const resources = await Promise.all(promises);
 
-    return resources.map((resource) => ({
-      ...resource,
-      createdAt: resource.createdAt.toISOString(),
-    }));
+    return resources.map(ResourceResponseMapper.fromQuery);
+  }
+
+  /**
+   * Use an image as a product image
+   * @param resourceId Resource ID
+   * @param productSlug Product Slug
+   * @returns
+   */
+  public async copyResourceToProduct(resourceId: string) {
+    const resource = await this.prisma.resource.findUnique({
+      where: { id: resourceId, type: ResourceType.RESOURCE_IMAGE },
+      select: {
+        id: true,
+        url: true,
+      },
+    });
+
+    if (!resource) throw new BadRequestException('resource_not_found');
+
+    const extension = Utils.getExtension(resource.url);
+    const imageName = `${uuidv4()}.${extension}`;
+    const newKey = CloudflareUtil.getR2Path('product', imageName);
+
+    await this.storage.copyObject(resource.url, newKey);
+
+    return {
+      key: newKey,
+    };
   }
 }

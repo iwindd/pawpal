@@ -11,12 +11,13 @@ import { useTranslations } from "next-intl";
 import { useProduct } from "../../ProductContext";
 
 const FieldPage = () => {
-  const product = useProduct();
+  const { product } = useProduct();
   const __ = useTranslations("ProductField");
   const [modalOpened, { close, open }] = useDisclosure(false);
 
   const [createProductFieldMutation, { isLoading, error }] =
     useCreateProductFieldMutation();
+
   const onSubmit = async (values: FieldInput) => {
     const response = await createProductFieldMutation({
       productId: product.id,

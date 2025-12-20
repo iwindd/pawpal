@@ -1,13 +1,13 @@
 -- CreateEnum
-CREATE TYPE "public"."ResourceType" AS ENUM ('IMAGE');
+CREATE TYPE "public"."ResourceType" AS ENUM ('RESOURCE_IMAGE', 'PRODUCT_IMAGE');
 
 -- CreateTable
 CREATE TABLE "public"."resources" (
     "id" TEXT NOT NULL,
     "url" TEXT NOT NULL,
-    "type" "public"."ResourceType" NOT NULL DEFAULT 'IMAGE',
+    "type" "public"."ResourceType" NOT NULL DEFAULT 'RESOURCE_IMAGE',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "updatedAt" TIMESTAMP(3) NOT NULL,  
     "user_id" TEXT NOT NULL,
 
     CONSTRAINT "resources_pkey" PRIMARY KEY ("id")

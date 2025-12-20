@@ -14,7 +14,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { ResourceResponse, Session } from '@pawpal/shared';
+import { AdminResourceResponse, Session } from '@pawpal/shared';
 import { ResourceService } from './resource.service';
 
 @Controller('admin/resource')
@@ -39,7 +39,7 @@ export class ResourcesController {
     @UploadedFiles()
     files: Array<Express.Multer.File>,
     @AuthUser() user: Session,
-  ): Promise<ResourceResponse[]> {
+  ): Promise<AdminResourceResponse[]> {
     return await this.resourceService.uploadResources(files, user.id);
   }
 }

@@ -11,7 +11,7 @@ import { useTranslations } from "next-intl";
 import { useProduct } from "../../ProductContext";
 
 const PackagePage = () => {
-  const product = useProduct();
+  const { product } = useProduct();
   const __ = useTranslations("ProductPackage");
   const [modalOpened, { close, open }] = useDisclosure(false);
   const [createProductPackage, { isLoading }] =

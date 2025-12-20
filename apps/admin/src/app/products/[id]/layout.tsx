@@ -18,7 +18,7 @@ const ProductLayout = async ({
   if (!product.success) return notFound();
 
   return (
-    <ProductProvider value={product.data}>
+    <ProductProvider defaultValue={product.data}>
       <PageHeader title={product.data.name} />
       <TabNavigation />
       {children}

@@ -35,7 +35,7 @@ const useResource = ({
     ) {
       fetchResource(valueToUse);
     }
-  }, [defaultValue, value, fetchResource, selectedResource]);
+  }, [defaultValue, value]);
 
   const handleOpen = () => {
     setIsSelecting(true);

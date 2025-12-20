@@ -10,17 +10,20 @@ import { useTranslations } from "next-intl";
 import { useProduct } from "../../ProductContext";
 
 const ProductInformationPage = () => {
-  const product = useProduct();
+  const { product, updateProduct } = useProduct();
   const __ = useTranslations("Product");
-  const [updateProduct, { isLoading, error }] = useUpdateProductMutation();
+  const [updateProductMutation, { isLoading, error }] =
+    useUpdateProductMutation();
 
   const onSubmit = async (payload: ProductInput, form: ProductFormControl) => {
-    const { data, error } = await updateProduct({
+    const { data, error } = await updateProductMutation({
       id: product.id,
       product: payload,
     });
 
     if (error || !data) return;
+
+    updateProduct(data);
 
     notify.show({
       title: __("notify.updated.title"),
@@ -28,6 +31,7 @@ const ProductInformationPage = () => {
       color: "green",
     });
 
+    form.setFieldValue("image_id", data.image.id);
     form.resetDirty();
   };
 

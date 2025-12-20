@@ -1,18 +1,32 @@
 "use client";
-import { AdminProductEditResponse } from "@pawpal/shared";
-import { createContext, useContext } from "react";
+import { AdminProductResponse } from "@pawpal/shared";
+import { createContext, useContext, useState } from "react";
 
-const ProductContext = createContext<AdminProductEditResponse | null>(null);
+const ProductContext = createContext<{
+  product: AdminProductResponse;
+  updateProduct: (newProduct: AdminProductResponse) => void;
+} | null>(null);
 
 export const ProductProvider = ({
   children,
-  value,
+  defaultValue,
 }: {
   children: React.ReactNode;
-  value: any;
+  defaultValue: AdminProductResponse;
 }) => {
+  const [value, setValue] = useState<AdminProductResponse>(defaultValue);
+
   return (
-    <ProductContext.Provider value={value}>{children}</ProductContext.Provider>
+    <ProductContext.Provider
+      value={{
+        product: value || defaultValue,
+        updateProduct: (newProduct: AdminProductResponse) => {
+          setValue(newProduct);
+        },
+      }}
+    >
+      {children}
+    </ProductContext.Provider>
   );
 };
 

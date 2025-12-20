@@ -1,5 +1,9 @@
 import { CloudflareUtil } from '@/utils/cloudflareUtil';
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import {
+  CopyObjectCommand,
+  PutObjectCommand,
+  S3Client,
+} from '@aws-sdk/client-s3';
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { v4 as uuidv4 } from 'uuid';
@@ -56,6 +60,26 @@ export class CloudflareService {
       };
     } catch (error) {
       this.logger.error('Failed to upload file to R2', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Copy an object from R2 storage to a new key.
+   * @param key The key of the object to copy.
+   * @param newKey The new key for the copied object.
+   */
+  public async copyObject(key: string, newKey: string) {
+    try {
+      await this.s3Client.send(
+        new CopyObjectCommand({
+          Bucket: this.bucketName,
+          CopySource: `${this.bucketName}/${key}`,
+          Key: newKey,
+        }),
+      );
+    } catch (error) {
+      this.logger.error('Failed to copy object to R2', error);
       throw error;
     }
   }
