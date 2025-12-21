@@ -98,7 +98,7 @@ const ResourcePage = () => {
       <Paper p={5} pt={0} bg="transparent">
         <Grid gutter={"xs"}>
           {records.length > 0 &&
-            records.map((resource) => (
+            records.map((resource, index) => (
               <Grid.Col
                 key={resource.id}
                 p={1}
@@ -110,7 +110,7 @@ const ResourcePage = () => {
                 }}
               >
                 <OverlayImage
-                  onClick={() => setViewRecord(records.indexOf(resource))}
+                  onClick={() => setViewRecord(index)}
                   image={
                     <Box
                       style={{
@@ -168,7 +168,11 @@ const ResourcePage = () => {
       </Paper>
 
       <ViewResouceImageModal
-        resource={viewRecord ? records[viewRecord] || null : null}
+        resource={
+          viewRecord == null || records[viewRecord] == null
+            ? null
+            : records[viewRecord]
+        }
         close={() => setViewRecord(null)}
         hasNext={viewRecord !== records.length - 1 || hasNextPage}
         hasPrev={viewRecord !== 0}
