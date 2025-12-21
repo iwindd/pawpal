@@ -1,8 +1,8 @@
 import { baseQuery } from "@/configs/api";
 import {
+  AdminResourceResponse,
   DatatableInput,
   DatatableResponse,
-  ResourceResponse,
 } from "@pawpal/shared";
 import { createApi } from "@reduxjs/toolkit/query/react";
 
@@ -14,7 +14,7 @@ export const resourceApi = createApi({
   }),
   endpoints: (builder) => ({
     getResources: builder.query<
-      DatatableResponse<ResourceResponse>,
+      DatatableResponse<AdminResourceResponse>,
       DatatableInput
     >({
       query: (params) => ({
@@ -24,7 +24,7 @@ export const resourceApi = createApi({
       providesTags: ["Resources"],
     }),
     getInfiniteResources: builder.infiniteQuery<
-      DatatableResponse<ResourceResponse>,
+      DatatableResponse<AdminResourceResponse>,
       DatatableInput,
       number
     >({
@@ -42,18 +42,18 @@ export const resourceApi = createApi({
         params: {
           page: pageParam,
           limit: queryArg.limit,
-          sort: null,
+          sort: queryArg.sort,
         },
       }),
       providesTags: ["Resources"],
     }),
-    getResource: builder.query<ResourceResponse, string>({
+    getResource: builder.query<AdminResourceResponse, string>({
       query: (resourceId) => ({
         url: `/${resourceId}`,
       }),
       providesTags: (result, error, id) => [{ type: "Resource", id: id }],
     }),
-    uploadResource: builder.mutation<ResourceResponse[], FormData>({
+    uploadResource: builder.mutation<AdminResourceResponse[], FormData>({
       query: (formData) => ({
         url: "/",
         method: "POST",

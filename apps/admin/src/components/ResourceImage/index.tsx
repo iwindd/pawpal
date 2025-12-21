@@ -15,7 +15,7 @@ const ResourceImage = ({ src, alt, ...props }: ResourceImageProps) => {
       component={NextImage}
       src={`${STORAGE_URL}/${src}`}
       alt={alt}
-      loading="eager"
+      loading="lazy"
       {...props}
     />
   );

@@ -478,10 +478,16 @@
   "Resources": {
     "title": "ทรัพยากร",
     "subtitle": "ทรัพยากรที่อัพโหลดโดยผู้ใช้งาน",
-    "sortBy": "จัดเรียงตาม",
-    "fileType": "ประเภทไฟล์",
-    "uploadedBy": "อัพโหลดโดย",
+    "sortBy": {
+      "label": "จัดเรียงตาม",
+      "options": {
+        "newest": "ใหม่ที่สุด",
+        "oldest": "เก่าที่สุด"
+      }
+    },
     "upload": "อัพโหลด",
+    "fileType": "ประเภทไฟล์",
+    "loadMore": "ดูเพิ่มเติม",
     "UploadModal": {
       "title": "อัพโหลดทรัพยากร",
       "filePlaceholder": "...เลือกไฟล์",

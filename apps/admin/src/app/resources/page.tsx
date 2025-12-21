@@ -1,10 +1,13 @@
 "use client";
 import ResourceImage from "@/components/ResourceImage";
-import { useGetResourcesQuery } from "@/features/resource/resourceApi";
+import { useGetInfiniteResourcesInfiniteQuery } from "@/features/resource/resourceApi";
 import useUploadImage from "@/hooks/useUploadImage";
+import { AdminResourceResponse } from "@pawpal/shared";
 import {
   Box,
   Button,
+  Center,
+  DataTableSortStatus,
   Divider,
   Grid,
   Group,
@@ -15,23 +18,49 @@ import {
   Title,
 } from "@pawpal/ui/core";
 import { useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
 
-const COL_SPAN = {
-  xs: 1,
-  sm: 2,
-  md: 3,
-  lg: 4,
-  xl: 5,
-};
+const RESOURCE_SORT_BY: {
+  value: DataTableSortStatus<AdminResourceResponse>;
+  label: string;
+}[] = [
+  {
+    value: { columnAccessor: "createdAt", direction: "desc" },
+    label: "sortBy.options.newest",
+  },
+  {
+    value: { columnAccessor: "createdAt", direction: "asc" },
+    label: "sortBy.options.oldest",
+  },
+];
 
 const ResourcePage = () => {
   const __ = useTranslations("Resources");
   const uploadImage = useUploadImage();
+  const [records, setRecords] = useState<AdminResourceResponse[]>([]);
+  const [sort, setSort] = useState<DataTableSortStatus<AdminResourceResponse>>(
+    RESOURCE_SORT_BY[0]!.value
+  );
 
-  const { data, isLoading } = useGetResourcesQuery({
-    page: 1,
-    limit: 1000, // TODO:: implement pagination
-  });
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useGetInfiniteResourcesInfiniteQuery({
+      limit: 18,
+      sort: JSON.stringify(sort),
+    });
+
+  useEffect(() => {
+    if (data) {
+      setRecords(data?.pages.flatMap((page) => page.data ?? []) ?? []);
+    }
+  }, [data]);
+
+  const onSelectSort = (value: string | null) => {
+    const index = Number(value || 0);
+    const sort = RESOURCE_SORT_BY[index];
+    if (sort) {
+      setSort(sort.value);
+    }
+  };
 
   return (
     <div>
@@ -48,29 +77,70 @@ const ResourcePage = () => {
           </Text>
         </Stack>
         <Group gap="xs">
-          <Select placeholder={__("sortBy")} disabled data={[]} />
-          <Select placeholder={__("fileType")} disabled data={[]} />
-          <Select placeholder={__("uploadedBy")} disabled data={[]} />
+          <Select
+            label={__("sortBy.label")}
+            data={RESOURCE_SORT_BY.map((item, index) => ({
+              value: index.toString(),
+              label: __(item.label),
+            }))}
+            onChange={onSelectSort}
+            clearable={false}
+            defaultValue={"0"}
+          />
         </Group>
       </Group>
 
       <Divider my="xs" />
-      <Paper p={5}>
+      <Paper p={5} pt={0} bg="transparent">
         <Grid gutter={"xs"}>
-          {!isLoading &&
-            data?.data.map((resource) => (
-              <Grid.Col key={resource.id} span={COL_SPAN.xs} p={1}>
-                <Box>
+          {records.length > 0 &&
+            records.map((resource) => (
+              <Grid.Col
+                key={resource.id}
+                p={1}
+                span={{
+                  xs: 6,
+                  sm: 4,
+                  md: 3,
+                  lg: 2,
+                }}
+              >
+                <Box
+                  style={{
+                    aspectRatio: "1 / 1",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    overflow: "hidden",
+                  }}
+                >
                   <ResourceImage
                     src={resource.url}
-                    width={128}
-                    height={128}
+                    width={500}
+                    height={500}
                     alt={resource.url}
+                    style={{
+                      width: "100%",
+                      height: "100%", // CSS overrides the intrinsic height prop, maintaining aspect ratio
+                    }}
                   />
                 </Box>
               </Grid.Col>
             ))}
         </Grid>
+        {hasNextPage && (
+          <Center>
+            <Button
+              size="xs"
+              mt={"sm"}
+              variant="outline"
+              onClick={() => fetchNextPage()}
+              loading={isFetchingNextPage}
+            >
+              {__("loadMore")}
+            </Button>
+          </Center>
+        )}
       </Paper>
 
       {uploadImage.input}
