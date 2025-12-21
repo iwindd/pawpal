@@ -7,6 +7,7 @@ import {
   Loader,
   LoadingTrigger,
   ScrollArea,
+  Stack,
   Table,
   Text,
 } from "@pawpal/ui/core";
@@ -21,7 +22,8 @@ const ResourceDatatable = ({
   onSelectedRecordsChange,
 }: ResourceDatatableProps) => {
   const format = useFormatter();
-  const __ = useTranslations("Datatable.product");
+  const __ = useTranslations("Resources");
+
   const [records, setRecords] = useState<AdminResourceResponse[]>([]);
   const [selectedRecords, setSelectedRecords] = useState<
     AdminResourceResponse[]
@@ -98,20 +100,26 @@ const ResourceDatatable = ({
                   cursor: "pointer",
                 }}
               >
-                <Table.Td>
+                <Table.Td w={70}>
                   <Box h={50} w={50} pos="relative">
-                    <ResourceImage fill alt={record.url} src={record.url} />
+                    <ResourceImage
+                      width={50}
+                      height={50}
+                      alt={record.url}
+                      src={record.url}
+                    />
                   </Box>
                 </Table.Td>
                 <Table.Td>
-                  <Text size="sm">
-                    {record.id} -{record.url}
-                  </Text>
-                </Table.Td>
-                <Table.Td>
-                  <Text size="sm">
-                    {format.dateTime(new Date(record.createdAt), "date")}
-                  </Text>
+                  <Stack gap={0}>
+                    <Text size="sm">{record.id}</Text>
+                    <Text size="xs" c="dimmed" truncate>
+                      {format.dateTime(new Date(record.createdAt), "dateTime")}
+                      {__("resource.uploadedBy", {
+                        name: record.user.displayName,
+                      })}
+                    </Text>
+                  </Stack>
                 </Table.Td>
               </Table.Tr>
             ))}
