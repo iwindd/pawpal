@@ -41,6 +41,8 @@ const useUploadImage = () => {
 
     backdrop.show("Uploading...");
     const resp = await uploadResourceMutation(formData);
+    if (inputRef.current) inputRef.current.value = "";
+
     backdrop.hide();
 
     if (!resp.data || resp.error) {
