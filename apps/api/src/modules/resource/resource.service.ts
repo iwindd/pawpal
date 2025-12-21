@@ -36,7 +36,6 @@ export class ResourceService {
    * @returns datatable response
    */
   async getAllResourceDatatable(query: DatatableQuery) {
-    CloudflareUtil.logger.debug(query);
     const { data, total } = await this.prisma.resource.getDatatable({
       query,
       select: ResourceResponseMapper.SELECT,

@@ -1,6 +1,6 @@
 import { useUploadResourceMutation } from "@/features/resource/resourceApi";
+import { IconCheck, IconX } from "@pawpal/icons";
 import { resourceUploadSchema } from "@pawpal/shared";
-import { backdrop } from "@pawpal/ui/backdrop";
 import { notify } from "@pawpal/ui/notifications";
 import { useTranslations } from "next-intl";
 import { useRef } from "react";
@@ -39,22 +39,34 @@ const useUploadImage = () => {
       }
     }
 
-    backdrop.show("Uploading...");
+    notify.show({
+      id: "uploading",
+      message: __("notify.uploading.message"),
+      color: "blue",
+      autoClose: false,
+      loading: true,
+    });
     const resp = await uploadResourceMutation(formData);
     if (inputRef.current) inputRef.current.value = "";
 
-    backdrop.hide();
-
     if (!resp.data || resp.error) {
       console.error(resp.error);
-      return notify.show({
+      return notify.update({
+        id: "uploading",
+        loading: false,
+        icon: <IconX size={18} />,
+        autoClose: 2000,
         title: __("notify.error.title"),
         message: __("notify.error.message"),
         color: "red",
       });
     }
 
-    notify.show({
+    notify.update({
+      id: "uploading",
+      loading: false,
+      icon: <IconCheck size={18} />,
+      autoClose: 2000,
       title: __("notify.success.title"),
       message: __("notify.success.message"),
       color: "green",

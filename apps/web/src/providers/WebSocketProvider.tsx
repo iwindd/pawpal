@@ -3,7 +3,7 @@
 import { setUserBalance } from "@/features/auth/authSlice";
 import { clearCurrentCharge } from "@/features/payment/paymentSlice";
 import { useAppDispatch, useAppSelector } from "@/hooks";
-import { IconCheck } from "@pawpal/icons";
+import { IconCheck, IconX } from "@pawpal/icons";
 import {
   ENUM_TRANSACTION_STATUS,
   OnTopupTransactionUpdatedProps,
@@ -70,7 +70,7 @@ export const WebSocketProvider = ({
                 color: "red",
                 title: __("PromptPayManualModal.notify.failed.title"),
                 message: __("PromptPayManualModal.notify.failed.message"),
-                icon: <IconCheck size={18} />,
+                icon: <IconX size={18} />,
                 loading: false,
                 autoClose: 2000,
               });
