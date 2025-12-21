@@ -494,6 +494,10 @@
       "hint": ".jpg, .png (8mb)",
       "cancel": "ยกเลิก",
       "upload": "อัพโหลด",
+      "dropzone": {
+        "placeholder": "ลากและวางไฟล์ที่นี่หรือคลิกเพื่อเลือกไฟล์",
+        "hint": ".jpg, .png (8mb)"
+      },
       "notify": {
         "uploading": {
           "message": "กำลังอัพโหลด..."
@@ -516,9 +520,17 @@
         "browse": "ค้นหา",
         "upload": "อัพโหลด"
       },
+      "dropzone": {
+        "placeholder": "ลากและวางไฟล์ที่นี่หรือคลิกเพื่อเลือกไฟล์",
+        "hint": ".jpg, .png (8mb)"
+      },
+      "backdrop": {
+        "uploading": "กำลังอัพโหลด..."
+      },
       "actions": {
         "cancel": "ยกเลิก",
-        "confirm": "เลือก"
+        "uploadAndSelect": "อัพโหลดและเลือก",
+        "select": "เลือก"
       }
     }
   },

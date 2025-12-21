@@ -1,49 +1,49 @@
-import { IconPhoto, IconUpload, IconX } from "@pawpal/icons";
-import { Group, Text } from "@pawpal/ui/core";
-import { Dropzone, IMAGE_MIME_TYPE } from "@pawpal/ui/dropzone";
+import UploadResourceInput from "@/components/Inputs/UploadResourceInput";
+import useUploadImage from "@/hooks/useUploadImage";
+import { backdrop } from "@pawpal/ui/backdrop";
+import { Button } from "@pawpal/ui/core";
+import { useTranslations } from "next-intl";
+import { SelectResourceModalFooter, SelectResourceTabProps } from "..";
 
-const UploadTab = () => {
+interface UploadTabProps extends SelectResourceTabProps {}
+
+const UploadTab = ({ onSubmit, onClose }: UploadTabProps) => {
+  const __ = useTranslations("Resources.modal");
+  const uploadImage = useUploadImage({
+    autoUpload: false,
+  });
+
+  const handleSelectedRecordsChange = async () => {
+    onClose();
+    backdrop.show(__("backdrop.uploading"));
+    const resp = await uploadImage.upload();
+    backdrop.hide();
+
+    if (!resp || resp.error) {
+      console.error((resp && resp.error) || "Upload failed");
+
+      return uploadImage.clear();
+    }
+
+    onSubmit?.(resp.data);
+  };
+
   return (
-    <Dropzone
-      onDrop={(files) => console.log("accepted files", files)}
-      onReject={(files) => console.log("rejected files", files)}
-      maxSize={5 * 1024 ** 2}
-      accept={IMAGE_MIME_TYPE}
-    >
-      <Group
-        justify="center"
-        gap="xl"
-        mih={220}
-        style={{ pointerEvents: "none" }}
-      >
-        <Dropzone.Accept>
-          <IconUpload
-            size={52}
-            color="var(--mantine-color-blue-6)"
-            stroke={1.5}
-          />
-        </Dropzone.Accept>
-        <Dropzone.Reject>
-          <IconX size={52} color="var(--mantine-color-red-6)" stroke={1.5} />
-        </Dropzone.Reject>
-        <Dropzone.Idle>
-          <IconPhoto
-            size={52}
-            color="var(--mantine-color-dimmed)"
-            stroke={1.5}
-          />
-        </Dropzone.Idle>
-
-        <div>
-          <Text size="xl" inline>
-            Drag images here or click to select files
-          </Text>
-          <Text size="sm" c="dimmed" inline mt={7}>
-            Attach as many files as you like, each file should not exceed 5mb
-          </Text>
-        </div>
-      </Group>
-    </Dropzone>
+    <>
+      <UploadResourceInput
+        uploadImage={uploadImage}
+        placeholder={__("dropzone.placeholder")}
+        hint={__("dropzone.hint")}
+      />
+      <SelectResourceModalFooter onClose={onClose} selected={[]}>
+        <Button
+          onClick={handleSelectedRecordsChange}
+          disabled={!uploadImage.files}
+        >
+          {__("actions.uploadAndSelect")}
+        </Button>
+      </SelectResourceModalFooter>
+    </>
   );
 };
 

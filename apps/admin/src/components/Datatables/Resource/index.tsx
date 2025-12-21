@@ -1,5 +1,6 @@
 import ResourceImage from "@/components/ResourceImage";
 import { useGetInfiniteResourcesInfiniteQuery } from "@/features/resource/resourceApi";
+import { AdminResourceResponse } from "@pawpal/shared";
 import {
   Box,
   Center,
@@ -13,7 +14,7 @@ import { useFormatter, useTranslations } from "next-intl";
 import { useCallback, useEffect, useState } from "react";
 
 interface ResourceDatatableProps {
-  onSelectedRecordsChange?: (selectedRecords: any[]) => void;
+  onSelectedRecordsChange?: (selectedRecords: AdminResourceResponse[]) => void;
 }
 
 const ResourceDatatable = ({
@@ -21,8 +22,10 @@ const ResourceDatatable = ({
 }: ResourceDatatableProps) => {
   const format = useFormatter();
   const __ = useTranslations("Datatable.product");
-  const [records, setRecords] = useState<any[]>([]);
-  const [selectedRecords, setSelectedRecords] = useState<any[]>([]);
+  const [records, setRecords] = useState<AdminResourceResponse[]>([]);
+  const [selectedRecords, setSelectedRecords] = useState<
+    AdminResourceResponse[]
+  >([]);
   const [selectedLimit] = useState(1);
 
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
@@ -34,41 +37,38 @@ const ResourceDatatable = ({
     }
   };
 
-  const onSelectRecord = useCallback(
-    (recordId: any) => {
-      setSelectedRecords((prev) => {
-        if (prev.includes(recordId)) {
-          return prev.filter((id) => id !== recordId);
-        }
-
-        if (prev.length < selectedLimit) {
-          return [...prev, recordId];
-        }
-
-        if (prev.length >= selectedLimit) {
-          const newSelected = prev.slice(1);
-          newSelected.push(recordId);
-          return newSelected;
-        }
-
-        return prev;
-      });
-    },
-    [selectedRecords]
-  );
-
   useEffect(() => {
     if (data) {
       setRecords(data?.pages.flatMap((page) => page.data ?? []) ?? []);
     }
   }, [data]);
 
+  const onSelectRecord = useCallback(
+    (newRecordId: AdminResourceResponse["id"]) => {
+      setSelectedRecords((prev) => {
+        const newRecord = records.find((record) => record.id === newRecordId);
+        if (!newRecord) return prev;
+
+        // REMOVE
+        if (prev.some((record) => record.id === newRecordId)) {
+          return prev.filter((record) => record.id !== newRecordId);
+        }
+
+        // ADD
+        if (prev.length < selectedLimit) {
+          return [...prev, newRecord];
+        }
+
+        // REPLACE
+        return [...prev.slice(1), newRecord];
+      });
+    },
+    [records, selectedLimit]
+  );
+
   useEffect(() => {
-    if (onSelectedRecordsChange) {
-      const resources = records.filter((r) => selectedRecords.includes(r.id));
-      onSelectedRecordsChange(resources);
-    }
-  }, [selectedRecords, records]);
+    onSelectedRecordsChange?.(selectedRecords);
+  }, [selectedRecords, onSelectedRecordsChange]);
 
   if (isLoading) {
     return (
@@ -87,7 +87,11 @@ const ResourceDatatable = ({
               <Table.Tr
                 key={record.id + record.url}
                 bg={
-                  (selectedRecords.includes(record.id) && "grey") || undefined
+                  (selectedRecords.some(
+                    (selectedRecord) => selectedRecord.id === record.id
+                  ) &&
+                    "grey") ||
+                  undefined
                 }
                 onClick={() => onSelectRecord(record.id)}
                 style={{

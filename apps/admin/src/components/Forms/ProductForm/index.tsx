@@ -1,7 +1,7 @@
 "use client";
 import CategoryCombobox from "@/components/Combobox/Category";
+import ResourceInput from "@/components/Inputs/ResourceInput";
 import useFormValidate from "@/hooks/useFormValidate";
-import DropzoneTrigger from "@/hooks/useResource/triggers/DropzoneTriggger";
 import {
   AdminProductResponse,
   ProductInput,
@@ -70,7 +70,7 @@ const ProductForm = ({
         <Paper p="lg" title={__("sections.information")}>
           <Group gap={"xs"} className={classes.productInfo} align="flex-start">
             <Stack>
-              <DropzoneTrigger
+              <ResourceInput
                 w={150}
                 h={150}
                 defaultValue={product?.image?.id}

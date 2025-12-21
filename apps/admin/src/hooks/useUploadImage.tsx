@@ -1,14 +1,47 @@
 import { useUploadResourceMutation } from "@/features/resource/resourceApi";
 import { IconCheck, IconX } from "@pawpal/icons";
-import { resourceUploadSchema } from "@pawpal/shared";
+import { AdminResourceResponse, resourceUploadSchema } from "@pawpal/shared";
 import { notify } from "@pawpal/ui/notifications";
 import { useTranslations } from "next-intl";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
-const useUploadImage = () => {
+interface UseUploadImageProps {
+  autoUpload?: boolean;
+  onUploaded?: (resp: AdminResourceResponse[]) => void;
+}
+
+export type UseUploadImageReturn = ReturnType<typeof useUploadImage>;
+
+const useUploadImage = (props?: UseUploadImageProps) => {
+  const { autoUpload = true, onUploaded } = props || {};
   const __ = useTranslations("Resources.UploadModal");
-  const [uploadResourceMutation] = useUploadResourceMutation();
+  const [uploadResourceMutation, { isLoading: isUploading, error }] =
+    useUploadResourceMutation();
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const [files, setFiles] = useState<FileList | null>(null);
+  const [previews, setPreviews] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (!files) {
+      setPreviews([]);
+      return;
+    }
+
+    const objectUrls = Array.from(files).map((file) =>
+      URL.createObjectURL(file)
+    );
+    setPreviews(objectUrls);
+
+    return () => {
+      objectUrls.forEach((url) => URL.revokeObjectURL(url));
+    };
+  }, [files]);
+
+  const clear = () => {
+    setFiles(null);
+    setPreviews([]);
+    if (inputRef.current) inputRef.current.value = "";
+  };
 
   const validate = (file: File) => {
     const schema = resourceUploadSchema.safeParse({
@@ -28,9 +61,13 @@ const useUploadImage = () => {
     return true;
   };
 
-  const upload = async (files: FileList) => {
+  const upload = async () => {
+    if (!files) {
+      return console.error("No files");
+    }
+
     const formData = new FormData();
-    // Validate all files first
+
     for (let i = 0; i < files.length; i++) {
       const file = files.item(i);
       if (file) {
@@ -39,6 +76,13 @@ const useUploadImage = () => {
       }
     }
 
+    const resp = await uploadResourceMutation(formData);
+    clear();
+
+    return resp;
+  };
+
+  const handleUpload = async () => {
     notify.show({
       id: "uploading",
       message: __("notify.uploading.message"),
@@ -46,12 +90,12 @@ const useUploadImage = () => {
       autoClose: false,
       loading: true,
     });
-    const resp = await uploadResourceMutation(formData);
-    if (inputRef.current) inputRef.current.value = "";
+    const resp = await upload();
 
-    if (!resp.data || resp.error) {
-      console.error(resp.error);
-      return notify.update({
+    if (!resp || resp.error) {
+      if (resp?.error) console.error(resp?.error);
+
+      notify.update({
         id: "uploading",
         loading: false,
         icon: <IconX size={18} />,
@@ -60,6 +104,8 @@ const useUploadImage = () => {
         message: __("notify.error.message"),
         color: "red",
       });
+
+      return resp;
     }
 
     notify.update({
@@ -71,30 +117,42 @@ const useUploadImage = () => {
       message: __("notify.success.message"),
       color: "green",
     });
+
+    onUploaded?.(resp.data);
   };
 
   const open = () => {
     inputRef.current?.click();
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files && files.length > 0) {
-      upload(files);
-    }
+  const inputProps = {
+    ref: inputRef,
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+      const files = e.target.files;
+      if (files && files.length > 0) {
+        setFiles(files);
+      }
+    },
   };
+
+  useEffect(() => {
+    if (autoUpload && files && files.length > 0) handleUpload();
+  }, [autoUpload, files]);
 
   return {
     open,
-    input: (
-      <input
-        ref={inputRef}
-        type="file"
-        multiple
-        hidden
-        onChange={handleFileChange}
-      />
-    ),
+    setFiles,
+    upload,
+    clear,
+    previews,
+    setPreviews,
+    inputProps,
+    input: <input type="file" multiple hidden {...inputProps} />,
+    files,
+    states: {
+      isUploading,
+      error,
+    },
   };
 };
 

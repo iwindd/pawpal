@@ -1,5 +1,5 @@
 "use client";
-import { ResourceResponse } from "@pawpal/shared";
+import { AdminResourceResponse } from "@pawpal/shared";
 import {
   Button,
   Divider,
@@ -10,58 +10,53 @@ import {
   Text,
 } from "@pawpal/ui/core";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import BrowseTab from "./tabs/Browse";
 import UploadTab from "./tabs/Upload";
 
 type SelectResourceTab = "browse" | "upload";
 
-interface SelectResourceModalProps {
-  opened: boolean;
+export interface SelectResourceTabProps {
   onClose: () => void;
-  onSubmit?: (selectedResource: ResourceResponse) => void;
+  onSubmit?: (selectedResource: AdminResourceResponse[]) => void;
+}
+interface SelectResourceModalProps extends SelectResourceTabProps {
+  opened: boolean;
 }
 
 const SelectResourceModal = ({
   opened,
-  onClose,
   onSubmit,
+  onClose,
 }: SelectResourceModalProps) => {
   const __ = useTranslations("Resources.modal");
-  const [selectedRecord, setSelectedRecord] = useState<
-    Record<SelectResourceTab, ResourceResponse | null>
-  >({
-    browse: null,
-    upload: null,
-  });
-  const [activeTab, setActiveTab] = useState<SelectResourceTab | null>(
-    "browse"
+
+  const [activeTab, setActiveTab] = useState<SelectResourceTab>("browse");
+
+  const handleClose = useCallback(() => {
+    onClose();
+    setActiveTab("browse");
+  }, [onClose]);
+
+  const handleSubmit = useCallback(
+    (selectedResource: AdminResourceResponse[]) => {
+      onSubmit?.(selectedResource);
+      handleClose();
+    },
+    [onSubmit]
   );
-  const handleSelectedRecordsChange = (
-    tab: SelectResourceTab,
-    selectedRecords: ResourceResponse[]
-  ) => {
-    setSelectedRecord((prev) => ({
-      ...prev,
-      [tab]: selectedRecords.length > 0 ? selectedRecords[0] : null,
-    }));
-  };
 
-  const currentSelectedRecord = activeTab ? selectedRecord[activeTab] : null;
-
-  const handleSubmit = () => {
-    if (currentSelectedRecord) {
-      onSubmit?.(currentSelectedRecord);
-    }
+  const tabProps = {
+    onClose: handleClose,
+    onSubmit: handleSubmit,
   };
 
   return (
-    <Modal opened={opened} onClose={onClose} title={__("title")} size="xl">
+    <Modal opened={opened} onClose={handleClose} title={__("title")} size="xl">
       <Tabs
         value={activeTab}
         onChange={(value) => setActiveTab(value as SelectResourceTab)}
         variant="outline"
-        defaultValue="browse"
       >
         <Tabs.List>
           <Tabs.Tab value="browse">{__("tab.browse")}</Tabs.Tab>
@@ -69,28 +64,38 @@ const SelectResourceModal = ({
         </Tabs.List>
         <Tabs.Panel value="browse">
           <Stack py={"md"}>
-            <BrowseTab
-              onSelectedRecordsChange={(selectedRecords) =>
-                handleSelectedRecordsChange("browse", selectedRecords)
-              }
-            />
+            <BrowseTab {...tabProps} />
           </Stack>
         </Tabs.Panel>
         <Tabs.Panel value="upload">
           <Stack py={"md"}>
-            {/* TODO:: Implement UploadTab */}
-            <UploadTab />
+            <UploadTab {...tabProps} />
           </Stack>
         </Tabs.Panel>
       </Tabs>
+    </Modal>
+  );
+};
 
+export const SelectResourceModalFooter = ({
+  children,
+  onClose,
+  selected,
+}: Pick<SelectResourceTabProps, "onClose"> & {
+  children: React.ReactNode;
+  selected: AdminResourceResponse[];
+}) => {
+  const __ = useTranslations("Resources.modal");
+
+  return (
+    <>
       <Divider />
       <Group justify="space-between" mt="md">
         <Group>
-          {currentSelectedRecord && (
+          {selected.length > 0 && (
             <Text>
               {__("selected", {
-                name: currentSelectedRecord.id,
+                name: selected.map((item) => item.id).join(", "),
               })}
             </Text>
           )}
@@ -99,12 +104,10 @@ const SelectResourceModal = ({
           <Button onClick={onClose} variant="outline">
             {__("actions.cancel")}
           </Button>
-          <Button onClick={handleSubmit} disabled={!currentSelectedRecord}>
-            {__("actions.confirm")}
-          </Button>
+          {children}
         </Group>
       </Group>
-    </Modal>
+    </>
   );
 };
 

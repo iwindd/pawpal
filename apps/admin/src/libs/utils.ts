@@ -1,3 +1,4 @@
+import { FileWithPath } from "@pawpal/ui/dropzone";
 import levenshtein from "./levenshtein";
 
 export class Util {
@@ -19,6 +20,30 @@ export class Util {
     const distance = levenshtein(label, q) || 0;
 
     return 10 - distance;
+  }
+
+  /**
+   * Convert FileWithPath[] to FileList
+   * @param files Array of FileWithPath
+   * @returns FileList
+   */
+  static fileWithPathToFileList(files: FileWithPath[]): FileList {
+    const dataTransfer = new DataTransfer();
+
+    files.forEach((file) => {
+      dataTransfer.items.add(file);
+    });
+
+    return dataTransfer.files;
+  }
+
+  /**
+   * Get resource url from storage
+   * @param url Resource url
+   * @returns Resource url
+   */
+  static getResourceUrl(url: string) {
+    return `${process.env.NEXT_PUBLIC_STORAGE_URL}/${url}`;
   }
 }
 

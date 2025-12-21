@@ -1,9 +1,9 @@
 "use client";
 import ComboboxProduct from "@/components/Combobox/Product";
+import ResourceInput from "@/components/Inputs/ResourceInput";
 import SelectCarouselStatus from "@/components/Select/CarouselStatus";
 import { DEFAULT_CAROUSEL_STATUS } from "@/configs/carousel";
 import useFormValidate from "@/hooks/useFormValidate";
-import DropzoneTrigger from "@/hooks/useResource/triggers/DropzoneTriggger";
 import { IconPublishShare, IconSchedule } from "@pawpal/icons";
 import {
   CarouselInput,
@@ -65,7 +65,7 @@ const CarouselForm = ({
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack maw="1920">
         <Paper p="md">
-          <DropzoneTrigger
+          <ResourceInput
             placeholder={__("fields.resource.placeholder")}
             hint={__("fields.resource.hint")}
             h="400"
