@@ -21,6 +21,7 @@ export {
   Container,
   createTheme,
   DEFAULT_THEME,
+  Dialog,
   Divider,
   Drawer,
   FileInput,

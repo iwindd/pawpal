@@ -1,5 +1,6 @@
 "use client";
 import OverlayImage from "@/components/Images/OverlayImage/OverlayImage";
+import ViewResouceImageModal from "@/components/Modals/ViewResourceImageModal";
 import ResourceImage from "@/components/ResourceImage";
 import { useGetInfiniteResourcesInfiniteQuery } from "@/features/resource/resourceApi";
 import useUploadImage from "@/hooks/useUploadImage";
@@ -40,6 +41,7 @@ const ResourcePage = () => {
   const uploadImage = useUploadImage();
   const formmater = useFormatter();
   const [records, setRecords] = useState<AdminResourceResponse[]>([]);
+  const [viewRecord, setViewRecord] = useState<number | null>(null);
   const [sort, setSort] = useState<DataTableSortStatus<AdminResourceResponse>>(
     RESOURCE_SORT_BY[0]!.value
   );
@@ -108,6 +110,7 @@ const ResourcePage = () => {
                 }}
               >
                 <OverlayImage
+                  onClick={() => setViewRecord(records.indexOf(resource))}
                   image={
                     <Box
                       style={{
@@ -164,6 +167,24 @@ const ResourcePage = () => {
         )}
       </Paper>
 
+      <ViewResouceImageModal
+        resource={viewRecord ? records[viewRecord] || null : null}
+        close={() => setViewRecord(null)}
+        hasNext={viewRecord !== records.length - 1 || hasNextPage}
+        hasPrev={viewRecord !== 0}
+        next={async () => {
+          const nextIndex = viewRecord! + 1;
+          if (nextIndex === records.length) {
+            await fetchNextPage();
+            setTimeout(() => {
+              setViewRecord(nextIndex);
+            }, 100);
+          } else {
+            setViewRecord(nextIndex);
+          }
+        }}
+        prev={() => setViewRecord(viewRecord! - 1)}
+      />
       {uploadImage.input}
     </div>
   );
