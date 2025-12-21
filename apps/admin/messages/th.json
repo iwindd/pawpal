@@ -532,6 +532,9 @@
         "uploadAndSelect": "อัพโหลดและเลือก",
         "select": "เลือก"
       }
+    },
+    "resource": {
+      "uploadedBy": " โดย {name}"
     }
   },
   "Combobox": {

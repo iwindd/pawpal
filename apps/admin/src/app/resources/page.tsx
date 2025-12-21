@@ -1,4 +1,5 @@
 "use client";
+import OverlayImage from "@/components/Images/OverlayImage/OverlayImage";
 import ResourceImage from "@/components/ResourceImage";
 import { useGetInfiniteResourcesInfiniteQuery } from "@/features/resource/resourceApi";
 import useUploadImage from "@/hooks/useUploadImage";
@@ -17,7 +18,7 @@ import {
   Text,
   Title,
 } from "@pawpal/ui/core";
-import { useTranslations } from "next-intl";
+import { useFormatter, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
 const RESOURCE_SORT_BY: {
@@ -37,6 +38,7 @@ const RESOURCE_SORT_BY: {
 const ResourcePage = () => {
   const __ = useTranslations("Resources");
   const uploadImage = useUploadImage();
+  const formmater = useFormatter();
   const [records, setRecords] = useState<AdminResourceResponse[]>([]);
   const [sort, setSort] = useState<DataTableSortStatus<AdminResourceResponse>>(
     RESOURCE_SORT_BY[0]!.value
@@ -105,26 +107,45 @@ const ResourcePage = () => {
                   lg: 2,
                 }}
               >
-                <Box
-                  style={{
-                    aspectRatio: "1 / 1",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    overflow: "hidden",
-                  }}
+                <OverlayImage
+                  image={
+                    <Box
+                      style={{
+                        aspectRatio: "1 / 1",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        overflow: "hidden",
+                      }}
+                    >
+                      <ResourceImage
+                        src={resource.url}
+                        width={500}
+                        height={500}
+                        alt={resource.url}
+                        style={{
+                          width: "100%",
+                          height: "100%", // CSS overrides the intrinsic height prop, maintaining aspect ratio
+                        }}
+                      />
+                    </Box>
+                  }
                 >
-                  <ResourceImage
-                    src={resource.url}
-                    width={500}
-                    height={500}
-                    alt={resource.url}
-                    style={{
-                      width: "100%",
-                      height: "100%", // CSS overrides the intrinsic height prop, maintaining aspect ratio
-                    }}
-                  />
-                </Box>
+                  <Stack w="100%" h="100%" justify="end">
+                    <Stack gap={0} mb={"xs"}>
+                      <Text>{resource.id}</Text>
+                      <Text size="xs" c="dimmed" truncate>
+                        {formmater.dateTime(
+                          new Date(resource.createdAt),
+                          "dateTime"
+                        )}
+                        {__("resource.uploadedBy", {
+                          name: resource.user.displayName,
+                        })}
+                      </Text>
+                    </Stack>
+                  </Stack>
+                </OverlayImage>
               </Grid.Col>
             ))}
         </Grid>
