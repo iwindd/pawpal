@@ -121,7 +121,7 @@ export class OrderService {
       });
 
       await userWallet.updateBalance(balanceAfter);
-      await this.orderRepo.updateStatusOrThrow(order.id, OrderStatus.PENDING);
+      await this.prisma.order.pending(order.id);
       order.status = OrderStatus.PENDING;
 
       this.eventService.admin.onNewJobOrder(
@@ -337,10 +337,13 @@ export class OrderService {
   /**
    * Complete Order
    * @param id order id
-   * @param status order status
+   * @param processedBy processed by user id
    * @returns updated order
    */
-  async completeOrder(id: string): Promise<AdminOrderResponse> {
+  async completeOrder(
+    id: string,
+    processedBy: string,
+  ): Promise<AdminOrderResponse> {
     const order = await this.orderRepo.find(id, {
       status: OrderStatus.PENDING,
     });
@@ -349,16 +352,12 @@ export class OrderService {
     const purchaseTransaction = order.purchaseTransaction;
     if (!purchaseTransaction) throw new BadRequestException('invalid_order');
 
-    await this.prisma.userWalletTransaction.update({
-      where: {
-        id: purchaseTransaction.id,
-      },
-      data: {
-        status: TransactionStatus.SUCCESS,
-      },
-    });
+    await this.prisma.userWalletTransaction.success(
+      purchaseTransaction.id,
+      processedBy,
+    );
 
-    await order.updateStatus(OrderStatus.COMPLETED);
+    await this.prisma.order.complete(id, processedBy);
     const orderResponse = await this.orderRepo.toOrderResponse(order.id);
     this.eventService.admin.onFinishedJobOrder(orderResponse);
     this.eventService.user.onPurchaseTransactionUpdated(order.userId, {
@@ -377,9 +376,13 @@ export class OrderService {
   /**
    * Cancel Order
    * @param id order id
+   * @param processedBy processed by user id
    * @returns updated order
    */
-  async cancelOrder(id: string): Promise<AdminOrderResponse> {
+  async cancelOrder(
+    id: string,
+    processedBy: string,
+  ): Promise<AdminOrderResponse> {
     const order = await this.orderRepo.find(id);
     if (!order) throw new BadRequestException('invalid_order');
 
@@ -400,7 +403,8 @@ export class OrderService {
       order.userId,
       purchaseTransaction.wallet.walletType,
     );
-    await order.updateStatus(OrderStatus.CANCELLED);
+
+    await this.prisma.order.cancel(id, processedBy);
     this.eventService.user.onPurchaseTransactionUpdated(order.userId, {
       id: order.id,
       status: OrderStatus.CANCELLED,

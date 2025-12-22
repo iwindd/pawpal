@@ -1,8 +1,4 @@
-import {
-  OrderStatus,
-  Prisma,
-  TransactionType,
-} from '@/generated/prisma/client';
+import { Prisma, TransactionType } from '@/generated/prisma/client';
 import { OrderRepository } from '../../modules/order/order.repository';
 
 export type OrderEntityProps = Prisma.OrderGetPayload<{
@@ -73,10 +69,5 @@ export class OrderEntity {
     return this.transactions.find(
       (transaction) => transaction.type === TransactionType.PURCHASE,
     );
-  }
-
-  public async updateStatus(status: OrderStatus) {
-    this.order.status = status;
-    return this.repo.updateStatusOrThrow(this.order.id, status);
   }
 }

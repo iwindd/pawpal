@@ -1,5 +1,5 @@
 import { OrderResponseMapper } from '@/common/mappers/OrderResponseMapper';
-import { OrderStatus, Prisma } from '@/generated/prisma/client';
+import { Prisma } from '@/generated/prisma/client';
 import { Injectable, Logger } from '@nestjs/common';
 import { OrderEntity } from '../../common/entities/order.entity';
 import { PrismaService } from '../prisma/prisma.service';
@@ -41,24 +41,6 @@ export class OrderRepository {
     });
 
     return this.from(order);
-  }
-
-  /**
-   * Update order status
-   * @param orderId order id
-   * @param status order status
-   * @returns updated order
-   */
-  public async updateStatusOrThrow(orderId: string, status: OrderStatus) {
-    this.logger.log(`Setting order ${orderId} status to ${status}`);
-    return this.prisma.order.update({
-      where: {
-        id: orderId,
-      },
-      data: {
-        status,
-      },
-    });
   }
 
   /**

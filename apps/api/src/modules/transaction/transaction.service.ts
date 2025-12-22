@@ -1,10 +1,6 @@
 import { OrderResponseMapper } from '@/common/mappers/OrderResponseMapper';
 import { DatatableQuery } from '@/common/pipes/DatatablePipe';
-import {
-  OrderStatus,
-  TransactionStatus,
-  TransactionType,
-} from '@/generated/prisma/enums';
+import { TransactionStatus, TransactionType } from '@/generated/prisma/enums';
 import { Injectable, Logger } from '@nestjs/common';
 import { EventService } from '../event/event.service';
 import { OrderRepository } from '../order/order.repository';
@@ -27,18 +23,16 @@ export class TransactionService {
   /**
    * Success charge transaction
    * @param transactionId transaction id
+   * @param processedBy processed by user id
    * @returns success charge transaction response
    */
-  async successCharge(transactionId: string) {
+  async successCharge(transactionId: string, processedBy: string) {
     const transaction = await this.transactionRepo.find(transactionId);
 
     if (transaction.type == TransactionType.PURCHASE)
       throw new Error('Transaction is not topup transaction');
 
-    this.transactionRepo.updateStatusOrThrow(
-      transactionId,
-      TransactionStatus.SUCCESS,
-    );
+    this.prisma.userWalletTransaction.success(transactionId, processedBy);
 
     switch (transaction.type) {
       case TransactionType.TOPUP: {
@@ -59,10 +53,7 @@ export class TransactionService {
         break;
       }
       case TransactionType.TOPUP_FOR_PURCHASE: {
-        await this.orderRepo.updateStatusOrThrow(
-          transaction.orderId,
-          OrderStatus.PENDING,
-        );
+        await this.prisma.order.pending(transaction.orderId);
 
         // create new purchase transaction
         const total = transaction.total.minus(transaction.balanceAfter).abs();
@@ -115,21 +106,16 @@ export class TransactionService {
   /**
    * Failed charge transaction
    * @param transactionId transaction id
+   * @param processedBy processed by user id
    */
-  async failCharge(transactionId: string) {
+  async failCharge(transactionId: string, processedBy: string) {
     const transaction = await this.transactionRepo.find(transactionId);
 
-    await this.transactionRepo.updateStatusOrThrow(
-      transaction.id,
-      TransactionStatus.FAILED,
-    );
+    this.prisma.userWalletTransaction.failed(transactionId, processedBy);
 
     // CANCELLED ORDER IF ORDER IS PENDING
     if (transaction.orderId)
-      await this.orderRepo.updateStatusOrThrow(
-        transaction.orderId,
-        OrderStatus.CANCELLED,
-      );
+      await this.prisma.order.cancel(transaction.orderId, processedBy);
 
     this.eventService.admin.onFinishedJobTransaction(transaction.toJson());
     this.eventService.user.onTopupTransactionUpdated(transaction.userId, {

@@ -4,6 +4,7 @@ import { PrismaClient } from '../../generated/prisma/client';
 import { DatatableExtension } from './extensions/DatatableExtension';
 import { loggingModelExtension } from './extensions/LoggingExtension';
 import { PackageExtension } from './extensions/PackageExtension';
+import { PaymentExtension } from './extensions/PaymentExtension';
 import { walletExtension } from './extensions/WalletExtension';
 @Injectable()
 export class PrismaProvider extends PrismaClient {
@@ -19,6 +20,7 @@ export class PrismaProvider extends PrismaClient {
     return this.$extends(loggingModelExtension)
       .$extends(DatatableExtension)
       .$extends(PackageExtension)
-      .$extends(walletExtension);
+      .$extends(walletExtension)
+      .$extends(PaymentExtension);
   }
 }

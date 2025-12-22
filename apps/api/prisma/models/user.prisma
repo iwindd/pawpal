@@ -7,12 +7,14 @@ model User {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  userWallets UserWallet[]   @relation("UserWallets")
-  orders      Order[]        @relation("OrderUser")
-  roles       Role[]         @relation("UserRoles")
-  Resources   Resource[]     @relation("ResourceUser")
-  carousels   Carousel[]     @relation("CarouselCreatedBy")
-  fields      ProductField[] @relation("FieldCreatedBy")
+  userWallets                     UserWallet[]            @relation("UserWallets")
+  orders                          Order[]                 @relation("OrderUser")
+  roles                           Role[]                  @relation("UserRoles")
+  Resources                       Resource[]              @relation("ResourceUser")
+  carousels                       Carousel[]              @relation("CarouselCreatedBy")
+  fields                          ProductField[]          @relation("FieldCreatedBy")
+  processedOrders                 Order[]                 @relation("OrderProcessedBy")
+  processedUserWalletTransactions UserWalletTransaction[] @relation("UserWalletTransactionProcessedBy")
 
   @@map("users")
 }

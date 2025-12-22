@@ -65,29 +65,6 @@ export class TransactionRepository {
   }
 
   /**
-   * Update a transaction status
-   * @param id transaction id
-   * @param status transaction status
-   * @returns updated transaction
-   */
-  public async updateStatusOrThrow(
-    transactionId: string,
-    transactionStatus: TransactionStatus,
-  ) {
-    this.logger.log(
-      `Setting transaction ${transactionId} status to ${transactionStatus}`,
-    );
-    return this.prisma.userWalletTransaction.update({
-      where: {
-        id: transactionId,
-      },
-      data: {
-        status: transactionStatus,
-      },
-    });
-  }
-
-  /**
    * Create a charge
    * @param amount amount
    * @param paymentGatewayId payment gateway id
