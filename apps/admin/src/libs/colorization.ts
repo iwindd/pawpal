@@ -6,6 +6,7 @@ import {
   TransactionStatus,
   TransactionType,
 } from "@pawpal/shared";
+import dayjs from "dayjs";
 
 export class Colorization {
   static orderStatus(status: OrderStatus) {
@@ -45,5 +46,28 @@ export class Colorization {
       default:
         return "gray";
     }
+  }
+
+  /**
+   * Get relative time from date
+   * @param date Date to get relative time
+   * @param colors Object of colors
+   * @returns Color of relative time
+   */
+  static relativeTime(
+    date: Date,
+    colors: {
+      successAfter?: number;
+      warningAfter?: number;
+      errorAfter?: number;
+    }
+  ) {
+    const now = dayjs();
+    const secondAgo = now.diff(dayjs(date), "second");
+    const { errorAfter, warningAfter, successAfter } = colors;
+
+    if (errorAfter && secondAgo >= errorAfter) return "red";
+    if (warningAfter && secondAgo >= warningAfter) return "yellow";
+    if (successAfter && secondAgo >= successAfter) return "green";
   }
 }

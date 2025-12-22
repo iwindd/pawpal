@@ -14,6 +14,7 @@ import { sortBy } from "lodash";
 import { useFormatter, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import TableAction, { Action } from "../action";
+import { RelativeTime } from "./RelativeTime";
 
 const TransactionDatatable = () => {
   const __ = useTranslations("Datatable.transaction");
@@ -83,8 +84,7 @@ const TransactionDatatable = () => {
       noWrap: true,
       sortable: true,
       title: __("createdAt"),
-      render: (record) =>
-        format.dateTime(new Date(record.createdAt), "dateTime"),
+      render: (record) => <RelativeTime date={record.createdAt} />,
     },
     {
       accessor: "order_id",

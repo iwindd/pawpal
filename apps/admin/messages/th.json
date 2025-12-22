@@ -634,5 +634,14 @@
         }
       }
     }
+  },
+  "RelativeTime": {
+    "short": {
+      "days": "วัน",
+      "hours": "ชั่วโมง",
+      "minutes": "นาที",
+      "seconds": "วินาที",
+      "now": "ตอนนี้"
+    }
   }
 }
