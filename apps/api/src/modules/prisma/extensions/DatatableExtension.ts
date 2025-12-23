@@ -49,6 +49,7 @@ export const DatatableExtension = Prisma.defineExtension((client) => {
           const count = await context.count({
             where: {
               AND: where.AND,
+              OR: where.OR,
             },
           });
 
