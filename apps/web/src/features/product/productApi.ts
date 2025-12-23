@@ -8,19 +8,14 @@ import { createApi } from "@reduxjs/toolkit/query/react";
 
 export const productApi = createApi({
   reducerPath: "productApi",
-  tagTypes: ["Products"],
+  tagTypes: ["Products", "SaleProducts"],
   baseQuery: baseQuery({
     baseUrl: `/product`,
   }),
   endpoints: (builder) => ({
     getInfiniteProducts: builder.infiniteQuery<
       DatatableResponse<ProductResponse>,
-      DatatableInput & {
-        filters?: {
-          search?: string;
-          category?: string;
-        };
-      },
+      DatatableInput,
       number
     >({
       infiniteQueryOptions: {
@@ -41,7 +36,33 @@ export const productApi = createApi({
       }),
       providesTags: ["Products"],
     }),
+    getInfiniteSaleProducts: builder.infiniteQuery<
+      DatatableResponse<ProductResponse>,
+      DatatableInput,
+      number
+    >({
+      infiniteQueryOptions: {
+        initialPageParam: 1,
+        getNextPageParam: (lastPage, allPages, lastPageParam) => {
+          const total = lastPage.total;
+          const loaded = allPages.flatMap((p) => p.data).length;
+
+          return loaded < total ? lastPageParam + 1 : undefined;
+        },
+      },
+      query: ({ queryArg, pageParam }) => ({
+        url: "/sale",
+        params: {
+          page: pageParam,
+          ...queryArg,
+        },
+      }),
+      providesTags: ["SaleProducts"],
+    }),
   }),
 });
 
-export const { useGetInfiniteProductsInfiniteQuery } = productApi;
+export const {
+  useGetInfiniteProductsInfiniteQuery,
+  useGetInfiniteSaleProductsInfiniteQuery,
+} = productApi;

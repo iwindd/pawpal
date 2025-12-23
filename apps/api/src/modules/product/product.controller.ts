@@ -2,31 +2,20 @@ import {
   FindProductPipe,
   FindProductQuery,
 } from '@/common/pipes/FindProductPipe';
-import { Controller, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ProductService } from './product.service';
 
 @Controller('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
-  @Get('/new')
-  getNewProducts(
-    @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
-  ) {
-    return this.productService.getNewProducts(Math.min(limit || 4, 100));
-  }
-
   @Get('/sale')
-  getSaleProducts(
-    @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
-  ) {
-    return this.productService.getSaleProducts(Math.min(limit || 4, 100));
+  getSaleProductDatatable(@Query(FindProductPipe) query: FindProductQuery) {
+    return this.productService.getSaleProductDatatable(query);
   }
 
   @Get()
-  async getAllProductDatatable(
-    @Query(FindProductPipe) query: FindProductQuery,
-  ) {
+  getAllProductDatatable(@Query(FindProductPipe) query: FindProductQuery) {
     return this.productService.getAllProductDatatable(query);
   }
 

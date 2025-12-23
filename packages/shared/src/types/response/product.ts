@@ -45,8 +45,8 @@ export interface ProductResponse {
   createdAt: string | Date;
   category: ProductCategory;
   packages: ProductPackage[];
-  sales: ProductSaleValue | null;
   fields: ProductField[];
+  MOST_SALE: ProductSaleValue | null;
 }
 
 export interface AdminProductResponse {

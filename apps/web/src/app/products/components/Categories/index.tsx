@@ -16,7 +16,7 @@ const CATEGORIES = [
     icon: IconGames,
   },
   {
-    key: "other",
+    key: "streaming",
     label: "filters.other",
     icon: IconOther,
   },

@@ -115,6 +115,10 @@ export class ProductService {
    * @returns Datatable response
    */
   async getAllProductDatatable(query: DatatableQuery) {
+    this.logger.debug(query);
+    const filterCategory =
+      query.filter || query.filter != 'all' ? null : query.filter;
+
     return this.prisma.product.getDatatable({
       query,
       select: {
@@ -175,6 +179,92 @@ export class ProductService {
           some: {
             name: { mode: 'insensitive' },
             description: { mode: 'insensitive' },
+          },
+        },
+      },
+      ...(filterCategory && { where: { category: { slug: filterCategory } } }),
+    });
+  }
+
+  /**
+   * Get all products with datatable
+   * @param query Datatable query
+   * @returns Datatable response
+   */
+  async getSaleProductDatatable(query: DatatableQuery) {
+    const now = new Date();
+    return this.prisma.product.getDatatable({
+      query,
+      select: {
+        id: true,
+        slug: true,
+        name: true,
+        description: true,
+        createdAt: true,
+        category: {
+          select: {
+            name: true,
+            slug: true,
+          },
+        },
+        productTags: {
+          select: {
+            slug: true,
+            name: true,
+          },
+        },
+        packages: {
+          select: {
+            id: true,
+            name: true,
+            price: true,
+            description: true,
+            sales: {
+              where: {
+                startAt: { lte: new Date() },
+                endAt: { gte: new Date() },
+              },
+              select: {
+                discount: true,
+                discountType: true,
+                startAt: true,
+                endAt: true,
+              },
+            },
+          },
+        },
+        MOST_SALE: true,
+      },
+      searchable: {
+        name: { mode: 'insensitive' },
+        slug: { mode: 'insensitive' },
+        description: { mode: 'insensitive' },
+        category: {
+          name: { mode: 'insensitive' },
+          slug: { mode: 'insensitive' },
+        },
+        productTags: {
+          some: {
+            name: { mode: 'insensitive' },
+            slug: { mode: 'insensitive' },
+          },
+        },
+        packages: {
+          some: {
+            name: { mode: 'insensitive' },
+            description: { mode: 'insensitive' },
+          },
+        },
+      },
+      where: {
+        packages: {
+          some: {
+            sales: {
+              some: {
+                startAt: { lte: now },
+                endAt: { gte: now },
+              },
+            },
           },
         },
       },

@@ -1,5 +1,6 @@
 "use client";
 
+import ProductCard from "@/components/Card/ProductCart";
 import { useGetInfiniteProductsInfiniteQuery } from "@/features/product/productApi";
 import { IconSearch } from "@pawpal/icons";
 import {
@@ -17,7 +18,6 @@ import {
 import { useTranslations } from "next-intl";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useMemo, useState } from "react";
-import ProductCard from "../Home/components/ProductSections/components/card";
 import Categories, { CategoryKey } from "./components/Categories";
 
 interface ProductsPageState {
@@ -33,7 +33,7 @@ export default function ProductsPage() {
 
   const [state, setState] = useState<ProductsPageState>({
     search: searchParams.get("search") || "",
-    category: (searchParams.get("category") as CategoryKey) || "all",
+    category: (searchParams.get("games") as CategoryKey) || "all",
     showFilters: false,
   });
 
@@ -46,11 +46,9 @@ export default function ProductsPage() {
     isFetchingNextPage,
     error,
   } = useGetInfiniteProductsInfiniteQuery({
-    limit: 12,
-    filters: {
-      search: state.search,
-      category: state.category,
-    },
+    limit: 6 * 4,
+    search: state.search,
+    filter: state.category,
   });
 
   // Flatten all products from all pages
@@ -131,11 +129,9 @@ export default function ProductsPage() {
                   <Grid.Col
                     key={product.slug}
                     span={{
-                      xs: 12,
-                      sm: 6,
-                      md: 4,
-                      lg: 3,
-                      xl: 2,
+                      base: 12,
+                      xs: 3,
+                      md: 2,
                     }}
                   >
                     <ProductCard product={product} />

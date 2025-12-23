@@ -17,8 +17,15 @@
       "flashsale": "Flashsale"
     },
     "ProductSections": {
-      "title": "สินค้า"
-    }
+      "title": "สินค้า",
+      "NewProductRow": {
+        "title": "สินค้าใหม่!"
+      },
+      "SaleProductRow": {
+        "title": "กำลังลดราคา!"
+      }
+    },
+    "showMore": "แสดงสินค้าทั้งหมด"
   },
   "Navbar": {
     "userMenu": {
