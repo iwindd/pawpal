@@ -9,14 +9,14 @@ export type PaymentData = {
 
 export const paymentMethods: PaymentData[] = [
   {
-    image: "assets/images/fallback-product.jpg",
+    image: "assets/images/fallback-product.png",
     label: "Pawpal Wallet",
     value: "pawpal-wallet",
     disabledTopup: true,
     description: undefined,
   },
   {
-    image: "assets/images/fallback-product.jpg",
+    image: "assets/images/fallback-product.png",
     label: "PromptPay",
     description: undefined,
     value: "promptpay",

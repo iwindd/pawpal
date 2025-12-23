@@ -39,7 +39,7 @@ const ProductDatatable = ({
       accessor: "productTags._count",
       noWrap: true,
       sortable: true,
-      render: (value) => value.productTags.map((tag) => tag.name).join(", "),
+      render: (value) => "-", // TODO:: Show product tags
       title: __("productTags"),
       visibleMediaQuery: above.md,
     },

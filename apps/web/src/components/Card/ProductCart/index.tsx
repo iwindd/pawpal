@@ -17,7 +17,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
       key={product.slug}
       shadow="sm"
       component={Link}
-      href={`/product/${product.slug}`}
+      href={`/products/${product.slug}`}
       w={"100%"}
       className={classes.card}
       padding={0}

@@ -1,7 +1,6 @@
 import { useGetActivePaymentGatewayQuery } from "@/features/paymentGateway/paymentGatewayApi";
 import { useAppSelector } from "@/hooks";
-import { getPriceWithSale } from "@/utils/pricing";
-import { ENUM_DISCOUNT_TYPE, ProductPackage } from "@pawpal/shared";
+import { ProductPackage } from "@pawpal/shared";
 import {
   Box,
   Card,
@@ -32,11 +31,7 @@ const PaymentPartial = ({ form, selectedPackage }: PaymentPartialProp) => {
   const basePrice = selectedPackage?.price || 0;
   const amount = form.getValues().amount;
   const price = basePrice * amount;
-  const discountedPrice = getPriceWithSale(price, {
-    type: ENUM_DISCOUNT_TYPE.PERCENT,
-    value: selectedPackage?.sale?.percent || 0,
-  });
-
+  const discountedPrice = 0;
   const walletBalance = user?.userWallet.MAIN || 0;
   const includeWallet = form.getValues().includeWalletBalance;
 
@@ -77,7 +72,7 @@ const PaymentPartial = ({ form, selectedPackage }: PaymentPartialProp) => {
                     <Box w={50} h={50}>
                       <Image
                         component={NextImage}
-                        src={`/assets/images/fallback-product.jpg`}
+                        src={`/assets/images/fallback-product.png`}
                         alt={gateway.label}
                         width={50}
                         height={50}

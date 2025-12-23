@@ -4,7 +4,6 @@ import useFormValidate from "@/hooks/useFormValidate";
 import {
   buildFieldSchema,
   defaultPaymentMethod,
-  ENUM_DISCOUNT_TYPE,
   ProductPackage,
   ProductResponse,
   PurchaseInput,
@@ -118,12 +117,6 @@ const ProductForm = ({ product, onPurchase, isLoading }: ProductFormProps) => {
             label: field.label,
             value: submittedValues?.fields[field.id] || "",
           })) || []
-        }
-        sale={
-          selectedPackage?.sale && {
-            type: ENUM_DISCOUNT_TYPE.PERCENT,
-            value: selectedPackage.sale.percent,
-          }
         }
       />
     </>

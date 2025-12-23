@@ -1,5 +1,4 @@
-import { getPriceWithSale } from "@/utils/pricing";
-import { ENUM_DISCOUNT_TYPE, ProductResponse } from "@pawpal/shared";
+import { ProductResponse } from "@pawpal/shared";
 import {
   Box,
   Card,
@@ -49,7 +48,7 @@ const PackagePartial = ({ product, form }: PackagePartialProps) => {
                       <Box w={50} h={50}>
                         <Image
                           component={NextImage}
-                          src={`/assets/images/fallback-product.jpg`}
+                          src={`/assets/images/fallback-product.png`}
                           alt={data.name}
                           width={50}
                           height={50}
@@ -66,13 +65,8 @@ const PackagePartial = ({ product, form }: PackagePartialProps) => {
                     </Group>
                     <Stack gap={0} align="flex-end">
                       <Text size="sm" inline>
-                        {format.number(
-                          getPriceWithSale(data.price, {
-                            type: ENUM_DISCOUNT_TYPE.PERCENT,
-                            value: sale?.percent || 0,
-                          }),
-                          "currency"
-                        )}
+                        {/* TODO:: Show total price include sale */}
+                        {format.number(data.price, "currency")}
                       </Text>
                       {sale && (
                         <Text size="xs" c="dimmed" td="line-through" inline>

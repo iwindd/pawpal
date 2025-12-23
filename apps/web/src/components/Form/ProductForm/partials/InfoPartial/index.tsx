@@ -18,7 +18,7 @@ const InfoPartial = ({ product }: InfoPartialProps) => {
             height={150}
             width={150}
             fit="cover"
-            fallbackSrc="/assets/images/fallback-product.jpg"
+            fallbackSrc="/assets/images/fallback-product.png"
           />
         </Box>
         <Stack gap="xs">

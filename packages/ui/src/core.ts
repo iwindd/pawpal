@@ -62,6 +62,7 @@ export {
   useMantineTheme,
   virtualColor,
   type ActionIconProps,
+  type AnchorProps,
   type BadgeProps,
   type ComboboxProps,
   type GroupProps,

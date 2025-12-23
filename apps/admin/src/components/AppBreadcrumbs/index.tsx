@@ -1,10 +1,11 @@
 import { useActiveRouteTrail } from "@/hooks/useActiveRouteTrail";
-import { Anchor, Breadcrumbs, Text } from "@pawpal/ui/core";
+import { Route } from "@pawpal/shared";
+import { AnchorProps, Breadcrumbs, Text } from "@pawpal/ui/core";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 
 interface BreadcrumbLink extends AnchorProps {
-  route: Route;
+  route: Route & { disabled?: boolean };
   isActive?: boolean;
 }
 
@@ -18,7 +19,7 @@ const BreadcrumbLink = ({
   return (
     <Text
       component={!isActive && !route.disabled ? Link : undefined}
-      href={!route.disabled ? route.path : undefined}
+      href={route.disabled ? "/" : route.path}
       c={isActive ? "pink" : "dimmed"}
       size={"xs"}
       {...props}
@@ -40,7 +41,7 @@ const AppBreadcrumbs = (props: AppBreadcrumbProps) => {
 
         return (
           <BreadcrumbLink
-            key={route.id + index}
+            key={route.name + route.path + index}
             route={route}
             isActive={isLast}
           />
