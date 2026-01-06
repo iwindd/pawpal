@@ -1,0 +1,20 @@
+meta {
+  name: ProcessedHistory
+  type: http
+  seq: 2
+}
+
+get {
+  url: http://localhost:8000/admin/employee/:userId/processed-topup-history
+  body: none
+  auth: inherit
+}
+
+params:path {
+  userId: cmjeleu1y0003p0ixosuklqs1
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -1,0 +1,20 @@
+meta {
+  name: TopupOrder
+  type: http
+  seq: 3
+}
+
+get {
+  url: http://localhost:8000/admin/customer/:userId/order-history
+  body: none
+  auth: inherit
+}
+
+params:path {
+  userId: cmjeleu8f0005p0ixyk3d6vsz
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
