@@ -154,4 +154,24 @@ export class PaymentService {
       }),
     };
   }
+
+  /**
+   * Get user wallet transaction history
+   * @param user_id user id
+   * @returns user wallet transaction history
+   */
+  public async getHistory(user_id: string) {
+    const userWalletTransations =
+      await this.prisma.userWalletTransaction.findMany({
+        where: {
+          wallet: {
+            user_id,
+          },
+          order_id: null,
+        },
+        select: TransactionResponseMapper.SELECT,
+      });
+
+    return userWalletTransations.map(TransactionResponseMapper.fromQuery);
+  }
 }

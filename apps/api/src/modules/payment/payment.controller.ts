@@ -6,6 +6,7 @@ import { ZodPipe } from '@/common/pipes/ZodPipe';
 import {
   Body,
   Controller,
+  Get,
   Param,
   Patch,
   Post,
@@ -41,5 +42,10 @@ export class PaymentController {
   @Patch('topup/:chargeId')
   confirmPayment(@Param('chargeId') chargeId: string) {
     return this.paymentService.confirm(chargeId);
+  }
+
+  @Get('history')
+  getHistory(@AuthUser() user: Session) {
+    return this.paymentService.getHistory(user.id);
   }
 }
