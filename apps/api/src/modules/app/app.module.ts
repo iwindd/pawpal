@@ -22,6 +22,8 @@ import { ProductTagModule } from '../productTags/product-tag.module';
 import { ResourceModule } from '../resource/resource.module';
 import { SaleModule } from '../sale/sale.module';
 import { TransactionModule } from '../transaction/transaction.module';
+import { CustomerModule } from '../user/customer/customer.module';
+import { EmployeeModule } from '../user/employee/employee.module';
 import { WalletModule } from '../wallet/wallet.module';
 @Module({
   imports: [
@@ -34,6 +36,8 @@ import { WalletModule } from '../wallet/wallet.module';
     EventModule,
     AuthModule,
     UserModule,
+    CustomerModule,
+    EmployeeModule,
     ProductModule,
     ProductTagModule,
     SaleModule,
