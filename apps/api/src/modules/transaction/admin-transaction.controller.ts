@@ -25,6 +25,28 @@ export class AdminTransactionController {
     return this.transactionService.getJobTransactionsDatatable(query);
   }
 
+  @Get('job/history/order/:userId')
+  async getOrderHistoryDatatable(
+    @Param('userId') userId: string,
+    @Query(DatatablePipe) query: DatatableQuery,
+  ) {
+    return await this.transactionService.getOrderHistoryDatatable(
+      userId,
+      query,
+    );
+  }
+
+  @Get('job/history/topup/:userId')
+  async getTopupHistoryDatatable(
+    @Param('userId') userId: string,
+    @Query(DatatablePipe) query: DatatableQuery,
+  ) {
+    return await this.transactionService.getTopupHistoryDatatable(
+      userId,
+      query,
+    );
+  }
+
   @Patch('job/:transactionId/success')
   async successJobTransaction(
     @Param('transactionId') transactionId: string,

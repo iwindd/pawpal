@@ -1,0 +1,20 @@
+meta {
+  name: OrderHistory
+  type: http
+  seq: 2
+}
+
+get {
+  url: http://localhost:8000/admin/transaction/job/history/order/:userId
+  body: none
+  auth: inherit
+}
+
+params:path {
+  userId: cmjeleu1y0003p0ixosuklqs1
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

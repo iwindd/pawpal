@@ -1,0 +1,20 @@
+meta {
+  name: TopupHistory
+  type: http
+  seq: 3
+}
+
+get {
+  url: http://localhost:8000/admin/transaction/job/history/topup/:userId
+  body: none
+  auth: inherit
+}
+
+params:path {
+  userId: cmjeleu1y0003p0ixosuklqs1
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
