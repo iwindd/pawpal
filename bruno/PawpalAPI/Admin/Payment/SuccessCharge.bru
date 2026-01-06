@@ -1,0 +1,20 @@
+meta {
+  name: SuccessCharge
+  type: http
+  seq: 1
+}
+
+patch {
+  url: http://localhost:8000/admin/transaction/job/:chargeId/success
+  body: none
+  auth: inherit
+}
+
+params:path {
+  chargeId: cmk2r9ht40000zoixqljokho7
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

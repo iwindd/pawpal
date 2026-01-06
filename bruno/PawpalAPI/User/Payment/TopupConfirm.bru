@@ -1,0 +1,27 @@
+meta {
+  name: TopupConfirm
+  type: http
+  seq: 2
+}
+
+patch {
+  url: http://localhost:8000/payment/topup/:chargeId
+  body: json
+  auth: inherit
+}
+
+params:path {
+  chargeId: cmk2r9ht40000zoixqljokho7
+}
+
+body:json {
+  {
+    "amount": 500,
+    "payment_id": "promptpay-manual"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -1,0 +1,23 @@
+meta {
+  name: Topup
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:8000/payment/topup
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "amount": 500,
+    "payment_id": "promptpay-manual"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

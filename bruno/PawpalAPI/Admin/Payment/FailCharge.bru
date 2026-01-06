@@ -1,0 +1,20 @@
+meta {
+  name: FailCharge
+  type: http
+  seq: 2
+}
+
+patch {
+  url: http://localhost:8000/admin/transaction/job/:chargeId/fail
+  body: none
+  auth: inherit
+}
+
+params:path {
+  chargeId: cmk2r9ht40000zoixqljokho7
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
