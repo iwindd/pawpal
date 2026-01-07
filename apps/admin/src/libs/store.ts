@@ -10,6 +10,9 @@ import { packageApi } from "@/features/package/packageApi";
 import { paymentGatewayApi } from "@/features/paymentGateway/paymentGatewayApi";
 import { productApi } from "@/features/productApi/productApi";
 import { resourceApi } from "@/features/resource/resourceApi";
+
+import { customerApi } from "@/features/customer/customerApi";
+import { employeeApi } from "@/features/employee/employeeApi";
 import { transactionApi } from "@/features/transaction/transactionApi";
 import { userApi } from "@/features/user/userApi";
 import { Action, configureStore, ThunkAction } from "@reduxjs/toolkit";
@@ -23,6 +26,8 @@ export const makeStore = (preloadedState: { auth: AuthState }) => {
       [transactionApi.reducerPath]: transactionApi.reducer,
       [productApi.reducerPath]: productApi.reducer,
       [userApi.reducerPath]: userApi.reducer,
+      [customerApi.reducerPath]: customerApi.reducer,
+      [employeeApi.reducerPath]: employeeApi.reducer,
       [resourceApi.reducerPath]: resourceApi.reducer,
       [paymentGatewayApi.reducerPath]: paymentGatewayApi.reducer,
       [packageApi.reducerPath]: packageApi.reducer,
@@ -38,6 +43,8 @@ export const makeStore = (preloadedState: { auth: AuthState }) => {
         transactionApi.middleware,
         productApi.middleware,
         userApi.middleware,
+        customerApi.middleware,
+        employeeApi.middleware,
         resourceApi.middleware,
         paymentGatewayApi.middleware,
         packageApi.middleware,

@@ -1,5 +1,5 @@
 "use client";
-import { useGetCustomersQuery } from "@/features/user/userApi";
+import { useGetCustomersQuery } from "@/features/customer/customerApi";
 import useDatatable from "@/hooks/useDatatable";
 import { AdminCustomerResponse } from "@pawpal/shared";
 import {

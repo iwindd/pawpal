@@ -1,5 +1,5 @@
 "use client";
-import { useGetEmployeesQuery } from "@/features/user/userApi";
+import { useGetEmployeesQuery } from "@/features/employee/employeeApi";
 import useDatatable from "@/hooks/useDatatable";
 import { AdminEmployeeResponse } from "@pawpal/shared";
 import {
