@@ -1,5 +1,6 @@
 "use client";
 import navbarLinks from "@/configs/navbar";
+import { getPath } from "@/configs/route";
 import { useAppSelector } from "@/hooks";
 import { useActiveRouteConfig } from "@/hooks/useActiveRouteConfig";
 import {
@@ -34,7 +35,7 @@ const Navbar = () => {
   const __ = useTranslations("Routes");
 
   const items = navbarLinks.map((link) => {
-    const path = typeof link.path === "string" ? link.path : link.path();
+    const path = getPath(link.name);
     return (
       <Link
         key={link.label}
