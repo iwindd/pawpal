@@ -22,6 +22,7 @@ const ROUTES = ROUTER({
     path: "/job",
     label: "job.main",
     icon: IconWork,
+    disabled: true,
     children: {
       orders: {
         path: "/job/orders",
@@ -89,6 +90,7 @@ const ROUTES = ROUTER({
     path: "/users",
     label: "users.main",
     icon: IconUser,
+    disabled: true,
     children: {
       customers: {
         path: "/users/customers",
@@ -104,6 +106,7 @@ const ROUTES = ROUTER({
     path: "/website",
     label: "website.main",
     icon: IconWork,
+    disabled: true,
     children: {
       carousel: {
         path: "/website/carousel",

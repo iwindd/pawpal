@@ -13,7 +13,7 @@ export interface NavLink {
   id: number;
   icon: React.ComponentType<any>;
   title: string;
-  link: string | ((...args: any[]) => string);
+  link: string;
   files: {
     id: number;
     name: string;

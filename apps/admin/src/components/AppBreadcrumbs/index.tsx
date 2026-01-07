@@ -7,11 +7,13 @@ import Link from "next/link";
 interface BreadcrumbLink extends AnchorProps {
   route: Route & { disabled?: boolean };
   isActive?: boolean;
+  isDisabled?: boolean;
 }
 
 const BreadcrumbLink = ({
   route,
   isActive = false,
+  isDisabled = false,
   ...props
 }: BreadcrumbLink) => {
   const __ = useTranslations("Navbar.links");
@@ -44,6 +46,7 @@ const AppBreadcrumbs = (props: AppBreadcrumbProps) => {
             key={route.name + route.path + index}
             route={route}
             isActive={isLast}
+            isDisabled={route.disabled}
           />
         );
       })}
