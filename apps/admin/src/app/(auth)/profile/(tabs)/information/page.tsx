@@ -14,7 +14,7 @@ const ProfileInformationPage = () => {
           <UserProfileCard user={session} type="employee" />
         </Grid.Col>
         <Grid.Col span={{ base: 12, md: 8 }}>
-          <UserInfoCard user={session} type="employee" />
+          <UserInfoCard user={session} type="session" />
         </Grid.Col>
       </Grid>
     </Box>

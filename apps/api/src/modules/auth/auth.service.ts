@@ -25,6 +25,8 @@ export class AuthService {
 
     if (!user) throw new UnauthorizedException('invalid_credentials');
 
+    if (user.isSuspended) throw new UnauthorizedException('user_suspended');
+
     return user.toJSON();
   }
 
@@ -43,6 +45,8 @@ export class AuthService {
 
     if (!isValidPassword)
       throw new UnauthorizedException(`invalid_credentials`);
+
+    if (user.isSuspended) throw new UnauthorizedException('user_suspended');
 
     return user.toJSON();
   }

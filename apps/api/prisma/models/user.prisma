@@ -15,8 +15,28 @@ model User {
   fields                          ProductField[]          @relation("FieldCreatedBy")
   processedOrders                 Order[]                 @relation("OrderProcessedBy")
   processedUserWalletTransactions UserWalletTransaction[] @relation("UserWalletTransactionProcessedBy")
+  suspensions                     UserSuspension[]        @relation("UserSuspensions")
+  performedSuspensions            UserSuspension[]        @relation("PerformedSuspensions")
 
   @@map("users")
+}
+
+enum UserSuspensionType {
+  SUSPENDED
+  UNSUSPENDED
+}
+
+model UserSuspension {
+  id            String             @id @default(cuid())
+  userId        String
+  user          User               @relation("UserSuspensions", fields: [userId], references: [id])
+  type          UserSuspensionType
+  note          String?
+  performedBy   User               @relation("PerformedSuspensions", fields: [performedById], references: [id])
+  performedById String
+  createdAt     DateTime           @default(now())
+
+  @@map("user_suspensions")
 }
 
 model Session {

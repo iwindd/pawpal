@@ -1,7 +1,10 @@
 import { WalletCollection } from '@/common/collections/wallet.collection';
+import { UserSuspensionType } from '@/generated/prisma/enums';
+import { SuspensionUtil } from '@/utils/suspensionUtil';
 import {
   ConflictException,
   Injectable,
+  Logger,
   UnauthorizedException,
 } from '@nestjs/common';
 import {
@@ -14,6 +17,7 @@ import { UserRepository } from './user.repository';
 
 @Injectable()
 export class UserService {
+  private readonly logger = new Logger(UserService.name);
   constructor(
     private readonly userRepo: UserRepository,
     private readonly prisma: PrismaService,
@@ -90,7 +94,7 @@ export class UserService {
    * @returns user session
    */
   async getProfile(userId: string): Promise<AdminUserResponse> {
-    const user = await this.prisma.user.findFirst({
+    const { suspensions, ...user } = await this.prisma.user.findFirst({
       where: {
         id: userId,
       },
@@ -118,10 +122,29 @@ export class UserService {
             orders: true,
           },
         },
+        suspensions: {
+          orderBy: {
+            createdAt: 'desc',
+          },
+          take: 1,
+          select: {
+            type: true,
+            note: true,
+            createdAt: true,
+            performedBy: {
+              select: {
+                id: true,
+                displayName: true,
+              },
+            },
+          },
+        },
       },
     });
 
     if (!user) throw new UnauthorizedException('invalid_credentials');
+
+    const isSuspension = SuspensionUtil.isSuspended(suspensions);
 
     return {
       ...user,
@@ -130,6 +153,47 @@ export class UserService {
       updatedAt: user.updatedAt.toISOString(),
       walletCount: 0, // TODO: WHAT DA HELL IS THIS?
       orderCount: user._count.orders,
+      isSuspended: isSuspension,
+      suspension: isSuspension
+        ? {
+            ...suspensions[0],
+            createdAt: suspensions[0]?.createdAt?.toISOString(),
+          }
+        : null,
     };
+  }
+
+  /**
+   * Suspend a user
+   * @param id user id
+   * @param adminId admin id who performed the action
+   * @param note optional note
+   */
+  async suspendUser(id: string, adminId: string, note?: string) {
+    return this.prisma.userSuspension.create({
+      data: {
+        userId: id,
+        performedById: adminId,
+        type: UserSuspensionType.SUSPENDED,
+        note,
+      },
+    });
+  }
+
+  /**
+   * Unsuspend a user
+   * @param id user id
+   * @param adminId admin id who performed the action
+   * @param note optional note
+   */
+  async unsuspendUser(id: string, adminId: string, note?: string) {
+    return this.prisma.userSuspension.create({
+      data: {
+        userId: id,
+        performedById: adminId,
+        type: UserSuspensionType.UNSUSPENDED,
+        note,
+      },
+    });
   }
 }

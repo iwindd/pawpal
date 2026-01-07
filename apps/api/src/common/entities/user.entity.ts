@@ -28,7 +28,18 @@ export class UserEntity {
           balance: true,
         },
       },
+      suspensions: {
+        orderBy: {
+          createdAt: 'desc',
+        },
+        take: 1,
+      },
     } satisfies Prisma.UserSelect;
+  }
+
+  public get isSuspended() {
+    const lastSuspension = this.user.suspensions?.[0];
+    return lastSuspension?.type === 'SUSPENDED';
   }
 
   public get id() {
@@ -94,6 +105,7 @@ export class UserEntity {
       updatedAt: this.updatedAt.toISOString(),
       userWallet: this.userWallet,
       roles: this.roles,
+      isSuspended: this.isSuspended,
     };
   }
 }

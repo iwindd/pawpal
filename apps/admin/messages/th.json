@@ -53,6 +53,15 @@
     }
   },
   "User": {
+    "SuspendUserModal": {
+      "titleSuspend": "ระงับการใช้งาน",
+      "titleUnsuspend": "ยกเลิกการระงับ",
+      "note": {
+        "label": "เหตุผล/หมายเหตุ",
+        "placeholder": "ระบุเหตุผล (ไม่บังคับ)"
+      },
+      "submit": "ยืนยัน"
+    },
     "EditProfileModal": {
       "title": "แก้ไขข้อมูล",
       "displayName": "ชื่อที่แสดง",
@@ -75,6 +84,10 @@
       "email": "อีเมล",
       "submit": "บันทึก"
     }
+  },
+  "UserStatus": {
+    "active": "ปกติ",
+    "suspended": "โดนระงับ"
   },
   "Navbar": {
     "userMenu": {
@@ -333,9 +346,14 @@
       "roles": "บทบาท",
       "editEmail": "แก้ไขอีเมล",
       "editPassword": "แก้ไขรหัสผ่าน",
+      "suspension": "สถานะบัญชี",
+      "unsuspendAction": "ยกเลิกการระงับ",
+      "suspendAction": "ระงับบัญชี",
       "notify": {
         "resetEmailSuccess": "เปลี่ยนอีเมลสำเร็จ",
-        "resetPasswordSuccess": "เปลี่ยนรหัสผ่านสำเร็จ"
+        "resetPasswordSuccess": "เปลี่ยนรหัสผ่านสำเร็จ",
+        "suspendSuccess": "ระงับบัญชีแล้ว",
+        "unsuspendSuccess": "ยกเลิกการระงับบัญชีแล้ว"
       }
     }
   },
@@ -358,10 +376,15 @@
       "roles": "บทบาท",
       "editEmail": "แก้ไขอีเมล",
       "editPassword": "แก้ไขรหัสผ่าน",
+      "suspension": "สถานะบัญชี",
+      "unsuspendAction": "ยกเลิกการระงับ",
+      "suspendAction": "ระงับบัญชี",
       "notify": {
         "updateProfileSuccess": "แก้ไขข้อมูลส่วนตัวสำเร็จ",
         "resetEmailSuccess": "เปลี่ยนอีเมลสำเร็จ",
-        "resetPasswordSuccess": "เปลี่ยนรหัสผ่านสำเร็จ"
+        "resetPasswordSuccess": "เปลี่ยนรหัสผ่านสำเร็จ",
+        "suspendSuccess": "ระงับบัญชีแล้ว",
+        "unsuspendSuccess": "ยกเลิกการระงับบัญชีแล้ว"
       }
     }
   },

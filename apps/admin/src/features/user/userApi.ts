@@ -44,6 +44,32 @@ export const userApi = createApi({
         body: { newPassword },
       }),
     }),
+    suspendUser: builder.mutation<
+      void,
+      { id: string; type: "customer" | "employee"; note?: string }
+    >({
+      query: ({ id, type, note }) => ({
+        url: `${type}/${id}/suspend`,
+        method: "PATCH",
+        body: { note },
+      }),
+      invalidatesTags: (result, error, { type }) => [
+        type === "customer" ? "Customers" : "Employees",
+      ],
+    }),
+    unsuspendUser: builder.mutation<
+      void,
+      { id: string; type: "customer" | "employee"; note?: string }
+    >({
+      query: ({ id, type, note }) => ({
+        url: `${type}/${id}/unsuspend`,
+        method: "PATCH",
+        body: { note },
+      }),
+      invalidatesTags: (result, error, { type }) => [
+        type === "customer" ? "Customers" : "Employees",
+      ],
+    }),
   }),
 });
 
@@ -51,4 +77,6 @@ export const {
   useUpdateUserProfileMutation,
   useAdminResetEmailMutation,
   useAdminResetPasswordMutation,
+  useSuspendUserMutation,
+  useUnsuspendUserMutation,
 } = userApi;

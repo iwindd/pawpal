@@ -1,14 +1,27 @@
+import { AuthUser } from '@/common/decorators/user.decorator';
+import { JwtAuthGuard } from '@/common/guards/auth/jwt-auth.guard';
+import { SessionAuthGuard } from '@/common/guards/auth/session-auth.guard';
 import { DatatablePipe, DatatableQuery } from '@/common/pipes/DatatablePipe';
-import { Body, Controller, Get, Param, Patch, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import {
   ChangeEmailInput,
   ChangePasswordInput,
+  Session,
   UpdateProfileInput,
 } from '@pawpal/shared';
 import { UserService } from '../user.service';
 import { EmployeeService } from './employee.service';
 
 @Controller('admin/employee')
+@UseGuards(SessionAuthGuard, JwtAuthGuard)
 export class AdminEmployeeController {
   constructor(
     private readonly employeeService: EmployeeService,
@@ -69,5 +82,23 @@ export class AdminEmployeeController {
       userId,
       query,
     );
+  }
+
+  @Patch(':userId/suspend')
+  suspendUser(
+    @Param('userId') userId: string,
+    @Body() payload: { note?: string },
+    @AuthUser() admin: Session,
+  ) {
+    return this.userService.suspendUser(userId, admin.id, payload.note);
+  }
+
+  @Patch(':userId/unsuspend')
+  unsuspendUser(
+    @Param('userId') userId: string,
+    @Body() payload: { note?: string },
+    @AuthUser() admin: Session,
+  ) {
+    return this.userService.unsuspendUser(userId, admin.id, payload.note);
   }
 }

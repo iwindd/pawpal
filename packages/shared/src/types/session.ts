@@ -13,4 +13,5 @@ export interface Session {
     id: string;
     name: string;
   }[];
+  isSuspended: boolean;
 }
