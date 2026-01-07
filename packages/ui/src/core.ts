@@ -74,6 +74,7 @@ export {
   type SelectProps,
   type TextInputProps,
   type TextProps,
+  type TitleProps,
 } from "@mantine/core";
 
 export { default as Paper } from "./components/Paper";

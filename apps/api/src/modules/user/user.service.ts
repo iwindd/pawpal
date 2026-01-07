@@ -52,6 +52,34 @@ export class UserService {
   }
 
   /**
+   * Admin reset user email
+   * @param userId user id
+   * @param email new email
+   * @returns user session
+   */
+  async adminResetEmail(userId: string, email: string) {
+    const isAlreadyExist = await this.userRepo.isAlreadyExist(email);
+
+    if (isAlreadyExist) throw new ConflictException('email_already_exists');
+
+    await this.userRepo.updateEmail(userId, email);
+
+    return { success: true };
+  }
+
+  /**
+   * Admin reset user password
+   * @param userId user id
+   * @param password new password
+   * @returns user session
+   */
+  async adminResetPassword(userId: string, password: string) {
+    await this.userRepo.updatePassword(userId, password);
+
+    return { success: true };
+  }
+
+  /**
    * Get user profile
    * @param userId user id
    * @returns user session

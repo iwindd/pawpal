@@ -27,6 +27,30 @@
       }
     }
   },
+  "User": {
+    "EditProfileModal": {
+      "title": "แก้ไขข้อมูล",
+      "displayName": "ชื่อที่แสดง",
+      "submit": "บันทึก"
+    },
+    "ChangePasswordModal": {
+      "title": "แก้ไขรหัสผ่าน",
+      "password": {
+        "label": "รหัสผ่านใหม่",
+        "placeholder": ""
+      },
+      "confirmPassword": {
+        "label": "ยืนยันรหัสผ่านใหม่",
+        "placeholder": ""
+      },
+      "submit": "บันทึก"
+    },
+    "ChangeEmailModal": {
+      "title": "แก้ไขอีเมล",
+      "email": "อีเมล",
+      "submit": "บันทึก"
+    }
+  },
   "Navbar": {
     "userMenu": {
       "accountSettings": "บัญชี",
@@ -264,11 +288,24 @@
       "title": "ลูกค้าทั้งหมด"
     },
     "profile": {
+      "createdAt": "เป็นสมาชิกตั้งแต่ {date}",
+      "notify": {
+        "updateProfileSuccess": "แก้ไขข้อมูลส่วนตัวสำเร็จ"
+      },
+      "editProfile": "แก้ไขข้อมูลส่วนตัว"
+    },
+    "info": {
       "accountDetails": "ข้อมูลบัญชี",
       "id": "รหัสผู้ใช้",
       "email": "อีเมล",
       "displayName": "ชื่อที่แสดง",
-      "roles": "บทบาท"
+      "roles": "บทบาท",
+      "editEmail": "แก้ไขอีเมล",
+      "editPassword": "แก้ไขรหัสผ่าน",
+      "notify": {
+        "resetEmailSuccess": "เปลี่ยนอีเมลสำเร็จ",
+        "resetPasswordSuccess": "เปลี่ยนรหัสผ่านสำเร็จ"
+      }
     }
   },
   "Employee": {
@@ -276,11 +313,25 @@
       "title": "พนักงานทั้งหมด"
     },
     "profile": {
+      "createdAt": "เป็นพนักงานตั้งแต่ {date}",
+      "notify": {
+        "updateProfileSuccess": "แก้ไขข้อมูลส่วนตัวสำเร็จ"
+      },
+      "editProfile": "แก้ไขข้อมูลส่วนตัว"
+    },
+    "info": {
       "accountDetails": "ข้อมูลพนักงาน",
       "id": "รหัสพนักงาน",
       "email": "อีเมล",
       "displayName": "ชื่อที่แสดง",
-      "roles": "บทบาท"
+      "roles": "บทบาท",
+      "editEmail": "แก้ไขอีเมล",
+      "editPassword": "แก้ไขรหัสผ่าน",
+      "notify": {
+        "updateProfileSuccess": "แก้ไขข้อมูลส่วนตัวสำเร็จ",
+        "resetEmailSuccess": "เปลี่ยนอีเมลสำเร็จ",
+        "resetPasswordSuccess": "เปลี่ยนรหัสผ่านสำเร็จ"
+      }
     }
   },
   "Datatable": {

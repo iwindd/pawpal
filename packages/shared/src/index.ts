@@ -20,6 +20,8 @@ export * from "./schemas/payment/charge/create";
 export * from "./schemas/payment/promptpay";
 export * from "./schemas/product";
 export * from "./schemas/resource/resource";
+export * from "./schemas/user/admin-reset-email";
+export * from "./schemas/user/admin-reset-password";
 export * from "./schemas/wallet/transaction";
 export * from "./schemas/website/carousel";
 export * from "./schemas/website/carousel-reorder";
