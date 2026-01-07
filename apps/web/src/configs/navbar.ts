@@ -1,11 +1,5 @@
-import { RouteItem, ROUTES } from "./route";
+import { getRoute } from "./route";
 
-interface NavbarLink extends RouteItem {}
-
-const navbarLinks: NavbarLink[] = [
-  ROUTES.home as NavbarLink,
-  ROUTES.products as NavbarLink,
-  ROUTES.topup as NavbarLink,
-];
+const navbarLinks = [getRoute("home"), getRoute("products"), getRoute("topup")];
 
 export default navbarLinks;

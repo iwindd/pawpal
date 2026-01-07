@@ -1,4 +1,4 @@
-import { ROUTES } from "@/configs/route";
+import { getPath } from "@/configs/route";
 import APISession from "@/libs/api/server";
 import { MiddlewareFunction } from "@pawpal/nextjs-middleware";
 
@@ -11,7 +11,7 @@ const AuthMiddleware: MiddlewareFunction = async (context) => {
     return { type: "continue" };
   } catch (error) {
     console.error("Auth middleware error:", error);
-    return { type: "redirect", url: ROUTES["home"]?.path as string };
+    return { type: "redirect", url: getPath("home") };
   }
 };
 
