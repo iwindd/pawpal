@@ -1,7 +1,7 @@
 "use client";
 
 import { setUserBalance } from "@/features/auth/authSlice";
-import { clearCurrentCharge } from "@/features/payment/paymentSlice";
+import { clearCurrentCharge } from "@/features/topup/topupSlice";
 import { useAppDispatch, useAppSelector } from "@/hooks";
 import { IconCheck, IconX } from "@pawpal/icons";
 import {

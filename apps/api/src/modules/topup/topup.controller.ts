@@ -2,6 +2,7 @@ import { AuthUser } from '@/common/decorators/user.decorator';
 import { JwtAuthGuard } from '@/common/guards/auth/jwt-auth.guard';
 import { NoProgressGuard } from '@/common/guards/auth/no-progress-guard.guard';
 import { SessionAuthGuard } from '@/common/guards/auth/session-auth.guard';
+import { DatatablePipe, DatatableQuery } from '@/common/pipes/DatatablePipe';
 import { ZodPipe } from '@/common/pipes/ZodPipe';
 import {
   Body,
@@ -10,6 +11,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -18,34 +20,37 @@ import {
   Session,
 } from '@pawpal/shared';
 import { Decimal } from '@prisma/client/runtime/client';
-import { PaymentService } from './payment.service';
+import { TopupService } from './topup.service';
 
-@Controller('payment')
+@Controller('topup')
 @UseGuards(SessionAuthGuard, JwtAuthGuard)
-export class PaymentController {
-  constructor(private readonly paymentService: PaymentService) {}
+export class TopupController {
+  constructor(private readonly topupService: TopupService) {}
 
-  @Post('topup')
+  @Get()
+  async getTopupHistoryDatatable(
+    @Query(DatatablePipe) query: DatatableQuery,
+    @AuthUser() user: Session,
+  ) {
+    return this.topupService.getTopupHistoryDatatable(user.id, query);
+  }
+
+  @Post()
   @UseGuards(NoProgressGuard)
   createPayment(
     @Body(new ZodPipe(PaymentChargeCreateSchema))
     payload: PaymentChargeCreateInput,
     @AuthUser() user: Session,
   ) {
-    return this.paymentService.topup(
+    return this.topupService.topup(
       user,
       new Decimal(payload.amount),
       payload.payment_id,
     );
   }
 
-  @Patch('topup/:chargeId')
+  @Patch(':chargeId')
   confirmPayment(@Param('chargeId') chargeId: string) {
-    return this.paymentService.confirm(chargeId);
-  }
-
-  @Get('history')
-  getHistory(@AuthUser() user: Session) {
-    return this.paymentService.getHistory(user.id);
+    return this.topupService.confirm(chargeId);
   }
 }

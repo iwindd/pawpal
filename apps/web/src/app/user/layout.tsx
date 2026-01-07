@@ -1,7 +1,7 @@
 "use client";
-import { RouteItem, ROUTES } from "@/configs/route";
-import { useAppSelector } from "@/hooks";
-import { useActiveRouteTrail } from "@/hooks/useActiveRouteTrail";
+import {RouteItem, ROUTES} from "@/configs/route";
+import {useAppSelector} from "@/hooks";
+import {useActiveRouteTrail} from "@/hooks/useActiveRouteTrail";
 import {
   Box,
   Container,
@@ -10,10 +10,10 @@ import {
   Stack,
   UnstyledButton,
 } from "@pawpal/ui/core";
-import { useTranslations } from "next-intl";
+import {useTranslations} from "next-intl";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { ReactNode, useEffect } from "react";
+import {useRouter} from "next/navigation";
+import {ReactNode, useEffect} from "react";
 import classes from "./style.module.css";
 
 interface UserLayoutProps {
@@ -29,7 +29,8 @@ const UserLayout = ({ children }: UserLayoutProps) => {
   const navigationItems = [
     ROUTES.user as RouteItem,
     ROUTES.user?.children?.profile as RouteItem,
-    ROUTES.user?.children?.order as RouteItem,
+    ROUTES.user?.children?.orders as RouteItem,
+    ROUTES.user?.children?.topups as RouteItem,
   ];
   const activeRoute = trail.at(-1);
 

@@ -1,4 +1,4 @@
-import { useConfirmChargeMutation } from "@/features/payment/paymentApi";
+import { useConfirmChargeMutation } from "@/features/topup/topupApi";
 import { useAppSelector } from "@/hooks";
 import { PaymentChargeCreatedResponse } from "@pawpal/shared";
 import { Button, Group, Modal, Stack, Text, Title } from "@pawpal/ui/core";
@@ -19,7 +19,7 @@ export const PromptPayManualModal = ({
 }: PromptPayManualModal) => {
   const __ = useTranslations("PromptPayManualModal");
   const [promptPayModal, setPromptPayModal] = useState(false);
-  const currentCharge = useAppSelector((state) => state.payment.currentCharge);
+  const currentCharge = useAppSelector((state) => state.topup.currentCharge);
   const [confirmChargeMutation, { isLoading }] = useConfirmChargeMutation();
   const payload = currentCharge?.qrcode;
   const payment = currentCharge?.payment.metadata;

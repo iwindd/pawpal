@@ -17,8 +17,8 @@ import {
   Session,
 } from '@pawpal/shared';
 import { EventService } from '../event/event.service';
-import { PaymentService } from '../payment/payment.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { TopupService } from '../topup/topup.service';
 import { WalletRepository } from '../wallet/wallet.repository';
 import { OrderRepository } from './order.repository';
 
@@ -27,7 +27,7 @@ export class OrderService {
   private readonly logger = new Logger(OrderService.name);
   constructor(
     private readonly prisma: PrismaService,
-    private readonly paymentService: PaymentService,
+    private readonly topupService: TopupService,
     private readonly eventService: EventService,
     private readonly walletRepo: WalletRepository,
     private readonly orderRepo: OrderRepository,
@@ -86,7 +86,7 @@ export class OrderService {
     if (topupAmount.greaterThan(0)) {
       return {
         type: 'topup',
-        charge: await this.paymentService.topup(
+        charge: await this.topupService.topup(
           user,
           topupAmount,
           body.paymentMethod,

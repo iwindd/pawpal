@@ -1,11 +1,14 @@
+import { TopupResponseMapper } from '@/common/mappers/TopupResponseMapper';
 import { TransactionResponseMapper } from '@/common/mappers/TransactionResponseMapper';
+import { DatatableQuery } from '@/common/pipes/DatatablePipe';
+import { Prisma } from '@/generated/prisma/client';
 import {
   TransactionStatus,
   TransactionType,
   WalletType,
 } from '@/generated/prisma/enums';
 import { BadGatewayException, Injectable, Logger } from '@nestjs/common';
-import { Session } from '@pawpal/shared';
+import { ENUM_TOPUP_STATUS, Session, TopupStatus } from '@pawpal/shared';
 import { Decimal } from '@prisma/client/runtime/client';
 import generatePayload from 'promptpay-qr';
 import { EventService } from '../event/event.service';
@@ -14,8 +17,8 @@ import { PrismaService } from '../prisma/prisma.service';
 import { WalletRepository } from '../wallet/wallet.repository';
 
 @Injectable()
-export class PaymentService {
-  private readonly logger = new Logger(PaymentService.name);
+export class TopupService {
+  private readonly logger = new Logger(TopupService.name);
   constructor(
     private readonly prisma: PrismaService,
     private readonly paymentGatewayService: PaymentGatewayService,
@@ -23,24 +26,67 @@ export class PaymentService {
     private readonly walletRepo: WalletRepository,
   ) {}
 
+  /**
+   * Get user wallet transaction history
+   * @param user_id user id
+   * @returns user wallet transaction history
+   */
+  public async getTopupHistoryDatatable(
+    user_id: string,
+    query: DatatableQuery,
+  ) {
+    const where: Prisma.UserWalletTransactionWhereInput = {
+      wallet: {
+        user_id,
+      },
+      order_id: null,
+    };
+
+    if (
+      query.filter &&
+      Object.values(ENUM_TOPUP_STATUS).includes(query.filter)
+    ) {
+      where.status = query.filter as TopupStatus;
+    }
+
+    const datatable = await this.prisma.userWalletTransaction.getDatatable({
+      query,
+      where,
+      select: TopupResponseMapper.SELECT,
+    });
+
+    return {
+      data: datatable.data.map(TopupResponseMapper.fromQuery),
+      total: datatable.total,
+    };
+  }
+
+  /**
+   * Topup
+   * @param user user
+   * @param amount amount
+   * @param topupId topup id
+   * @param orderId order id (optional)
+   * @returns
+   */
   async topup(
     user: Session,
     amount: Decimal,
-    paymentId: string,
+    topupId: string,
     orderId?: string,
   ) {
-    const isActive = await this.paymentGatewayService.isActive(paymentId);
-    if (!isActive) throw new BadGatewayException(`${paymentId} is not active`);
+    const isActive = await this.paymentGatewayService.isActive(topupId);
+    if (!isActive) throw new BadGatewayException(`${topupId} is not active`);
 
-    switch (paymentId) {
+    switch (topupId) {
       case 'promptpay-manual':
         return this.createPromptpayManualCharge(user, amount, orderId);
       default:
         this.logger.error(
-          `Payment method ${paymentId} is not supported. Falling back to default.`,
+          `Payment method ${topupId} is not supported. Falling back to default.`,
         );
         throw new BadGatewayException(
-          `Payment method ${paymentId} is not supported.`,
+          `Payment method ${topupId} is not supported.`,
         );
     }
   }
@@ -93,6 +139,7 @@ export class PaymentService {
           select: {
             id: true,
             metadata: true,
+            label: true,
           },
         },
       },
@@ -101,6 +148,11 @@ export class PaymentService {
     return charge;
   }
 
+  /**
+   * Confirm charge
+   * @param chargeId charge id
+   * @returns confirmed charge
+   */
   public async confirm(chargeId: string) {
     const charge = await this.prisma.userWalletTransaction.update({
       where: {
@@ -119,7 +171,14 @@ export class PaymentService {
     return result;
   }
 
-  public async createPromptpayManualCharge(
+  /**
+   * Create promptpay manual charge
+   * @param user user
+   * @param amount amount
+   * @param orderId order id (optional)
+   * @returns created charge
+   */
+  private async createPromptpayManualCharge(
     user: Session,
     amount: Decimal,
     orderId?: string,
@@ -153,25 +212,5 @@ export class PaymentService {
         amount: amount.toNumber(),
       }),
     };
-  }
-
-  /**
-   * Get user wallet transaction history
-   * @param user_id user id
-   * @returns user wallet transaction history
-   */
-  public async getHistory(user_id: string) {
-    const userWalletTransations =
-      await this.prisma.userWalletTransaction.findMany({
-        where: {
-          wallet: {
-            user_id,
-          },
-          order_id: null,
-        },
-        select: TransactionResponseMapper.SELECT,
-      });
-
-    return userWalletTransations.map(TransactionResponseMapper.fromQuery);
   }
 }

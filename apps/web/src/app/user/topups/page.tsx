@@ -1,8 +1,8 @@
 "use client";
-import FilterOrderStatusSelect from "@/components/Select/FilterOrderStatus";
-import OrderStatusBadge from "@/components/ฺฺBadges/OrderStatus";
-import { useGetOrderHistoryQuery } from "@/features/order/orderApi";
-import { OrderStatus } from "@pawpal/shared";
+import FilterTopupStatus from "@/components/Select/FilterTopupStatus";
+import TopupStatusBadge from "@/components/ฺฺBadges/TopupStatus";
+import { useGetTopupHistoryQuery } from "@/features/topup/topupApi";
+import { TopupStatus } from "@pawpal/shared";
 import {
   Box,
   Card,
@@ -17,16 +17,16 @@ import {
 import { useFormatter, useTranslations } from "next-intl";
 import { useState } from "react";
 
-const LIMIT_ORDER = 5;
+const LIMIT_TOPUP = 5;
 
-const OrderPage = () => {
-  const __ = useTranslations("User.Orders");
+const TopupHistoryPage = () => {
+  const __ = useTranslations("User.Topups");
   const format = useFormatter();
   const [page, setPage] = useState(1);
-  const [filter, setFilter] = useState<OrderStatus | null>(null);
+  const [filter, setFilter] = useState<TopupStatus | null>(null);
 
-  const { data: orders, isLoading } = useGetOrderHistoryQuery({
-    limit: LIMIT_ORDER,
+  const { data: topups, isLoading } = useGetTopupHistoryQuery({
+    limit: LIMIT_TOPUP,
     page: page,
     filter: filter || undefined,
   });
@@ -35,7 +35,7 @@ const OrderPage = () => {
     return <Loader />;
   }
 
-  if (!orders) {
+  if (!topups) {
     return null;
   }
 
@@ -52,34 +52,32 @@ const OrderPage = () => {
 
       <Group justify="space-between">
         <TextInput placeholder={__("search")} />
-        <FilterOrderStatusSelect
+        <FilterTopupStatus
           value={filter}
-          onChange={(value) => setFilter(value as OrderStatus)}
+          onChange={(value) => setFilter(value as TopupStatus)}
         />
       </Group>
 
       {/* Desktop View */}
       <Stack gap="md">
-        {orders.data.map((order) => (
-          <Card key={order.id} shadow="sm" padding="md" radius="md">
+        {topups.data.map((topup) => (
+          <Card key={topup.id} shadow="sm" padding="md" radius="md">
             <Stack gap={0}>
               <Group justify="space-between" align="flex-start">
                 <Group>
                   <Text fw={500} size="lg">
-                    {order.cart
-                      .map((item) => `${item.product.name} [${item.amount}]`)
-                      .join(", ")}
+                    {topup.payment.label}
                   </Text>
                   <Text size="sm" c="dimmed">
-                    {format.dateTime(new Date(order.createdAt), "dateTime")}
+                    {format.dateTime(new Date(topup.createdAt), "dateTime")}
                   </Text>
                 </Group>
-                <OrderStatusBadge status={order.status} />
+                <TopupStatusBadge status={topup.status} />
               </Group>
 
               <Group align="center">
                 <Text fw={500} size="md" c="blue">
-                  {format.number(order.total, {
+                  {format.number(topup.amount, {
                     style: "currency",
                     currency: "THB",
                   })}
@@ -93,13 +91,13 @@ const OrderPage = () => {
       <Group justify="space-between">
         <Text c="dimmed">
           {__("page", {
-            from: page * LIMIT_ORDER - LIMIT_ORDER + 1,
-            to: Math.min(page * LIMIT_ORDER, orders.total),
-            total: orders.total,
+            from: page * LIMIT_TOPUP - LIMIT_TOPUP + 1,
+            to: Math.min(page * LIMIT_TOPUP, topups.total),
+            total: topups.total,
           })}
         </Text>
         <Pagination
-          total={Math.ceil(orders.total / LIMIT_ORDER)}
+          total={Math.ceil(topups.total / LIMIT_TOPUP)}
           value={page}
           onChange={setPage}
         />
@@ -108,4 +106,4 @@ const OrderPage = () => {
   );
 };
 
-export default OrderPage;
+export default TopupHistoryPage;

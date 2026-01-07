@@ -33,6 +33,7 @@ export * from "./types/response/package";
 export * from "./types/response/payment-gateway";
 export * from "./types/response/product";
 export * from "./types/response/resource";
+export * from "./types/response/topup";
 export * from "./types/response/transaction";
 export * from "./types/response/user";
 export * from "./types/session";

@@ -15,12 +15,12 @@ import { NotificationModule } from '../notification/notification.module';
 import { OrderModule } from '../order/order.module';
 import { PackageModule } from '../package/package.module';
 import { PaymentGatewayModule } from '../payment-gateway/payment-gateway.module';
-import { PaymentModule } from '../payment/payment.module';
 import { PrismaModule } from '../prisma/prisma.module';
 import { ProductModule } from '../product/product.module';
 import { ProductTagModule } from '../productTags/product-tag.module';
 import { ResourceModule } from '../resource/resource.module';
 import { SaleModule } from '../sale/sale.module';
+import { TopupModule } from '../topup/topup.module';
 import { TransactionModule } from '../transaction/transaction.module';
 import { CustomerModule } from '../user/customer/customer.module';
 import { EmployeeModule } from '../user/employee/employee.module';
@@ -41,10 +41,10 @@ import { WalletModule } from '../wallet/wallet.module';
     ProductModule,
     ProductTagModule,
     SaleModule,
-    PaymentModule,
     PaymentGatewayModule,
     TransactionModule,
     WalletModule,
+    TopupModule,
     OrderModule,
     PackageModule,
     ResourceModule,

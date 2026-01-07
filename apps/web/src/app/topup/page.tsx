@@ -1,7 +1,7 @@
 "use client";
 import PromptPayManualModal from "@/components/Modals/PromptPayManualModal";
-import { useCreateChargeMutation } from "@/features/payment/paymentApi";
 import { useGetActivePaymentGatewayQuery } from "@/features/paymentGateway/paymentGatewayApi";
+import { useCreateChargeMutation } from "@/features/topup/topupApi";
 import useFormValidate from "@/hooks/useFormValidate";
 import {
   PaymentChargeCreatedResponse,

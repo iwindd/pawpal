@@ -4,7 +4,7 @@ import {
 } from "@pawpal/shared";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { orderApi } from "../order/orderApi";
-import { paymentApi } from "./paymentApi";
+import { topupApi } from "./topupApi";
 
 export interface PaymentState {
   currentCharge: PaymentChargeCreatedResponse | null;
@@ -16,7 +16,7 @@ const initialState: PaymentState = {
   chargeType: null,
 };
 
-const paymentSlice = createSlice({
+const topupSlice = createSlice({
   name: "payment",
   initialState,
   reducers: {
@@ -27,21 +27,21 @@ const paymentSlice = createSlice({
   },
   extraReducers(builder) {
     builder.addMatcher(
-      paymentApi.endpoints.createCharge.matchFulfilled,
+      topupApi.endpoints.createCharge.matchFulfilled,
       (state, action: PayloadAction<PaymentChargeCreatedResponse>) => {
         state.currentCharge = action.payload;
         state.chargeType = "topup";
       }
     );
     builder.addMatcher(
-      paymentApi.endpoints.createCharge.matchRejected,
+      topupApi.endpoints.createCharge.matchRejected,
       (state) => {
         state.currentCharge = null;
         state.chargeType = null;
       }
     );
     builder.addMatcher(
-      paymentApi.endpoints.confirmCharge.matchFulfilled,
+      topupApi.endpoints.confirmCharge.matchFulfilled,
       (state) => {
         state.currentCharge = null;
         state.chargeType = null;
@@ -59,5 +59,5 @@ const paymentSlice = createSlice({
   },
 });
 
-export const { clearCurrentCharge } = paymentSlice.actions;
-export default paymentSlice.reducer;
+export const { clearCurrentCharge } = topupSlice.actions;
+export default topupSlice.reducer;

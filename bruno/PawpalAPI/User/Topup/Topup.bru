@@ -1,17 +1,13 @@
 meta {
-  name: TopupConfirm
+  name: Topup
   type: http
-  seq: 2
+  seq: 1
 }
 
-patch {
-  url: http://localhost:8000/payment/topup/:chargeId
+post {
+  url: http://localhost:8000/topup/
   body: json
   auth: inherit
-}
-
-params:path {
-  chargeId: cmk2r9ht40000zoixqljokho7
 }
 
 body:json {

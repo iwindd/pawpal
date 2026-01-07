@@ -29,12 +29,4 @@ export class OrderController {
   ) {
     return this.orderService.createOrder(user, body);
   }
-
-  @Get('admin/test')
-  test(): { message: string; status: string } {
-    return {
-      message: 'Order service is working correctly',
-      status: 'success',
-    };
-  }
 }

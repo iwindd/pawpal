@@ -38,9 +38,14 @@ export const ROUTES: Record<string, RouteItem> = {
         label: "user.profile",
         icon: IconSettings,
       },
-      order: {
-        path: "/user/order",
+      orders: {
+        path: "/user/orders",
         label: "user.orders",
+        icon: IconHistory,
+      },
+      topups: {
+        path: "/user/topups",
+        label: "user.topups",
         icon: IconHistory,
       },
       activity: {
