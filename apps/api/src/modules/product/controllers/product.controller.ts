@@ -3,7 +3,7 @@ import {
   FindProductQuery,
 } from '@/common/pipes/FindProductPipe';
 import { Controller, Get, Param, Query } from '@nestjs/common';
-import { ProductService } from './product.service';
+import { ProductService } from '../product.service';
 
 @Controller('product')
 export class ProductController {

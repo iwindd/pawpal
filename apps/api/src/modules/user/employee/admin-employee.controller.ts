@@ -3,7 +3,7 @@ import { Controller, Get, Param, Query } from '@nestjs/common';
 import { EmployeeService } from './employee.service';
 
 @Controller('admin/employee')
-export class EmployeeController {
+export class AdminEmployeeController {
   constructor(private readonly employeeService: EmployeeService) {}
 
   @Get()

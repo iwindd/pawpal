@@ -21,7 +21,7 @@ import {
   CarouselResponse,
   Session,
 } from '@pawpal/shared';
-import { CarouselService } from './carousel.service';
+import { CarouselService } from '../carousel.service';
 
 @Controller('admin/carousel')
 @UseGuards(SessionAuthGuard, JwtAuthGuard)

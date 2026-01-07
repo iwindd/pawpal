@@ -3,7 +3,7 @@ import { Controller, Get, Param, Query } from '@nestjs/common';
 import { CustomerService } from './customer.service';
 
 @Controller('admin/customer')
-export class CustomerController {
+export class AdminCustomerController {
   constructor(private readonly customerService: CustomerService) {}
 
   @Get()

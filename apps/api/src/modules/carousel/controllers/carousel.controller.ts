@@ -1,5 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
-import { CarouselService } from './carousel.service';
+import { CarouselService } from '../carousel.service';
 
 @Controller('carousel')
 export class CarouselController {

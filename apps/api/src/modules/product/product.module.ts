@@ -1,6 +1,6 @@
 import { Global, Module } from '@nestjs/common';
-import { AdminProductController } from './admin-product.controller';
-import { ProductController } from './product.controller';
+import { AdminProductController } from './controllers/admin-product.controller';
+import { ProductController } from './controllers/product.controller';
 import { ProductRepository } from './product.repository';
 import { ProductService } from './product.service';
 

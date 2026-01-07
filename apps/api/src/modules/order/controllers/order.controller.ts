@@ -6,7 +6,7 @@ import { DatatablePipe, DatatableQuery } from '@/common/pipes/DatatablePipe';
 import { PurchasePipe } from '@/common/pipes/PurchasePipe';
 import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 import { PurchaseInput, Session } from '@pawpal/shared';
-import { OrderService } from './order.service';
+import { OrderService } from '../order.service';
 
 @Controller('order')
 @UseGuards(SessionAuthGuard, JwtAuthGuard)

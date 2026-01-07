@@ -11,7 +11,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { ProductInput, productSchema, Session } from '@pawpal/shared';
-import { ProductService } from './product.service';
+import { ProductService } from '../product.service';
 
 @Controller('admin/product')
 export class AdminProductController {

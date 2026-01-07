@@ -11,7 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Session } from '@pawpal/shared';
-import { OrderService } from './order.service';
+import { OrderService } from '../order.service';
 
 @Controller('admin/order')
 @UseGuards(SessionAuthGuard, JwtAuthGuard)
