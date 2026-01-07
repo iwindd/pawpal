@@ -9,7 +9,7 @@ const AdminMiddleware: MiddlewareFunction = async (context) => {
 
     if (!isLoggedIn) return { type: "redirect", url: getPath("login") };
 
-    if (!user.roles.includes("Admin"))
+    if (!user.roles.some((role: any) => role.name === "Admin"))
       return { type: "redirect", url: getPath("login") };
 
     return { type: "continue" };

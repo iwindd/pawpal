@@ -7,6 +7,10 @@ export interface Session {
   displayName: string;
   avatar: string | null;
   createdAt: string;
+  updatedAt: string;
   userWallet: Record<WalletType, Decimal>;
-  roles: string[];
+  roles: {
+    id: string;
+    name: string;
+  }[];
 }

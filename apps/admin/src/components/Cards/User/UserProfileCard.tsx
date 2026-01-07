@@ -2,14 +2,14 @@
 import UpdateProfileModal from "@/components/Modals/User/UpdateProfileModal";
 import TextWithCaption from "@/components/TextWithCaption";
 import { useUpdateUserProfileMutation } from "@/features/user/userApi";
-import { UserResponse } from "@pawpal/shared";
+import { Session } from "@pawpal/shared";
 import { Anchor, Avatar, Card, Stack } from "@pawpal/ui/core";
 import { notify } from "@pawpal/ui/notifications";
 import { useFormatter, useTranslations } from "next-intl";
 import { useState } from "react";
 
 interface UserProfileCardProps {
-  user: UserResponse;
+  user: Session;
   type: "customer" | "employee";
 }
 

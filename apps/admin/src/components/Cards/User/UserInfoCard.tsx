@@ -5,14 +5,14 @@ import {
   useAdminResetEmailMutation,
   useAdminResetPasswordMutation,
 } from "@/features/user/userApi";
-import { UserResponse } from "@pawpal/shared";
+import { Session } from "@pawpal/shared";
 import { Anchor, Card, Group, Stack, Text, Title } from "@pawpal/ui/core";
 import { useDisclosure } from "@pawpal/ui/hooks";
 import { notify } from "@pawpal/ui/notifications";
 import { useTranslations } from "next-intl";
 
 interface UserInfoCardProps {
-  user: UserResponse;
+  user: Session;
   type: "customer" | "employee";
 }
 

@@ -27,6 +27,31 @@
       }
     }
   },
+  "Profile": {
+    "main": {
+      "title": "บัญชีของฉัน"
+    },
+    "profile": {
+      "createdAt": "เป็นสมาชิกตั้งแต่ {date}",
+      "notify": {
+        "updateProfileSuccess": "แก้ไขข้อมูลส่วนตัวสำเร็จ"
+      },
+      "editProfile": "แก้ไขข้อมูลส่วนตัว"
+    },
+    "info": {
+      "accountDetails": "ข้อมูลบัญชี",
+      "id": "รหัสผู้ใช้",
+      "email": "อีเมล",
+      "displayName": "ชื่อที่แสดง",
+      "roles": "บทบาท",
+      "editEmail": "แก้ไขอีเมล",
+      "editPassword": "แก้ไขรหัสผ่าน",
+      "notify": {
+        "resetEmailSuccess": "เปลี่ยนอีเมลสำเร็จ",
+        "resetPasswordSuccess": "เปลี่ยนรหัสผ่านสำเร็จ"
+      }
+    }
+  },
   "User": {
     "EditProfileModal": {
       "title": "แก้ไขข้อมูล",
@@ -103,6 +128,12 @@
           "orders": "ประวัติการจัดการคำสั่งซื้อ",
           "topups": "ประวัติธุรกรรม"
         }
+      },
+      "profile": {
+        "main": "บัญชีของฉัน",
+        "edit": "ข้อมูลทั่วไป",
+        "orders": "ประวัติการจัดการคำสั่งซื้อ",
+        "topups": "ประวัติธุรกรรม"
       },
       "website": {
         "main": "เว็บไซต์",

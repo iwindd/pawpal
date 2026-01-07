@@ -18,6 +18,21 @@ const ROUTES = ROUTER({
     label: "login",
     icon: IconLogin,
   },
+  profile: {
+    path: "/profile",
+    label: "profile.edit",
+    icon: IconUser,
+    children: {
+      orders: {
+        path: "/profile/orders",
+        label: "profile.orders",
+      },
+      topups: {
+        path: "/profile/topups",
+        label: "profile.topups",
+      },
+    },
+  },
   job: {
     path: "/job",
     label: "job.main",

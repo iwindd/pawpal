@@ -99,7 +99,7 @@ const UserMenu = ({ user }: UserMenuProps) => {
         <Menu.Item
           leftSection={<IconSettings size={16} stroke={1.5} />}
           component={Link}
-          href="/user/"
+          href={getPath("profile")}
         >
           {__("accountSettings")}
         </Menu.Item>

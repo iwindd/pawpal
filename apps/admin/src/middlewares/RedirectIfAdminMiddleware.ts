@@ -7,7 +7,7 @@ const RedirectIfAdminMiddleware: MiddlewareFunction = async (context) => {
     const API = await APISession();
     const { success: isLoggedIn, data: user } = await API.auth.getProfile();
 
-    if (isLoggedIn && user.roles.includes("Admin"))
+    if (isLoggedIn && user.roles.some((role: any) => role.name === "Admin"))
       return { type: "redirect", url: getPath("home") };
 
     return { type: "continue" };

@@ -28,7 +28,7 @@ export class WsJwtAdminGuard implements CanActivate {
     try {
       const user = await this.authService.verifyPayload(payload);
 
-      if (!user.roles.includes('Admin'))
+      if (!user.roles.some((role) => role.name === 'Admin'))
         throw new UnauthorizedException('User is not admin');
 
       return user;

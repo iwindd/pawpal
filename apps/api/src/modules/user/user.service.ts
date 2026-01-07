@@ -1,9 +1,14 @@
+import { WalletCollection } from '@/common/collections/wallet.collection';
 import {
   ConflictException,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { ChangeEmailInput, UpdateProfileInput } from '@pawpal/shared';
+import {
+  AdminUserResponse,
+  ChangeEmailInput,
+  UpdateProfileInput,
+} from '@pawpal/shared';
 import { PrismaService } from '../prisma/prisma.service';
 import { UserRepository } from './user.repository';
 
@@ -84,7 +89,7 @@ export class UserService {
    * @param userId user id
    * @returns user session
    */
-  async getProfile(userId: string) {
+  async getProfile(userId: string): Promise<AdminUserResponse> {
     const user = await this.prisma.user.findFirst({
       where: {
         id: userId,
@@ -95,6 +100,7 @@ export class UserService {
         displayName: true,
         avatar: true,
         createdAt: true,
+        updatedAt: true,
         roles: {
           select: {
             id: true,
@@ -107,11 +113,23 @@ export class UserService {
             balance: true,
           },
         },
+        _count: {
+          select: {
+            orders: true,
+          },
+        },
       },
     });
 
-    if (!user) return null;
+    if (!user) throw new UnauthorizedException('invalid_credentials');
 
-    return user;
+    return {
+      ...user,
+      userWallet: WalletCollection.toObject(user.userWallets),
+      createdAt: user.createdAt.toISOString(),
+      updatedAt: user.updatedAt.toISOString(),
+      walletCount: 0, // TODO: WHAT DA HELL IS THIS?
+      orderCount: user._count.orders,
+    };
   }
 }

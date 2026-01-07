@@ -1,17 +1,9 @@
-export interface UserResponse {
-  id: string;
-  email: string;
-  displayName: string;
-  avatar: string | null;
-  createdAt: string | Date;
-  updatedAt: string | Date;
-  roles: {
-    id: string;
-    name: string;
-  }[];
+import { Session } from "../session";
+
+export interface AdminUserResponse extends Session {
   walletCount: number;
   orderCount: number;
 }
 
-export interface AdminCustomerResponse extends UserResponse {}
-export interface AdminEmployeeResponse extends UserResponse {}
+export interface AdminCustomerResponse extends AdminUserResponse {}
+export interface AdminEmployeeResponse extends AdminUserResponse {}

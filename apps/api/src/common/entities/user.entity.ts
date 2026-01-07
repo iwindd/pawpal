@@ -20,6 +20,7 @@ export class UserEntity {
       displayName: true,
       avatar: true,
       createdAt: true,
+      updatedAt: true,
       roles: true,
       userWallets: {
         select: {
@@ -50,12 +51,19 @@ export class UserEntity {
     return this.user.createdAt;
   }
 
+  public get updatedAt() {
+    return this.user.updatedAt;
+  }
+
   public get userWallet() {
     return WalletCollection.toObject(this.user.userWallets);
   }
 
   public get roles() {
-    return this.user.roles.map((role) => role.name);
+    return this.user.roles.map((role) => ({
+      id: role.id,
+      name: role.name,
+    }));
   }
 
   public async isValidPassword(password: string) {
@@ -83,6 +91,7 @@ export class UserEntity {
       displayName: this.displayName,
       avatar: this.avatar,
       createdAt: this.createdAt.toISOString(),
+      updatedAt: this.updatedAt.toISOString(),
       userWallet: this.userWallet,
       roles: this.roles,
     };

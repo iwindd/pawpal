@@ -6,7 +6,7 @@ class AuthApi {
   public async getProfile() {
     try {
       const response = await this.client.get("/auth/profile");
-      if (!response.data.roles.includes("Admin"))
+      if (!response.data.roles.some((role: any) => role.name === "Admin"))
         return { success: false, data: null };
 
       return { success: true, data: response.data };

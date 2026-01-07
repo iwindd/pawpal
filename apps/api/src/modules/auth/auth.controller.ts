@@ -48,7 +48,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @UseInterceptors(TokenInterceptor)
   async adminLogin(@AuthUser() user: Session) {
-    if (!user.roles.includes('Admin'))
+    if (!user.roles.some((role) => role.name === 'Admin'))
       throw new UnauthorizedException('user_not_admin');
 
     return user;
