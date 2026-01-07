@@ -4,11 +4,15 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { ChangeEmailInput, UpdateProfileInput } from '@pawpal/shared';
+import { PrismaService } from '../prisma/prisma.service';
 import { UserRepository } from './user.repository';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userRepo: UserRepository) {}
+  constructor(
+    private readonly userRepo: UserRepository,
+    private readonly prisma: PrismaService,
+  ) {}
   /**
    * Change user email
    * @param userId user id
@@ -45,5 +49,41 @@ export class UserService {
     user.updateProfile(payload);
 
     return user.toJSON();
+  }
+
+  /**
+   * Get user profile
+   * @param userId user id
+   * @returns user session
+   */
+  async getProfile(userId: string) {
+    const user = await this.prisma.user.findFirst({
+      where: {
+        id: userId,
+      },
+      select: {
+        id: true,
+        email: true,
+        displayName: true,
+        avatar: true,
+        createdAt: true,
+        roles: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        userWallets: {
+          select: {
+            walletType: true,
+            balance: true,
+          },
+        },
+      },
+    });
+
+    if (!user) return null;
+
+    return user;
   }
 }

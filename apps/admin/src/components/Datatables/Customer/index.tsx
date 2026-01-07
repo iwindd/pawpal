@@ -1,6 +1,7 @@
 "use client";
 import { useGetCustomersQuery } from "@/features/customer/customerApi";
 import useDatatable from "@/hooks/useDatatable";
+import { IconEye } from "@pawpal/icons";
 import { AdminCustomerResponse } from "@pawpal/shared";
 import {
   Avatar,
@@ -10,6 +11,7 @@ import {
   Text,
 } from "@pawpal/ui/core";
 import { useFormatter, useTranslations } from "next-intl";
+import TableAction from "../action";
 
 const CustomerDatatable = () => {
   const format = useFormatter();
@@ -65,6 +67,24 @@ const CustomerDatatable = () => {
       title: __("createdAt"),
       render: (record) => format.dateTime(new Date(record.createdAt), "date"),
       visibleMediaQuery: above.lg,
+    },
+    {
+      accessor: "actions",
+      noWrap: true,
+      title: __("actions"),
+      render: (record) => (
+        <TableAction
+          displayType="icon"
+          actions={[
+            {
+              translate: "view",
+              action: `/users/customers/${record.id}`,
+              icon: IconEye,
+              color: "blue",
+            },
+          ]}
+        />
+      ),
     },
   ];
 

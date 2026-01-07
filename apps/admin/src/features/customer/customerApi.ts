@@ -23,7 +23,34 @@ export const customerApi = createApi({
       }),
       providesTags: ["Customers"],
     }),
+    getCustomerProfile: builder.query<AdminCustomerResponse, string>({
+      query: (id) => `/${id}/profile`,
+      providesTags: (result, error, id) => [{ type: "Customers", id }],
+    }),
+    getCustomerOrders: builder.query<
+      DatatableResponse<any>,
+      { id: string; params: DatatableInput }
+    >({
+      query: ({ id, params }) => ({
+        url: `/${id}/order-history`,
+        params,
+      }),
+    }),
+    getCustomerTopups: builder.query<
+      DatatableResponse<any>,
+      { id: string; params: DatatableInput }
+    >({
+      query: ({ id, params }) => ({
+        url: `/${id}/topup-history`,
+        params,
+      }),
+    }),
   }),
 });
 
-export const { useGetCustomersQuery } = customerApi;
+export const {
+  useGetCustomersQuery,
+  useGetCustomerProfileQuery,
+  useGetCustomerOrdersQuery,
+  useGetCustomerTopupsQuery,
+} = customerApi;

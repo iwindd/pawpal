@@ -1,14 +1,23 @@
 import { DatatablePipe, DatatableQuery } from '@/common/pipes/DatatablePipe';
 import { Controller, Get, Param, Query } from '@nestjs/common';
+import { UserService } from '../user.service';
 import { CustomerService } from './customer.service';
 
 @Controller('admin/customer')
 export class AdminCustomerController {
-  constructor(private readonly customerService: CustomerService) {}
+  constructor(
+    private readonly customerService: CustomerService,
+    private readonly userService: UserService,
+  ) {}
 
   @Get()
   getCustomerDatatable(@Query(DatatablePipe) query: DatatableQuery) {
     return this.customerService.getCustomerDatatable(query);
+  }
+
+  @Get(':userId/profile')
+  getProfile(@Param('userId') userId: string) {
+    return this.userService.getProfile(userId);
   }
 
   @Get(':userId/topup-history')

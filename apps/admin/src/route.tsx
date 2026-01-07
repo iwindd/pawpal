@@ -94,11 +94,40 @@ const ROUTES = ROUTER({
     children: {
       customers: {
         path: "/users/customers",
-        label: "users.customer",
+        label: "users.customer.main",
+        children: {
+          edit: {
+            path: "/users/customers/:id",
+            label: "users.customer.edit",
+            children: {},
+          },
+          orders: {
+            path: "/users/customers/:id/orders",
+            label: "users.customer.orders",
+          },
+          topups: {
+            path: "/users/customers/:id/topups",
+            label: "users.customer.topups",
+          },
+        },
       },
       employees: {
         path: "/users/employees",
-        label: "users.employee",
+        label: "users.employee.main",
+        children: {
+          edit: {
+            path: "/users/employees/:id",
+            label: "users.employee.edit",
+          },
+          orders: {
+            path: "/users/employees/:id/orders",
+            label: "users.employee.orders",
+          },
+          topups: {
+            path: "/users/employees/:id/topups",
+            label: "users.employee.topups",
+          },
+        },
       },
     },
   },

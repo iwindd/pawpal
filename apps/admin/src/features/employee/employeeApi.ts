@@ -23,7 +23,34 @@ export const employeeApi = createApi({
       }),
       providesTags: ["Employees"],
     }),
+    getEmployeeProfile: builder.query<AdminEmployeeResponse, string>({
+      query: (id) => `/${id}/profile`,
+      providesTags: (result, error, id) => [{ type: "Employees", id }],
+    }),
+    getEmployeeOrders: builder.query<
+      DatatableResponse<any>,
+      { id: string; params: DatatableInput }
+    >({
+      query: ({ id, params }) => ({
+        url: `/${id}/processed-order-history`,
+        params,
+      }),
+    }),
+    getEmployeeTopups: builder.query<
+      DatatableResponse<any>,
+      { id: string; params: DatatableInput }
+    >({
+      query: ({ id, params }) => ({
+        url: `/${id}/processed-topup-history`,
+        params,
+      }),
+    }),
   }),
 });
 
-export const { useGetEmployeesQuery } = employeeApi;
+export const {
+  useGetEmployeesQuery,
+  useGetEmployeeProfileQuery,
+  useGetEmployeeOrdersQuery,
+  useGetEmployeeTopupsQuery,
+} = employeeApi;

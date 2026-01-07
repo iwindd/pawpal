@@ -23,6 +23,7 @@ export {
   IconPencil as IconDraft,
   IconGripVertical as IconDrag,
   IconPencil as IconEdit,
+  IconEye,
   IconBolt as IconFlashsale,
   IconFolder,
   IconPacman as IconGames,

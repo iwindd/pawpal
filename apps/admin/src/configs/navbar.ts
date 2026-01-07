@@ -65,12 +65,12 @@ export const navlinks: NavLink[] = [
     files: [
       {
         id: 1,
-        name: "users.customer",
+        name: "users.customer.main",
         link: getPath("users.customers"),
       },
       {
         id: 2,
-        name: "users.employee",
+        name: "users.employee.main",
         link: getPath("users.employees"),
       },
     ],

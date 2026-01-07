@@ -67,8 +67,18 @@
       "resources": "ทรัพยากร",
       "users": {
         "main": "ผู้ใช้งาน",
-        "customer": "ลูกค้า",
-        "employee": "พนักงาน"
+        "customer": {
+          "main": "ลูกค้า",
+          "edit": "ข้อมูลทั่วไป",
+          "orders": "ประวัติการสั่งซื้อ",
+          "topups": "ประวัติการเติมเงิน"
+        },
+        "employee": {
+          "main": "พนักงาน",
+          "edit": "ข้อมูลทั่วไป",
+          "orders": "ประวัติการจัดการคำสั่งซื้อ",
+          "topups": "ประวัติธุรกรรม"
+        }
       },
       "website": {
         "main": "เว็บไซต์",
@@ -252,11 +262,25 @@
   "Customer": {
     "main": {
       "title": "ลูกค้าทั้งหมด"
+    },
+    "profile": {
+      "accountDetails": "ข้อมูลบัญชี",
+      "id": "รหัสผู้ใช้",
+      "email": "อีเมล",
+      "displayName": "ชื่อที่แสดง",
+      "roles": "บทบาท"
     }
   },
   "Employee": {
     "main": {
       "title": "พนักงานทั้งหมด"
+    },
+    "profile": {
+      "accountDetails": "ข้อมูลพนักงาน",
+      "id": "รหัสพนักงาน",
+      "email": "อีเมล",
+      "displayName": "ชื่อที่แสดง",
+      "roles": "บทบาท"
     }
   },
   "Datatable": {
@@ -273,12 +297,14 @@
       "customer": "ผู้ใช้งาน",
       "orders": "คำสั่งซื้อ",
       "orderFormat": "{count} คำสั่งซื้อ",
-      "createdAt": "วันที่สร้าง"
+      "createdAt": "วันที่สร้าง",
+      "actions": "เครื่องมือ"
     },
     "employee": {
       "employee": "พนักงาน",
       "role": "บทบาท",
-      "createdAt": "วันที่สร้าง"
+      "createdAt": "วันที่สร้าง",
+      "actions": "เครื่องมือ"
     },
     "product": {
       "name": "ขื่อสินค้า",
@@ -327,7 +353,8 @@
       }
     },
     "transaction": {
-      "transactionId": "รหัสธุรกรรม",
+      "id": "รหัสธุรกรรม",
+      "transactionId": "รหัสธุรกรรม ",
       "customer": "ลูกค้า",
       "amount": "จำนวนเงิน",
       "balanceBefore": "ยอดก่อนหน้า",
