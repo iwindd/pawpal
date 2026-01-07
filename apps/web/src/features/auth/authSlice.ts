@@ -1,6 +1,7 @@
 import { OrderResponseType, Session, WalletType } from "@pawpal/shared";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { orderApi } from "../order/orderApi";
+import { userApi } from "../user/userApi";
 import { authApi } from "./authApi";
 
 export interface AuthState {
@@ -53,13 +54,13 @@ const authSlice = createSlice({
       }
     );
     builder.addMatcher(
-      authApi.endpoints.updateProfile.matchFulfilled,
+      userApi.endpoints.updateProfile.matchFulfilled,
       (state, action: PayloadAction<Session>) => {
         state.user = action.payload;
       }
     );
     builder.addMatcher(
-      authApi.endpoints.changeEmail.matchFulfilled,
+      userApi.endpoints.changeEmail.matchFulfilled,
       (state, action: PayloadAction<Session>) => {
         state.user = action.payload;
       }

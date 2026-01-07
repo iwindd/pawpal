@@ -17,15 +17,11 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import {
-  type ChangeEmailInput,
-  changeEmailSchema,
   type ChangePasswordInput,
   changePasswordSchema,
   type RegisterInput,
   registerSchema,
   type Session,
-  type UpdateProfileInput,
-  updateProfileSchema,
 } from '@pawpal/shared';
 import { AuthService } from './auth.service';
 
@@ -81,26 +77,5 @@ export class AuthController {
     body: ChangePasswordInput,
   ) {
     return this.authService.changePassword(user.id, body);
-  }
-
-  @Post('change-email')
-  @UseGuards(SessionAuthGuard, JwtAuthGuard)
-  changeEmail(
-    @AuthUser() user: Session,
-    @Body(new ZodPipe(changeEmailSchema))
-    body: ChangeEmailInput,
-  ) {
-    return this.authService.changeEmail(user.id, body);
-  }
-
-  @Post('update-profile')
-  @UseGuards(SessionAuthGuard, JwtAuthGuard)
-  @HttpCode(HttpStatus.OK)
-  async updateProfile(
-    @AuthUser() user: Session,
-    @Body(new ZodPipe(updateProfileSchema))
-    body: UpdateProfileInput,
-  ): Promise<Session> {
-    return this.authService.updateProfile(user.id, body);
   }
 }

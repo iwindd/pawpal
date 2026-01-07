@@ -1,7 +1,7 @@
 "use client";
 import ErrorMessage from "@/components/ErrorMessage";
-import { useChangeEmailMutation } from "@/features/auth/authApi";
 import { isErrorWithData, isErrorWithMessage } from "@/features/helpers";
+import { useChangeEmailMutation } from "@/features/user/userApi";
 import useFormValidate from "@/hooks/useFormValidate";
 import { IconSettings } from "@pawpal/icons";
 import { ChangeEmailInput, changeEmailSchema } from "@pawpal/shared";

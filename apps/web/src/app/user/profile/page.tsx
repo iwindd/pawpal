@@ -1,6 +1,6 @@
 "use client";
 import ErrorMessage from "@/components/ErrorMessage";
-import { useUpdateProfileMutation } from "@/features/auth/authApi";
+import { useUpdateProfileMutation } from "@/features/user/userApi";
 import { useAppSelector } from "@/hooks";
 import useFormValidate from "@/hooks/useFormValidate";
 import { UpdateProfileInput, updateProfileSchema } from "@pawpal/shared";
