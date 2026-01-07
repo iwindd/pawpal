@@ -1,20 +1,20 @@
 import { compile, match } from "./path";
 
-export type CFG_ROUTE = {
+type BaseRoute = {
   path: string;
   label: string;
-  name?: string;
   icon?: any;
-  children?: Record<string, CFG_ROUTE>;
   parent?: string;
+  disabled?: boolean;
 };
 
-export type Route = {
-  path: string;
-  label: string;
+export type CFG_ROUTE = BaseRoute & {
+  name?: string;
+  children?: Record<string, CFG_ROUTE>;
+};
+
+export type Route = BaseRoute & {
   name: string;
-  icon?: any;
-  parent?: string;
 };
 
 export const ROUTER = (
@@ -40,7 +40,6 @@ export const ROUTER = (
 
       delete (route as CFG_ROUTE).children;
       APP_ROUTES[fullKey] = route;
-
       if (routes[key]!.children) traverse(routes[key]!.children, fullKey);
     }
   }
@@ -56,7 +55,7 @@ export const buildRouteUtility = (ROUTES: Record<string, Route>) => {
     const findRouteByName = Object.values(ROUTES).find(
       (r) => r.name === routeName
     );
-    const route = findRouteByKey || findRouteByName;
+    const route = findRouteByKey ?? findRouteByName;
     if (!route) throw new Error(`Route not found: ${routeName}`);
 
     return route;
