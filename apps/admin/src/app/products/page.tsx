@@ -1,7 +1,7 @@
 "use client";
 import ProductDatatable from "@/components/Datatables/Product";
 import PageHeader from "@/components/Pages/PageHeader";
-import { pather } from "@/configs/route";
+import { getPath } from "@/configs/route";
 import { useGetProductsQuery } from "@/features/productApi/productApi";
 import useDatatable from "@/hooks/useDatatable";
 import { IconPlus } from "@pawpal/icons";
@@ -29,7 +29,7 @@ export default function ProductsPage() {
           component={Link}
           variant="outline"
           rightSection={<IconPlus size={14} />}
-          href={pather("products.create")}
+          href={getPath("products.create")}
         >
           {__("main.add-btn")}
         </Button>

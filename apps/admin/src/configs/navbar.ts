@@ -7,7 +7,7 @@ import {
   IconUser,
   IconWork,
 } from "@pawpal/icons";
-import { getPath, pather } from "./route";
+import { getPath } from "./route";
 
 export interface NavLink {
   id: number;
@@ -28,7 +28,7 @@ export const navlinks: NavLink[] = [
     id: 1,
     icon: IconDashboard,
     title: "home",
-    link: pather("home"),
+    link: getPath("home"),
     files: [],
     hasBorderBottom: true,
   },
@@ -36,17 +36,17 @@ export const navlinks: NavLink[] = [
     id: 3,
     icon: IconWork,
     title: "job.main",
-    link: pather("job"),
+    link: getPath("job"),
     files: [
       {
         id: 1,
         name: "orders.main",
-        link: pather("job.orders"),
+        link: getPath("job.orders"),
       },
       {
         id: 2,
         name: "transactions.main",
-        link: pather("job.transactions"),
+        link: getPath("job.transactions"),
       },
     ],
   },
@@ -54,7 +54,7 @@ export const navlinks: NavLink[] = [
     id: 4,
     icon: IconShoppingBag,
     title: "products.main",
-    link: pather("products"),
+    link: getPath("products"),
     files: [],
   },
   {
@@ -79,18 +79,18 @@ export const navlinks: NavLink[] = [
     id: 6,
     icon: IconAppWindow,
     title: "website.main",
-    link: pather("website"),
+    link: getPath("website"),
     files: [
       {
         id: 1,
         name: "website.carousel.main",
-        link: pather("website.carousel"),
+        link: getPath("website.carousel"),
         badgeKey: "carousels",
       },
       {
         id: 2,
         name: "website.payment.main",
-        link: pather("website.payment"),
+        link: getPath("website.payment"),
       },
     ],
   },
@@ -98,7 +98,7 @@ export const navlinks: NavLink[] = [
     id: 7,
     icon: IconFolder,
     title: "resources",
-    link: pather("resources"),
+    link: getPath("resources"),
     files: [],
   },
 ];

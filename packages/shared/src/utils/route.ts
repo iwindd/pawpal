@@ -50,65 +50,61 @@ export const ROUTER = (
   return APP_ROUTES;
 };
 
-export const findRouteTrail = (
-  pathname: string,
-  routes: Record<string, Route>
-): Route[] | null => {
-  for (const key in routes) {
-    const route = routes[key] as Route;
-    const matcher = match(route.path);
+export const buildRouteUtility = (ROUTES: Record<string, Route>) => {
+  const getRoute = (routeName: string) => {
+    const findRouteByKey = ROUTES[routeName];
+    const findRouteByName = Object.values(ROUTES).find(
+      (r) => r.name === routeName
+    );
+    const route = findRouteByKey || findRouteByName;
+    if (!route) throw new Error(`Route not found: ${routeName}`);
 
-    if (matcher(pathname)) {
-      const trail: Route[] = [route];
+    return route;
+  };
 
-      let parentKey = route.parent;
-      while (parentKey) {
-        const parentRoute = routes[parentKey];
-        if (parentRoute) {
-          trail.unshift(parentRoute);
-          parentKey = parentRoute.parent;
-        } else {
-          break;
+  const getPath = (routeName: string, params?: Record<string, any>) => {
+    const route = getRoute(routeName);
+    const toPath = compile(route.path);
+    return toPath(params || {}) as string;
+  };
+
+  const findRouteTrail = (pathname: string) => {
+    for (const key in ROUTES) {
+      const route = ROUTES[key] as Route;
+      const matcher = match(route.path);
+
+      if (matcher(pathname)) {
+        const trail: Route[] = [route];
+
+        let parentKey = route.parent;
+        while (parentKey) {
+          const parentRoute = ROUTES[parentKey];
+          if (parentRoute) {
+            trail.unshift(parentRoute);
+            parentKey = parentRoute.parent;
+          } else {
+            break;
+          }
         }
+
+        return trail;
       }
-
-      return trail;
     }
-  }
-  return null;
-};
+    return null;
+  };
 
-export const findActiveRoute = (
-  pathname: string,
-  routes: Record<string, Route>
-): Route | null => {
-  for (const route of Object.values(routes)) {
-    const matcher = match(route.path);
-    if (matcher(pathname)) return route;
-  }
-  return null;
-};
+  const findActiveRoute = (pathname: string) => {
+    for (const route of Object.values(ROUTES)) {
+      const matcher = match(route.path);
+      if (matcher(pathname)) return route;
+    }
+    return null;
+  };
 
-export const getRoute = (
-  routeName: string,
-  ROUTES: Record<string, Route>
-): Route => {
-  const findRouteByKey = ROUTES[routeName];
-  const findRouteByName = Object.values(ROUTES).find(
-    (r) => r.name === routeName
-  );
-  const route = findRouteByKey || findRouteByName;
-  if (!route) throw new Error(`Route not found: ${routeName}`);
-
-  return route;
-};
-
-export const getPath = (
-  routeName: string,
-  ROUTES: Record<string, Route>,
-  params?: Record<string, any>
-): string => {
-  const route = getRoute(routeName, ROUTES);
-  const toPath = compile(route.path);
-  return toPath(params || {}) as string;
+  return {
+    getRoute,
+    getPath,
+    findRouteTrail,
+    findActiveRoute,
+  };
 };
