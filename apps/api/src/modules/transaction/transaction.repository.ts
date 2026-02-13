@@ -97,6 +97,7 @@ export class TransactionRepository {
             id: paymentGatewayId,
           },
         },
+        amount,
         balance_before: wallet.balance,
         balance_after: wallet.balance.plus(amount),
         status,

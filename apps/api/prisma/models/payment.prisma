@@ -25,6 +25,7 @@ model UserWalletTransaction {
   wallet         UserWallet        @relation("UserWalletTransactions", fields: [wallet_id], references: [id])
   balance_before Decimal           @db.Decimal(10, 2)
   balance_after  Decimal           @db.Decimal(10, 2)
+  amount         Decimal           @db.Decimal(10, 2)
   status         TransactionStatus @default(CREATED)
   currency       String            @default("THB")
   createdAt      DateTime          @default(now())

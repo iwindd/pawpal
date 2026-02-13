@@ -100,6 +100,7 @@ export class OrderService {
           type: TransactionType.PURCHASE,
           balance_after: balanceAfter,
           balance_before: userWallet.balance,
+          amount: totalPrice,
           status: TransactionStatus.PENDING,
           wallet: {
             connect: {

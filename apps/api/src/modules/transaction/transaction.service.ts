@@ -58,6 +58,7 @@ export class TransactionService {
         // create new purchase transaction
         const total = transaction.total.minus(transaction.balanceAfter).abs();
         await this.transactionRepo.create({
+          amount: total,
           balance_before: transaction.balanceAfter,
           balance_after: total,
           type: TransactionType.PURCHASE,
