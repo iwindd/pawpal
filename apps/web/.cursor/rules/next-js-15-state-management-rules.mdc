@@ -1,8 +1,0 @@
----
-description: Defines the recommended state management strategies for Next.js 15 applications, including server and client contexts.
-globs: app/**/*
----
-
-- Leverage new `useFormValidate`(custom hook) hook for form state management and validation message.
-- Implement URL state management with 'nuqs'.
-- Minimize client-side state.

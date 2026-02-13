@@ -10,10 +10,13 @@ export const DatatableExtension = Prisma.defineExtension((client) => {
     name: 'datatable',
     model: {
       $allModels: {
-        async getDatatable<T>(
+        async getDatatable<
+          T,
+          S extends Prisma.Args<T, 'findMany'>['select'] | undefined,
+        >(
           this: T,
           args: {
-            select: Prisma.Args<T, 'findMany'>['select'];
+            select: S;
             searchable?: Prisma.Args<T, 'findMany'>['where'];
             where?: Prisma.Args<T, 'findMany'>['where'];
             query?: Pick<

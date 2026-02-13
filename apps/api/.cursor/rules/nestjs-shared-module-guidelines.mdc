@@ -1,8 +1,0 @@
----
-description: Guidelines for shared utilities and business logic that can be used across multiple modules.
-globs: apps/api/src/utils/**/*.ts
-alwaysApply: false
----
-
-- Utilities
-- Shared business logic

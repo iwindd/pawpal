@@ -1,5 +1,0 @@
-{
-  "commit": {
-    "instruction": "Generate commit messages strictly following the Angular Conventional Commit format. The structure must be:\n\n<type>(<scope>): <summary>\n\n<body>\n\n<footer>\n\nRules:\n- Use one of the allowed types: build, ci, docs, feat, fix, perf, refactor, test.\n- The scope must be one of the defined package names (e.g., core, forms, router, http, common, etc.). If not applicable, omit the scope.\n- The summary must be written in the imperative, present tense (e.g., 'fix bug', not 'fixed bug'), must not start with a capital letter, and must not end with a period.\n- The body is mandatory except for 'docs' commits, and must be at least 20 characters long. It should explain the motivation for the change and describe its effect.\n- The footer is optional. If present, it should include references to issues/PRs (using 'Fixes #', 'Closes #') or breaking changes/deprecations (using 'BREAKING CHANGE:' or 'DEPRECATED:').\n- For revert commits, start with 'revert: ' followed by the original commit header, and explain the SHA and reason in the body."
-  }
-}
