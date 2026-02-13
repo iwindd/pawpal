@@ -125,6 +125,11 @@
         "edit": "ข้อมูล",
         "packages": "แพ็คเกจ",
         "fields": "ฟิลด์",
+        "categories": {
+          "main": "หมวดหมู่",
+          "create": "สร้างหมวดหมู่",
+          "edit": "แก้ไขหมวดหมู่"
+        },
         "tags": {
           "main": "แท็กสินค้า"
         }
@@ -240,8 +245,13 @@
         "title": "สำเร็จ",
         "message": "บันทึกการเปลี่ยนแปลงสินค้าแล้ว!"
       }
+    },
+    "category": {
+      "title": "หมวดหมู่สินค้า",
+      "add-btn": "เพิ่มหมวดหมู่"
     }
   },
+
   "ProductPackage": {
     "title": "รายการแพ็คเกจ",
     "form": {
@@ -459,6 +469,12 @@
       "packages": "แพ็คเกจ",
       "packageFormat": "{count} แพ็คเกจ",
       "createdAt": "วันที่สร้าง"
+    },
+    "category": {
+      "name": "ชื่อหมวดหมู่",
+      "slug": "Slug",
+      "createdAt": "วันที่สร้าง",
+      "actions": "เครื่องมือ"
     },
     "productPackage": {
       "name": "ชื่อแพ็คเกจ",

@@ -1,5 +1,20 @@
-import { Controller, Get, Post, Put, Delete, Param, Query, Body } from '@nestjs/common';
-import { CategoryResponse, CategoryInput, CategoryUpdateInput } from '@pawpal/shared';
+import { DatatablePipe, DatatableQuery } from '@/common/pipes/DatatablePipe';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+} from '@nestjs/common';
+import {
+  CategoryInput,
+  CategoryResponse,
+  CategoryUpdateInput,
+  DatatableResponse,
+} from '@pawpal/shared';
 import { CategoryService } from './category.service';
 
 @Controller('admin/category')
@@ -7,8 +22,10 @@ export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
   @Get()
-  async findAll(@Query('search') search?: string): Promise<CategoryResponse[]> {
-    return this.categoryService.findAll(search);
+  async findAll(
+    @Query(new DatatablePipe()) query: DatatableQuery,
+  ): Promise<DatatableResponse<CategoryResponse>> {
+    return this.categoryService.findAll(query);
   }
 
   @Get(':id')
@@ -17,7 +34,9 @@ export class CategoryController {
   }
 
   @Post()
-  async create(@Body() createCategoryDto: CategoryInput): Promise<CategoryResponse> {
+  async create(
+    @Body() createCategoryDto: CategoryInput,
+  ): Promise<CategoryResponse> {
     return this.categoryService.create(createCategoryDto);
   }
 

@@ -1,8 +1,10 @@
+import { DatatableQuery } from '@/common/pipes/DatatablePipe';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import {
   CategoryInput,
   CategoryResponse,
   CategoryUpdateInput,
+  DatatableResponse,
 } from '@pawpal/shared';
 import { PrismaService } from '../prisma/prisma.service';
 
@@ -10,21 +12,11 @@ import { PrismaService } from '../prisma/prisma.service';
 export class CategoryService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll(search?: string): Promise<CategoryResponse[]> {
-    const where: any = {};
-
-    if (search) {
-      where.name = {
-        contains: search,
-        mode: 'insensitive',
-      };
-    }
-
-    const categories = await this.prisma.category.findMany({
-      where,
-      orderBy: {
-        name: 'asc',
-      },
+  async findAll(
+    query: DatatableQuery,
+  ): Promise<DatatableResponse<CategoryResponse>> {
+    return this.prisma.category.getDatatable({
+      query,
       select: {
         id: true,
         name: true,
@@ -32,15 +24,11 @@ export class CategoryService {
         createdAt: true,
         updatedAt: true,
       },
+      searchable: {
+        name: { mode: 'insensitive' },
+        slug: { mode: 'insensitive' },
+      },
     });
-
-    return categories.map((category) => ({
-      id: category.id,
-      name: category.name,
-      slug: category.slug,
-      createdAt: category.createdAt.toISOString(),
-      updatedAt: category.updatedAt.toISOString(),
-    }));
   }
 
   async findOne(id: string): Promise<CategoryResponse> {

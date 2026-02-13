@@ -61,6 +61,11 @@ export const navlinks: NavLink[] = [
         name: "products.tags.main",
         link: getPath("products.tags"),
       },
+      {
+        id: 2,
+        name: "products.categories.main", // Ensure this key exists in translations
+        link: getPath("products.categories"),
+      },
     ],
   },
   {

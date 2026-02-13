@@ -49,6 +49,7 @@ export {
   IconBrandSoundcloud as IconStreaming,
   IconMoon as IconThemeDark,
   IconSun as IconThemeLight,
+  IconTrash,
   IconUpload,
   IconUser,
   IconPaw as IconWork,

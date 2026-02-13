@@ -1,5 +1,9 @@
 import { baseQuery } from "@/configs/api";
-import { AdminCategoryResponse, DatatableInput } from "@pawpal/shared";
+import {
+  AdminCategoryResponse,
+  DatatableInput,
+  DatatableResponse,
+} from "@pawpal/shared";
 import { createApi } from "@reduxjs/toolkit/query/react";
 
 export const categoryApi = createApi({
@@ -9,7 +13,10 @@ export const categoryApi = createApi({
     baseUrl: `/admin/category`,
   }),
   endpoints: (builder) => ({
-    getCategories: builder.query<AdminCategoryResponse[], DatatableInput>({
+    getCategories: builder.query<
+      DatatableResponse<AdminCategoryResponse>,
+      DatatableInput
+    >({
       query: (params) => ({
         url: `/`,
         params,
