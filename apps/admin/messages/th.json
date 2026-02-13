@@ -252,6 +252,44 @@
     }
   },
 
+  "Category": {
+    "main": {
+      "title": "หมวดหมู่สินค้า",
+      "create": "เพิ่มหมวดหมู่"
+    },
+    "form": {
+      "name": {
+        "label": "ชื่อหมวดหมู่",
+        "placeholder": "ระบุชื่อหมวดหมู่"
+      },
+      "slug": {
+        "label": "Slug",
+        "placeholder": "ระบุ Slug"
+      },
+      "save": "บันทึก"
+    },
+    "notify": {
+      "created": {
+        "title": "สำเร็จ",
+        "message": "สร้างหมวดหมู่ใหม่แล้ว"
+      },
+      "updated": {
+        "title": "สำเร็จ",
+        "message": "บันทึกการเปลี่ยนแปลงหมวดหมู่แล้ว"
+      },
+      "deleted": {
+        "title": "สำเร็จ",
+        "message": "ลบหมวดหมู่แล้ว"
+      }
+    },
+    "confirmation": {
+      "delete": {
+        "title": "ยืนยันการลบ",
+        "message": "คุณแน่ใจหรือไม่ว่าต้องการลบหมวดหมู่นี้?"
+      }
+    }
+  },
+
   "ProductPackage": {
     "title": "รายการแพ็คเกจ",
     "form": {
