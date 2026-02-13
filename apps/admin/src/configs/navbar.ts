@@ -55,7 +55,13 @@ export const navlinks: NavLink[] = [
     icon: IconShoppingBag,
     title: "products.main",
     link: getPath("products"),
-    files: [],
+    files: [
+      {
+        id: 1,
+        name: "products.tags.main",
+        link: getPath("products.tags"),
+      },
+    ],
   },
   {
     id: 5,

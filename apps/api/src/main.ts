@@ -1,17 +1,18 @@
-import { AppModule } from '@/modules/app/app.module';
-import { ConfigService } from '@nestjs/config';
-import { NestFactory } from '@nestjs/core';
-import { NestExpressApplication } from '@nestjs/platform-express';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { PrismaSessionStore } from '@quixo3/prisma-session-store';
+import {AppModule} from '@/modules/app/app.module';
+import {ConfigService} from '@nestjs/config';
+import {HttpAdapterHost, NestFactory} from '@nestjs/core';
+import {NestExpressApplication} from '@nestjs/platform-express';
+import {DocumentBuilder, SwaggerModule} from '@nestjs/swagger';
+import {PrismaSessionStore} from '@quixo3/prisma-session-store';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import passport from 'passport';
-import { join } from 'path';
-import { SocketIoAdapter } from './common/adapters/socket-io-adapter';
-import { ZodFilter } from './common/execeptions/ZodFilter';
-import { DelayInterceptor } from './common/interceptors/delay.interceptor';
-import { PrismaService } from './modules/prisma/prisma.service';
+import {join} from 'path';
+import {SocketIoAdapter} from './common/adapters/socket-io-adapter';
+import {PrismaClientExceptionFilter} from './common/execeptions/prisma-client-exception.filter';
+import {ZodFilter} from './common/execeptions/ZodFilter';
+import {DelayInterceptor} from './common/interceptors/delay.interceptor';
+import {PrismaService} from './modules/prisma/prisma.service';
 
 // Constants
 const DEFAULT_PORT = 3000;
@@ -22,6 +23,8 @@ const ENABLE_DELAY_FLAG = 'true';
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const configService = app.get(ConfigService);
+  const { httpAdapter } = app.get(HttpAdapterHost);
+
   app.useWebSocketAdapter(new SocketIoAdapter(app, configService));
 
   app.use(cookieParser(process.env.APP_SECRET));
@@ -69,6 +72,7 @@ async function bootstrap(): Promise<void> {
   });
 
   app.useGlobalFilters(new ZodFilter());
+  app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
 
   // swagger
   const config = new DocumentBuilder().setTitle('PawpalAPI').build();

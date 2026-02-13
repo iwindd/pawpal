@@ -124,7 +124,10 @@
         "create": "สร้างสินค้า",
         "edit": "ข้อมูล",
         "packages": "แพ็คเกจ",
-        "fields": "ฟิลด์"
+        "fields": "ฟิลด์",
+        "tags": {
+          "main": "แท็กสินค้า"
+        }
       },
       "resources": "ทรัพยากร",
       "users": {
@@ -293,6 +296,44 @@
       }
     }
   },
+  "ProductTag": {
+    "main": {
+      "title": "แท็กสินค้า",
+      "add-btn": "เพิ่มแท็กสินค้า"
+    },
+    "table": {
+      "name": "ชื่อ",
+      "slug": "Slug",
+      "type": "ประเภท",
+      "products": "สินค้าทั้งหมด",
+      "createdAt": "สร้างเมื่อ"
+    },
+    "CreateProductTagModal": {
+      "title": "สร้างแท็กสินค้า"
+    },
+    "form": {
+      "name": {
+        "label": "ชื่อ",
+        "placeholder": "เช่น Battle Royale, FPS, RPG เป็นต้น"
+      },
+      "slug": {
+        "label": "Slug",
+        "description": "ส่วนท้ายของลิงก์ ใช้แทนชื่อเรื่องหรือชื่อข้อมูล",
+        "placeholder": "เช่น battle-royale, live-service เป็นต้น"
+      },
+      "save": "บันทึกแท็กสินค้า"
+    },
+    "messages": {
+      "notify": {
+        "created": "สร้างแท็กสินค้า {name} เรียบร้อยแล้ว"
+      }
+    },
+    "type": {
+      "USER_DEFINED": "กำหนดเอง",
+      "SYSTEM_DEFINED": "กำหนดโดยระบบ"
+    }
+  },
+
   "Errors": {
     "try_again": "กรุณาลองใหม่อีกครั้งภายหลัง!",
     "login": {

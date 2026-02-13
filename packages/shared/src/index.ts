@@ -19,6 +19,7 @@ export * from "./schemas/order/field";
 export * from "./schemas/payment/charge/create";
 export * from "./schemas/payment/promptpay";
 export * from "./schemas/product";
+export * from "./schemas/productTag";
 export * from "./schemas/resource/resource";
 export * from "./schemas/user/admin-reset-email";
 export * from "./schemas/user/admin-reset-password";
@@ -34,6 +35,8 @@ export * from "./types/response/order";
 export * from "./types/response/package";
 export * from "./types/response/payment-gateway";
 export * from "./types/response/product";
+export * from "./types/response/product-tag";
+
 export * from "./types/response/resource";
 export * from "./types/response/topup";
 export * from "./types/response/transaction";

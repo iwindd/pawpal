@@ -64,6 +64,11 @@ const ROUTES = ROUTER({
     label: "products.main",
     icon: IconWork,
     children: {
+      tags: {
+        path: "/products/tags",
+        label: "products.tags.main",
+        icon: IconWork,
+      },
       create: {
         path: "/products/create",
         label: "products.create",

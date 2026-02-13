@@ -1,0 +1,27 @@
+meta {
+  name: CreateProductTag
+  type: http
+  seq: 1
+}
+
+patch {
+  url: http://localhost:8000/admin/product-tag/:productTagId
+  body: json
+  auth: inherit
+}
+
+params:path {
+  productTagId: cmlkzllo50003ccix2eqeg3kv
+}
+
+body:json {
+  {
+    "name": "Test2222",
+    "slug": "promptpay-manual2222222"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
