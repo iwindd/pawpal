@@ -42,4 +42,9 @@ export class ProductTagController {
   ) {
     return this.productTagService.update(slug, updateProductTagDto);
   }
+
+  @Get(':id')
+  findOneById(@Param('id') id: string) {
+    return this.productTagService.findOneById(id);
+  }
 }

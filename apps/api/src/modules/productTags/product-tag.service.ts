@@ -1,5 +1,5 @@
 import { DatatableQuery } from '@/common/pipes/DatatablePipe';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import {
   CreateProductTagInput,
   slugify,
@@ -38,6 +38,16 @@ export class ProductTagService {
         slug: { mode: 'insensitive' },
       },
     });
+  }
+
+  async findOneById(id: string) {
+    const productTag = await this.prisma.productTag.findFirst({
+      where: { id },
+    });
+
+    if (!productTag) throw new BadRequestException('product_not_found');
+
+    return productTag;
   }
 
   async update(id: string, payload: UpdateProductTagInput) {

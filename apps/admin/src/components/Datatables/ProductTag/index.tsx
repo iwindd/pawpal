@@ -1,8 +1,9 @@
 import { Badge, DataTable, DataTableProps } from "@pawpal/ui/core";
 import { useFormatter, useNow, useTranslations } from "next-intl";
 
-import { IconSettings, IconUser } from "@pawpal/icons";
+import { IconEdit, IconSettings, IconUser } from "@pawpal/icons";
 import { AdminProductTagResponse, ProductTagType } from "@pawpal/shared";
+import TableAction from "../action";
 import { BaseDatatableProps } from "../datatable";
 
 interface Props extends BaseDatatableProps<AdminProductTagResponse> {}
@@ -59,6 +60,24 @@ export default function ProductTagDatatable({
         <span title={format.dateTime(new Date(record.createdAt), "dateTime")}>
           {format.relativeTime(new Date(record.createdAt), now)}
         </span>
+      ),
+    },
+    {
+      accessor: "actions",
+      title: "",
+      width: 100,
+      textAlign: "center",
+      render: (record) => (
+        <TableAction
+          displayType="icon"
+          actions={[
+            {
+              color: "blue",
+              icon: IconEdit,
+              action: `/products/tags/${record.id}`,
+            },
+          ]}
+        />
       ),
     },
   ];

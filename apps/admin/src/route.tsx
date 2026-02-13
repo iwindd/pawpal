@@ -68,6 +68,18 @@ const ROUTES = ROUTER({
         path: "/products/tags",
         label: "products.tags.main",
         icon: IconWork,
+        children: {
+          edit: {
+            path: "/products/tags/:id",
+            label: "products.tags.edit",
+            icon: IconWork,
+          },
+          products: {
+            path: "/products/tags/:id/products",
+            label: "products.tags.products",
+            icon: IconWork,
+          },
+        },
       },
       categories: {
         path: "/products/categories",
