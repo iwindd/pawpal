@@ -1,5 +1,4 @@
 import { WalletCollection } from '@/common/collections/wallet.collection';
-import { UserSuspensionType } from '@/generated/prisma/enums';
 import { SuspensionUtil } from '@/utils/suspensionUtil';
 import {
   ConflictException,
@@ -174,7 +173,7 @@ export class UserService {
       data: {
         userId: id,
         performedById: adminId,
-        type: UserSuspensionType.SUSPENDED,
+        type: 'SUSPENDED',
         note,
       },
     });
@@ -191,7 +190,7 @@ export class UserService {
       data: {
         userId: id,
         performedById: adminId,
-        type: UserSuspensionType.UNSUSPENDED,
+        type: 'UNSUSPENDED',
         note,
       },
     });
