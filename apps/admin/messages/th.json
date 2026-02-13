@@ -248,7 +248,27 @@
     },
     "category": {
       "title": "หมวดหมู่สินค้า",
-      "add-btn": "เพิ่มหมวดหมู่"
+      "add-btn": "เพิ่มหมวดหมู่",
+      "form": {
+        "name": {
+          "label": "ชื่อหมวดหมู่",
+          "placeholder": "ระบุชื่อหมวดหมู่"
+        },
+        "slug": {
+          "label": "Slug",
+          "placeholder": "ระบุ Slug",
+          "description": "ส่วนท้ายของลิงก์ ใช้แทนชื่อเรื่องหรือชื่อข้อมูล"
+        },
+        "save": "บันทึก"
+      },
+      "CreateCategoryModal": {
+        "title": "สร้างหมวดหมู่"
+      },
+      "messages": {
+        "notify": {
+          "created": "สร้างหมวดหมู่ {name} เรียบร้อยแล้ว"
+        }
+      }
     }
   },
 

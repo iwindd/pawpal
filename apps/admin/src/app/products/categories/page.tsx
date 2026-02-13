@@ -1,19 +1,25 @@
 "use client";
 import CategoryDatatable from "@/components/Datatables/Category";
+import CreateCategoryModal from "@/components/Modals/CreateCategoryModal";
 import PageHeader from "@/components/Pages/PageHeader";
 import { useGetCategoriesQuery } from "@/features/category/categoryApi";
 import useDatatable from "@/hooks/useDatatable";
 import { IconPlus } from "@pawpal/icons";
 import { AdminCategoryResponse } from "@pawpal/shared";
 import { Button, Paper } from "@pawpal/ui/core";
+import { useDisclosure } from "@pawpal/ui/hooks";
 import { useTranslations } from "next-intl";
-import Link from "next/link"; // Assuming we link to create page
 
 export const dynamic = "force-dynamic";
 
 export default function CategoriesPage() {
   const datatable = useDatatable<AdminCategoryResponse>();
-  const __ = useTranslations("Product.category"); // Reuse or create new translation key
+  const __ = useTranslations("Product.category");
+
+  const [
+    createModalOpened,
+    { open: openCreateModal, close: closeCreateModal },
+  ] = useDisclosure(false);
 
   const { data, isLoading } = useGetCategoriesQuery({
     page: datatable.page,
@@ -25,8 +31,7 @@ export default function CategoriesPage() {
     <main>
       <PageHeader title={__("title")}>
         <Button
-          component={Link}
-          href="/products/categories/create" // Assuming create page exists or will be created
+          onClick={openCreateModal}
           variant="outline"
           rightSection={<IconPlus size={14} />}
         >
@@ -42,6 +47,11 @@ export default function CategoriesPage() {
           {...datatable}
         />
       </Paper>
+
+      <CreateCategoryModal
+        opened={createModalOpened}
+        onClose={closeCreateModal}
+      />
     </main>
   );
 }
