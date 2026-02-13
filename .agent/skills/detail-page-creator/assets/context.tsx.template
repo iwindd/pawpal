@@ -1,0 +1,37 @@
+"use client";
+import { {{ResponseType}} } from "@pawpal/shared";
+import { createContext, useContext, useState } from "react";
+
+const {{Feature}}Context = createContext<{
+  {{featureLower}}: {{ResponseType}};
+  update{{Feature}}: (new{{Feature}}: {{ResponseType}}) => void;
+} | null>(null);
+
+export const {{Feature}}Provider = ({
+  children,
+  defaultValue,
+}: {
+  children: React.ReactNode;
+  defaultValue: {{ResponseType}};
+}) => {
+  const [value, setValue] = useState<{{ResponseType}}>(defaultValue);
+
+  return (
+    <{{Feature}}Context.Provider
+      value={{
+        {{featureLower}}: value || defaultValue,
+        update{{Feature}}: (new{{Feature}}: {{ResponseType}}) => {
+          setValue(new{{Feature}});
+        },
+      }}
+    >
+      {children}
+    </{{Feature}}Context.Provider>
+  );
+};
+
+export const use{{Feature}} = () => {
+  const ctx = useContext({{Feature}}Context);
+  if (!ctx) throw new Error("use{{Feature}} must be used inside {{Feature}}Provider");
+  return ctx;
+};

@@ -1,0 +1,28 @@
+import PageHeader from "@/components/Pages/PageHeader";
+import APISession from "@/libs/api/server";
+import { notFound } from "next/navigation";
+import { {{Feature}}Provider } from "./{{Feature}}Context";
+
+const {{Feature}}Layout = async ({
+  params,
+  children,
+}: {
+  params: Promise<{ id: string }>;
+  children: React.ReactNode;
+}) => {
+  const { id } = await params;
+  const API = await APISession();
+  const {{featureLower}} = await API.{{apiEndpoint}}.findOne(id);
+
+  if (!{{featureLower}}.success) return notFound();
+
+  return (
+    <{{Feature}}Provider defaultValue={{{featureLower}}.data}>
+      <PageHeader title={{{featureLower}}.data.name} />
+      {/* <TabNavigation /> If utilizing tab navigation */}
+      {children}
+    </{{Feature}}Provider>
+  );
+};
+
+export default {{Feature}}Layout;

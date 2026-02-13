@@ -1,0 +1,22 @@
+"use client";
+
+import { use{{Feature}} } from "./{{Feature}}Context";
+import { Stack, Text, Card } from "@pawpal/ui/core";
+
+const {{Feature}}Page = () => {
+  const { {{featureLower}} } = use{{Feature}}();
+
+  return (
+    <Stack>
+      <Card>
+        <Text size="lg" fw={700}>
+          { {{featureLower}}.name } Details
+        </Text>
+        <Text>ID: { {{featureLower}}.id }</Text>
+        {/* Add more detail fields here */}
+      </Card>
+    </Stack>
+  );
+};
+
+export default {{Feature}}Page;
