@@ -27,7 +27,7 @@ export default function UserInfoCard({
   const __ = useTranslations(
     type === "employee" || type === "session"
       ? "Employee.info"
-      : "Customer.info"
+      : "Customer.info",
   );
 
   const [resetEmail, { isLoading: isResettingEmail }] =
