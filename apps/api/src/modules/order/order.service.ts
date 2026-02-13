@@ -98,8 +98,8 @@ export class OrderService {
       const transaction = await this.prisma.userWalletTransaction.create({
         data: {
           type: TransactionType.PURCHASE,
-          balance_after: balanceAfter,
-          balance_before: userWallet.balance,
+          balanceAfter: balanceAfter,
+          balanceBefore: userWallet.balance,
           amount: totalPrice,
           status: TransactionStatus.PENDING,
           wallet: {
@@ -203,8 +203,8 @@ export class OrderService {
             id: true,
             type: true,
             status: true,
-            balance_before: true,
-            balance_after: true,
+            balanceBefore: true,
+            balanceAfter: true,
             createdAt: true,
             payment: {
               select: {
@@ -314,8 +314,8 @@ export class OrderService {
             id: true,
             type: true,
             status: true,
-            balance_before: true,
-            balance_after: true,
+            balanceBefore: true,
+            balanceAfter: true,
             createdAt: true,
             payment: {
               select: {

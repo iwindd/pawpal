@@ -45,8 +45,8 @@ const TransactionHistoryPartial = (order: AdminOrderResponse) => {
               </Table.Td>
               <Table.Td style={{ textAlign: "right" }}>
                 {formatter.number(
-                  tx.balance_after - tx.balance_before,
-                  "currency"
+                  tx.balanceAfter - tx.balanceBefore,
+                  "currency",
                 )}
               </Table.Td>
             </Table.Tr>

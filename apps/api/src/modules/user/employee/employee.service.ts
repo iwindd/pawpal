@@ -52,11 +52,11 @@ export class EmployeeService {
 
   /**
    * Get topup history datatable
-   * @param user_id user id
+   * @param userId user id
    * @returns datatable response
    */
   async getProcessedTopupHistoryDatatable(
-    user_id: string,
+    userId: string,
     query: DatatableQuery,
   ) {
     return this.prisma.userWalletTransaction.getDatatable({
@@ -65,17 +65,24 @@ export class EmployeeService {
         id: true,
         type: true,
         amount: true,
-        balance_before: true,
-        balance_after: true,
+        balanceBefore: true,
+        balanceAfter: true,
         status: true,
         currency: true,
-        payment_gateway_id: true,
-        order_id: true,
+        paymentGatewayId: true,
+        orderId: true,
         createdAt: true,
         updatedAt: true,
       },
       where: {
-        processedBy_id: user_id,
+        OR: [
+          {
+            succeededById: userId,
+          },
+          {
+            failedById: userId,
+          },
+        ],
         type: {
           not: TransactionType.PURCHASE,
         },
@@ -85,18 +92,25 @@ export class EmployeeService {
 
   /**
    * Get order history datatable
-   * @param user_id user id
+   * @param userId user id
    * @returns datatable response
    */
   async getProcessedOrderHistoryDatatable(
-    user_id: string,
+    userId: string,
     query: DatatableQuery,
   ) {
     const result = await this.prisma.order.getDatatable({
       query: query,
       select: OrderResponseMapper.SELECT,
       where: {
-        processedBy_id: user_id,
+        OR: [
+          {
+            completedById: userId,
+          },
+          {
+            cancelledById: userId,
+          },
+        ],
       },
     });
 

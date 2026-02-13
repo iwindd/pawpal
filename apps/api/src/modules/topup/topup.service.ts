@@ -31,15 +31,12 @@ export class TopupService {
    * @param user_id user id
    * @returns user wallet transaction history
    */
-  public async getTopupHistoryDatatable(
-    user_id: string,
-    query: DatatableQuery,
-  ) {
+  public async getTopupHistoryDatatable(userId: string, query: DatatableQuery) {
     const where: Prisma.UserWalletTransactionWhereInput = {
       wallet: {
-        user_id,
+        userId,
       },
-      order_id: null,
+      orderId: null,
     };
 
     if (
@@ -128,8 +125,8 @@ export class TopupService {
           },
         },
         amount,
-        balance_before: wallet.balance,
-        balance_after: wallet.balance.plus(amount),
+        balanceBefore: wallet.balance,
+        balanceAfter: wallet.balance.plus(amount),
         status,
         ...(orderId && { order: { connect: { id: orderId } } }),
       },

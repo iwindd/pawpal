@@ -45,7 +45,7 @@ export class TransactionService {
         this.eventService.admin.onFinishedJobTransaction(transaction.toJson());
         this.eventService.user.onTopupTransactionUpdated(transaction.userId, {
           id: transaction.id,
-          status: TransactionStatus.SUCCESS,
+          status: TransactionStatus.SUCCEEDED,
           balance: transaction.balanceAfter.toNumber(),
           walletType: transaction.walletType,
         });
@@ -59,8 +59,8 @@ export class TransactionService {
         const total = transaction.total.minus(transaction.balanceAfter).abs();
         await this.transactionRepo.create({
           amount: total,
-          balance_before: transaction.balanceAfter,
-          balance_after: total,
+          balanceBefore: transaction.balanceAfter,
+          balanceAfter: total,
           type: TransactionType.PURCHASE,
           status: TransactionStatus.PENDING,
           wallet: {
@@ -97,9 +97,9 @@ export class TransactionService {
     }
 
     return {
-      transaction_id: transaction.id,
-      balance_before: transaction.balanceBefore,
-      balance_after: transaction.balanceAfter,
+      transactionId: transaction.id,
+      balanceBefore: transaction.balanceBefore,
+      balanceAfter: transaction.balanceAfter,
       balance: transaction.balanceAfter,
     };
   }
@@ -142,12 +142,12 @@ export class TransactionService {
         id: true,
         type: true,
         amount: true,
-        balance_before: true,
-        balance_after: true,
+        balanceBefore: true,
+        balanceAfter: true,
         status: true,
         currency: true,
-        payment_gateway_id: true,
-        order_id: true,
+        paymentGatewayId: true,
+        orderId: true,
         createdAt: true,
         updatedAt: true,
       },

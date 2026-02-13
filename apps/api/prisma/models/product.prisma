@@ -3,16 +3,16 @@ model Package {
   name        String
   price       Decimal  @db.Decimal(10, 2)
   description String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
 
-  product    Product @relation("ProductPackages", fields: [product_id], references: [id])
-  product_id String
+  product   Product @relation("ProductPackages", fields: [productId], references: [id])
+  productId String  @map("product_id")
 
   sales         Sale[]         @relation("PackageSales")
   orderPackages OrderPackage[] @relation("OrderPackages")
 
-  @@index([product_id])
+  @@index([productId])
   @@index([price])
   @@map("packages")
 }
@@ -22,32 +22,31 @@ model Product {
   slug        String   @unique
   name        String
   description String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
 
-  category    Category @relation("ProductCategory", fields: [category_id], references: [id])
-  category_id String
+  category   Category @relation("ProductCategory", fields: [categoryId], references: [id])
+  categoryId String   @map("category_id")
 
   productTags ProductTag[]   @relation("ProductTags")
   packages    Package[]      @relation("ProductPackages")
   carousels   Carousel[]     @relation("ProductCarousels")
   fields      ProductField[] @relation("ProductFields")
-  image       Resource?      @relation("ProductImage", fields: [image_id], references: [id])
-  image_id    String?
+  image       Resource?      @relation("ProductImage", fields: [imageId], references: [id])
+  imageId     String?        @map("image_id")
 
   @@index([slug])
-  @@index([category_id])
+  @@index([categoryId])
   @@index([createdAt])
   @@map("products")
 }
-
 
 model Category {
   id        String   @id @default(cuid())
   slug      String   @unique
   name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   products Product[] @relation("ProductCategory")
 
@@ -60,8 +59,8 @@ model ProductTag {
   id        String         @id @default(cuid())
   slug      String         @unique
   name      String
-  createdAt DateTime       @default(now())
-  updatedAt DateTime       @updatedAt
+  createdAt DateTime       @default(now()) @map("created_at")
+  updatedAt DateTime       @updatedAt @map("updated_at")
   type      ProductTagType @default(USER_DEFINED)
 
   products Product[] @relation("ProductTags")
@@ -83,18 +82,18 @@ model ProductField {
   metadata    Json      @default("{}")
   type        FieldType @default(TEXT)
 
-  creator    User?   @relation("FieldCreatedBy", fields: [creator_id], references: [id])
-  creator_id String?
+  creator   User?   @relation("FieldCreatedBy", fields: [creatorId], references: [id])
+  creatorId String? @map("creator_id")
 
   optional Boolean @default(false)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   order Int @default(0)
 
-  product_id String
-  product    Product @relation("ProductFields", fields: [product_id], references: [id])
+  productId String  @map("product_id")
+  product   Product @relation("ProductFields", fields: [productId], references: [id])
 
   orderFields OrderField[] @relation("OrderFields")
 

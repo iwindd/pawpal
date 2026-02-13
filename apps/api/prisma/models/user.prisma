@@ -1,11 +1,11 @@
 model User {
   id          String   @id @default(cuid())
   email       String   @unique
-  displayName String
+  displayName String   @map("display_name")
   password    String
   avatar      String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
 
   userWallets                     UserWallet[]            @relation("UserWallets")
   orders                          Order[]                 @relation("OrderUser")
@@ -13,8 +13,10 @@ model User {
   Resources                       Resource[]              @relation("ResourceUser")
   carousels                       Carousel[]              @relation("CarouselCreatedBy")
   fields                          ProductField[]          @relation("FieldCreatedBy")
-  processedOrders                 Order[]                 @relation("OrderProcessedBy")
-  processedUserWalletTransactions UserWalletTransaction[] @relation("UserWalletTransactionProcessedBy")
+  cancelledOrders                 Order[]                 @relation("OrderCancelledBy")
+  completedOrders                 Order[]                 @relation("OrderCompletedBy")
+  succeededUserWalletTransactions UserWalletTransaction[] @relation("UserWalletTransactionSucceededBy")
+  failedUserWalletTransactions    UserWalletTransaction[] @relation("UserWalletTransactionFailedBy")
   suspensions                     UserSuspension[]        @relation("UserSuspensions")
   performedSuspensions            UserSuspension[]        @relation("PerformedSuspensions")
 
@@ -28,13 +30,13 @@ enum UserSuspensionType {
 
 model UserSuspension {
   id            String             @id @default(cuid())
-  userId        String
+  userId        String             @map("user_id")
   user          User               @relation("UserSuspensions", fields: [userId], references: [id])
   type          UserSuspensionType
   note          String?
   performedBy   User               @relation("PerformedSuspensions", fields: [performedById], references: [id])
-  performedById String
-  createdAt     DateTime           @default(now())
+  performedById String             @map("performed_by_id")
+  createdAt     DateTime           @default(now()) @map("created_at")
 
   @@map("user_suspensions")
 }
@@ -43,9 +45,9 @@ model Session {
   id        String   @id
   sid       String   @unique
   data      String
-  expiresAt DateTime
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("sessions")
 }

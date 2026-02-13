@@ -1,16 +1,16 @@
 model UserWallet {
   id         String     @id @default(cuid())
-  user_id    String
-  user       User       @relation("UserWallets", fields: [user_id], references: [id])
-  walletType WalletType @default(MAIN)
+  userId     String     @map("user_id")
+  user       User       @relation("UserWallets", fields: [userId], references: [id])
+  walletType WalletType @default(MAIN) @map("wallet_type")
   balance    Decimal    @db.Decimal(10, 2)
   currency   String     @default("THB")
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
+  createdAt  DateTime   @default(now()) @map("created_at")
+  updatedAt  DateTime   @updatedAt @map("updated_at")
 
   userWalletTransactions UserWalletTransaction[] @relation("UserWalletTransactions")
 
-  @@unique([user_id, walletType])
+  @@unique([userId, walletType])
   @@map("user_wallets")
 }
 
@@ -19,31 +19,36 @@ enum WalletType {
 }
 
 model UserWalletTransaction {
-  id             String            @id @default(cuid())
-  type           TransactionType   @default(TOPUP)
-  wallet_id      String
-  wallet         UserWallet        @relation("UserWalletTransactions", fields: [wallet_id], references: [id])
-  balance_before Decimal           @db.Decimal(10, 2)
-  balance_after  Decimal           @db.Decimal(10, 2)
-  amount         Decimal           @db.Decimal(10, 2)
-  status         TransactionStatus @default(CREATED)
-  currency       String            @default("THB")
-  createdAt      DateTime          @default(now())
-  updatedAt      DateTime          @updatedAt
-  processedAt    DateTime?
-  order          Order?            @relation(fields: [order_id], references: [id])
-  order_id       String?
+  id            String            @id @default(cuid())
+  type          TransactionType   @default(TOPUP)
+  walletId      String            @map("wallet_id")
+  wallet        UserWallet        @relation("UserWalletTransactions", fields: [walletId], references: [id])
+  balanceBefore Decimal           @map("balance_before") @db.Decimal(10, 2)
+  balanceAfter  Decimal           @map("balance_after") @db.Decimal(10, 2)
+  amount        Decimal           @db.Decimal(10, 2)
+  status        TransactionStatus @default(CREATED)
+  currency      String            @default("THB")
+  createdAt     DateTime          @default(now()) @map("created_at")
+  updatedAt     DateTime          @updatedAt @map("updated_at")
+  order         Order?            @relation(fields: [orderId], references: [id])
+  orderId       String?           @map("order_id")
 
-  payment            PaymentGateway? @relation(fields: [payment_gateway_id], references: [id])
-  payment_gateway_id String?
+  payment          PaymentGateway? @relation(fields: [paymentGatewayId], references: [id])
+  paymentGatewayId String?         @map("payment_gateway_id")
 
-  processedBy    User?   @relation("UserWalletTransactionProcessedBy", fields: [processedBy_id], references: [id])
-  processedBy_id String?
+  succeededBy   User?     @relation("UserWalletTransactionSucceededBy", fields: [succeededById], references: [id])
+  succeededById String?   @map("succeeded_by_id")
+  succeededAt   DateTime? @map("succeeded_at")
 
-  @@index([wallet_id])
+  failedBy   User?     @relation("UserWalletTransactionFailedBy", fields: [failedById], references: [id])
+  failedById String?   @map("failed_by_id")
+  failedAt   DateTime? @map("failed_at")
+
+  @@index([walletId])
   @@index([type])
-  @@index([payment_gateway_id])
-  @@index([processedBy_id])
+  @@index([paymentGatewayId])
+  @@index([succeededById])
+  @@index([failedById])
   @@map("user_wallet_transactions")
 }
 
@@ -56,7 +61,7 @@ enum TransactionType {
 enum TransactionStatus {
   CREATED
   PENDING
-  SUCCESS
+  SUCCEEDED
   FAILED
 }
 
@@ -67,9 +72,9 @@ model PaymentGateway {
   label       String // label for user interface
   text        String? // additional text for user interface
   metadata    Json     @default("{}")
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
   order       Int      @default(0)
 
   userWalletTransactions UserWalletTransaction[]

@@ -16,14 +16,14 @@ export class TransactionEntity {
   static get SELECT() {
     return {
       id: true,
-      balance_after: true,
-      balance_before: true,
+      balanceAfter: true,
+      balanceBefore: true,
       type: true,
       status: true,
       currency: true,
       createdAt: true,
       updatedAt: true,
-      payment_gateway_id: true,
+      paymentGatewayId: true,
       order: {
         select: {
           id: true,
@@ -33,7 +33,7 @@ export class TransactionEntity {
       wallet: {
         select: {
           id: true,
-          user_id: true,
+          userId: true,
           walletType: true,
         },
       },
@@ -49,8 +49,8 @@ export class TransactionEntity {
   }
 
   get amount() {
-    const diff = this.transaction.balance_after.minus(
-      this.transaction.balance_before,
+    const diff = this.transaction.balanceAfter.minus(
+      this.transaction.balanceBefore,
     );
 
     return diff.abs();
@@ -61,15 +61,15 @@ export class TransactionEntity {
   }
 
   get balanceBefore() {
-    return this.transaction.balance_before;
+    return this.transaction.balanceBefore;
   }
 
   get balanceAfter() {
-    return this.transaction.balance_after;
+    return this.transaction.balanceAfter;
   }
 
   get userId() {
-    return this.transaction.wallet.user_id;
+    return this.transaction.wallet.userId;
   }
 
   get walletId() {
@@ -99,7 +99,7 @@ export class TransactionEntity {
   public toJson(): AdminTransactionResponse {
     return TransactionResponseMapper.fromQuery({
       ...this.transaction,
-      order_id: this.orderId,
+      orderId: this.orderId,
     });
   }
 }

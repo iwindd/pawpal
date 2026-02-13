@@ -37,7 +37,7 @@ export class WalletRepository {
   public async find(userId: string, walletType: WalletType = WalletType.MAIN) {
     const userWallet = await this.prisma.userWallet.findFirst({
       where: {
-        user_id: userId,
+        userId: userId,
         walletType: walletType,
       },
       select: WalletRepository.DEFAULT_SELECT,
@@ -47,7 +47,7 @@ export class WalletRepository {
       return this.from(
         await this.prisma.userWallet.create({
           data: {
-            user_id: userId,
+            userId: userId,
             walletType: walletType,
             balance: 0,
           },
@@ -67,7 +67,7 @@ export class WalletRepository {
   public async findAll(userId: string) {
     const userWallets = await this.prisma.userWallet.findMany({
       where: {
-        user_id: userId,
+        userId: userId,
       },
       select: WalletRepository.DEFAULT_SELECT,
     });
@@ -96,8 +96,8 @@ export class WalletRepository {
     this.logger.log(`Setting ${+amount} to wallet ${userId} (${walletType})`);
     return this.prisma.userWallet.update({
       where: {
-        user_id_walletType: {
-          user_id: userId,
+        userId_walletType: {
+          userId: userId,
           walletType: walletType,
         },
       },
@@ -121,7 +121,7 @@ export class WalletRepository {
   ) {
     const userWallet = await this.prisma.userWallet.findFirst({
       where: {
-        user_id: userId,
+        userId: userId,
         walletType: walletType,
       },
     });

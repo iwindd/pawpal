@@ -4,14 +4,14 @@ export interface TopupResponse {
   id: string;
   type: TransactionType;
   amount: number;
-  balance_before: number;
-  balance_after: number;
+  balanceBefore: number;
+  balanceAfter: number;
   status: TransactionStatus;
   currency: string;
   payment: {
     id: string;
     label: string;
   };
-  order_id?: string;
+  orderId?: string;
   createdAt: string;
 }

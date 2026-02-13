@@ -39,8 +39,7 @@ export default function Navbar({ opened, toggle }: Readonly<Props>) {
       <ScrollArea h="100%">
         <Flex h="100%" gap={4} direction="column" align="start">
           {navlinks.map((navlink) => {
-            const path =
-              typeof navlink.link === "string" ? navlink.link : navlink.link();
+            const path = navlink.link;
             const isActive = activeRoute?.path === path;
 
             return navlink.files.length > 0 ? (

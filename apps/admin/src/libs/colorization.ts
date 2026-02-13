@@ -39,7 +39,7 @@ export class Colorization {
     switch (status) {
       case ENUM_TRANSACTION_STATUS.PENDING:
         return "yellow";
-      case ENUM_TRANSACTION_STATUS.SUCCESS:
+      case ENUM_TRANSACTION_STATUS.SUCCEEDED:
         return "green";
       case ENUM_TRANSACTION_STATUS.FAILED:
         return "red";
@@ -60,7 +60,7 @@ export class Colorization {
       successAfter?: number;
       warningAfter?: number;
       errorAfter?: number;
-    }
+    },
   ) {
     const now = dayjs();
     const secondAgo = now.diff(dayjs(date), "second");

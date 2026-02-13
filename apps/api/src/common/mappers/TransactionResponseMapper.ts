@@ -6,14 +6,14 @@ export class TransactionResponseMapper {
     return {
       id: true,
       type: true,
-      balance_before: true,
-      balance_after: true,
+      balanceBefore: true,
+      balanceAfter: true,
       status: true,
       currency: true,
       createdAt: true,
       updatedAt: true,
-      payment_gateway_id: true,
-      order_id: true,
+      paymentGatewayId: true,
+      orderId: true,
     } satisfies Prisma.UserWalletTransactionSelect;
   }
 
@@ -26,14 +26,14 @@ export class TransactionResponseMapper {
       id: transaction.id,
       type: transaction.type,
       amount: Math.abs(
-        transaction.balance_after.minus(transaction.balance_before).toNumber(),
+        transaction.balanceAfter.minus(transaction.balanceBefore).toNumber(),
       ),
-      balance_before: transaction.balance_before.toNumber(),
-      balance_after: transaction.balance_after.toNumber(),
+      balanceBefore: transaction.balanceBefore.toNumber(),
+      balanceAfter: transaction.balanceAfter.toNumber(),
       status: transaction.status,
       currency: transaction.currency,
-      payment_gateway_id: transaction.payment_gateway_id,
-      order_id: transaction.order_id,
+      paymentGatewayId: transaction.paymentGatewayId,
+      orderId: transaction.orderId,
       createdAt: transaction.createdAt.toISOString(),
       updatedAt: transaction.updatedAt.toISOString(),
     };

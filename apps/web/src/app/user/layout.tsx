@@ -1,7 +1,8 @@
 "use client";
-import { getRoute, RouteItem } from "@/configs/route";
+import { getRoute } from "@/configs/route";
 import { useAppSelector } from "@/hooks";
 import { useActiveRouteTrail } from "@/hooks/useActiveRouteTrail";
+import { Route } from "@pawpal/shared";
 import {
   Box,
   Container,
@@ -54,10 +55,9 @@ const UserLayout = ({ children }: UserLayoutProps) => {
           <Stack gap="xs">
             <ScrollArea>
               <Stack gap={4}>
-                {navigationItems.map((item: RouteItem) => {
+                {navigationItems.map((item: Route) => {
                   const Icon = item.icon;
-                  const path =
-                    typeof item.path === "string" ? item.path : item.path();
+                  const path = item.path;
                   const isActive = activeRoute?.path === path;
 
                   return (

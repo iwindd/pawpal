@@ -150,14 +150,14 @@ describe('OrderService', () => {
         id: 'txn-1',
         type: TransactionType.PURCHASE,
         amount: new Decimal(200),
-        balance_before: new Decimal(500),
-        balance_after: new Decimal(300),
+        balanceBefore: new Decimal(500),
+        balanceAfter: new Decimal(300),
         status: TransactionStatus.PENDING,
         currency: 'THB',
         createdAt: new Date(),
         updatedAt: new Date(),
-        payment_gateway_id: 'promptpay-manual',
-        order_id: 'order-1',
+        paymentGatewayId: 'promptpay-manual',
+        orderId: 'order-1',
       };
       prisma.userWalletTransaction.create.mockResolvedValue(mockTransaction);
 

@@ -59,8 +59,8 @@ export class OrderResponseMapper {
           id: true,
           type: true,
           status: true,
-          balance_before: true,
-          balance_after: true,
+          balanceBefore: true,
+          balanceAfter: true,
           createdAt: true,
           payment: {
             select: {
@@ -113,8 +113,8 @@ export class OrderResponseMapper {
         id: tx.id,
         type: tx.type,
         status: tx.status,
-        balance_before: tx.balance_before.toNumber(),
-        balance_after: tx.balance_after.toNumber(),
+        balanceBefore: tx.balanceBefore.toNumber(),
+        balanceAfter: tx.balanceAfter.toNumber(),
         createdAt: tx.createdAt.toISOString(),
         payment: tx.payment
           ? {

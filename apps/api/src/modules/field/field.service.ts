@@ -66,7 +66,7 @@ export class FieldService {
     return this.prismaService.productField.getDatatable({
       query: query,
       where: {
-        product_id: productId,
+        productId: productId,
       },
       select: {
         id: true,
@@ -94,7 +94,7 @@ export class FieldService {
   }
 
   async reorderProductField(
-    product_id: string,
+    productId: string,
     { fromIndex, toIndex, field_id }: FieldReorderInput,
   ) {
     const operator = fromIndex < toIndex ? 'decrement' : 'increment';
@@ -105,11 +105,11 @@ export class FieldService {
 
     await this.prismaService.$transaction(async () => {
       await this.prismaService.productField.updateMany({
-        where: { order: range, product_id: product_id },
+        where: { order: range, productId: productId },
         data: { order: { [operator]: 1 } },
       });
       await this.prismaService.productField.update({
-        where: { id: field_id, product_id: product_id },
+        where: { id: field_id, productId: productId },
         data: { order: toIndex },
       });
     });

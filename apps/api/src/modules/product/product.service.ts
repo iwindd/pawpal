@@ -350,21 +350,21 @@ export class ProductService {
     const product = await this.prisma.product.findUnique({
       where: { id },
       select: {
-        image_id: true,
-        category_id: true,
+        imageId: true,
+        categoryId: true,
       },
     });
 
     if (!product) throw new BadRequestException('product_not_found');
 
-    const { image_id, category_id, ...rest } = payload;
+    const { image_id: imageId, category_id: categoryId, ...rest } = payload;
 
     let image: Prisma.ProductUpdateInput['image'] = {};
 
-    if (product.image_id !== image_id) {
+    if (product.imageId !== imageId) {
       image = {
         create: {
-          url: (await this.resourceService.copyResourceToProduct(image_id)).key,
+          url: (await this.resourceService.copyResourceToProduct(imageId)).key,
           type: ResourceType.PRODUCT_IMAGE,
           user: {
             connect: {
@@ -382,7 +382,7 @@ export class ProductService {
         image: image,
         category: {
           connect: {
-            id: category_id,
+            id: categoryId,
           },
         },
       },

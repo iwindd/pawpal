@@ -47,8 +47,8 @@ export interface AdminOrderResponse {
     id: string;
     type: TransactionType;
     status: TransactionStatus;
-    balance_before: number;
-    balance_after: number;
+    balanceBefore: number;
+    balanceAfter: number;
     createdAt: string;
     payment?: {
       id: string;

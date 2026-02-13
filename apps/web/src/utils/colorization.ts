@@ -23,7 +23,7 @@ export class Colorization {
     switch (status) {
       case ENUM_TRANSACTION_STATUS.PENDING:
         return "orange";
-      case ENUM_TRANSACTION_STATUS.SUCCESS:
+      case ENUM_TRANSACTION_STATUS.SUCCEEDED:
         return "green";
       case ENUM_TRANSACTION_STATUS.FAILED:
         return "red";

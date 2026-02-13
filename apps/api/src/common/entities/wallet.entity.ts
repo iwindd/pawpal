@@ -17,7 +17,7 @@ export class WalletEntity {
       id: true,
       balance: true,
       walletType: true,
-      user_id: true,
+      userId: true,
     } satisfies Prisma.UserWalletSelect;
   }
 
@@ -26,7 +26,7 @@ export class WalletEntity {
   }
 
   get userId() {
-    return this.userWallet.user_id;
+    return this.userWallet.userId;
   }
 
   get balance() {
@@ -46,7 +46,7 @@ export class WalletEntity {
 
     return await this.repo.updateWalletBalanceOrThrow(
       amount,
-      this.userWallet.user_id,
+      this.userWallet.userId,
       this.userWallet.walletType,
     );
   }
@@ -60,7 +60,7 @@ export class WalletEntity {
   public async getMissingAmount(requiredAmount: Decimal) {
     return this.repo.getMissingAmount(
       requiredAmount,
-      this.userWallet.user_id,
+      this.userWallet.userId,
       this.userWallet.walletType,
     );
   }

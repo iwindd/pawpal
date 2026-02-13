@@ -49,9 +49,9 @@ export class CarouselService {
       data: {
         title: payload.title,
         status: payload.status,
-        resource_id: payload.resource_id,
-        product_id: payload.product_id || null,
-        creator_id: user.id,
+        resourceId: payload.resource_id,
+        productId: payload.product_id || null,
+        creatorId: user.id,
       },
       select: {
         ...this.carouselResponseSelect,
@@ -132,8 +132,8 @@ export class CarouselService {
       data: {
         title: payload.title,
         status: payload.status,
-        resource_id: payload.resource_id,
-        product_id: payload.product_id || null,
+        resourceId: payload.resource_id,
+        productId: payload.product_id || null,
       },
       select: {
         ...this.carouselResponseSelect,

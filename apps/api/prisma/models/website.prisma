@@ -2,11 +2,11 @@ model Resource {
   id        String       @id @default(cuid())
   url       String
   type      ResourceType @default(RESOURCE_IMAGE)
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
+  createdAt DateTime     @default(now()) @map("created_at")
+  updatedAt DateTime     @updatedAt @map("updated_at")
 
-  user    User   @relation("ResourceUser", fields: [user_id], references: [id])
-  user_id String
+  user   User   @relation("ResourceUser", fields: [userId], references: [id])
+  userId String @map("user_id")
 
   carousel Carousel[] @relation("CarouselImage")
   products Product[]  @relation("ProductImage")
@@ -20,20 +20,21 @@ enum ResourceType {
 }
 
 model Carousel {
-  id          String         @id @default(cuid())
-  title       String
-  status      CarouselStatus @default(DRAFT)
-  image       Resource       @relation("CarouselImage", fields: [resource_id], references: [id])
-  resource_id String
-  product     Product?       @relation("ProductCarousels", fields: [product_id], references: [id])
-  product_id  String?
+  id         String         @id @default(cuid())
+  title      String
+  status     CarouselStatus @default(DRAFT)
+  image      Resource       @relation("CarouselImage", fields: [resourceId], references: [id])
+  resourceId String         @map("resource_id")
 
-  creator    User   @relation("CarouselCreatedBy", fields: [creator_id], references: [id])
-  creator_id String
+  product   Product? @relation("ProductCarousels", fields: [productId], references: [id])
+  productId String?  @map("product_id")
+
+  creator   User   @relation("CarouselCreatedBy", fields: [creatorId], references: [id])
+  creatorId String @map("creator_id")
 
   order     Int      @default(0)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("carousels")
 }

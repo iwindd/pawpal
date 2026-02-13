@@ -10,18 +10,18 @@ describe('TransactionRepository', () => {
 
   const mockTransactionData = {
     id: 'txn-1',
-    balance_after: new Decimal(200),
-    balance_before: new Decimal(100),
+    balanceAfter: new Decimal(200),
+    balanceBefore: new Decimal(100),
     type: TransactionType.TOPUP,
     status: TransactionStatus.CREATED,
     currency: 'THB',
     createdAt: new Date(),
     updatedAt: new Date(),
-    payment_gateway_id: 'gw-1',
+    paymentGatewayId: 'gw-1',
     order: null,
     wallet: {
       id: 'wallet-1',
-      user_id: 'user-1',
+      userId: 'user-1',
       walletType: 'MAIN',
     },
   };
@@ -72,8 +72,8 @@ describe('TransactionRepository', () => {
 
       const input = {
         type: TransactionType.TOPUP,
-        balance_before: new Decimal(100),
-        balance_after: new Decimal(200),
+        balanceBefore: new Decimal(100),
+        balanceAfter: new Decimal(200),
         amount: new Decimal(100),
         status: TransactionStatus.CREATED,
         wallet: { connect: { id: 'wallet-1' } },
@@ -108,8 +108,8 @@ describe('TransactionRepository', () => {
           data: expect.objectContaining({
             type: TransactionType.TOPUP_FOR_PURCHASE,
             amount: new Decimal(200),
-            balance_before: new Decimal(100),
-            balance_after: new Decimal(300),
+            balanceBefore: new Decimal(100),
+            balanceAfter: new Decimal(300),
             status: TransactionStatus.CREATED,
           }),
         }),
@@ -160,8 +160,8 @@ describe('TransactionRepository', () => {
       expect(prisma.userWalletTransaction.create).toHaveBeenCalledWith(
         expect.objectContaining({
           data: expect.objectContaining({
-            balance_before: new Decimal(150),
-            balance_after: new Decimal(500),
+            balanceBefore: new Decimal(150),
+            balanceAfter: new Decimal(500),
           }),
         }),
       );

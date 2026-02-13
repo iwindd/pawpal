@@ -66,18 +66,18 @@ const TransactionDatatable = () => {
       render: (record) => format.number(record.amount, "currency"),
     },
     {
-      accessor: "balance_before",
+      accessor: "balanceBefore",
       noWrap: true,
       sortable: true,
       title: __("balanceBefore"),
-      render: (record) => format.number(record.balance_before, "currency"),
+      render: (record) => format.number(record.balanceBefore, "currency"),
     },
     {
-      accessor: "balance_after",
+      accessor: "balanceAfter",
       noWrap: true,
       sortable: true,
       title: __("balanceAfter"),
-      render: (record) => format.number(record.balance_after, "currency"),
+      render: (record) => format.number(record.balanceAfter, "currency"),
     },
     {
       accessor: "createdAt",
@@ -91,7 +91,7 @@ const TransactionDatatable = () => {
       noWrap: true,
       sortable: true,
       title: __("order"),
-      render: ({ order_id }) => order_id || __("orderNone"),
+      render: ({ orderId }) => orderId || __("orderNone"),
     },
     {
       accessor: "actions",
@@ -122,11 +122,11 @@ const TransactionDatatable = () => {
       datatable.sortStatus.direction === "desc" ? [...data].reverse() : data;
 
     const createdData = sortedData.filter(
-      (t) => t.status == ENUM_TRANSACTION_STATUS.CREATED
+      (t) => t.status == ENUM_TRANSACTION_STATUS.CREATED,
     );
 
     const pendingData = sortedData.filter(
-      (t) => t.status == ENUM_TRANSACTION_STATUS.PENDING
+      (t) => t.status == ENUM_TRANSACTION_STATUS.PENDING,
     );
 
     setRecords([...pendingData, ...createdData]);

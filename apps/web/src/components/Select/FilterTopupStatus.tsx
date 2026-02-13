@@ -7,7 +7,7 @@ interface FilterTopupStatus extends Omit<SelectProps, "data"> {}
 
 const TOPUP_STATUS_FILTER = [
   ENUM_TOPUP_STATUS.PENDING,
-  ENUM_TOPUP_STATUS.SUCCESS,
+  ENUM_TOPUP_STATUS.SUCCEEDED,
   ENUM_TOPUP_STATUS.FAILED,
 ];
 

@@ -1,16 +1,16 @@
 "use client";
 import ProductForm from "@/components/Form/ProductForm";
 import PromptPayManualModal from "@/components/Modals/PromptPayManualModal";
-import { useCreateOrderMutation } from "@/features/order/orderApi";
+import {useCreateOrderMutation} from "@/features/order/orderApi";
 import {
   PaymentChargeCreatedResponse,
   ProductResponse,
   PurchaseInput,
 } from "@pawpal/shared";
-import { backdrop } from "@pawpal/ui/backdrop";
-import { Container } from "@pawpal/ui/core";
-import { Notifications } from "@pawpal/ui/notifications";
-import { useTranslations } from "next-intl";
+import {backdrop} from "@pawpal/ui/backdrop";
+import {Container} from "@pawpal/ui/core";
+import {Notifications} from "@pawpal/ui/notifications";
+import {useTranslations} from "next-intl";
 
 interface ProductViewProps {
   product: ProductResponse;
@@ -39,7 +39,7 @@ const ProductView = ({ product }: ProductViewProps) => {
 
     if (data.type == "purchase") {
       Notifications.show({
-        id: `order-${data.transaction.order_id}`,
+        id: `order-${data.transaction.orderId}`,
         title: __("notify.success.title"),
         message: __("notify.success.message"),
         color: "pawpink",
@@ -51,9 +51,9 @@ const ProductView = ({ product }: ProductViewProps) => {
   };
 
   const onPurchaseSuccess = async (response: PaymentChargeCreatedResponse) => {
-    if (!response.order_id) return;
+    if (!response.orderId) return;
     Notifications.show({
-      id: `order-${response.order_id}`,
+      id: `order-${response.orderId}`,
       title: __("notify.success.title"),
       message: __("notify.success.message"),
       color: "pawpink",

@@ -42,14 +42,14 @@ export const WebSocketProvider = ({
         "onNewJobTransaction",
         (transaction: AdminTransactionResponse) => {
           dispatch(addTransaction(transaction));
-        }
+        },
       );
 
       socket.on(
         "onFinishedJobTransaction",
         (transaction: AdminTransactionResponse) => {
           dispatch(finishedTransaction(transaction));
-        }
+        },
       );
 
       socket.on("onNewJobOrder", (order: AdminOrderResponse) => {

@@ -52,28 +52,28 @@ export class CustomerService {
 
   /**
    * Get topup history datatable
-   * @param user_id user id
+   * @param userId user id
    * @returns datatable response
    */
-  async getTopupHistoryDatatable(user_id: string, query: DatatableQuery) {
+  async getTopupHistoryDatatable(userId: string, query: DatatableQuery) {
     return this.prisma.userWalletTransaction.getDatatable({
       query: query,
       select: {
         id: true,
         type: true,
         amount: true,
-        balance_before: true,
-        balance_after: true,
+        balanceBefore: true,
+        balanceAfter: true,
         status: true,
         currency: true,
-        payment_gateway_id: true,
-        order_id: true,
+        paymentGatewayId: true,
+        orderId: true,
         createdAt: true,
         updatedAt: true,
       },
       where: {
         wallet: {
-          user_id,
+          userId,
         },
         type: {
           not: TransactionType.PURCHASE,

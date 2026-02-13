@@ -12,33 +12,33 @@ export const PaymentExtension = Prisma.defineExtension((client) => {
     name: 'paymentExtension',
     model: {
       userWalletTransaction: {
-        failed: async (transactionId: string, processedBy: string) => {
+        failed: async (transactionId: string, failedBy: string) => {
           return await client.userWalletTransaction.update({
             where: {
               id: transactionId,
             },
             data: {
               status: TransactionStatus.FAILED,
-              processedAt: new Date(),
-              processedBy: {
+              failedAt: new Date(),
+              failedBy: {
                 connect: {
-                  id: processedBy,
+                  id: failedBy,
                 },
               },
             },
           });
         },
-        success: async (transactionId: string, processedBy: string) => {
+        success: async (transactionId: string, succeededBy: string) => {
           return await client.userWalletTransaction.update({
             where: {
               id: transactionId,
             },
             data: {
-              status: TransactionStatus.SUCCESS,
-              processedAt: new Date(),
-              processedBy: {
+              status: TransactionStatus.SUCCEEDED,
+              succeededAt: new Date(),
+              succeededBy: {
                 connect: {
-                  id: processedBy,
+                  id: succeededBy,
                 },
               },
             },
@@ -46,7 +46,7 @@ export const PaymentExtension = Prisma.defineExtension((client) => {
         },
       },
       order: {
-        complete: async (orderId: string, processedBy: string) => {
+        complete: async (orderId: string, completedBy: string) => {
           return await client.order.update({
             where: {
               id: orderId,
@@ -56,16 +56,16 @@ export const PaymentExtension = Prisma.defineExtension((client) => {
             },
             data: {
               status: OrderStatus.COMPLETED,
-              processedAt: new Date(),
-              processedBy: {
+              completedAt: new Date(),
+              completedBy: {
                 connect: {
-                  id: processedBy,
+                  id: completedBy,
                 },
               },
             },
           });
         },
-        cancel: async (orderId: string, processedBy: string) => {
+        cancel: async (orderId: string, cancelledBy: string) => {
           return await client.order.update({
             where: {
               id: orderId,
@@ -75,10 +75,10 @@ export const PaymentExtension = Prisma.defineExtension((client) => {
             },
             data: {
               status: OrderStatus.CANCELLED,
-              processedAt: new Date(),
-              processedBy: {
+              cancelledAt: new Date(),
+              cancelledBy: {
                 connect: {
-                  id: processedBy,
+                  id: cancelledBy,
                 },
               },
             },

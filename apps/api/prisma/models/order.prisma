@@ -1,18 +1,23 @@
 model Order {
-  id          String      @id @default(cuid())
-  user        User        @relation("OrderUser", fields: [user_id], references: [id])
-  user_id     String
-  total       Decimal     @db.Decimal(10, 2)
-  status      OrderStatus @default(CREATED)
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  processedAt DateTime?
+  id        String      @id @default(cuid())
+  user      User        @relation("OrderUser", fields: [user_id], references: [id])
+  user_id   String
+  total     Decimal     @db.Decimal(10, 2)
+  status    OrderStatus @default(CREATED)
+  createdAt DateTime    @default(now()) @map("created_at")
+  updatedAt DateTime    @updatedAt @map("updated_at")
 
   orderPackages          OrderPackage[]          @relation("OrderPackages")
   orderFields            OrderField[]            @relation("OrderFields")
   userWalletTransactions UserWalletTransaction[]
-  processedBy            User?                   @relation("OrderProcessedBy", fields: [processedBy_id], references: [id])
-  processedBy_id         String?
+
+  cancelledBy   User?     @relation("OrderCancelledBy", fields: [cancelledById], references: [id])
+  cancelledById String?   @map("cancelled_by_id")
+  cancelledAt   DateTime? @map("cancelled_at")
+
+  completedBy   User?     @relation("OrderCompletedBy", fields: [completedById], references: [id])
+  completedById String?   @map("completed_by_id")
+  completedAt   DateTime? @map("completed_at")
 
   @@map("orders")
 }
@@ -25,26 +30,26 @@ enum OrderStatus {
 }
 
 model OrderPackage {
-  id         String   @id @default(cuid())
-  order      Order    @relation("OrderPackages", fields: [order_id], references: [id])
-  order_id   String
-  package    Package  @relation("OrderPackages", fields: [package_id], references: [id])
-  package_id String
-  amount     Int
-  price      Decimal  @db.Decimal(10, 2)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id        String   @id @default(cuid())
+  order     Order    @relation("OrderPackages", fields: [orderId], references: [id])
+  orderId   String   @map("order_id")
+  package   Package  @relation("OrderPackages", fields: [packageId], references: [id])
+  packageId String   @map("package_id")
+  amount    Int
+  price     Decimal  @db.Decimal(10, 2)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("order_packages")
 }
 
 model OrderField {
-  id       String       @id @default(cuid())
-  order    Order        @relation("OrderFields", fields: [order_id], references: [id])
-  order_id String
-  field    ProductField @relation("OrderFields", fields: [field_id], references: [id])
-  field_id String
-  value    String
+  id      String       @id @default(cuid())
+  order   Order        @relation("OrderFields", fields: [orderId], references: [id])
+  orderId String       @map("order_id")
+  field   ProductField @relation("OrderFields", fields: [fieldId], references: [id])
+  fieldId String       @map("field_id")
+  value   String
 
   @@map("order_fields")
 }

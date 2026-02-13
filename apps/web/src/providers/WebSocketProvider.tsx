@@ -48,13 +48,13 @@ export const WebSocketProvider = ({
             setUserBalance({
               type: data.walletType,
               balance: data.balance,
-            })
+            }),
           );
 
           dispatch(clearCurrentCharge());
 
           switch (data.status) {
-            case ENUM_TRANSACTION_STATUS.SUCCESS:
+            case ENUM_TRANSACTION_STATUS.SUCCEEDED:
               return Notifications.update({
                 id: `topup-${data.id}`,
                 color: "teal",
@@ -77,7 +77,7 @@ export const WebSocketProvider = ({
             default:
               break;
           }
-        }
+        },
       );
     }
 

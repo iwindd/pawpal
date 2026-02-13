@@ -100,15 +100,15 @@ describe('TransactionService', () => {
         'user-1',
         {
           id: 'txn-1',
-          status: TransactionStatus.SUCCESS,
+          status: TransactionStatus.SUCCEEDED,
           balance: 200,
           walletType: 'MAIN',
         },
       );
       expect(result).toEqual({
-        transaction_id: 'txn-1',
-        balance_before: new Decimal(100),
-        balance_after: new Decimal(200),
+        transactionId: 'txn-1',
+        balanceBefore: new Decimal(100),
+        balanceAfter: new Decimal(200),
         balance: new Decimal(200),
       });
     });

@@ -34,7 +34,7 @@ describe('WalletRepository', () => {
         id: 'wallet-1',
         balance: new Decimal(100),
         walletType: WalletType.MAIN,
-        user_id: 'user-1',
+        userId: 'user-1',
       };
       prisma.userWallet.findFirst.mockResolvedValue(mockWallet);
 
@@ -43,7 +43,7 @@ describe('WalletRepository', () => {
       expect(prisma.userWallet.findFirst).toHaveBeenCalledWith(
         expect.objectContaining({
           where: {
-            user_id: 'user-1',
+            userId: 'user-1',
             walletType: WalletType.MAIN,
           },
         }),
@@ -58,7 +58,7 @@ describe('WalletRepository', () => {
         id: 'wallet-new',
         balance: new Decimal(0),
         walletType: WalletType.MAIN,
-        user_id: 'user-1',
+        userId: 'user-1',
       };
       prisma.userWallet.create.mockResolvedValue(createdWallet);
 
@@ -67,7 +67,7 @@ describe('WalletRepository', () => {
       expect(prisma.userWallet.create).toHaveBeenCalledWith(
         expect.objectContaining({
           data: {
-            user_id: 'user-1',
+            userId: 'user-1',
             walletType: WalletType.MAIN,
             balance: 0,
           },
@@ -89,8 +89,8 @@ describe('WalletRepository', () => {
 
       expect(prisma.userWallet.update).toHaveBeenCalledWith({
         where: {
-          user_id_walletType: {
-            user_id: 'user-1',
+          userId_walletType: {
+            userId: 'user-1',
             walletType: WalletType.MAIN,
           },
         },
@@ -138,7 +138,7 @@ describe('WalletRepository', () => {
           id: 'wallet-1',
           balance: new Decimal(100),
           walletType: WalletType.MAIN,
-          user_id: 'user-1',
+          userId: 'user-1',
         },
       ];
       prisma.userWallet.findMany.mockResolvedValue(mockWallets);
@@ -155,7 +155,7 @@ describe('WalletRepository', () => {
         id: 'wallet-new',
         balance: new Decimal(0),
         walletType: WalletType.MAIN,
-        user_id: 'user-1',
+        userId: 'user-1',
       });
 
       const result = await repo.findAll('user-1');

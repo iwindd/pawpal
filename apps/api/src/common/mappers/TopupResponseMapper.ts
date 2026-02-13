@@ -6,8 +6,8 @@ export class TopupResponseMapper {
     return {
       id: true,
       type: true,
-      balance_before: true,
-      balance_after: true,
+      balanceBefore: true,
+      balanceAfter: true,
       status: true,
       currency: true,
       createdAt: true,
@@ -18,7 +18,7 @@ export class TopupResponseMapper {
           label: true,
         },
       },
-      order_id: true,
+      orderId: true,
     } satisfies Prisma.UserWalletTransactionSelect;
   }
 
@@ -31,14 +31,14 @@ export class TopupResponseMapper {
       id: transaction.id,
       type: transaction.type,
       amount: Math.abs(
-        transaction.balance_after.minus(transaction.balance_before).toNumber(),
+        transaction.balanceAfter.minus(transaction.balanceBefore).toNumber(),
       ),
-      balance_before: transaction.balance_before.toNumber(),
-      balance_after: transaction.balance_after.toNumber(),
+      balanceBefore: transaction.balanceBefore.toNumber(),
+      balanceAfter: transaction.balanceAfter.toNumber(),
       status: transaction.status,
       currency: transaction.currency,
       payment: transaction.payment,
-      order_id: transaction.order_id,
+      orderId: transaction.orderId,
       createdAt: transaction.createdAt.toISOString(),
     };
   }

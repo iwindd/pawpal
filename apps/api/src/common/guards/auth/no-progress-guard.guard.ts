@@ -65,7 +65,7 @@ export class NoProgressGuard implements CanActivate {
     const workingTransaction = await this.prisma.userWalletTransaction.count({
       where: {
         wallet: {
-          user_id: userId,
+          userId: userId,
         },
         status: {
           in: [OrderStatus.CREATED, OrderStatus.PENDING],

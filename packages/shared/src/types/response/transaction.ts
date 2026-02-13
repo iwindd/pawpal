@@ -5,12 +5,12 @@ export interface AdminTransactionResponse {
   id: string;
   type: TransactionType;
   amount: number;
-  balance_before: number;
-  balance_after: number;
+  balanceBefore: number;
+  balanceAfter: number;
   status: TransactionStatus;
   currency: string;
-  payment_gateway_id: string;
-  order_id?: string;
+  paymentGatewayId: string;
+  orderId?: string;
   createdAt: string;
   updatedAt: string;
 }

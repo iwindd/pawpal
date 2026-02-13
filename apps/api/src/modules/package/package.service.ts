@@ -61,7 +61,7 @@ export class PackageService {
         },
       },
       where: {
-        product_id: productId,
+        productId: productId,
       },
     });
   }

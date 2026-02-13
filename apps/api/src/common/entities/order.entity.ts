@@ -22,8 +22,8 @@ export class OrderEntity {
           id: true,
           type: true,
           status: true,
-          balance_before: true,
-          balance_after: true,
+          balanceBefore: true,
+          balanceAfter: true,
           wallet: {
             select: {
               balance: true,
@@ -56,8 +56,8 @@ export class OrderEntity {
       id: transaction.id,
       type: transaction.type,
       status: transaction.status,
-      balanceBefore: transaction.balance_before,
-      balanceAfter: transaction.balance_after,
+      balanceBefore: transaction.balanceBefore,
+      balanceAfter: transaction.balanceAfter,
       wallet: {
         balance: transaction.wallet.balance,
         walletType: transaction.wallet.walletType,

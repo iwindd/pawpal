@@ -1,5 +1,9 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
-import { CategoryResponse, CategoryInput, CategoryUpdateInput } from '@pawpal/shared';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  CategoryInput,
+  CategoryResponse,
+  CategoryUpdateInput,
+} from '@pawpal/shared';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
@@ -94,7 +98,10 @@ export class CategoryService {
     };
   }
 
-  async update(id: string, data: CategoryUpdateInput): Promise<CategoryResponse> {
+  async update(
+    id: string,
+    data: CategoryUpdateInput,
+  ): Promise<CategoryResponse> {
     // Check if category exists
     const existingCategory = await this.prisma.category.findUnique({
       where: { id },
@@ -148,7 +155,7 @@ export class CategoryService {
 
     // Check if category has products
     const productsCount = await this.prisma.product.count({
-      where: { category_id: id },
+      where: { categoryId: id },
     });
 
     if (productsCount > 0) {

@@ -85,15 +85,15 @@ describe('TopupService', () => {
       prisma.userWalletTransaction.create.mockResolvedValue({
         id: 'txn-1',
         type: TransactionType.TOPUP,
-        balance_before: new Decimal(0),
-        balance_after: new Decimal(100),
+        balanceBefore: new Decimal(0),
+        balanceAfter: new Decimal(100),
         amount: new Decimal(100),
         status: TransactionStatus.CREATED,
         currency: 'THB',
         createdAt: new Date(),
         updatedAt: new Date(),
-        payment_gateway_id: 'promptpay-manual',
-        order_id: null,
+        paymentGatewayId: 'promptpay-manual',
+        orderId: null,
         payment: { id: 'promptpay-manual', metadata: {}, label: 'PromptPay' },
       });
 
@@ -132,8 +132,8 @@ describe('TopupService', () => {
           data: expect.objectContaining({
             type: TransactionType.TOPUP,
             amount: new Decimal(200),
-            balance_before: new Decimal(100),
-            balance_after: new Decimal(300),
+            balanceBefore: new Decimal(100),
+            balanceAfter: new Decimal(300),
           }),
         }),
       );
@@ -175,13 +175,13 @@ describe('TopupService', () => {
         id: 'txn-1',
         status: TransactionStatus.PENDING,
         type: TransactionType.TOPUP,
-        balance_before: new Decimal(0),
-        balance_after: new Decimal(100),
+        balanceBefore: new Decimal(0),
+        balanceAfter: new Decimal(100),
         currency: 'THB',
         createdAt: new Date(),
         updatedAt: new Date(),
-        payment_gateway_id: 'gw-1',
-        order_id: null,
+        paymentGatewayId: 'gw-1',
+        orderId: null,
       };
       prisma.userWalletTransaction.update.mockResolvedValue(mockCharge);
 
@@ -216,8 +216,8 @@ describe('TopupService', () => {
       expect(prisma.userWalletTransaction.getDatatable).toHaveBeenCalledWith(
         expect.objectContaining({
           where: expect.objectContaining({
-            wallet: { user_id: 'user-1' },
-            order_id: null,
+            wallet: { userId: 'user-1' },
+            orderId: null,
           }),
         }),
       );

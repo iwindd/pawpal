@@ -1,7 +1,7 @@
 export const ENUM_TRANSACTION_STATUS = {
   CREATED: "CREATED",
   PENDING: "PENDING",
-  SUCCESS: "SUCCESS",
+  SUCCEEDED: "SUCCEEDED",
   FAILED: "FAILED",
 };
 export type TransactionStatus = keyof typeof ENUM_TRANSACTION_STATUS;
