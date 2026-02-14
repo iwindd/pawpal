@@ -1,6 +1,7 @@
 import { baseQuery } from "@/configs/api";
 import {
   AdminCategoryResponse,
+  AdminProductResponse,
   CategoryInput,
   CategoryResponse,
   CategoryUpdateInput,
@@ -61,6 +62,16 @@ export const categoryApi = createApi({
       }),
       invalidatesTags: ["Categories"],
     }),
+    getProductsInCategory: builder.query<
+      DatatableResponse<AdminProductResponse>,
+      { id: string; params: DatatableInput }
+    >({
+      query: ({ id, params }) => ({
+        url: `/${id}/products`,
+        params,
+      }),
+      providesTags: ["Categories"],
+    }),
   }),
 });
 
@@ -71,4 +82,6 @@ export const {
   useCreateCategoryMutation,
   useUpdateCategoryMutation,
   useDeleteCategoryMutation,
+  useGetProductsInCategoryQuery,
+  useLazyGetProductsInCategoryQuery,
 } = categoryApi;

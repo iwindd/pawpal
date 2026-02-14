@@ -52,4 +52,12 @@ export class CategoryController {
   async remove(@Param('id') id: string): Promise<{ success: boolean }> {
     return this.categoryService.remove(id);
   }
+
+  @Get(':id/products')
+  async getProductsInCategory(
+    @Param('id') id: string,
+    @Query(new DatatablePipe()) query: DatatableQuery,
+  ) {
+    return this.categoryService.getProductsInCategoryDatatable(id, query);
+  }
 }
