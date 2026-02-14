@@ -1,22 +1,25 @@
 model AuditLog {
-  id        String     @id @default(uuid())
-  modelName String     @map("model_name")
-  recordId  String     @map("record_id")
-  action    ActionType
+  id        String          @id @default(uuid())
+  modelName String          @map("model_name")
+  recordId  String          @map("record_id")
+  action    AuditActionType
 
   // เก็บข้อมูลเป็น JSON (Prisma รองรับ Json type)
   oldData Json? @map("old_data") // ข้อมูลก่อนแก้ (ถ้าเป็น CREATED จะเป็น null)
   newData Json? @map("new_data") // ข้อมูลหลังแก้ (ถ้าเป็น DELETED จะเป็น null)
 
-  changedBy   User?    @relation("AuditLogs", fields: [changedById], references: [id])
-  changedById String?  @map("changed_by_id")
-  changedAt   DateTime @default(now()) @map("changed_at")
+  performedBy   User?    @relation("PerformedAuditLogs", fields: [performedById], references: [id])
+  performedById String?  @map("performed_by_id")
+  performedAt   DateTime @default(now()) @map("performed_at")
+
+  ipAddress String? @map("ip_address")
+  userAgent String? @map("user_agent")
 
   @@index([modelName, recordId])
-  @@index([changedAt])
+  @@map("audit_logs")
 }
 
-enum ActionType {
+enum AuditActionType {
   CREATED
   UPDATED
   DELETED

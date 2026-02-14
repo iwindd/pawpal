@@ -91,9 +91,12 @@ export class UserEntity {
     return this.repo.updateEmail(this.id, email, auditInfo);
   }
 
-  public async updateProfile(payload: UpdateProfileInput) {
+  public async updateProfile(
+    payload: UpdateProfileInput,
+    auditInfo?: PrismaAuditInfo,
+  ) {
     this.user.displayName = payload.displayName;
-    return this.repo.updateProfile(this.id, payload);
+    return this.repo.updateProfile(this.id, payload, auditInfo);
   }
 
   toJSON(): Session {

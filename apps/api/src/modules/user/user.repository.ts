@@ -1,6 +1,11 @@
 import { UserEntity } from '@/common/entities/user.entity';
 import { PrismaAuditInfo } from '@/common/interfaces/prisma-audit.interface';
-import { Prisma, UserSecurityEvent } from '@/generated/prisma/client';
+import {
+  AuditActionType,
+  Prisma,
+  UserSecurityEvent,
+} from '@/generated/prisma/client';
+import { ModelName } from '@/generated/prisma/internal/prismaNamespace';
 import { Injectable, Logger } from '@nestjs/common';
 import { UpdateProfileInput } from '@pawpal/shared';
 import bcrypt from 'bcrypt';
@@ -79,13 +84,35 @@ export class UserRepository {
    * @param user user payload
    * @returns user
    */
-  public async create(user: Prisma.UserCreateInput) {
-    const newUser = await this.prisma.user.create({
-      data: {
-        ...user,
-        password: await bcrypt.hash(user.password, 12),
-      },
-      select: UserRepository.DEFAULT_SELECT,
+  public async create(
+    user: Prisma.UserCreateInput,
+    auditInfo?: PrismaAuditInfo,
+  ) {
+    const newUser = await this.prisma.$transaction(async (tx) => {
+      const createdUser = await tx.user.create({
+        data: {
+          ...user,
+          password: await bcrypt.hash(user.password, 12),
+        },
+        select: UserRepository.DEFAULT_SELECT,
+      });
+
+      await tx.auditLog.create({
+        data: {
+          modelName: ModelName.User,
+          recordId: createdUser.id,
+          action: AuditActionType.CREATED,
+          newData: {
+            displayName: createdUser.displayName,
+            email: createdUser.email,
+          },
+          performedById: auditInfo?.performedById || createdUser.id,
+          ipAddress: auditInfo?.ipAddress,
+          userAgent: auditInfo?.userAgent,
+        },
+      });
+
+      return createdUser;
     });
 
     return this.from(newUser);
@@ -181,12 +208,42 @@ export class UserRepository {
    * @param payload update profile payload
    * @returns updated user
    */
-  public async updateProfile(userId: string, payload: UpdateProfileInput) {
-    return this.prisma.user.update({
-      where: { id: userId },
-      data: {
-        displayName: payload.displayName,
-      },
+  public async updateProfile(
+    userId: string,
+    payload: UpdateProfileInput,
+    auditInfo?: PrismaAuditInfo,
+  ) {
+    return this.prisma.$transaction(async (tx) => {
+      const user = await tx.user.findUniqueOrThrow({
+        where: { id: userId },
+        select: { displayName: true },
+      });
+
+      const updatedUser = await tx.user.update({
+        where: { id: userId },
+        data: {
+          displayName: payload.displayName,
+        },
+      });
+
+      await tx.auditLog.create({
+        data: {
+          modelName: ModelName.User,
+          recordId: updatedUser.id,
+          action: AuditActionType.UPDATED,
+          oldData: {
+            displayName: user.displayName,
+          },
+          newData: {
+            displayName: payload.displayName,
+          },
+          performedById: auditInfo?.performedById || updatedUser.id,
+          ipAddress: auditInfo?.ipAddress,
+          userAgent: auditInfo?.userAgent,
+        },
+      });
+
+      return updatedUser;
     });
   }
 

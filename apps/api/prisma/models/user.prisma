@@ -19,9 +19,9 @@ model User {
   failedUserWalletTransactions    UserWalletTransaction[] @relation("UserWalletTransactionFailedBy")
   suspensions                     UserSuspension[]        @relation("UserSuspensions")
   performedSuspensions            UserSuspension[]        @relation("PerformedSuspensions")
-  auditLogs                       AuditLog[]              @relation("AuditLogs")
   userSecurityLogs                UserSecurityLog[]       @relation("UserSecurityLogs")
   performedUserSecurityLogs       UserSecurityLog[]       @relation("PerformedUserSecurityLogs")
+  performedAuditLogs              AuditLog[]              @relation("PerformedAuditLogs")
 
   @@map("users")
 }

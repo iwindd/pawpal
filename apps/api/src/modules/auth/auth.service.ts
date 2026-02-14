@@ -57,20 +57,26 @@ export class AuthService {
    * @param userPayload user payload
    * @returns user session
    */
-  async register(payload: RegisterInput): Promise<Session> {
+  async register(
+    payload: RegisterInput,
+    auditInfo?: PrismaAuditInfo,
+  ): Promise<Session> {
     if (await this.userRepo.isAlreadyExist(payload.email))
       throw new ConflictException('email_already_exists');
 
-    const user = await this.userRepo.create({
-      displayName: payload.displayName,
-      email: payload.email,
-      password: payload.password,
-      roles: {
-        connect: {
-          name: 'User',
+    const user = await this.userRepo.create(
+      {
+        displayName: payload.displayName,
+        email: payload.email,
+        password: payload.password,
+        roles: {
+          connect: {
+            name: 'User',
+          },
         },
       },
-    });
+      auditInfo,
+    );
 
     return user.toJSON();
   }

@@ -1,7 +1,7 @@
-import { UnauthorizedException } from '@nestjs/common';
-import { Test, TestingModule } from '@nestjs/testing';
-import { AuthController } from './auth.controller';
-import { AuthService } from './auth.service';
+import {UnauthorizedException} from '@nestjs/common';
+import {Test, TestingModule} from '@nestjs/testing';
+import {AuthController} from './auth.controller';
+import {AuthService} from './auth.service';
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -94,7 +94,7 @@ describe('AuthController', () => {
       };
       authService.register.mockResolvedValue(mockSession);
 
-      const result = await controller.register(registerBody);
+      const result = await controller.register(registerBody, {});
 
       expect(authService.register).toHaveBeenCalledWith(registerBody);
       expect(result).toEqual(mockSession);
@@ -111,7 +111,7 @@ describe('AuthController', () => {
       };
       authService.changePassword.mockResolvedValue(undefined);
 
-      await controller.changePassword(mockSession as any, changeBody);
+      await controller.changePassword(mockSession as any, changeBody, {});
 
       expect(authService.changePassword).toHaveBeenCalledWith(
         'user-1',

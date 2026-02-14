@@ -57,9 +57,13 @@ export class UserService {
    * @param updateProfileData update profile data
    * @returns user session
    */
-  async updateProfile(userId: string, payload: UpdateProfileInput) {
+  async updateProfile(
+    userId: string,
+    payload: UpdateProfileInput,
+    auditInfo?: PrismaAuditInfo,
+  ) {
     const user = await this.userRepo.find(userId);
-    await user.updateProfile(payload);
+    await user.updateProfile(payload, auditInfo);
 
     return user.toJSON();
   }

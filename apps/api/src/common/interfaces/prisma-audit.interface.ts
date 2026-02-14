@@ -1,6 +1,4 @@
-export type PrismaAuditInfo = UserSecurityLogAuditInfo;
-
-export type UserSecurityLogAuditInfo = {
+export type PrismaAuditInfo = {
   performedById?: string;
   ipAddress?: string;
   userAgent?: string;

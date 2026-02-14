@@ -1,6 +1,8 @@
+import { AuditInfo } from '@/common/decorators/audit.decorator';
 import { AuthUser } from '@/common/decorators/user.decorator';
 import { JwtAuthGuard } from '@/common/guards/auth/jwt-auth.guard';
 import { SessionAuthGuard } from '@/common/guards/auth/session-auth.guard';
+import { PrismaAuditInfo } from '@/common/interfaces/prisma-audit.interface';
 import { ZodPipe } from '@/common/pipes/ZodPipe';
 import {
   Body,
@@ -8,7 +10,6 @@ import {
   HttpCode,
   HttpStatus,
   Post,
-  Req,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -18,7 +19,6 @@ import {
   type UpdateProfileInput,
   updateProfileSchema,
 } from '@pawpal/shared';
-import { Request } from 'express';
 import { UserService } from './user.service';
 
 @Controller('user')
@@ -29,15 +29,10 @@ export class UserController {
   @UseGuards(SessionAuthGuard, JwtAuthGuard)
   changeEmail(
     @AuthUser() user: Session,
-    @Body(new ZodPipe(changeEmailSchema))
-    body: ChangeEmailInput,
-    @Req() req: Request,
+    @Body(new ZodPipe(changeEmailSchema)) body: ChangeEmailInput,
+    @AuditInfo() auditInfo: PrismaAuditInfo,
   ) {
-    return this.userService.changeEmail(user.id, body, {
-      performedById: user.id,
-      ipAddress: req.ip,
-      userAgent: req.headers['user-agent'],
-    });
+    return this.userService.changeEmail(user.id, body, auditInfo);
   }
 
   @Post('update-profile')
@@ -45,9 +40,9 @@ export class UserController {
   @HttpCode(HttpStatus.OK)
   async updateProfile(
     @AuthUser() user: Session,
-    @Body(new ZodPipe(updateProfileSchema))
-    body: UpdateProfileInput,
+    @Body(new ZodPipe(updateProfileSchema)) body: UpdateProfileInput,
+    @AuditInfo() auditInfo: PrismaAuditInfo,
   ): Promise<Session> {
-    return this.userService.updateProfile(user.id, body);
+    return this.userService.updateProfile(user.id, body, auditInfo);
   }
 }

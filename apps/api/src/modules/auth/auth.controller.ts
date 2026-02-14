@@ -1,9 +1,11 @@
+import { AuditInfo } from '@/common/decorators/audit.decorator';
 import { AuthUser } from '@/common/decorators/user.decorator';
 import { JwtAuthGuard } from '@/common/guards/auth/jwt-auth.guard';
 import { LocalAuthGuard } from '@/common/guards/auth/local-auth.guard';
 import { SessionAuthGuard } from '@/common/guards/auth/session-auth.guard';
 import { LogoutInterceptor } from '@/common/interceptors/logout.interceptor';
 import { TokenInterceptor } from '@/common/interceptors/token.interceptor';
+import { PrismaAuditInfo } from '@/common/interfaces/prisma-audit.interface';
 import { ZodPipe } from '@/common/pipes/ZodPipe';
 import {
   Body,
@@ -12,7 +14,6 @@ import {
   HttpCode,
   HttpStatus,
   Post,
-  Req,
   UnauthorizedException,
   UseGuards,
   UseInterceptors,
@@ -24,7 +25,6 @@ import {
   registerSchema,
   type Session,
 } from '@pawpal/shared';
-import { Request } from 'express';
 import { AuthService } from './auth.service';
 
 @Controller('auth')
@@ -67,22 +67,20 @@ export class AuthController {
   @Post('register')
   @HttpCode(HttpStatus.CREATED)
   @UseInterceptors(TokenInterceptor)
-  register(@Body(new ZodPipe(registerSchema)) body: RegisterInput) {
-    return this.authService.register(body);
+  register(
+    @Body(new ZodPipe(registerSchema)) body: RegisterInput,
+    @AuditInfo() audit: PrismaAuditInfo,
+  ) {
+    return this.authService.register(body, audit);
   }
 
   @Post('change-password')
   @UseGuards(SessionAuthGuard, JwtAuthGuard)
   async changePassword(
     @AuthUser() user: Session,
-    @Body(new ZodPipe(changePasswordSchema))
-    body: ChangePasswordInput,
-    @Req() req: Request,
+    @Body(new ZodPipe(changePasswordSchema)) body: ChangePasswordInput,
+    @AuditInfo() audit: PrismaAuditInfo,
   ) {
-    return this.authService.changePassword(user.id, body, {
-      performedById: user.id,
-      ipAddress: req.ip,
-      userAgent: req.headers['user-agent'],
-    });
+    return this.authService.changePassword(user.id, body, audit);
   }
 }

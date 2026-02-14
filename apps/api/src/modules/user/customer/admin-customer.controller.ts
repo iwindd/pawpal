@@ -1,6 +1,8 @@
+import { AuditInfo } from '@/common/decorators/audit.decorator';
 import { AuthUser } from '@/common/decorators/user.decorator';
 import { JwtAuthGuard } from '@/common/guards/auth/jwt-auth.guard';
 import { SessionAuthGuard } from '@/common/guards/auth/session-auth.guard';
+import { PrismaAuditInfo } from '@/common/interfaces/prisma-audit.interface';
 import { DatatablePipe, DatatableQuery } from '@/common/pipes/DatatablePipe';
 import {
   Body,
@@ -10,7 +12,6 @@ import {
   Param,
   Patch,
   Query,
-  Req,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -19,7 +20,6 @@ import {
   Session,
   UpdateProfileInput,
 } from '@pawpal/shared';
-import { Request } from 'express';
 import { UserService } from '../user.service';
 import { CustomerService } from './customer.service';
 
@@ -46,36 +46,27 @@ export class AdminCustomerController {
   updateProfile(
     @Param('userId') userId: string,
     @Body() payload: UpdateProfileInput,
+    @AuditInfo() auditInfo: PrismaAuditInfo,
   ) {
-    return this.userService.updateProfile(userId, payload);
+    return this.userService.updateProfile(userId, payload, auditInfo);
   }
 
   @Patch(':userId/email')
   updateEmail(
     @Param('userId') userId: string,
-    @Body() payload: Pick<ChangeEmailInput, 'newEmail'>,
-    @AuthUser() admin: Session,
-    @Req() req: Request,
+    @Body() { newEmail }: Pick<ChangeEmailInput, 'newEmail'>,
+    @AuditInfo() auditInfo: PrismaAuditInfo,
   ) {
-    return this.userService.adminResetEmail(userId, payload.newEmail, {
-      performedById: admin.id,
-      ipAddress: req.ip,
-      userAgent: req.headers['user-agent'],
-    });
+    return this.userService.adminResetEmail(userId, newEmail, auditInfo);
   }
 
   @Patch(':userId/password')
   updatePassword(
     @Param('userId') userId: string,
-    @Body() payload: Pick<ChangePasswordInput, 'newPassword'>,
-    @AuthUser() admin: Session,
-    @Req() req: Request,
+    @Body() { newPassword }: Pick<ChangePasswordInput, 'newPassword'>,
+    @AuditInfo() auditInfo: PrismaAuditInfo,
   ) {
-    return this.userService.adminResetPassword(userId, payload.newPassword, {
-      performedById: admin.id,
-      ipAddress: req.ip,
-      userAgent: req.headers['user-agent'],
-    });
+    return this.userService.adminResetPassword(userId, newPassword, auditInfo);
   }
 
   @Get(':userId/topup-history')
@@ -100,7 +91,6 @@ export class AdminCustomerController {
     @Body() payload: { note?: string },
     @AuthUser() admin: Session,
   ) {
-    this.logger.debug(admin, userId, payload);
     return this.userService.suspendUser(userId, admin.id, payload.note);
   }
 
