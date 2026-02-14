@@ -12,7 +12,6 @@ export {
   Breadcrumbs,
   Burger,
   Button,
-  Card,
   Center,
   Checkbox,
   Collapse,
@@ -78,6 +77,7 @@ export {
   type TitleProps,
 } from "@mantine/core";
 
+export { Card } from "./components/Card";
 export { default as Paper } from "./components/Paper";
 
 export {

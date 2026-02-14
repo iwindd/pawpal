@@ -2,7 +2,7 @@
 import CategoryForm, { CreateCategoryForm } from "@/components/Forms/Category";
 import { useUpdateCategoryMutation } from "@/features/category/categoryApi";
 import { CategoryInput } from "@pawpal/shared";
-import { Box, Card } from "@pawpal/ui/core";
+import { Card } from "@pawpal/ui/core";
 import { Notifications } from "@pawpal/ui/notifications";
 import { useTranslations } from "next-intl";
 import { useCategory } from "../../CategoryContext";
@@ -41,13 +41,12 @@ const CategoryInformationPage = () => {
   };
 
   return (
-    <Box py="md">
-      <Card withBorder shadow="sm">
-        <Card.Section inheritPadding py="md">
-          <CategoryForm onSubmit={onSubmit} form={form} />
-        </Card.Section>
-      </Card>
-    </Box>
+    <Card>
+      <Card.Header title={__("information")} />
+      <Card.Section inheritPadding pb="md">
+        <CategoryForm onSubmit={onSubmit} form={form} />
+      </Card.Section>
+    </Card>
   );
 };
 
