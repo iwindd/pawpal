@@ -1,3 +1,4 @@
+import AppBreadcrumbs from "@/components/AppBreadcrumbs";
 import { useAppSelector } from "@/hooks";
 import { Burger, Flex, Group } from "@pawpal/ui/core";
 import dynamic from "next/dynamic";
@@ -20,6 +21,7 @@ export default function AppHeader({ opened, toggle }: Readonly<Props>) {
     <Group h="100%" px="lg" justify="space-between">
       <Flex align="center" gap={16}>
         <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
+        <AppBreadcrumbs />
       </Flex>
 
       <Flex align="center" gap={24}>
