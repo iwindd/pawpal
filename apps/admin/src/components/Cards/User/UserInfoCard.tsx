@@ -117,7 +117,7 @@ export default function UserInfoCard({
 
   return (
     <>
-      <Card withBorder radius="md" h={"100%"}>
+      <Card>
         <Title order={5} mb="lg">
           {__("accountDetails")}
         </Title>

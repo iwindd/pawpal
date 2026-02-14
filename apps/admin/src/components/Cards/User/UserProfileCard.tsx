@@ -18,7 +18,7 @@ export default function UserProfileCard({
   type,
 }: Readonly<UserProfileCardProps>) {
   const __ = useTranslations(
-    type === "customer" ? "Customer.profile" : "Employee.profile"
+    type === "customer" ? "Customer.profile" : "Employee.profile",
   );
   const format = useFormatter();
 
@@ -47,7 +47,7 @@ export default function UserProfileCard({
   return (
     <>
       <Stack gap="md" h={"100%"}>
-        <Card withBorder radius="md" h={"100%"}>
+        <Card>
           <Stack align="center" gap={0}>
             <Avatar src={user.avatar} size={120} radius={120} mb={"lg"} />
             <TextWithCaption

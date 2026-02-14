@@ -44,7 +44,7 @@ const ProductTagInformationPage = () => {
   };
   return (
     <Box py="md">
-      <Card withBorder shadow="sm">
+      <Card>
         <Card.Section inheritPadding py="md">
           <ProductTagForm onSubmit={onSubmit} form={form} />
         </Card.Section>
