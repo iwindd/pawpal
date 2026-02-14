@@ -1,5 +1,6 @@
 import { baseQuery } from "@/configs/api";
 import {
+  AdminProductResponse,
   AdminProductTagResponse,
   CreateProductTagInput,
   DatatableInput,
@@ -63,6 +64,16 @@ export const productTagApi = createApi({
       }),
       invalidatesTags: ["ProductTags"],
     }),
+    getProductsInTag: builder.query<
+      DatatableResponse<AdminProductResponse>,
+      { id: string; params: DatatableInput }
+    >({
+      query: ({ id, params }) => ({
+        url: `/${id}/products`,
+        params,
+      }),
+      providesTags: ["ProductTags"],
+    }),
   }),
 });
 
@@ -73,4 +84,6 @@ export const {
   useCreateProductTagMutation,
   useUpdateProductTagMutation,
   useDeleteProductTagMutation,
+  useGetProductsInTagQuery,
+  useLazyGetProductsInTagQuery,
 } = productTagApi;

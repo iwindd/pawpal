@@ -47,4 +47,12 @@ export class ProductTagController {
   findOneById(@Param('id') id: string) {
     return this.productTagService.findOneById(id);
   }
+
+  @Get(':id/products')
+  getProductsInTag(
+    @Param('id') id: string,
+    @Query(new DatatablePipe()) query: DatatableQuery,
+  ) {
+    return this.productTagService.getProductsInTagDatatable(id, query);
+  }
 }
