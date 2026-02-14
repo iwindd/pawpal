@@ -1,0 +1,46 @@
+model AuditLog {
+  id        String     @id @default(uuid())
+  modelName String     @map("model_name")
+  recordId  String     @map("record_id")
+  action    ActionType
+
+  // เก็บข้อมูลเป็น JSON (Prisma รองรับ Json type)
+  oldData Json? @map("old_data") // ข้อมูลก่อนแก้ (ถ้าเป็น CREATED จะเป็น null)
+  newData Json? @map("new_data") // ข้อมูลหลังแก้ (ถ้าเป็น DELETED จะเป็น null)
+
+  changedBy   User?    @relation("AuditLogs", fields: [changedById], references: [id])
+  changedById String?  @map("changed_by_id")
+  changedAt   DateTime @default(now()) @map("changed_at")
+
+  @@index([modelName, recordId])
+  @@index([changedAt])
+}
+
+enum ActionType {
+  CREATED
+  UPDATED
+  DELETED
+}
+
+model UserSecurityLog {
+  id            String            @id @default(uuid())
+  userId        String            @map("user_id")
+  eventType     UserSecurityEvent @map("event_type")
+  oldEmail      String?           @map("old_email")
+  newEmail      String?           @map("new_email")
+  performedBy   User?             @relation("PerformedUserSecurityLogs", fields: [performedById], references: [id])
+  performedById String?           @map("performed_by_id")
+  ipAddress     String?           @map("ip_address")
+  userAgent     String?           @map("user_agent")
+  createdAt     DateTime          @default(now()) @map("created_at")
+
+  user User @relation("UserSecurityLogs", fields: [userId], references: [id])
+
+  @@index([userId, createdAt])
+  @@map("user_security_logs")
+}
+
+enum UserSecurityEvent {
+  EMAIL_CHANGED
+  PASSWORD_CHANGED
+}

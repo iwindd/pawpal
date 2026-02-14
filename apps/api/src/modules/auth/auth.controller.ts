@@ -12,6 +12,7 @@ import {
   HttpCode,
   HttpStatus,
   Post,
+  Req,
   UnauthorizedException,
   UseGuards,
   UseInterceptors,
@@ -23,6 +24,7 @@ import {
   registerSchema,
   type Session,
 } from '@pawpal/shared';
+import { Request } from 'express';
 import { AuthService } from './auth.service';
 
 @Controller('auth')
@@ -75,7 +77,12 @@ export class AuthController {
     @AuthUser() user: Session,
     @Body(new ZodPipe(changePasswordSchema))
     body: ChangePasswordInput,
+    @Req() req: Request,
   ) {
-    return this.authService.changePassword(user.id, body);
+    return this.authService.changePassword(user.id, body, {
+      performedById: user.id,
+      ipAddress: req.ip,
+      userAgent: req.headers['user-agent'],
+    });
   }
 }

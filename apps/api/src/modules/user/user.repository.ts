@@ -1,5 +1,6 @@
 import { UserEntity } from '@/common/entities/user.entity';
-import { Prisma } from '@/generated/prisma/client';
+import { PrismaAuditInfo } from '@/common/interfaces/prisma-audit.interface';
+import { Prisma, UserSecurityEvent } from '@/generated/prisma/client';
 import { Injectable, Logger } from '@nestjs/common';
 import { UpdateProfileInput } from '@pawpal/shared';
 import bcrypt from 'bcrypt';
@@ -111,10 +112,28 @@ export class UserRepository {
    * @param password new password
    * @returns updated user
    */
-  public async updatePassword(userId: string, password: string) {
-    return this.prisma.user.update({
-      where: { id: userId },
-      data: { password: await bcrypt.hash(password, 12) },
+  public async updatePassword(
+    userId: string,
+    password: string,
+    auditInfo?: PrismaAuditInfo,
+  ) {
+    return this.prisma.$transaction(async (tx) => {
+      const updatedUser = await tx.user.update({
+        where: { id: userId },
+        data: { password: await bcrypt.hash(password, 12) },
+      });
+
+      await tx.userSecurityLog.create({
+        data: {
+          userId,
+          eventType: UserSecurityEvent.PASSWORD_CHANGED,
+          performedById: auditInfo?.performedById || userId,
+          ipAddress: auditInfo?.ipAddress,
+          userAgent: auditInfo?.userAgent,
+        },
+      });
+
+      return updatedUser;
     });
   }
 
@@ -124,10 +143,35 @@ export class UserRepository {
    * @param email new email
    * @returns updated user
    */
-  public async updateEmail(userId: string, email: string) {
-    return this.prisma.user.update({
-      where: { id: userId },
-      data: { email },
+  public async updateEmail(
+    userId: string,
+    email: string,
+    auditInfo?: PrismaAuditInfo,
+  ) {
+    return this.prisma.$transaction(async (tx) => {
+      const user = await tx.user.findUniqueOrThrow({
+        where: { id: userId },
+        select: { email: true },
+      });
+
+      const updatedUser = await tx.user.update({
+        where: { id: userId },
+        data: { email },
+      });
+
+      await tx.userSecurityLog.create({
+        data: {
+          userId,
+          eventType: UserSecurityEvent.EMAIL_CHANGED,
+          oldEmail: user.email,
+          newEmail: email,
+          performedById: auditInfo?.performedById || userId,
+          ipAddress: auditInfo?.ipAddress,
+          userAgent: auditInfo?.userAgent,
+        },
+      });
+
+      return updatedUser;
     });
   }
 

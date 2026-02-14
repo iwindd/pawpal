@@ -8,6 +8,7 @@ import {
   HttpCode,
   HttpStatus,
   Post,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -17,6 +18,7 @@ import {
   type UpdateProfileInput,
   updateProfileSchema,
 } from '@pawpal/shared';
+import { Request } from 'express';
 import { UserService } from './user.service';
 
 @Controller('user')
@@ -29,8 +31,13 @@ export class UserController {
     @AuthUser() user: Session,
     @Body(new ZodPipe(changeEmailSchema))
     body: ChangeEmailInput,
+    @Req() req: Request,
   ) {
-    return this.userService.changeEmail(user.id, body);
+    return this.userService.changeEmail(user.id, body, {
+      performedById: user.id,
+      ipAddress: req.ip,
+      userAgent: req.headers['user-agent'],
+    });
   }
 
   @Post('update-profile')

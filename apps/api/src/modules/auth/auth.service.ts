@@ -1,3 +1,4 @@
+import { PrismaAuditInfo } from '@/common/interfaces/prisma-audit.interface';
 import {
   ConflictException,
   Injectable,
@@ -90,7 +91,11 @@ export class AuthService {
    * @param userId user id
    * @param payload change password payload
    */
-  async changePassword(userId: string, payload: ChangePasswordInput) {
+  async changePassword(
+    userId: string,
+    payload: ChangePasswordInput,
+    auditInfo?: PrismaAuditInfo,
+  ) {
     const user = await this.userRepo.find(userId);
 
     if (!user) throw new UnauthorizedException('invalid_credentials');
@@ -100,6 +105,6 @@ export class AuthService {
     if (!isValidPassword)
       throw new UnauthorizedException('invalid_old_password');
 
-    user.updatePassword(payload.newPassword);
+    user.updatePassword(payload.newPassword, auditInfo);
   }
 }

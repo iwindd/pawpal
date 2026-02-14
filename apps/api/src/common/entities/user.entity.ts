@@ -2,6 +2,7 @@ import { Prisma } from '@/generated/prisma/client';
 import { UserRepository } from '@/modules/user/user.repository';
 import { Session, UpdateProfileInput } from '@pawpal/shared';
 import { WalletCollection } from '../collections/wallet.collection';
+import { PrismaAuditInfo } from '../interfaces/prisma-audit.interface';
 
 export type UserEntityProps = Prisma.UserGetPayload<{
   select: typeof UserEntity.SELECT;
@@ -81,13 +82,13 @@ export class UserEntity {
     return this.repo.isValidPassword(this.id, password);
   }
 
-  public async updatePassword(password: string) {
-    return this.repo.updatePassword(this.id, password);
+  public async updatePassword(password: string, auditInfo?: PrismaAuditInfo) {
+    return this.repo.updatePassword(this.id, password, auditInfo);
   }
 
-  public async updateEmail(email: string) {
+  public async updateEmail(email: string, auditInfo?: PrismaAuditInfo) {
     this.user.email = email;
-    return this.repo.updateEmail(this.id, email);
+    return this.repo.updateEmail(this.id, email, auditInfo);
   }
 
   public async updateProfile(payload: UpdateProfileInput) {

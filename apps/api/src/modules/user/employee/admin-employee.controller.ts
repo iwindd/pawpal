@@ -9,6 +9,7 @@ import {
   Param,
   Patch,
   Query,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -17,6 +18,7 @@ import {
   Session,
   UpdateProfileInput,
 } from '@pawpal/shared';
+import { Request } from 'express';
 import { UserService } from '../user.service';
 import { EmployeeService } from './employee.service';
 
@@ -50,16 +52,28 @@ export class AdminEmployeeController {
   updateEmail(
     @Param('userId') userId: string,
     @Body() payload: Pick<ChangeEmailInput, 'newEmail'>,
+    @AuthUser() admin: Session,
+    @Req() req: Request,
   ) {
-    return this.userService.adminResetEmail(userId, payload.newEmail);
+    return this.userService.adminResetEmail(userId, payload.newEmail, {
+      performedById: admin.id,
+      ipAddress: req.ip,
+      userAgent: req.headers['user-agent'],
+    });
   }
 
   @Patch(':userId/password')
   updatePassword(
     @Param('userId') userId: string,
     @Body() payload: Pick<ChangePasswordInput, 'newPassword'>,
+    @AuthUser() admin: Session,
+    @Req() req: Request,
   ) {
-    return this.userService.adminResetPassword(userId, payload.newPassword);
+    return this.userService.adminResetPassword(userId, payload.newPassword, {
+      performedById: admin.id,
+      ipAddress: req.ip,
+      userAgent: req.headers['user-agent'],
+    });
   }
 
   @Get(':userId/processed-topup-history')

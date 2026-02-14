@@ -1,4 +1,5 @@
 import { WalletCollection } from '@/common/collections/wallet.collection';
+import { PrismaAuditInfo } from '@/common/interfaces/prisma-audit.interface';
 import { SuspensionUtil } from '@/utils/suspensionUtil';
 import {
   ConflictException,
@@ -27,7 +28,11 @@ export class UserService {
    * @param payload change email payload
    * @returns user session
    */
-  async changeEmail(userId: string, payload: ChangeEmailInput) {
+  async changeEmail(
+    userId: string,
+    payload: ChangeEmailInput,
+    auditInfo?: PrismaAuditInfo,
+  ) {
     const isAlreadyExist = await this.userRepo.isAlreadyExist(payload.newEmail);
 
     if (isAlreadyExist) throw new ConflictException('email_already_exists');
@@ -41,7 +46,7 @@ export class UserService {
     if (!isValidPassword)
       throw new UnauthorizedException('invalid_old_password');
 
-    user.updateEmail(payload.newEmail);
+    await user.updateEmail(payload.newEmail, auditInfo);
 
     return user.toJSON();
   }
@@ -54,7 +59,7 @@ export class UserService {
    */
   async updateProfile(userId: string, payload: UpdateProfileInput) {
     const user = await this.userRepo.find(userId);
-    user.updateProfile(payload);
+    await user.updateProfile(payload);
 
     return user.toJSON();
   }
@@ -65,12 +70,16 @@ export class UserService {
    * @param email new email
    * @returns user session
    */
-  async adminResetEmail(userId: string, email: string) {
+  async adminResetEmail(
+    userId: string,
+    email: string,
+    auditInfo?: PrismaAuditInfo,
+  ) {
     const isAlreadyExist = await this.userRepo.isAlreadyExist(email);
 
     if (isAlreadyExist) throw new ConflictException('email_already_exists');
 
-    await this.userRepo.updateEmail(userId, email);
+    await this.userRepo.updateEmail(userId, email, auditInfo);
 
     return { success: true };
   }
@@ -81,8 +90,12 @@ export class UserService {
    * @param password new password
    * @returns user session
    */
-  async adminResetPassword(userId: string, password: string) {
-    await this.userRepo.updatePassword(userId, password);
+  async adminResetPassword(
+    userId: string,
+    password: string,
+    auditInfo?: PrismaAuditInfo,
+  ) {
+    await this.userRepo.updatePassword(userId, password, auditInfo);
 
     return { success: true };
   }
