@@ -10,12 +10,12 @@ export default function UsersPage() {
   const __ = useTranslations("Employee");
 
   return (
-    <div>
+    <>
       <PageHeader title={__("main.title")} />
 
       <Paper p={0}>
         <EmployeeDatatable />
       </Paper>
-    </div>
+    </>
   );
 }

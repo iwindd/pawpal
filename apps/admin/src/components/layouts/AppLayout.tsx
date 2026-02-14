@@ -1,7 +1,7 @@
 "use client";
 import AppHeader from "@/components/layouts/AppHeader";
 import { useAppSelector } from "@/hooks";
-import { AppShell } from "@pawpal/ui/core";
+import { AppShell, Stack } from "@pawpal/ui/core";
 import { useDisclosure, useMediaQuery } from "@pawpal/ui/hooks";
 import { useEffect } from "react";
 import Navbar from "./Navbar";
@@ -38,7 +38,17 @@ export default function AppLayout({
       <AppShell.Navbar>
         <Navbar opened={opened} toggle={toggle} />
       </AppShell.Navbar>
-      <AppShell.Main className={classes.main}>{children}</AppShell.Main>
+      <AppShell.Main className={classes.main}>
+        <Stack
+          px={{
+            lg: "3xl",
+          }}
+          py="md"
+          gap={"xs"}
+        >
+          {children}
+        </Stack>
+      </AppShell.Main>
     </AppShell>
   );
 }
