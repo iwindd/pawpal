@@ -559,7 +559,7 @@
       "actions": "เครื่องมือ"
     },
     "product": {
-      "name": "ขื่อสินค้า",
+      "name": "ชื่อสินค้า",
       "category": "หมวดหมู่",
       "productTags": "ป้ายกำกับ",
       "packages": "แพ็คเกจ",

@@ -82,9 +82,6 @@ const ProductPackageDatatable = ({
   return (
     <>
       <DataTable
-        height="65.4dvh"
-        minHeight={400}
-        maxHeight={1000}
         idAccessor="id"
         columns={columns}
         records={data?.data ?? []}

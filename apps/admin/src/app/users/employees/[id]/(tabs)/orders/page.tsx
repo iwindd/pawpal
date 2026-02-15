@@ -58,7 +58,6 @@ const EmployeeOrdersPage = () => {
   return (
     <Box py="md">
       <DataTable
-        minHeight={300}
         idAccessor="id"
         columns={columns}
         records={data?.data || []}

@@ -12,6 +12,7 @@ export function DataTable<T>(
       withTableBorder
       borderRadius="sm"
       highlightOnHover
+      height={690}
       {...props}
     />
   );

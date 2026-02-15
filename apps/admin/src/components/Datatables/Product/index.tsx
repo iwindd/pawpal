@@ -66,15 +66,14 @@ const ProductDatatable = ({
     },
     {
       accessor: "actions",
-      title: "Actions",
-      width: 100,
+      title: "",
       textAlign: "center",
       render: (record) => (
         <TableAction
           displayType="icon"
           actions={[
             {
-              color: "blue",
+              color: "secondary",
               icon: IconEdit,
               action: appRouter.path("products.product", {
                 id: record.id,
@@ -88,9 +87,6 @@ const ProductDatatable = ({
 
   return (
     <DataTable
-      height="83.4dvh"
-      minHeight={400}
-      maxHeight={1000}
       idAccessor="slug"
       columns={columns}
       records={records}

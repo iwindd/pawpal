@@ -85,9 +85,6 @@ const {{EntityName}}Datatable = ({
 
   return (
     <DataTable
-      height="83.4dvh"
-      minHeight={400}
-      maxHeight={1000}
       idAccessor="id" // CHECK: Does your entity use 'id', 'slug', or 'uuid'?
       columns={columns}
       records={records}

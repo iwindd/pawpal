@@ -133,8 +133,6 @@ const ProductFieldDatatable = ({ productId }: ProductFieldDatatable) => {
     <>
       <DragDropContext onDragEnd={handleDragEnd}>
         <DataTable
-          minHeight={400}
-          maxHeight={1000}
           columns={columns}
           records={data?.data ?? []}
           totalRecords={data?.total ?? 0}

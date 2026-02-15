@@ -134,9 +134,6 @@ const TransactionDatatable = () => {
 
   return (
     <DataTable
-      height="80dvh"
-      minHeight={400}
-      maxHeight={1000}
       idAccessor="id"
       columns={columns}
       records={records}

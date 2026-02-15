@@ -150,7 +150,6 @@ export default function CategoryPage() {
         onPageChange={setPage}
         onRecordsPerPageChange={setLimit}
         recordsPerPageOptions={[10, 20, 50]}
-        minHeight={200}
         fetching={isFetching}
       />
 
