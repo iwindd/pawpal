@@ -27,7 +27,9 @@ export default function ProductsPage() {
       <PageHeader title={__("main.title")}>
         <Button
           component={Link}
-          variant="outline"
+          variant="subtle"
+          color="secondary"
+          size="xs"
           rightSection={<IconPlus size={14} />}
           href={getPath("products.create")}
         >

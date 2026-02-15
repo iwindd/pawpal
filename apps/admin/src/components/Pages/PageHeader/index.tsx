@@ -12,7 +12,7 @@ const PageHeader = ({ title, children }: PageHeaderProps) => {
       <Group pb={"md"} justify="space-between">
         <Stack gap="0">
           <Group>
-            <Title order={2}>{title}</Title>
+            <Title order={3}>{title}</Title>
           </Group>
         </Stack>
         {children}
