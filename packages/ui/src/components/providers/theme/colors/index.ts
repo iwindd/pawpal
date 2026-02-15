@@ -27,7 +27,7 @@ const MantineColors = {
   ],
   danger: DEFAULT_THEME.colors.red,
   secondary: DEFAULT_THEME.colors.dark,
-  save: DEFAULT_THEME.colors.teal,
+  success: DEFAULT_THEME.colors.teal,
 } satisfies MantineThemeOverride["colors"];
 
 export default MantineColors;

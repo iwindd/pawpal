@@ -140,7 +140,7 @@ const CarouselForm = ({
             )}
             <Button
               type="submit"
-              color="save"
+              color="success"
               disabled={disabled}
               rightSection={<IconPublishShare size={16} />}
               loading={isLoading}

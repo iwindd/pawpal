@@ -51,7 +51,7 @@ const CategoryForm = ({ onSubmit, form }: CategoryFormProps) => {
         />
 
         <Group justify="flex-end" mt="md">
-          <Button type="submit" color="save" loading={form.isLoading}>
+          <Button type="submit" color="success" loading={form.isLoading}>
             {__("form.save")}
           </Button>
         </Group>

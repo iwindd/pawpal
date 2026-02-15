@@ -140,7 +140,7 @@ const ProductForm = ({
             {form.isDirty() && (
               <Button
                 type="submit"
-                color="save"
+                color="success"
                 disabled={disabled}
                 loading={isLoading}
               >

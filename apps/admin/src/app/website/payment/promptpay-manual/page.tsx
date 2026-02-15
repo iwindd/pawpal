@@ -53,7 +53,7 @@ const PromptpayManualPage = () => {
     {
       title: __("confirmation.save.title"),
       message: __("confirmation.save.message"),
-    }
+    },
   );
 
   useEffect(() => {
@@ -97,7 +97,7 @@ const PromptpayManualPage = () => {
               disabled={isLoading}
               leftSection={<IconDeviceFloppy size={20} />}
               type="submit"
-              color="save"
+              color="success"
             >
               {__("form.actions.save")}
             </Button>
