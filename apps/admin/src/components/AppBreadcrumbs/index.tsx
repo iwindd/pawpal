@@ -1,3 +1,4 @@
+import { useActiveRouteConfig } from "@/hooks/useActiveRouteConfig";
 import { useActiveRouteTrail } from "@/hooks/useActiveRouteTrail";
 import { Route } from "@pawpal/shared";
 import { AnchorProps, Breadcrumbs, Text } from "@pawpal/ui/core";
@@ -6,17 +7,18 @@ import Link from "next/link";
 
 interface BreadcrumbLink extends AnchorProps {
   route: Route & { disabled?: boolean };
-  isActive?: boolean;
   isDisabled?: boolean;
 }
 
 const BreadcrumbLink = ({
   route,
-  isActive = false,
   isDisabled = false,
   ...props
 }: BreadcrumbLink) => {
   const __ = useTranslations("Navbar.links");
+  const activeRoute = useActiveRouteConfig();
+
+  const isActive = route.name == activeRoute?.name;
 
   return (
     <Text
@@ -38,18 +40,17 @@ const AppBreadcrumbs = (props: AppBreadcrumbProps) => {
 
   return (
     <Breadcrumbs>
-      {activeRouteTrail.map((route, index) => {
-        const isLast = index === activeRouteTrail.length - 1;
-
-        return (
-          <BreadcrumbLink
-            key={route.name + route.path + index}
-            route={route}
-            isActive={isLast}
-            isDisabled={route.disabled}
-          />
-        );
-      })}
+      {activeRouteTrail
+        .filter((route) => !route.hiddenBreadcrumb)
+        .map((route, index) => {
+          return (
+            <BreadcrumbLink
+              key={route.name + route.path + index}
+              route={route}
+              isDisabled={route.disabled}
+            />
+          );
+        })}
     </Breadcrumbs>
   );
 };

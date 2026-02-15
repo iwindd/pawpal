@@ -6,6 +6,7 @@ type BaseRoute = {
   icon?: any;
   parent?: string;
   disabled?: boolean;
+  hiddenBreadcrumb?: boolean;
 };
 
 export type CFG_ROUTE = BaseRoute & {
@@ -18,13 +19,13 @@ export type Route = BaseRoute & {
 };
 
 export const ROUTER = (
-  ROUTES: Record<string, CFG_ROUTE>
+  ROUTES: Record<string, CFG_ROUTE>,
 ): Record<string, Route> => {
   const APP_ROUTES: Record<string, Route> = {};
 
   function traverse(
     routes: Record<string, CFG_ROUTE>,
-    parentKey: string | null = null
+    parentKey: string | null = null,
   ) {
     for (const key in routes) {
       const fullKey = parentKey ? `${parentKey}.${key}` : key;
@@ -53,7 +54,7 @@ export const buildRouteUtility = (ROUTES: Record<string, Route>) => {
   const getRoute = (routeName: string) => {
     const findRouteByKey = ROUTES[routeName];
     const findRouteByName = Object.values(ROUTES).find(
-      (r) => r.name === routeName
+      (r) => r.name === routeName,
     );
     const route = findRouteByKey ?? findRouteByName;
     if (!route) throw new Error(`Route not found: ${routeName}`);
