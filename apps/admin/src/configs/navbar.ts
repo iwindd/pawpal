@@ -1,129 +1,68 @@
 import {
-  IconAppWindow,
-  IconBrandFacebook,
-  IconDashboard,
-  IconFolder,
-  IconShoppingBag,
-  IconUser,
-  IconWork,
+  IconCarouselHorizontalFilled,
+  IconCategoryFilled,
+  IconCreditCardFilled,
+  IconDashboardFilled,
+  IconFolderFilled,
+  IconReceiptDollarFilled,
+  IconReceiptFilled,
+  IconShieldCheckFilled,
+  IconShoppingCartFilled,
+  IconTagsFilled,
+  IconUserFilled,
 } from "@pawpal/icons";
-import { getPath } from "./route";
+import { Route } from "@pawpal/shared";
+import { getRoute } from "./route";
 
-export interface NavLink {
-  id: number;
-  icon: React.ComponentType<any>;
-  title: string;
-  link?: string;
-  files: {
-    id: number;
-    name: string;
-    link: string;
-    badgeKey?: string;
-  }[];
-  hasBorderBottom?: boolean;
+export type NavLink = NavbarFolder | NavbarItem;
+
+export class NavbarItem {
+  constructor(
+    public route: Route,
+    public icon?: React.ComponentType<any>,
+    public notification?: string,
+  ) {}
 }
 
-export const navlinks: NavLink[] = [
-  {
-    id: 1,
-    icon: IconDashboard,
-    title: "home",
-    link: getPath("home"),
-    files: [],
-    hasBorderBottom: true,
-  },
-  {
-    id: 3,
-    icon: IconWork,
-    title: "job.main",
-    link: getPath("job"),
-    files: [
-      {
-        id: 1,
-        name: "orders.main",
-        link: getPath("job.orders"),
-      },
-      {
-        id: 2,
-        name: "transactions.main",
-        link: getPath("job.transactions"),
-      },
-    ],
-  },
-  {
-    id: 4,
-    icon: IconShoppingBag,
-    title: "groups.product",
-    files: [
-      {
-        id: 0,
-        name: "products.main",
-        link: getPath("products"),
-      },
-      {
-        id: 1,
-        name: "tags.main",
-        link: getPath("tags"),
-      },
-      {
-        id: 2,
-        name: "categories.main",
-        link: getPath("categories"),
-      },
-    ],
-  },
-  {
-    id: 5,
-    icon: IconUser,
-    title: "users.main",
-    link: "#",
-    files: [
-      {
-        id: 1,
-        name: "users.customer.main",
-        link: getPath("users.customers"),
-      },
-      {
-        id: 2,
-        name: "users.employee.main",
-        link: getPath("users.employees"),
-      },
-    ],
-  },
-  {
-    id: 6,
-    icon: IconAppWindow,
-    title: "website.main",
-    link: getPath("website"),
-    files: [
-      {
-        id: 1,
-        name: "website.carousel.main",
-        link: getPath("website.carousel"),
-        badgeKey: "carousels",
-      },
-      {
-        id: 2,
-        name: "website.payment.main",
-        link: getPath("website.payment"),
-      },
-    ],
-  },
-  {
-    id: 7,
-    icon: IconFolder,
-    title: "resources",
-    link: getPath("resources"),
-    files: [],
-  },
-];
+export class NavbarFolder {
+  constructor(
+    public name: string,
+    public items: NavbarItem[],
+  ) {}
+}
 
-export const othersNavlinks: NavLink[] = [
+export const folder = (name: string, items: NavbarItem[]) => {
+  return new NavbarFolder(name, items);
+};
+
+export const item = (
+  routeName: string,
   {
-    id: 11,
-    title: "fanpage",
-    link: "/",
-    files: [],
-    icon: IconBrandFacebook,
-  },
+    icon,
+    notification,
+  }: { icon?: React.ComponentType<any>; notification?: string } = {},
+) => {
+  return new NavbarItem(getRoute(routeName), icon, notification);
+};
+
+export const navlinks: NavLink[] = [
+  folder("overview", [item("home", { icon: IconDashboardFilled })]),
+  folder("job", [
+    item("job.orders", { icon: IconReceiptFilled }),
+    item("job.transactions", { icon: IconReceiptDollarFilled }),
+  ]),
+  folder("product", [
+    item("products", { icon: IconShoppingCartFilled }),
+    item("tags", { icon: IconTagsFilled }),
+    item("categories", { icon: IconCategoryFilled }),
+  ]),
+  folder("user", [
+    item("users.customers", { icon: IconUserFilled }),
+    item("users.employees", { icon: IconShieldCheckFilled }),
+  ]),
+  folder("website", [
+    item("website.carousel", { icon: IconCarouselHorizontalFilled }),
+    item("website.payment", { icon: IconCreditCardFilled }),
+  ]),
+  folder("misc", [item("resources", { icon: IconFolderFilled })]),
 ];

@@ -1,12 +1,13 @@
-import { NavLink, navlinks, othersNavlinks } from "@/configs/navbar";
+import { NavbarFolder, NavbarItem, navlinks } from "@/configs/navbar";
+import { getRoute } from "@/configs/route";
 import { useGetNotificationsQuery } from "@/features/notification/notificationApi";
 import { useActiveRouteConfig } from "@/hooks/useActiveRouteConfig";
-import { IconMinus, IconPlus } from "@pawpal/icons";
+import { IconChevronDown, IconChevronRight } from "@pawpal/icons";
 import {
+  Anchor,
   Badge,
   Burger,
   Collapse,
-  Divider,
   Flex,
   Group,
   ScrollArea,
@@ -17,6 +18,7 @@ import {
 import { useDisclosure } from "@pawpal/ui/hooks";
 import { useFormatter, useTranslations } from "next-intl";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import classes from "./style.module.css";
 
 interface Props {
@@ -25,124 +27,101 @@ interface Props {
 }
 
 export default function Navbar({ opened, toggle }: Readonly<Props>) {
-  const activeRoute = useActiveRouteConfig();
-
-  const { data: badges } = useGetNotificationsQuery();
-
   return (
-    <Stack h="100%" gap={20} px="md" py="lg">
-      <Group gap={8} w="100%" align="center">
+    <Stack h="100%" gap={0}>
+      {/* Header */}
+      <Group gap={8} w="100%" align="center" px="md" pt="md" pb="xs">
         <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-        <Text className={classes.teams}>PawPal</Text>
+        <Anchor component={Link} href={getRoute("home").path}>
+          <Text lts={-0.5}>PawPal</Text>
+        </Anchor>
       </Group>
 
+      {/* Main Navbar */}
       <ScrollArea h="100%">
-        <Flex h="100%" gap={4} direction="column" align="start">
+        <Flex h="100%" direction="column" align="start" gap={5}>
           {navlinks.map((navlink) => {
-            const path = navlink.link;
-            const isActive = activeRoute?.path === path;
+            if (navlink instanceof NavbarFolder) {
+              return <Folder key={navlink.name} {...navlink} />;
+            }
 
-            return navlink.files.length > 0 ? (
-              <Folder key={navlink.id} {...navlink} badges={badges || {}} />
-            ) : (
-              <Flex w="100%" direction="column" align="start" key={navlink.id}>
-                <LinkItem {...navlink} link={path} isActive={isActive} />
-                {navlink.hasBorderBottom && <Divider my={10} w="100%" />}
-              </Flex>
-            );
+            if (navlink instanceof NavbarItem) {
+              return <LinkItem key={navlink.route.name} {...navlink} />;
+            }
+
+            return null;
           })}
         </Flex>
       </ScrollArea>
-
-      <Flex w="100%" direction="column" align="start" gap={6}>
-        {othersNavlinks.map((otherLink) => (
-          <LinkItem
-            key={otherLink.id}
-            {...otherLink}
-            isActive={false}
-            link={otherLink.link as string}
-          />
-        ))}
-      </Flex>
     </Stack>
   );
 }
 
-const LinkItem = ({
-  title,
-  icon: Icon,
-  link,
-  isActive,
-}: {
-  title: string;
-  icon: React.ComponentType<any>;
-  link: string;
-  isActive: boolean;
-}) => {
-  const __ = useTranslations("Navbar.links");
+const LinkItem = ({ icon: Icon, route, notification: notiKey }: NavbarItem) => {
+  const __ = useTranslations("Navbar.items");
+  const activeRoute = useActiveRouteConfig();
+  const [notificationCount, setNotificationCount] = useState(0);
+
+  const { data: notifications } = useGetNotificationsQuery();
+  const isActive = activeRoute?.name === route.name;
+  const format = useFormatter();
+
+  useEffect(() => {
+    if (notifications && notiKey !== undefined) {
+      setNotificationCount(notifications[notiKey] ?? 0);
+    }
+  }, [notifications, notiKey]);
 
   return (
-    <Link data-active={isActive} className={classes.navlink} href={link}>
-      <Icon size={20} />
-      <Text className={classes.title} lts={-0.5}>
-        {__(title)}
-      </Text>
-    </Link>
+    <Stack px="md" w="100%">
+      <Link
+        data-active={isActive}
+        className={classes.navbarItem}
+        href={route.path}
+      >
+        {Icon && <Icon size={20} />}
+        <Text className={classes.title} lts={-0.5}>
+          {__(route.name)}
+        </Text>
+        {notificationCount > 0 && notiKey !== undefined && (
+          <Badge variant="light" ml="auto" size="sm">
+            {format.number(notificationCount)}
+          </Badge>
+        )}
+      </Link>
+    </Stack>
   );
 };
 
-const Folder = ({
-  title,
-  icon: Icon,
-  files,
-  badges,
-}: NavLink & { badges: Record<string, number> }) => {
+const Folder = ({ name, items }: NavbarFolder) => {
   const [opened, { toggle }] = useDisclosure(true);
-  const __ = useTranslations("Navbar.links");
-  const format = useFormatter();
+  const __ = useTranslations("Navbar");
 
   return (
     <Flex direction="column" align="start" w="100%">
+      {/* TRIGGER */}
       <UnstyledButton
         h={36.15}
-        style={{
-          justifyContent: "space-between",
-        }}
-        w="100%"
-        className={classes.navlink}
+        className={classes.folder}
         onClick={toggle}
-        p={8}
+        px={"xs"}
       >
-        <Flex align="center" gap={10}>
-          <Icon size={20} />
+        <Flex align="center" gap={1}>
+          {opened ? (
+            <IconChevronDown size={14} className={classes.expandLess} />
+          ) : (
+            <IconChevronRight size={14} className={classes.expandMore} />
+          )}
           <Text className={classes.title} lts={-0.5}>
-            {__(title)}
+            {__(`groups.${name}`)}
           </Text>
         </Flex>
-        {opened && <IconMinus size={17} />}
-        {!opened && <IconPlus size={17} />}
       </UnstyledButton>
-      <Collapse w="100%" pl={30} in={opened}>
-        <Flex w="100%" py={14} direction="column" align="start" gap={10}>
-          {files.map((file) => {
-            const notificationCount = file.badgeKey
-              ? badges?.[file.badgeKey] || 0
-              : 0;
-
-            return (
-              <Link
-                key={file.id}
-                className={classes.subNavLink}
-                href={file.link}
-              >
-                <Text lts={-0.5}>{__(file.name)}</Text>
-                {badges && file.badgeKey && (
-                  <Badge radius={6} className={classes.noti} px={6}>
-                    {format.number(notificationCount)}
-                  </Badge>
-                )}
-              </Link>
-            );
+      {/* CONTENT */}
+      <Collapse w="100%" in={opened}>
+        <Flex w="100%" direction="column" align="start" gap={5}>
+          {items.map((item) => {
+            return <LinkItem key={item.route.name} {...item} />;
           })}
         </Flex>
       </Collapse>

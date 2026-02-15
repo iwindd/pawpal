@@ -1,17 +1,46 @@
-.team {
-  font-size: rem(16);
-  line-height: 1;
-  letter-spacing: rem(-0.6);
-  font-weight: 500;
-  color: light-dark(var(--mantine-color-black), var(--mantine-color-white));
+.folder {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+
+  .title {
+    font-size: calc(0.6875rem * var(--mantine-scale));
+    font-weight: 600;
+    font-family: var(--mantine-font-family-headings);
+    color: var(--mantine-color-dimmed);
+
+    transition:
+      color 300ms cubic-bezier(0.4, 0, 0.2, 1),
+      padding-left 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .expandMore,
+  .expandLess {
+    opacity: 0;
+    transition: opacity 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    transition-delay: 50ms;
+  }
+
+  &:hover {
+    .title {
+      padding-left: calc(0.3rem * var(--mantine-scale));
+      color: light-dark(var(--mantine-color-black), var(--mantine-color-white));
+    }
+
+    .expandMore,
+    .expandLess {
+      opacity: 1;
+      transition-delay: 0ms;
+    }
+  }
 }
 
-.navlink {
+.navbarItem {
   width: 100%;
   display: flex;
   align-items: center;
   gap: rem(10);
-  color: light-dark(var(--mantine-color-dark-4), var(--mantine-color-gray-4));
   padding: rem(4) rem(8);
   border-radius: rem(6);
   transition: all 0.2s cubic-bezier(0.075, 0.82, 0.165, 1);
@@ -19,10 +48,11 @@
 
   .title {
     font-size: var(--mantine-font-size-xs);
+    color: light-dark(var(--mantine-color-dark-3), var(--mantine-color-dark-1));
   }
 
   svg {
-    color: light-dark(var(--mantine-color-dark-5), var(--mantine-color-dark-2));
+    color: light-dark(var(--mantine-color-dark-3), var(--mantine-color-dark-1));
   }
 
   &:hover {
@@ -33,45 +63,24 @@
   }
 
   &[data-active="true"] {
-    color: light-dark(var(--mantine-color-white));
-    background-color: var(--mantine-color-dark-6);
+    background-color: light-dark(
+      color-mix(in srgb, var(--mantine-primary-color-1) 80%, transparent),
+      color-mix(in srgb, var(--mantine-primary-color-3) 20%, transparent)
+    );
 
     .title {
-      font-weight: 700;
+      font-weight: 600;
+      color: light-dark(
+        var(--mantine-primary-color-6),
+        var(--mantine-primary-color-3)
+      );
     }
 
     svg {
-      color: white;
+      color: light-dark(
+        var(--mantine-primary-color-6),
+        var(--mantine-primary-color-3)
+      );
     }
-  }
-}
-
-.subNavLink {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-radius: rem(6);
-  padding: rem(4) rem(8);
-  text-decoration: none;
-
-  & > p {
-    font-size: var(--mantine-font-size-xs);
-    color: light-dark(var(--mantine-color-dark-4), var(--mantine-color-gray-4));
-  }
-
-  &:hover {
-    background-color: light-dark(
-      var(--mantine-color-gray-1),
-      var(--mantine-color-dark-6)
-    );
-  }
-
-  .noti {
-    color: light-dark(var(--mantine-color-gray-8), var(--mantine-color-gray-3));
-    background-color: light-dark(
-      var(--mantine-color-gray-2),
-      var(--mantine-color-dark-6)
-    );
   }
 }

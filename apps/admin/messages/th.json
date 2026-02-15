@@ -104,6 +104,14 @@
         }
       }
     },
+    "groups": {
+      "overview": "ภาพรวม",
+      "job": "งานหลัก",
+      "product": "สินค้า",
+      "user": "ผู้ใช้งาน",
+      "website": "เว็บไซต์",
+      "misc": "อื่นๆ"
+    },
     "links": {
       "groups": {
         "product": "สินค้า"
@@ -181,6 +189,29 @@
         }
       },
       "fanpage": "Fanpage"
+    },
+    "items": {
+      "home": "หน้าหลัก",
+
+      "job": {
+        "orders": "คำสั่งซื้อ",
+        "transactions": "ธุรกรรม"
+      },
+
+      "products": "สินค้า",
+      "categories": "หมวดหมู่",
+      "tags": "แท็ก",
+
+      "users": {
+        "customers": "ลูกค้า",
+        "employees": "พนักงาน"
+      },
+
+      "website": {
+        "carousel": "สไลด์โชว์",
+        "payment": "การชำระเงิน"
+      },
+      "resources": "ทรัพยากร"
     }
   },
   "Product": {
