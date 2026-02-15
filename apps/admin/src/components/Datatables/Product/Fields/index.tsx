@@ -133,8 +133,6 @@ const ProductFieldDatatable = ({ productId }: ProductFieldDatatable) => {
     <>
       <DragDropContext onDragEnd={handleDragEnd}>
         <DataTable
-          highlightOnHover
-          height="65.4dvh"
           minHeight={400}
           maxHeight={1000}
           columns={columns}

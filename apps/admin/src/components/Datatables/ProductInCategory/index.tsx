@@ -76,10 +76,6 @@ const ProductInCategoryDatatable = ({
 
   return (
     <DataTable
-      withTableBorder
-      borderRadius="sm"
-      striped
-      highlightOnHover
       height="83.4dvh"
       minHeight={400}
       maxHeight={1000}

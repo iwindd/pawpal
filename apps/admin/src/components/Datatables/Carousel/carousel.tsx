@@ -124,8 +124,6 @@ const CarouselDatatable = () => {
         </div>
       </Group>
       <DataTable
-        striped
-        highlightOnHover
         height={670}
         scrollAreaProps={{ type: "never" }}
         columns={columns}

@@ -113,10 +113,6 @@ export default function CategoryPage() {
       </Group>
 
       <DataTable
-        withTableBorder
-        borderRadius="sm"
-        striped
-        highlightOnHover
         records={data?.data || []}
         columns={[
           {

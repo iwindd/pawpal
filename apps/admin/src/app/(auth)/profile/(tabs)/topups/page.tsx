@@ -57,10 +57,6 @@ const ProfileTopupHistoryPage = () => {
   return (
     <Box py="md">
       <DataTable
-        withTableBorder
-        borderRadius="sm"
-        striped
-        highlightOnHover
         minHeight={300}
         idAccessor="id"
         columns={columns}

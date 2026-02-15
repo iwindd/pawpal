@@ -17,7 +17,7 @@ const PublishDatatable = () => {
   const { data: publishedCarousels, isLoading } = useGetPublishedCarouselsQuery(
     {
       limit: 100,
-    }
+    },
   );
 
   const [reorderCarouselMutation, { isLoading: isReording }] =
@@ -116,8 +116,6 @@ const PublishDatatable = () => {
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
       <DataTable
-        striped
-        highlightOnHover
         maxHeight={530}
         columns={columns}
         fetching={isLoading || isReording}

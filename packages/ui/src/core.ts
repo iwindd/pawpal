@@ -80,13 +80,8 @@ export {
 export { Card } from "./components/Card";
 export { default as Paper } from "./components/Paper";
 
-export {
-  DataTable,
-  DataTableDraggableRow,
-  type DataTableColumn,
-  type DataTableProps,
-  type DataTableSortStatus,
-} from "mantine-datatable";
+export * from "./components/Datatable";
+
 export { default as ErrorMessage } from "./components/ErrorMessage";
 export {
   default as LoadingTrigger,

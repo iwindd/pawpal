@@ -82,7 +82,6 @@ const ProductPackageDatatable = ({
   return (
     <>
       <DataTable
-        highlightOnHover
         height="65.4dvh"
         minHeight={400}
         maxHeight={1000}

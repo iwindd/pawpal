@@ -134,10 +134,6 @@ const TransactionDatatable = () => {
 
   return (
     <DataTable
-      withTableBorder
-      borderRadius="sm"
-      striped
-      highlightOnHover
       height="80dvh"
       minHeight={400}
       maxHeight={1000}
