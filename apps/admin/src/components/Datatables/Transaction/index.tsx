@@ -9,7 +9,7 @@ import {
   AdminTransactionResponse,
   ENUM_TRANSACTION_STATUS,
 } from "@pawpal/shared";
-import { DataTable, DataTableProps } from "@pawpal/ui/core";
+import { DataTable } from "@pawpal/ui/core";
 import { sortBy } from "lodash";
 import { useFormatter, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
@@ -24,6 +24,84 @@ const TransactionDatatable = () => {
       columnAccessor: "createdAt",
       direction: "asc",
     },
+    columns: [
+      {
+        accessor: "id",
+        noWrap: true,
+        sortable: true,
+        title: __("transactionId"),
+        render: (record) => `#${record.id.slice(-8)}`,
+      },
+      {
+        accessor: "type",
+        noWrap: true,
+        sortable: true,
+        title: __("type"),
+        render: (record) => <TransactionTypeBadge type={record.type} />,
+      },
+      {
+        accessor: "status",
+        noWrap: true,
+        title: __("status"),
+        render: (record) => <TransactionStatusBadge status={record.status} />,
+      },
+      {
+        accessor: "amount",
+        noWrap: true,
+        sortable: true,
+        title: __("amount"),
+        render: (record) => format.number(record.amount, "currency"),
+      },
+      {
+        accessor: "balanceBefore",
+        noWrap: true,
+        sortable: true,
+        title: __("balanceBefore"),
+        render: (record) => format.number(record.balanceBefore, "currency"),
+      },
+      {
+        accessor: "balanceAfter",
+        noWrap: true,
+        sortable: true,
+        title: __("balanceAfter"),
+        render: (record) => format.number(record.balanceAfter, "currency"),
+      },
+      {
+        accessor: "createdAt",
+        noWrap: true,
+        sortable: true,
+        title: __("createdAt"),
+        render: (record) => <RelativeTime date={record.createdAt} />,
+      },
+      {
+        accessor: "order_id",
+        noWrap: true,
+        sortable: true,
+        title: __("order"),
+        render: ({ orderId }) => orderId || __("orderNone"),
+      },
+      {
+        accessor: "actions",
+        noWrap: true,
+        title: __("actions"),
+        render: (records) => {
+          const actions: Action[] = [
+            {
+              label: __("action.make_success"),
+              color: "green",
+              action: () => successJobTransaction(records.id) as unknown,
+            },
+            {
+              label: __("action.make_fail"),
+              color: "red",
+              action: () => failJobTransaction(records.id) as unknown,
+            },
+          ];
+
+          return <TableAction label={__("actions")} actions={actions} />;
+        },
+      },
+    ],
   });
 
   const { isLoading } = useGetTransactionsQuery({});
@@ -36,85 +114,6 @@ const TransactionDatatable = () => {
     failJobTransaction,
     isLoading: isTransactionLoading,
   } = useTransactionActions();
-
-  const columns: DataTableProps<AdminTransactionResponse>["columns"] = [
-    {
-      accessor: "id",
-      noWrap: true,
-      sortable: true,
-      title: __("transactionId"),
-      render: (record) => `#${record.id.slice(-8)}`,
-    },
-    {
-      accessor: "type",
-      noWrap: true,
-      sortable: true,
-      title: __("type"),
-      render: (record) => <TransactionTypeBadge type={record.type} />,
-    },
-    {
-      accessor: "status",
-      noWrap: true,
-      title: __("status"),
-      render: (record) => <TransactionStatusBadge status={record.status} />,
-    },
-    {
-      accessor: "amount",
-      noWrap: true,
-      sortable: true,
-      title: __("amount"),
-      render: (record) => format.number(record.amount, "currency"),
-    },
-    {
-      accessor: "balanceBefore",
-      noWrap: true,
-      sortable: true,
-      title: __("balanceBefore"),
-      render: (record) => format.number(record.balanceBefore, "currency"),
-    },
-    {
-      accessor: "balanceAfter",
-      noWrap: true,
-      sortable: true,
-      title: __("balanceAfter"),
-      render: (record) => format.number(record.balanceAfter, "currency"),
-    },
-    {
-      accessor: "createdAt",
-      noWrap: true,
-      sortable: true,
-      title: __("createdAt"),
-      render: (record) => <RelativeTime date={record.createdAt} />,
-    },
-    {
-      accessor: "order_id",
-      noWrap: true,
-      sortable: true,
-      title: __("order"),
-      render: ({ orderId }) => orderId || __("orderNone"),
-    },
-    {
-      accessor: "actions",
-      noWrap: true,
-      title: __("actions"),
-      render: (records) => {
-        const actions: Action[] = [
-          {
-            label: __("action.make_success"),
-            color: "green",
-            action: () => successJobTransaction(records.id) as unknown,
-          },
-          {
-            label: __("action.make_fail"),
-            color: "red",
-            action: () => failJobTransaction(records.id) as unknown,
-          },
-        ];
-
-        return <TableAction label={__("actions")} actions={actions} />;
-      },
-    },
-  ];
 
   useEffect(() => {
     const data = sortBy(transactions, datatable.sortStatus.columnAccessor);
@@ -135,11 +134,10 @@ const TransactionDatatable = () => {
   return (
     <DataTable
       idAccessor="id"
-      columns={columns}
       records={records}
       fetching={isLoading || isTransactionLoading}
-      sortStatus={datatable.sortStatus}
-      onSortStatusChange={datatable.setSortStatus}
+      totalRecords={0} /* TODO: Get total records from API */
+      {...datatable.props}
     />
   );
 };

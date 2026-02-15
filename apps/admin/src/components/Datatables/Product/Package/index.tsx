@@ -86,12 +86,8 @@ const ProductPackageDatatable = ({
         columns={columns}
         records={data?.data ?? []}
         totalRecords={data?.total ?? 0}
-        recordsPerPage={datatable.limit}
-        page={datatable.page}
-        onPageChange={datatable.setPage}
         fetching={isFetching}
-        sortStatus={datatable.sortStatus}
-        onSortStatusChange={datatable.setSortStatus}
+        {...datatable.props}
       />
 
       {editPackage.modal}

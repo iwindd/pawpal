@@ -11,11 +11,38 @@ const EmployeeOrdersPage = () => {
   const { employee } = useEmployee();
   const format = useFormatter();
   const __ = useTranslations("Datatable.order");
-  const { ...datatable } = useDatatable<AdminOrderResponse>({
+  const datatable = useDatatable<AdminOrderResponse>({
     sortStatus: {
       columnAccessor: "createdAt",
       direction: "desc",
     },
+    columns: [
+      {
+        accessor: "id",
+        render: (record) => `#${record.id.slice(-8)}`,
+        title: __("orderId"),
+      },
+      {
+        accessor: "total",
+        title: __("total"),
+        render: ({ total }) =>
+          format.number(+total, {
+            style: "currency",
+            currency: "THB",
+          }),
+      },
+      {
+        accessor: "status",
+        title: __("status"),
+        render: ({ status }) => <OrderStatusBadge status={status} />,
+      },
+      {
+        accessor: "createdAt",
+        title: __("createdAt"),
+        render: (record) =>
+          format.dateTime(new Date(record.createdAt), "dateTime"),
+      },
+    ],
   });
 
   const { data, isLoading } = useGetEmployeeOrdersQuery({
@@ -27,47 +54,14 @@ const EmployeeOrdersPage = () => {
     },
   });
 
-  const columns = [
-    {
-      accessor: "id",
-      render: (record: any) => `#${record.id.slice(-8)}`,
-      title: __("orderId"),
-    },
-    {
-      accessor: "total",
-      title: __("total"),
-      render: ({ total }: any) =>
-        format.number(+total, {
-          style: "currency",
-          currency: "THB",
-        }),
-    },
-    {
-      accessor: "status",
-      title: __("status"),
-      render: ({ status }: any) => <OrderStatusBadge status={status} />,
-    },
-    {
-      accessor: "createdAt",
-      title: __("createdAt"),
-      render: (record: any) =>
-        format.dateTime(new Date(record.createdAt), "dateTime"),
-    },
-  ];
-
   return (
     <Box py="md">
       <DataTable
         idAccessor="id"
-        columns={columns}
         records={data?.data || []}
         totalRecords={data?.total || 0}
-        recordsPerPage={15}
-        page={datatable.page}
-        onPageChange={datatable.setPage}
         fetching={isLoading}
-        sortStatus={datatable.sortStatus}
-        onSortStatusChange={datatable.setSortStatus}
+        {...datatable.props}
       />
     </Box>
   );

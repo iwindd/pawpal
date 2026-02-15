@@ -1,22 +1,15 @@
-import { UseDatatableReturnProps } from "@/components/Datatables/datatable";
+import {
+  UseDataTableProps,
+  UseDatatableReturnProps,
+} from "@/components/Datatables/datatable";
 import { DataTableSortStatus, MantineTheme } from "@pawpal/ui/core";
-import { useState } from "react";
-
-interface Props<T> {
-  sortStatus?: DataTableSortStatus<T>;
-  page?: number;
-  limit?: number;
-}
+import { useMemo, useState } from "react";
 
 const useDatatable = <T>(
-  props: Props<T> = {
-    sortStatus: {
-      columnAccessor: "name",
-      direction: "asc",
-    },
+  props: UseDataTableProps<T> = {
     page: 1,
-    limit: 15,
-  }
+    limit: 10,
+  },
 ): UseDatatableReturnProps<T> => {
   const [page, setPage] = useState(props.page ?? 1);
   const [limit, setLimit] = useState(props.limit ?? 10);
@@ -30,6 +23,36 @@ const useDatatable = <T>(
     setSortStatus(sortStatus);
   };
 
+  const above = useMemo(() => {
+    return {
+      xs: (theme: MantineTheme) => `(min-width: ${theme.breakpoints.xs})`,
+      sm: (theme: MantineTheme) => `(min-width: ${theme.breakpoints.sm})`,
+      md: (theme: MantineTheme) => `(min-width: ${theme.breakpoints.md})`,
+      lg: (theme: MantineTheme) => `(min-width: ${theme.breakpoints.lg})`,
+      xl: (theme: MantineTheme) => `(min-width: ${theme.breakpoints.xl})`,
+    };
+  }, []);
+
+  const columns = useMemo(() => {
+    if (typeof props.columns === "function") {
+      return props.columns({ above });
+    }
+    return props.columns;
+  }, [props.columns, above]);
+
+  const datatableProps = useMemo(() => {
+    const datatableProps = {
+      recordsPerPage: 15,
+      page,
+      onPageChange: setPage,
+      sortStatus,
+      onSortStatusChange: handleSortStatusChange,
+      columns,
+    };
+
+    return datatableProps as UseDatatableReturnProps<T>["props"];
+  }, [page, sortStatus, columns, props.columns]);
+
   return {
     page,
     limit,
@@ -38,13 +61,8 @@ const useDatatable = <T>(
     sortStatus,
     setSortStatus: handleSortStatusChange,
     sort: JSON.stringify(sortStatus),
-    above: {
-      xs: (theme: MantineTheme) => `(min-width: ${theme.breakpoints.xs})`,
-      sm: (theme: MantineTheme) => `(min-width: ${theme.breakpoints.sm})`,
-      md: (theme: MantineTheme) => `(min-width: ${theme.breakpoints.md})`,
-      lg: (theme: MantineTheme) => `(min-width: ${theme.breakpoints.lg})`,
-      xl: (theme: MantineTheme) => `(min-width: ${theme.breakpoints.xl})`,
-    },
+    above,
+    props: datatableProps,
   };
 };
 

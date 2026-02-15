@@ -8,6 +8,7 @@ import {
   useUpdateCategoryMutation,
 } from "@/features/category/categoryApi";
 import { CategoryForm } from "@/features/category/components/CategoryForm";
+import useDatatable from "@/hooks/useDatatable";
 
 import { IconEdit, IconTrash } from "@pawpal/icons";
 import {
@@ -31,14 +32,42 @@ import { useState } from "react";
 export default function CategoryPage() {
   const t = useTranslations("Category");
   const tDatatable = useTranslations("Datatable");
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
-  const [search, setSearch] = useState("");
+  const datatable = useDatatable<CategoryResponse>({
+    columns: [
+      {
+        accessor: "name",
+        title: tDatatable("category.name"),
+      },
+      { accessor: "slug", title: tDatatable("category.slug") },
+      {
+        accessor: "actions",
+        title: tDatatable("category.actions"),
+        width: 100,
+        render: (record: CategoryResponse) => (
+          <Group gap="xs">
+            <ActionIcon
+              variant="subtle"
+              color="blue"
+              onClick={() => handleEdit(record)}
+            >
+              <IconEdit size={16} />
+            </ActionIcon>
+            <ActionIcon
+              variant="subtle"
+              color="red"
+              onClick={() => handleDelete(record.id)}
+            >
+              <IconTrash size={16} />
+            </ActionIcon>
+          </Group>
+        ),
+      },
+    ],
+  });
 
   const { data, isFetching } = useGetCategoriesQuery({
-    page,
-    limit,
-    search,
+    page: datatable.page,
+    limit: datatable.limit,
   });
 
   const [createCategory, { isLoading: isCreating }] =
@@ -114,43 +143,9 @@ export default function CategoryPage() {
 
       <DataTable
         records={data?.data || []}
-        columns={[
-          {
-            accessor: "name",
-            title: tDatatable("category.name"),
-          },
-          { accessor: "slug", title: tDatatable("category.slug") },
-          {
-            accessor: "actions",
-            title: tDatatable("category.actions"),
-            width: 100,
-            render: (record: CategoryResponse) => (
-              <Group gap="xs">
-                <ActionIcon
-                  variant="subtle"
-                  color="blue"
-                  onClick={() => handleEdit(record)}
-                >
-                  <IconEdit size={16} />
-                </ActionIcon>
-                <ActionIcon
-                  variant="subtle"
-                  color="red"
-                  onClick={() => handleDelete(record.id)}
-                >
-                  <IconTrash size={16} />
-                </ActionIcon>
-              </Group>
-            ),
-          },
-        ]}
         totalRecords={data?.total || 0}
-        recordsPerPage={limit}
-        page={page}
-        onPageChange={setPage}
-        onRecordsPerPageChange={setLimit}
-        recordsPerPageOptions={[10, 20, 50]}
         fetching={isFetching}
+        {...datatable.props}
       />
 
       <Modal

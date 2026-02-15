@@ -1,3 +1,6 @@
+import { DataTableProps } from "@pawpal/ui/core";
+
+type DatatableAbove = Record<string, (theme: MantineTheme) => string>;
 export interface BaseDatatableProps<T> extends UseDatatableReturnProps<T> {
   records: T[];
   fetching?: boolean;
@@ -10,6 +13,15 @@ export interface BaseDatatableProps<T> extends UseDatatableReturnProps<T> {
   setSortStatus: (sortStatus: DataTableSortStatus<T>) => void;
 }
 
+export interface UseDataTableProps<T> {
+  columns?:
+    | DataTableProps<T>["columns"]
+    | (({ above }: { above: DatatableAbove }) => DataTableProps<T>["columns"]);
+  sortStatus?: DataTableSortStatus<T>;
+  page?: number;
+  limit?: number;
+}
+
 export interface UseDatatableReturnProps<T> {
   page: BaseDatatableProps<T>["page"];
   limit: BaseDatatableProps<T>["limit"];
@@ -19,5 +31,17 @@ export interface UseDatatableReturnProps<T> {
   setSortStatus: BaseDatatableProps<T>["setSortStatus"];
   sort: string;
 
-  above: Record<string, (theme: MantineTheme) => string>;
+  above: DatatableAbove;
+
+  props: Required<
+    Pick<
+      DataTableProps<T>,
+      | "recordsPerPage"
+      | "page"
+      | "onPageChange"
+      | "sortStatus"
+      | "onSortStatusChange"
+      | "columns"
+    >
+  >;
 }
