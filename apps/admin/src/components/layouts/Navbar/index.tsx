@@ -1,3 +1,4 @@
+import Logo from "@/components/Logo";
 import { NavbarFolder, NavbarItem, navlinks } from "@/configs/navbar";
 import { getRoute } from "@/configs/route";
 import { useGetNotificationsQuery } from "@/features/notification/notificationApi";
@@ -33,7 +34,7 @@ export default function Navbar({ opened, toggle }: Readonly<Props>) {
       <Group gap={8} w="100%" align="center" px="md" pt="md" pb="xs">
         <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
         <Anchor component={Link} href={getRoute("home").path}>
-          <Text lts={-0.5}>PawPal</Text>
+          <Logo />
         </Anchor>
       </Group>
 
