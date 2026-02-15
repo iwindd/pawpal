@@ -9,7 +9,7 @@ import { useCategory } from "./CategoryContext";
 const Tab = ({ routeName }: { routeName: string }) => {
   const route = getRoute(routeName);
   const { category } = useCategory();
-  const __ = useTranslations("Navbar.links");
+  const __ = useTranslations("Routes");
 
   return (
     <Tabs.Tab

@@ -70,30 +70,23 @@ const ROUTES = ROUTER({
         label: "products.create",
         icon: IconWork,
       },
-      edit: {
+      product: {
         path: "/products/:id",
         label: "products.edit",
         icon: IconWork,
-        children: {
-          information: {
-            path: "/products/:id/information",
-            label: "products.information",
-            name: "products.information",
-            icon: IconWork,
-          },
-          packages: {
-            path: "/products/:id/packages",
-            label: "products.packages",
-            name: "products.packages",
-            icon: IconWork,
-          },
-          fields: {
-            path: "/products/:id/fields",
-            label: "products.fields",
-            name: "products.fields",
-            icon: IconWork,
-          },
-        },
+        children: {},
+      },
+      packages: {
+        path: "/products/:id/packages",
+        label: "products.packages",
+        name: "products.packages",
+        icon: IconWork,
+      },
+      fields: {
+        path: "/products/:id/fields",
+        label: "products.fields",
+        name: "products.fields",
+        icon: IconWork,
       },
     },
   },

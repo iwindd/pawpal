@@ -112,84 +112,6 @@
       "website": "เว็บไซต์",
       "misc": "อื่นๆ"
     },
-    "links": {
-      "groups": {
-        "product": "สินค้า"
-      },
-      "home": "หน้าหลัก",
-      "job": {
-        "main": "งานหลัก",
-        "order": "คำสั่งซื้อ",
-        "topup": "เติมเงิน"
-      },
-      "orders": {
-        "main": "จัดการคำสั่งซื้อ",
-        "edit": "คำสั่งซื้อ"
-      },
-      "transactions": {
-        "main": "ธุรกรรม",
-        "view": "รายละเอียดธุรกรรม"
-      },
-
-      "products": {
-        "main": "สินค้าทั้งหมด",
-        "create": "สร้างสินค้า",
-        "edit": "ข้อมูล",
-        "packages": "แพ็คเกจ",
-        "fields": "ฟิลด์"
-      },
-      "categories": {
-        "main": "หมวดหมู่",
-        "create": "สร้างหมวดหมู่",
-        "edit": "แก้ไขหมวดหมู่",
-        "products": "สินค้าในหมวดหมู่"
-      },
-      "tags": {
-        "main": "แท็กสินค้า",
-        "edit": "แท็กสินค้า",
-        "products": "สินค้าภายในแท็ก"
-      },
-      "resources": "ทรัพยากร",
-      "users": {
-        "main": "ผู้ใช้งาน",
-        "customer": {
-          "main": "ลูกค้า",
-          "edit": "ข้อมูลทั่วไป",
-          "orders": "ประวัติการสั่งซื้อ",
-          "topups": "ประวัติการเติมเงิน"
-        },
-        "employee": {
-          "main": "พนักงาน",
-          "edit": "ข้อมูลทั่วไป",
-          "orders": "ประวัติการจัดการคำสั่งซื้อ",
-          "topups": "ประวัติธุรกรรม"
-        }
-      },
-      "profile": {
-        "main": "บัญชีของฉัน",
-        "edit": "ข้อมูลทั่วไป",
-        "orders": "ประวัติการจัดการคำสั่งซื้อ",
-        "topups": "ประวัติธุรกรรม"
-      },
-      "website": {
-        "main": "เว็บไซต์",
-        "carousel": {
-          "main": "สไลด์โชว์",
-          "create": "สร้างสไลด์",
-          "edit": "แก้ไขสไลด์"
-        },
-        "payment": {
-          "main": "ช่องทางการชำระเงิน",
-          "promptpayManual": {
-            "main": "PromptPay Manual"
-          },
-          "walletVoucher": {
-            "main": "Wallet Voucher"
-          }
-        }
-      },
-      "fanpage": "Fanpage"
-    },
     "items": {
       "home": "หน้าหลัก",
 
@@ -213,6 +135,81 @@
       },
       "resources": "ทรัพยากร"
     }
+  },
+  "Routes": {
+    "home": "หน้าหลัก",
+    "job": {
+      "main": "งานหลัก",
+      "order": "คำสั่งซื้อ",
+      "topup": "เติมเงิน"
+    },
+    "orders": {
+      "main": "จัดการคำสั่งซื้อ",
+      "edit": "คำสั่งซื้อ"
+    },
+    "transactions": {
+      "main": "ธุรกรรม",
+      "view": "รายละเอียดธุรกรรม"
+    },
+
+    "products": {
+      "main": "สินค้า",
+      "create": "สินค้าใหม่",
+      "edit": "รายละเอียด",
+      "packages": "แพ็คเกจ",
+      "fields": "ฟิลด์"
+    },
+    "categories": {
+      "main": "หมวดหมู่",
+      "create": "หมวดหมู่ใหม่",
+      "edit": "รายละเอียด",
+      "products": "สินค้าในหมวดหมู่"
+    },
+    "tags": {
+      "main": "แท็ก",
+      "edit": "รายละเอียด",
+      "products": "สินค้าภายในแท็ก"
+    },
+    "resources": "ทรัพยากร",
+    "users": {
+      "main": "ผู้ใช้งาน",
+      "customer": {
+        "main": "ลูกค้า",
+        "edit": "ข้อมูลทั่วไป",
+        "orders": "ประวัติการสั่งซื้อ",
+        "topups": "ประวัติการเติมเงิน"
+      },
+      "employee": {
+        "main": "พนักงาน",
+        "edit": "ข้อมูลทั่วไป",
+        "orders": "ประวัติการจัดการคำสั่งซื้อ",
+        "topups": "ประวัติธุรกรรม"
+      }
+    },
+    "profile": {
+      "main": "บัญชีของฉัน",
+      "edit": "ข้อมูลทั่วไป",
+      "orders": "ประวัติการจัดการคำสั่งซื้อ",
+      "topups": "ประวัติธุรกรรม"
+    },
+    "website": {
+      "main": "เว็บไซต์",
+      "carousel": {
+        "main": "สไลด์โชว์",
+        "create": "สร้างสไลด์",
+        "edit": "แก้ไขสไลด์"
+      },
+      "payment": {
+        "main": "ช่องทางการชำระเงิน",
+        "promptpayManual": {
+          "main": "PromptPay Manual"
+        },
+        "walletVoucher": {
+          "main": "Wallet Voucher"
+        }
+      }
+    },
+    "fanpage": "Fanpage"
   },
   "Product": {
     "main": {

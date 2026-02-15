@@ -9,7 +9,7 @@ import { useCustomer } from "./CustomerContext";
 const Tab = ({ routeName }: { routeName: string }) => {
   const route = getRoute(routeName);
   const { customer } = useCustomer();
-  const __ = useTranslations("Navbar.links");
+  const __ = useTranslations("Routes");
 
   return (
     <Tabs.Tab

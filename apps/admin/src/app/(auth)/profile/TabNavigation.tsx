@@ -7,7 +7,7 @@ import Link from "next/link";
 
 const Tab = ({ routeName }: { routeName: string }) => {
   const route = getRoute(routeName);
-  const __ = useTranslations("Navbar.links");
+  const __ = useTranslations("Routes");
 
   return (
     <Tabs.Tab

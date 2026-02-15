@@ -9,7 +9,7 @@ import { useEmployee } from "./EmployeeContext";
 const Tab = ({ routeName }: { routeName: string }) => {
   const route = getRoute(routeName);
   const { employee } = useEmployee();
-  const __ = useTranslations("Navbar.links");
+  const __ = useTranslations("Routes");
 
   return (
     <Tabs.Tab

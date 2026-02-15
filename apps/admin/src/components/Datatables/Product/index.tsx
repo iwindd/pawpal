@@ -1,4 +1,5 @@
 "use client";
+import { useAppRouter } from "@/hooks/useAppRouter";
 import { IconEdit } from "@pawpal/icons";
 import { AdminProductResponse } from "@pawpal/shared";
 import { DataTable, DataTableProps } from "@pawpal/ui/core";
@@ -21,6 +22,8 @@ const ProductDatatable = ({
 }: Props) => {
   const format = useFormatter();
   const __ = useTranslations("Datatable.product");
+  const appRouter = useAppRouter();
+
   const columns: DataTableProps<AdminProductResponse>["columns"] = [
     {
       accessor: "name",
@@ -73,7 +76,9 @@ const ProductDatatable = ({
             {
               color: "blue",
               icon: IconEdit,
-              action: `/products/${record.id}`,
+              action: appRouter.path("products.product", {
+                id: record.id,
+              }),
             },
           ]}
         />

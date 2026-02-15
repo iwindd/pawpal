@@ -15,7 +15,7 @@ const BreadcrumbLink = ({
   isDisabled = false,
   ...props
 }: BreadcrumbLink) => {
-  const __ = useTranslations("Navbar.links");
+  const __ = useTranslations("Routes");
   const activeRoute = useActiveRouteConfig();
 
   const isActive = route.name == activeRoute?.name;
