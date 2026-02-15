@@ -13,7 +13,7 @@ export interface NavLink {
   id: number;
   icon: React.ComponentType<any>;
   title: string;
-  link: string;
+  link?: string;
   files: {
     id: number;
     name: string;
@@ -53,18 +53,22 @@ export const navlinks: NavLink[] = [
   {
     id: 4,
     icon: IconShoppingBag,
-    title: "products.main",
-    link: getPath("products"),
+    title: "groups.product",
     files: [
       {
+        id: 0,
+        name: "products.main",
+        link: getPath("products"),
+      },
+      {
         id: 1,
-        name: "products.tags.main",
-        link: getPath("products.tags"),
+        name: "tags.main",
+        link: getPath("tags"),
       },
       {
         id: 2,
-        name: "products.categories.main", // Ensure this key exists in translations
-        link: getPath("products.categories"),
+        name: "categories.main",
+        link: getPath("categories"),
       },
     ],
   },

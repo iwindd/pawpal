@@ -56,7 +56,7 @@ const CategoryDatatable = ({
             {
               color: "blue",
               icon: IconEdit,
-              action: `/products/categories/${record.id}`,
+              action: `/categories/${record.id}`,
             },
             ...(onDelete
               ? [

@@ -74,7 +74,7 @@ export default function ProductTagDatatable({
             {
               color: "blue",
               icon: IconEdit,
-              action: `/products/tags/${record.id}`,
+              action: `/tags/${record.id}`,
             },
           ]}
         />

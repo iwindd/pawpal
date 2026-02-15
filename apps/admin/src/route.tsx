@@ -64,45 +64,6 @@ const ROUTES = ROUTER({
     label: "products.main",
     icon: IconWork,
     children: {
-      tags: {
-        path: "/products/tags",
-        label: "products.tags.main",
-        icon: IconWork,
-        children: {
-          edit: {
-            path: "/products/tags/:id",
-            label: "products.tags.edit",
-            icon: IconWork,
-          },
-          products: {
-            path: "/products/tags/:id/products",
-            label: "products.tags.products",
-            icon: IconWork,
-          },
-        },
-      },
-      categories: {
-        path: "/products/categories",
-        label: "products.categories.main",
-        icon: IconWork,
-        children: {
-          create: {
-            path: "/products/categories/create",
-            label: "products.categories.create",
-            icon: IconWork,
-          },
-          edit: {
-            path: "/products/categories/:id",
-            label: "products.categories.edit",
-            icon: IconWork,
-          },
-          products: {
-            path: "/products/categories/:id/products",
-            label: "products.categories.products",
-            icon: IconWork,
-          },
-        },
-      },
       create: {
         path: "/products/create",
         label: "products.create",
@@ -132,6 +93,45 @@ const ROUTES = ROUTER({
             icon: IconWork,
           },
         },
+      },
+    },
+  },
+  tags: {
+    path: "/tags",
+    label: "tags.main",
+    icon: IconWork,
+    children: {
+      edit: {
+        path: "/tags/:id",
+        label: "tags.edit",
+        icon: IconWork,
+      },
+      products: {
+        path: "/tags/:id/products",
+        label: "tags.products",
+        icon: IconWork,
+      },
+    },
+  },
+  categories: {
+    path: "/categories",
+    label: "categories.main",
+    icon: IconWork,
+    children: {
+      create: {
+        path: "/categories/create",
+        label: "categories.create",
+        icon: IconWork,
+      },
+      edit: {
+        path: "/categories/:id",
+        label: "categories.edit",
+        icon: IconWork,
+      },
+      products: {
+        path: "/categories/:id/products",
+        label: "categories.products",
+        icon: IconWork,
       },
     },
   },

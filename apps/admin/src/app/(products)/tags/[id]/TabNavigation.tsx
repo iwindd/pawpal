@@ -4,11 +4,11 @@ import { useActiveRouteConfig } from "@/hooks/useActiveRouteConfig";
 import { Tabs } from "@pawpal/ui/core";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
-import { useCategory } from "./CategoryContext";
+import { useProductTag } from "./ProductTagContext";
 
 const Tab = ({ routeName }: { routeName: string }) => {
   const route = getRoute(routeName);
-  const { category } = useCategory();
+  const { productTag } = useProductTag();
   const __ = useTranslations("Navbar.links");
 
   return (
@@ -16,7 +16,7 @@ const Tab = ({ routeName }: { routeName: string }) => {
       value={route.name}
       component={Link}
       // @ts-ignore
-      href={getPath(route.name, { id: category.id })}
+      href={getPath(route.name, { id: productTag.id })}
     >
       {__(route.label)}
     </Tabs.Tab>
@@ -29,8 +29,8 @@ const TabNavigation = () => {
   return (
     <Tabs mb="xs" value={activeRoute?.name}>
       <Tabs.List>
-        <Tab routeName={"products.categories.edit"} />
-        <Tab routeName={"products.categories.products"} />
+        <Tab routeName={"tags.edit"} />
+        <Tab routeName={"tags.products"} />
       </Tabs.List>
     </Tabs>
   );
