@@ -2,7 +2,7 @@ import Logo from "@/components/Logo";
 import { NavbarFolder, NavbarItem, navlinks } from "@/configs/navbar";
 import { getRoute } from "@/configs/route";
 import { useGetNotificationsQuery } from "@/features/notification/notificationApi";
-import { useActiveRouteConfig } from "@/hooks/useActiveRouteConfig";
+import { useActiveRouteTrail } from "@/hooks/useActiveRouteTrail";
 import { IconChevronDown, IconChevronRight } from "@pawpal/icons";
 import {
   Anchor,
@@ -60,11 +60,11 @@ export default function Navbar({ opened, toggle }: Readonly<Props>) {
 
 const LinkItem = ({ icon: Icon, route, notification: notiKey }: NavbarItem) => {
   const __ = useTranslations("Navbar.items");
-  const activeRoute = useActiveRouteConfig();
+  const activeRouteTrail = useActiveRouteTrail();
   const [notificationCount, setNotificationCount] = useState(0);
 
   const { data: notifications } = useGetNotificationsQuery();
-  const isActive = activeRoute?.name === route.name;
+  const isActive = activeRouteTrail.some((r) => r.name === route.name);
   const format = useFormatter();
 
   useEffect(() => {
