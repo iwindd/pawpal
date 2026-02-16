@@ -27,74 +27,73 @@ import { {{ApiResponseType}} } from "@pawpal/shared"; // e.g. AdminTagResponse
 import { DataTable, DataTableProps } from "@pawpal/ui/core";
 import { useFormatter, useTranslations } from "next-intl";
 import TableAction from "../action";
-import { BaseDatatableProps } from "../datatable";
+import useDatatable from "@/hooks/useDatatable";
 
-interface Props extends BaseDatatableProps<{{ApiResponseType}}> {}
-
-const {{EntityName}}Datatable = ({
-  records,
-  totalRecords,
-  limit,
-  page,
-  setPage,
-  fetching,
-  sortStatus,
-  setSortStatus,
-  above,
-}: Props) => {
+const {{EntityName}}Datatable = () => {
   const format = useFormatter();
   const __ = useTranslations("Datatable.{{TranslationKey}}"); // e.g. "productTag"
+  const datatable = useDatatable<{ApiResponseType}>({
+    columns: [
+      {
+        accessor: "name",
+        noWrap: true,
+        sortable: true,
+        title: __("name"),
+      },
+      {
+        accessor: "category.name",
+        noWrap: true,
+        sortable: true,
+        title: __("category"),
+        visibleMediaQuery: above.xs,
+      },
+      {
+        accessor: "packages._count",
+        noWrap: true,
+        sortable: true,
+        title: __("packages"),
+        render: (value) =>
+          __("packageFormat", {
+            count: format.number(value.packageCount, "count"),
+          }),
+      },
+      {
+        accessor: "createdAt",
+        noWrap: true,
+        sortable: true,
+        title: __("createdAt"),
+        render: (value) => format.dateTime(new Date(value.createdAt), "date"),
+        visibleMediaQuery: above.md,
+      },
+      {
+        accessor: "actions",
+        title: "Actions",
+        width: 100,
+        textAlign: "center",
+        render: (record) => (
+          <TableAction
+            displayType="icon"
+            actions={[
+              {
+                color: "blue",
+                icon: IconEdit,
+                action: `/products/${record.id}`,
+              },
+            ]}
+          />
+        ),
+      },
+    ],
+  });
 
-  const columns: DataTableProps<{{ApiResponseType}}>["columns"] = [
-    // Example Column: Name
-    {
-      accessor: "name", // Change to match your API response field
-      noWrap: true,
-      sortable: true,
-      title: __("name"),
-    },
-    // Example Column: Created At (Hidden on small screens)
-    {
-      accessor: "createdAt",
-      noWrap: true,
-      sortable: true,
-      title: __("createdAt"),
-      render: (value) => format.dateTime(new Date(value.createdAt), "date"),
-      visibleMediaQuery: above.md,
-    },
-    // Actions Column
-    {
-      accessor: "actions",
-      title: "Actions",
-      width: 100,
-      textAlign: "center",
-      render: (record) => (
-        <TableAction
-          displayType="icon"
-          actions={[
-            {
-              color: "blue",
-              icon: IconEdit,
-              action: `/{{RouteBase}}/${record.id}`, // e.g. /products/tags/${record.id}
-            },
-          ]}
-        />
-      ),
-    },
-  ];
 
   return (
     <DataTable
       idAccessor="id" // CHECK: Does your entity use 'id', 'slug', or 'uuid'?
-      columns={columns}
       records={records}
       totalRecords={totalRecords}
-      recordsPerPage={limit}
-      page={page}
-      onPageChange={setPage}
       fetching={fetching}
-      sortStatus={sortStatus}
-      onSortStatusChange={setSortStatus}
+      {...datatable.props}
     />
   );
 };
@@ -105,6 +104,6 @@ export default {{EntityName}}Datatable;
 ## Checklist
 
 - [ ] **Imports**: Verify `@pawpal/shared` imports match the actual type names.
-- [ ] **Translations**: Check if `__("...")` keys exist in `messages/en.json` / `messages/th.json`.
+- [ ] **Translations**: Check if `__("...")` keys exist in `messages/th.json`.
 - [ ] **Route**: Verify the `action` URL in `TableAction`.
 - [ ] **Id Accessor**: Ensure `idAccessor` matches the unique identifier of the record.
