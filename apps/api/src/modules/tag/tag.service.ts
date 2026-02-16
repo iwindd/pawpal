@@ -1,17 +1,13 @@
 import { DatatableQuery } from '@/common/pipes/DatatablePipe';
 import { BadRequestException, Injectable } from '@nestjs/common';
-import {
-  CreateProductTagInput,
-  slugify,
-  UpdateProductTagInput,
-} from '@pawpal/shared';
+import { CreateTagInput, slugify, UpdateTagInput } from '@pawpal/shared';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
-export class ProductTagService {
+export class TagService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async createProductTag(payload: CreateProductTagInput) {
+  async createTag(payload: CreateTagInput) {
     const slug = payload.slug || slugify(payload.name);
 
     return this.prisma.productTag.create({
@@ -22,7 +18,7 @@ export class ProductTagService {
     });
   }
 
-  async getProductTagDatatable(query: DatatableQuery) {
+  async getTagDatatable(query: DatatableQuery) {
     return this.prisma.productTag.getDatatable({
       query,
       select: {
@@ -112,7 +108,7 @@ export class ProductTagService {
     return productTag;
   }
 
-  async update(id: string, payload: UpdateProductTagInput) {
+  async update(id: string, payload: UpdateTagInput) {
     return this.prisma.productTag.update({
       where: { id },
       data: payload,

@@ -1,19 +1,19 @@
 import useFormValidate from "@/hooks/useFormValidate";
 import { IconDeviceFloppy, IconPlus } from "@pawpal/icons";
-import { ProductTagInput, ProductTagSchema } from "@pawpal/shared";
+import { TagInput, TagSchema } from "@pawpal/shared";
 import { Box, Button, Group, Stack, TextInput } from "@pawpal/ui/core";
 import { useTranslations } from "next-intl";
 
-interface ProductTagFormProps {
-  initialValues?: Partial<ProductTagInput>;
-  onSubmit: (values: ProductTagInput) => void;
-  form: ReturnType<typeof CreateProductTagForm>;
+interface TagFormProps {
+  initialValues?: Partial<TagInput>;
+  onSubmit: (values: TagInput) => void;
+  form: ReturnType<typeof CreateTagForm>;
   variant?: "default" | "modal";
   type?: "save" | "create";
 }
 
-export const CreateProductTagForm = (props: {
-  initialValues?: Partial<ProductTagInput>;
+export const CreateTagForm = (props: {
+  initialValues?: Partial<TagInput>;
   isLoading?: boolean;
 }) => {
   const form = useFormValidate({
@@ -24,7 +24,7 @@ export const CreateProductTagForm = (props: {
     enhanceGetInputProps: () => ({
       disabled: props.isLoading,
     }),
-    schema: ProductTagSchema,
+    schema: TagSchema,
   });
 
   return {
@@ -33,13 +33,13 @@ export const CreateProductTagForm = (props: {
   };
 };
 
-const ProductTagForm = ({
+const TagForm = ({
   onSubmit,
   form,
   variant = "default",
   type = "save",
-}: ProductTagFormProps) => {
-  const __ = useTranslations("ProductTag");
+}: TagFormProps) => {
+  const __ = useTranslations("Tag");
 
   return (
     <Box component={"form"} onSubmit={form.onSubmit(onSubmit)}>
@@ -85,4 +85,4 @@ const ProductTagForm = ({
   );
 };
 
-export default ProductTagForm;
+export default TagForm;

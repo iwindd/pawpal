@@ -1,39 +1,36 @@
 "use client";
-import ProductTagForm, {
-  CreateProductTagForm,
-} from "@/components/Forms/ProductTag";
-import { useUpdateProductTagMutation } from "@/features/productApi/productTagApi";
-import { ProductTagInput } from "@pawpal/shared";
-import { Box, Card } from "@pawpal/ui/core";
+import TagForm, { CreateTagForm } from "@/components/Forms/TagForm";
+import { useUpdateTagMutation } from "@/features/tag/tagApi";
+import { TagInput } from "@pawpal/shared";
+import { Card } from "@pawpal/ui/core";
 import { Notifications } from "@pawpal/ui/notifications";
 import { useTranslations } from "next-intl";
-import { useProductTag } from "../../ProductTagContext";
+import { useTag } from "../../TagContext";
 
-const ProductTagInformationPage = () => {
-  const { productTag, updateProductTag } = useProductTag();
-  const __ = useTranslations("ProductTag");
-  const messages = useTranslations("ProductTag.messages");
+const TagInformationPage = () => {
+  const { tag, updateTag } = useTag();
+  const __ = useTranslations("Tag");
+  const messages = useTranslations("Tag.messages");
 
-  const [updateProductTagMutation, { isLoading }] =
-    useUpdateProductTagMutation();
+  const [updateTagMutation, { isLoading }] = useUpdateTagMutation();
 
-  const form = CreateProductTagForm({
+  const form = CreateTagForm({
     initialValues: {
-      name: productTag.name,
-      slug: productTag.slug,
+      name: tag.name,
+      slug: tag.slug,
     },
     isLoading,
   });
 
-  const onSubmit = async (values: ProductTagInput) => {
-    const { data, error } = await updateProductTagMutation({
-      id: productTag.id,
+  const onSubmit = async (values: TagInput) => {
+    const { data, error } = await updateTagMutation({
+      id: tag.id,
       payload: values,
     });
 
     if (error || !data) return;
 
-    updateProductTag(data);
+    updateTag(data);
 
     Notifications.show({
       message: messages("notify.updated", { name: values.name }),
@@ -43,14 +40,13 @@ const ProductTagInformationPage = () => {
     form.resetDirty();
   };
   return (
-    <Box py="md">
-      <Card>
-        <Card.Section inheritPadding py="md">
-          <ProductTagForm onSubmit={onSubmit} form={form} />
-        </Card.Section>
-      </Card>
-    </Box>
+    <Card>
+      <Card.Header title={__("information")} />
+      <Card.Section inheritPadding py="md">
+        <TagForm onSubmit={onSubmit} form={form} />
+      </Card.Section>
+    </Card>
   );
 };
 
-export default ProductTagInformationPage;
+export default TagInformationPage;

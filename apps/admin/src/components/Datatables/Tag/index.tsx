@@ -1,23 +1,17 @@
 import { Badge, DataTable } from "@pawpal/ui/core";
 import { useFormatter, useNow, useTranslations } from "next-intl";
 
+import { useGetTagsQuery } from "@/features/tag/tagApi";
 import useDatatable from "@/hooks/useDatatable";
 import { IconEdit, IconSettings, IconUser } from "@pawpal/icons";
-import { AdminProductTagResponse, ProductTagType } from "@pawpal/shared";
+import { AdminTagResponse, TagType } from "@pawpal/shared";
 import TableAction from "../action";
-import { BaseDatatableProps } from "../datatable";
 
-interface Props extends BaseDatatableProps<AdminProductTagResponse> {}
-
-export default function ProductTagDatatable({
-  records,
-  fetching,
-  totalRecords,
-}: Props) {
-  const __ = useTranslations("ProductTag");
+export default function TagDatatable() {
+  const __ = useTranslations("Tag");
   const format = useFormatter();
   const now = useNow();
-  const datatable = useDatatable<AdminProductTagResponse>({
+  const datatable = useDatatable<AdminTagResponse>({
     columns: [
       {
         accessor: "name",
@@ -34,7 +28,7 @@ export default function ProductTagDatatable({
         title: __("table.type"),
         sortable: true,
         render: (record) => {
-          const isSystem = record.type === ProductTagType.SYSTEM;
+          const isSystem = record.type === TagType.SYSTEM;
           return (
             <Badge
               color={isSystem ? "blue" : "gray"}
@@ -79,11 +73,17 @@ export default function ProductTagDatatable({
     ],
   });
 
+  const { data, isLoading } = useGetTagsQuery({
+    page: datatable.page,
+    limit: datatable.limit,
+    sort: datatable.sort,
+  });
+
   return (
     <DataTable
-      records={records}
-      totalRecords={totalRecords}
-      fetching={fetching}
+      records={data?.data ?? []}
+      totalRecords={data?.total ?? 0}
+      fetching={isLoading}
       {...datatable.props}
     />
   );

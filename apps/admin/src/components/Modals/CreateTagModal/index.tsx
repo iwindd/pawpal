@@ -1,31 +1,28 @@
 "use client";
-import ProductTagForm, {
-  CreateProductTagForm,
-} from "@/components/Forms/ProductTag";
+import TagForm, { CreateTagForm } from "@/components/Forms/TagForm";
 import { isErrorWithStatus } from "@/features/helpers";
-import { useCreateProductTagMutation } from "@/features/productApi/productTagApi";
-import { ProductTagInput } from "@pawpal/shared";
+import { useCreateTagMutation } from "@/features/tag/tagApi";
+import { TagInput } from "@pawpal/shared";
 import { Modal } from "@pawpal/ui/core";
 import { Notifications } from "@pawpal/ui/notifications";
 import { useTranslations } from "next-intl";
 
-interface CreateProductTagModalProps {
+interface CreateTagModalProps {
   opened: boolean;
   onClose: () => void;
 }
 
-export default function CreateProductTagModal({
+export default function CreateTagModal({
   opened,
   onClose,
-}: Readonly<CreateProductTagModalProps>) {
-  const __ = useTranslations("ProductTag.CreateProductTagModal");
-  const messages = useTranslations("ProductTag.messages");
+}: Readonly<CreateTagModalProps>) {
+  const __ = useTranslations("Tag.CreateTagModal");
+  const messages = useTranslations("Tag.messages");
 
-  const [createProductTag, { isLoading, error }] =
-    useCreateProductTagMutation();
+  const [createTag, { isLoading, error }] = useCreateTagMutation();
 
-  const onSubmit = async (values: ProductTagInput) => {
-    const response = await createProductTag(values);
+  const onSubmit = async (values: TagInput) => {
+    const response = await createTag(values);
 
     if (response.error) {
       const status = isErrorWithStatus(response.error) && response.error.status;
@@ -47,7 +44,7 @@ export default function CreateProductTagModal({
     onClose();
   };
 
-  const form = CreateProductTagForm({
+  const form = CreateTagForm({
     initialValues: {
       name: "",
       slug: "",
@@ -63,12 +60,7 @@ export default function CreateProductTagModal({
       size="md"
       withCloseButton={!isLoading}
     >
-      <ProductTagForm
-        onSubmit={onSubmit}
-        form={form}
-        variant="modal"
-        type="create"
-      />
+      <TagForm onSubmit={onSubmit} form={form} variant="modal" type="create" />
     </Modal>
   );
 }

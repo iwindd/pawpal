@@ -17,9 +17,9 @@ import { PackageModule } from '../package/package.module';
 import { PaymentGatewayModule } from '../payment-gateway/payment-gateway.module';
 import { PrismaModule } from '../prisma/prisma.module';
 import { ProductModule } from '../product/product.module';
-import { ProductTagModule } from '../productTags/product-tag.module';
 import { ResourceModule } from '../resource/resource.module';
 import { SaleModule } from '../sale/sale.module';
+import { TagModule } from '../tag/tag.module';
 import { TopupModule } from '../topup/topup.module';
 import { TransactionModule } from '../transaction/transaction.module';
 import { CustomerModule } from '../user/customer/customer.module';
@@ -39,7 +39,7 @@ import { WalletModule } from '../wallet/wallet.module';
     CustomerModule,
     EmployeeModule,
     ProductModule,
-    ProductTagModule,
+    TagModule,
     SaleModule,
     PaymentGatewayModule,
     TransactionModule,

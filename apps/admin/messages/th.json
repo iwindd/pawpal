@@ -282,17 +282,17 @@
       }
     },
     "category": {
-      "title": "หมวดหมู่สินค้า",
+      "title": "หมวดหมู่",
       "information": "ข้อมูลทั่วไป",
       "add-btn": "หมวดหมู่ใหม่",
       "form": {
         "name": {
-          "label": "ชื่อหมวดหมู่",
-          "placeholder": "ระบุชื่อหมวดหมู่"
+          "label": "ชื่อ",
+          "placeholder": "เช่น เกม, สตรีมมิ่ง เป็นต้น"
         },
         "slug": {
           "label": "ส่วนท้ายของลิงก์",
-          "placeholder": "ใช้แทนชื่อเรื่องหรือชื่อข้อมูล เช่น /mmo-rpg"
+          "placeholder": "ใช้แทนชื่อเรื่องหรือชื่อข้อมูล เช่น /streaming"
         },
         "create": "เพิ่มหมวดหมู่",
         "save": "บันทึก"
@@ -363,7 +363,8 @@
       }
     }
   },
-  "ProductTag": {
+  "Tag": {
+    "information": "ข้อมูลทั่วไป",
     "main": {
       "title": "แท็ก",
       "add-btn": "แท็กใหม่"
@@ -375,7 +376,7 @@
       "products": "สินค้าทั้งหมด",
       "createdAt": "สร้างเมื่อ"
     },
-    "CreateProductTagModal": {
+    "CreateTagModal": {
       "title": "แท็กใหม่"
     },
     "form": {
@@ -529,7 +530,7 @@
       "createdAt": "วันที่สร้าง"
     },
     "category": {
-      "name": "ชื่อหมวดหมู่",
+      "name": "ชื่อ",
       "slug": "ส่วนท้ายของลิงก์",
       "createdAt": "วันที่สร้าง",
       "actions": "เครื่องมือ"

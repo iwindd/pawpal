@@ -47,7 +47,7 @@ CREATE TABLE "public"."product_tags" (
     "name" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "type" "public"."ProductTagType" NOT NULL DEFAULT 'USER_DEFINED',
+    "type" "public"."TagType" NOT NULL DEFAULT 'USER_DEFINED',
 
     CONSTRAINT "product_tags_pkey" PRIMARY KEY ("id")
 );

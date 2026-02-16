@@ -13,7 +13,7 @@ import { resourceApi } from "@/features/resource/resourceApi";
 
 import { customerApi } from "@/features/customer/customerApi";
 import { employeeApi } from "@/features/employee/employeeApi";
-import { productTagApi } from "@/features/productApi/productTagApi";
+import { tagApi } from "@/features/tag/tagApi";
 import { transactionApi } from "@/features/transaction/transactionApi";
 import { userApi } from "@/features/user/userApi";
 import { Action, configureStore, ThunkAction } from "@reduxjs/toolkit";
@@ -26,7 +26,7 @@ export const makeStore = (preloadedState: { auth: AuthState }) => {
       job: jobReducer,
       [transactionApi.reducerPath]: transactionApi.reducer,
       [productApi.reducerPath]: productApi.reducer,
-      [productTagApi.reducerPath]: productTagApi.reducer,
+      [tagApi.reducerPath]: tagApi.reducer,
       [userApi.reducerPath]: userApi.reducer,
       [customerApi.reducerPath]: customerApi.reducer,
       [employeeApi.reducerPath]: employeeApi.reducer,
@@ -44,7 +44,7 @@ export const makeStore = (preloadedState: { auth: AuthState }) => {
       getDefaultMiddleware().concat(
         transactionApi.middleware,
         productApi.middleware,
-        productTagApi.middleware,
+        tagApi.middleware,
         userApi.middleware,
         customerApi.middleware,
         employeeApi.middleware,

@@ -23,7 +23,7 @@ This skill helps you create a new datatable component in `apps/admin` following 
 ```tsx
 "use client";
 import { IconEdit } from "@pawpal/icons"; // Ensure this icon exists or choose another
-import { {{ApiResponseType}} } from "@pawpal/shared"; // e.g. AdminProductTagResponse
+import { {{ApiResponseType}} } from "@pawpal/shared"; // e.g. AdminTagResponse
 import { DataTable, DataTableProps } from "@pawpal/ui/core";
 import { useFormatter, useTranslations } from "next-intl";
 import TableAction from "../action";

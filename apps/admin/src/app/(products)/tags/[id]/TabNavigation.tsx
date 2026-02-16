@@ -4,11 +4,11 @@ import { useActiveRouteConfig } from "@/hooks/useActiveRouteConfig";
 import { Tabs } from "@pawpal/ui/core";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
-import { useProductTag } from "./ProductTagContext";
+import { useTag } from "./TagContext";
 
 const Tab = ({ routeName }: { routeName: string }) => {
   const route = getRoute(routeName);
-  const { productTag } = useProductTag();
+  const { tag } = useTag();
   const __ = useTranslations("Routes");
 
   return (
@@ -16,7 +16,7 @@ const Tab = ({ routeName }: { routeName: string }) => {
       value={route.name}
       component={Link}
       // @ts-ignore
-      href={getPath(route.name, { id: productTag.id })}
+      href={getPath(route.name, { id: tag.id })}
     >
       {__(route.label)}
     </Tabs.Tab>

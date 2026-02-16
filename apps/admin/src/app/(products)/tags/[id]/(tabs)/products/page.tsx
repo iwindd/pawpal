@@ -1,17 +1,17 @@
 "use client";
 import ProductInTagDatatable from "@/components/Datatables/ProductInTag";
-import { useGetProductsInTagQuery } from "@/features/productApi/productTagApi";
+import { useGetProductsInTagQuery } from "@/features/tag/tagApi";
 import useDatatable from "@/hooks/useDatatable";
 import { AdminProductResponse } from "@pawpal/shared";
 import { Box, Paper } from "@pawpal/ui/core";
-import { useProductTag } from "../../ProductTagContext";
+import { useTag } from "../../TagContext";
 
-const ProductTagProducts = () => {
-  const { productTag } = useProductTag();
+const TagProducts = () => {
+  const { tag } = useTag();
   const datatable = useDatatable<AdminProductResponse>();
 
   const { data, isLoading } = useGetProductsInTagQuery({
-    id: productTag.id,
+    id: tag.id,
     params: {
       page: datatable.page,
       limit: datatable.limit,
@@ -33,4 +33,4 @@ const ProductTagProducts = () => {
   );
 };
 
-export default ProductTagProducts;
+export default TagProducts;

@@ -1,15 +1,13 @@
-import { AdminProductTagResponse } from "@pawpal/shared";
+import { AdminTagResponse } from "@pawpal/shared";
 import { AxiosError, AxiosInstance } from "axios";
 import { PawApiResponse } from "../../api";
 
 class ProductTagApi {
   constructor(private readonly client: AxiosInstance) {}
 
-  public async findOne(
-    id: string,
-  ): Promise<PawApiResponse<AdminProductTagResponse>> {
+  public async findOne(id: string): Promise<PawApiResponse<AdminTagResponse>> {
     try {
-      const response = await this.client.get(`/admin/product-tag/${id}`);
+      const response = await this.client.get(`/admin/tag/${id}`);
 
       return {
         success: true,

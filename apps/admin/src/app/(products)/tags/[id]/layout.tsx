@@ -1,10 +1,10 @@
 import PageHeader from "@/components/Pages/PageHeader";
 import APISession from "@/libs/api/server";
 import { notFound } from "next/navigation";
-import { ProductTagProvider } from "./ProductTagContext";
 import TabNavigation from "./TabNavigation";
+import { TagProvider } from "./TagContext";
 
-const ProductTagLayout = async ({
+const TagLayout = async ({
   params,
   children,
 }: {
@@ -13,18 +13,17 @@ const ProductTagLayout = async ({
 }) => {
   const { id } = await params;
   const API = await APISession();
-  const productTag = await API.productTag.findOne(id);
+  const tag = await API.productTag.findOne(id);
 
-  console.log(productTag.data);
-  if (!productTag.success) return notFound();
+  if (!tag.success) return notFound();
 
   return (
-    <ProductTagProvider defaultValue={productTag.data}>
-      <PageHeader title={productTag.data.name} />
+    <TagProvider defaultValue={tag.data}>
+      <PageHeader title={tag.data.name} />
       <TabNavigation />
       {children}
-    </ProductTagProvider>
+    </TagProvider>
   );
 };
 
-export default ProductTagLayout;
+export default TagLayout;

@@ -56,12 +56,12 @@ model Category {
 }
 
 model ProductTag {
-  id        String         @id @default(cuid())
-  slug      String         @unique
+  id        String   @id @default(cuid())
+  slug      String   @unique
   name      String
-  createdAt DateTime       @default(now()) @map("created_at")
-  updatedAt DateTime       @updatedAt @map("updated_at")
-  type      ProductTagType @default(USER_DEFINED)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  type      TagType  @default(USER_DEFINED)
 
   products Product[] @relation("ProductTags")
 
@@ -70,7 +70,7 @@ model ProductTag {
   @@map("product_tags")
 }
 
-enum ProductTagType {
+enum TagType {
   USER_DEFINED
   SYSTEM
 }
