@@ -16,7 +16,7 @@ interface CategoryComboboxProps extends Pick<
 }
 
 export default function CategoryCombobox(
-  props: Readonly<CategoryComboboxProps>
+  props: Readonly<CategoryComboboxProps>,
 ) {
   const __ = useTranslations("Combobox.Category");
   const [getCategories] = useLazyGetCategoriesQuery();
@@ -28,7 +28,7 @@ export default function CategoryCombobox(
       fetchList={(search: string) =>
         getCategories({ page: 1, limit: 8, search })
           .unwrap()
-          .then((r) => r)
+          .then((r) => r.data)
       }
       fetchById={(id: string) => getCategoryById(id).unwrap()}
       mapItem={(p: AdminCategoryResponse) => ({
