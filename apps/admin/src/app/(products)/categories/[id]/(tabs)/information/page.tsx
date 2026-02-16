@@ -1,5 +1,7 @@
 "use client";
-import CategoryForm, { CreateCategoryForm } from "@/components/Forms/Category";
+import CategoryForm, {
+  CreateCategoryForm,
+} from "@/components/Forms/CategoryForm";
 import { useUpdateCategoryMutation } from "@/features/category/categoryApi";
 import { CategoryInput } from "@pawpal/shared";
 import { Card } from "@pawpal/ui/core";
