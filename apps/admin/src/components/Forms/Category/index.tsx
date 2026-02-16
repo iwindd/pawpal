@@ -1,12 +1,15 @@
 import useFormValidate from "@/hooks/useFormValidate";
+import { IconDeviceFloppy, IconPlus } from "@pawpal/icons";
 import { CategoryInput, categorySchema } from "@pawpal/shared";
-import { Button, Group, Stack, TextInput } from "@pawpal/ui/core";
+import { Box, Button, Group, Stack, TextInput } from "@pawpal/ui/core";
 import { useTranslations } from "next-intl";
 
 interface CategoryFormProps {
   initialValues?: Partial<CategoryInput>;
   onSubmit: (values: CategoryInput) => void;
   form: ReturnType<typeof CreateCategoryForm>;
+  variant?: "default" | "modal";
+  type?: "save" | "create";
 }
 
 export const CreateCategoryForm = (props: {
@@ -30,11 +33,16 @@ export const CreateCategoryForm = (props: {
   };
 };
 
-const CategoryForm = ({ onSubmit, form }: CategoryFormProps) => {
+const CategoryForm = ({
+  onSubmit,
+  form,
+  variant = "default",
+  type = "save",
+}: CategoryFormProps) => {
   const __ = useTranslations("Product.category");
 
   return (
-    <form onSubmit={form.onSubmit(onSubmit)}>
+    <Box component={"form"} onSubmit={form.onSubmit(onSubmit)}>
       <Stack>
         <TextInput
           label={__("form.name.label")}
@@ -42,21 +50,39 @@ const CategoryForm = ({ onSubmit, form }: CategoryFormProps) => {
           required
           {...form.getInputProps("name")}
         />
+
         <TextInput
           label={__("form.slug.label")}
           placeholder={__("form.slug.placeholder")}
-          description={__("form.slug.description")}
           required
           {...form.getInputProps("slug")}
         />
-
-        <Group justify="flex-end" mt="md">
-          <Button type="submit" color="success" loading={form.isLoading}>
-            {__("form.save")}
-          </Button>
-        </Group>
       </Stack>
-    </form>
+
+      <Group justify={variant == "modal" ? "flex-end" : "flex-start"} mt={"xl"}>
+        {type === "create" ? (
+          <Button
+            type="submit"
+            color="success"
+            loading={form.isLoading}
+            rightSection={<IconPlus size={14} />}
+          >
+            {__("form.create")}
+          </Button>
+        ) : (
+          form.isDirty() && (
+            <Button
+              type="submit"
+              color="success"
+              loading={form.isLoading}
+              leftSection={<IconDeviceFloppy size={14} />}
+            >
+              {__("form.save")}
+            </Button>
+          )
+        )}
+      </Group>
+    </Box>
   );
 };
 

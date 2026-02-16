@@ -61,7 +61,12 @@ export default function CreateCategoryModal({
       size="md"
       withCloseButton={!isLoading}
     >
-      <CategoryForm onSubmit={onSubmit} form={form} />
+      <CategoryForm
+        variant="modal"
+        type="create"
+        onSubmit={onSubmit}
+        form={form}
+      />
     </Modal>
   );
 }
