@@ -7,6 +7,12 @@ const Modal = {
       blur: 6,
     },
   },
+  styles: {
+    title: {
+      fontWeight: 500,
+      fontSize: "var(--mantine-font-size-sm)",
+    },
+  },
 } satisfies MantineThemeComponents["Modal"];
 
 export default Modal;
