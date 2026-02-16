@@ -63,7 +63,12 @@ export default function CreateProductTagModal({
       size="md"
       withCloseButton={!isLoading}
     >
-      <ProductTagForm onSubmit={onSubmit} form={form} />
+      <ProductTagForm
+        onSubmit={onSubmit}
+        form={form}
+        variant="modal"
+        type="create"
+      />
     </Modal>
   );
 }

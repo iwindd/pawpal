@@ -309,44 +309,6 @@
     }
   },
 
-  "Category": {
-    "main": {
-      "title": "หมวดหมู่สินค้า",
-      "create": "เพิ่มหมวดหมู่"
-    },
-    "form": {
-      "name": {
-        "label": "ชื่อหมวดหมู่",
-        "placeholder": "ระบุชื่อหมวดหมู่"
-      },
-      "slug": {
-        "label": "Slug",
-        "placeholder": "ระบุ Slug"
-      },
-      "save": "บันทึก"
-    },
-    "notify": {
-      "created": {
-        "title": "สำเร็จ",
-        "message": "สร้างหมวดหมู่ใหม่แล้ว"
-      },
-      "updated": {
-        "title": "สำเร็จ",
-        "message": "บันทึกการเปลี่ยนแปลงหมวดหมู่แล้ว"
-      },
-      "deleted": {
-        "title": "สำเร็จ",
-        "message": "ลบหมวดหมู่แล้ว"
-      }
-    },
-    "confirmation": {
-      "delete": {
-        "title": "ยืนยันการลบ",
-        "message": "คุณแน่ใจหรือไม่ว่าต้องการลบหมวดหมู่นี้?"
-      }
-    }
-  },
-
   "ProductPackage": {
     "title": "รายการแพ็คเกจ",
     "form": {
@@ -408,7 +370,7 @@
     },
     "table": {
       "name": "ชื่อ",
-      "slug": "Slug",
+      "slug": "ส่วนท้ายของลิงก์",
       "type": "ประเภท",
       "products": "สินค้าทั้งหมด",
       "createdAt": "สร้างเมื่อ"
@@ -422,11 +384,11 @@
         "placeholder": "เช่น Battle Royale, FPS, RPG เป็นต้น"
       },
       "slug": {
-        "label": "Slug",
-        "description": "ส่วนท้ายของลิงก์ ใช้แทนชื่อเรื่องหรือชื่อข้อมูล",
-        "placeholder": "เช่น battle-royale, live-service เป็นต้น"
+        "label": "ส่วนท้ายของลิงก์",
+        "placeholder": "ใช้แทนชื่อเรื่องหรือชื่อข้อมูล เช่น /battle-royale เป็นต้น"
       },
-      "save": "บันทึกแท็กสินค้า"
+      "create": "เพิ่มแท็ก",
+      "save": "บันทึก"
     },
     "messages": {
       "notify": {
@@ -568,7 +530,7 @@
     },
     "category": {
       "name": "ชื่อหมวดหมู่",
-      "slug": "Slug",
+      "slug": "ส่วนท้ายของลิงก์",
       "createdAt": "วันที่สร้าง",
       "actions": "เครื่องมือ"
     },
