@@ -403,8 +403,8 @@
   },
   "ProductTag": {
     "main": {
-      "title": "แท็กสินค้า",
-      "add-btn": "เพิ่มแท็กสินค้า"
+      "title": "แท็ก",
+      "add-btn": "แท็กใหม่"
     },
     "table": {
       "name": "ชื่อ",
@@ -414,7 +414,7 @@
       "createdAt": "สร้างเมื่อ"
     },
     "CreateProductTagModal": {
-      "title": "สร้างแท็กสินค้า"
+      "title": "แท็กใหม่"
     },
     "form": {
       "name": {

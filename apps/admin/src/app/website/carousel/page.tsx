@@ -1,12 +1,12 @@
 "use client";
 
+import { AddButtonLink } from "@/components/Button/AddButton";
 import CarouselDatatable from "@/components/Datatables/Carousel/carousel";
 import PublishDatatable from "@/components/Datatables/Carousel/publish";
 import PageHeader from "@/components/Pages/PageHeader";
-import { IconPlus } from "@pawpal/icons";
-import { Button, Grid, Paper } from "@pawpal/ui/core";
+import { getPath } from "@/configs/route";
+import { Grid, Paper } from "@pawpal/ui/core";
 import { useTranslations } from "next-intl";
-import Link from "next/link";
 import { PreviewCarousel } from "./components/PreviewCarousel";
 
 const CarouselPage = () => {
@@ -17,15 +17,9 @@ const CarouselPage = () => {
       <Grid gutter={0}>
         <Grid.Col span={12}>
           <PageHeader title={__("title")}>
-            <Button
-              variant="outline"
-              component={Link}
-              href="/website/carousel/create"
-              leftSection={<IconPlus size={17} />}
-              size="sm"
-            >
+            <AddButtonLink href={getPath("website.carousel.create")}>
               {__("add-btn")}
-            </Button>
+            </AddButtonLink>
           </PageHeader>
         </Grid.Col>
         <Grid.Col

@@ -1,12 +1,12 @@
 "use client";
+import { AddButton } from "@/components/Button/AddButton";
 import ProductTagDatatable from "@/components/Datatables/ProductTag";
 import CreateProductTagModal from "@/components/Modals/CreateProductTagModal";
 import PageHeader from "@/components/Pages/PageHeader";
 import { useGetProductTagsQuery } from "@/features/productApi/productTagApi";
 import useDatatable from "@/hooks/useDatatable";
-import { IconPlus } from "@pawpal/icons";
 import { AdminProductTagResponse } from "@pawpal/shared";
-import { Button, Paper } from "@pawpal/ui/core";
+import { Paper } from "@pawpal/ui/core";
 import { useDisclosure } from "@pawpal/ui/hooks";
 import { useTranslations } from "next-intl";
 
@@ -26,13 +26,7 @@ export default function ProductTagsPage() {
   return (
     <main>
       <PageHeader title={__("main.title")}>
-        <Button
-          variant="outline"
-          rightSection={<IconPlus size={14} />}
-          onClick={openModal}
-        >
-          {__("main.add-btn")}
-        </Button>
+        <AddButton onClick={openModal}>{__("main.add-btn")}</AddButton>
       </PageHeader>
 
       <Paper p={0}>

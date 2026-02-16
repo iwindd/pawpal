@@ -1,14 +1,13 @@
 "use client";
+import { AddButtonLink } from "@/components/Button/AddButton";
 import ProductDatatable from "@/components/Datatables/Product";
 import PageHeader from "@/components/Pages/PageHeader";
 import { getPath } from "@/configs/route";
 import { useGetProductsQuery } from "@/features/productApi/productApi";
 import useDatatable from "@/hooks/useDatatable";
-import { IconPlus } from "@pawpal/icons";
 import { AdminProductResponse } from "@pawpal/shared";
-import { Button, Paper } from "@pawpal/ui/core";
+import { Paper } from "@pawpal/ui/core";
 import { useTranslations } from "next-intl";
-import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
@@ -25,16 +24,9 @@ export default function ProductsPage() {
   return (
     <div>
       <PageHeader title={__("main.title")}>
-        <Button
-          component={Link}
-          variant="subtle"
-          color="secondary"
-          size="xs"
-          rightSection={<IconPlus size={14} />}
-          href={getPath("products.create")}
-        >
+        <AddButtonLink href={getPath("products.create")}>
           {__("main.add-btn")}
-        </Button>
+        </AddButtonLink>
       </PageHeader>
 
       <Paper p={0}>
