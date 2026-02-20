@@ -92,7 +92,7 @@ export class PackageService {
 
   async bulkUpdatePackages(productId: string, payload: PackageBulkInput) {
     const { packages } = payload;
-    const incomingIds = packages.filter((p) => p.id).map((p) => p.id as string);
+    const incomingIds = packages.filter((p) => p.id).map((p) => p.id);
 
     return await this.prisma.$transaction(async (tx) => {
       // 1. Delete packages not in the incoming list for this product
@@ -120,6 +120,7 @@ export class PackageService {
               name: pkg.name,
               price: pkg.price,
               description: pkg.description,
+              order,
             },
           });
           results.push(updated);
@@ -130,6 +131,7 @@ export class PackageService {
               name: pkg.name,
               price: pkg.price,
               description: pkg.description,
+              order,
               product: {
                 connect: { id: productId },
               },

@@ -17,7 +17,14 @@ const PackagePage = () => {
   // We fetch packages here. Default pagination limits may apply but assuming no more than a few packages per product.
   const { data, isLoading: isFetching } = useGetProductPackagesQuery({
     productId: product.id,
-    params: { page: 1, limit: 100 },
+    params: {
+      page: 1,
+      limit: 100,
+      sort: JSON.stringify({
+        columnAccessor: "order",
+        direction: "asc",
+      }),
+    },
   });
 
   const [updatePackagesBulk, { isLoading: isUpdating }] =

@@ -1,6 +1,6 @@
 "use client";
 import useFormValidate from "@/hooks/useFormValidate";
-import { IconDeviceFloppy, IconTrash } from "@pawpal/icons";
+import { IconDeviceFloppy, IconDrag, IconTrash } from "@pawpal/icons";
 import {
   AdminProductPackageResponse,
   PackageBulkInput,
@@ -19,6 +19,12 @@ import {
   TextInput,
   Transition,
 } from "@pawpal/ui/core";
+import {
+  DragDropContext,
+  Draggable,
+  Droppable,
+  DropResult,
+} from "@pawpal/ui/draggable";
 import { UseFormReturnType } from "@pawpal/ui/form";
 import { useTranslations } from "next-intl";
 import AddPackageCardButton from "./AddPackageCardButton";
@@ -42,7 +48,6 @@ const PackageListForm = ({
   const form = useFormValidate<PackageBulkInput>({
     schema: packageBulkSchema,
     group: "package",
-    mode: "uncontrolled",
     enhanceGetInputProps: () => ({ disabled: isLoading }),
     initialValues: {
       packages: packages.map((p) => ({
@@ -70,6 +75,14 @@ const PackageListForm = ({
     form.removeListItem("packages", index);
   };
 
+  const handleDragEnd = ({ destination, source }: DropResult) => {
+    if (!destination) return;
+    form.reorderListItem("packages", {
+      from: source.index,
+      to: destination.index,
+    });
+  };
+
   // When form resets, it might lose dirty state, but it will be handled by the parent caller if needed.
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
@@ -87,64 +100,110 @@ const PackageListForm = ({
             </Text>
           )}
 
-          <Grid>
-            {form.getValues().packages.map((item, index) => (
-              <Grid.Col key={form.key(`packages.${index}.id`)} span={12}>
-                <Card>
-                  <Card.Header
-                    title={`${__("package", { defaultValue: "Package" })} ${index + 1}`}
-                    action={
-                      <ActionIcon
-                        color="red"
-                        variant="subtle"
-                        onClick={() => handleRemovePackage(index)}
-                        disabled={isLoading}
-                      >
-                        <IconTrash size={16} />
-                      </ActionIcon>
-                    }
-                  />
-                  <Card.Content>
-                    <Grid>
-                      <Grid.Col span={{ base: 12, md: 4 }}>
-                        <TextInput
-                          label={__("fields.name.label")}
-                          placeholder={__("fields.name.placeholder")}
-                          withAsterisk
-                          key={form.key(`packages.${index}.name`)}
-                          {...form.getInputProps(`packages.${index}.name`)}
-                        />
-                      </Grid.Col>
-                      <Grid.Col span={{ base: 12, md: 4 }}>
-                        <NumberInput
-                          label={__("fields.price.label")}
-                          placeholder={__("fields.price.placeholder")}
-                          withAsterisk
-                          min={0}
-                          decimalScale={2}
-                          fixedDecimalScale
-                          prefix="$"
-                          key={form.key(`packages.${index}.price`)}
-                          {...form.getInputProps(`packages.${index}.price`)}
-                        />
-                      </Grid.Col>
-                      <Grid.Col span={{ base: 12, md: 4 }}>
-                        <TextInput
-                          label={__("fields.description.label")}
-                          placeholder={__("fields.description.placeholder")}
-                          key={form.key(`packages.${index}.description`)}
-                          {...form.getInputProps(
-                            `packages.${index}.description`,
-                          )}
-                        />
-                      </Grid.Col>
-                    </Grid>
-                  </Card.Content>
-                </Card>
-              </Grid.Col>
-            ))}
+          <DragDropContext onDragEnd={handleDragEnd}>
+            <Droppable droppableId="packages-droppable">
+              {(provided) => (
+                <Grid ref={provided.innerRef} {...provided.droppableProps}>
+                  {form.getValues().packages.map((item, index) => (
+                    <Draggable
+                      key={form.key(`packages.${index}`)}
+                      draggableId={form.key(`packages.${index}`)}
+                      index={index}
+                    >
+                      {(provided, snapshot) => (
+                        <Grid.Col
+                          span={12}
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                        >
+                          <Card
+                            style={{
+                              boxShadow: snapshot.isDragging
+                                ? "var(--mantine-shadow-md)"
+                                : undefined,
+                            }}
+                          >
+                            <Card.Header
+                              title={
+                                <Group wrap="nowrap" gap="xs">
+                                  <div
+                                    {...provided.dragHandleProps}
+                                    style={{
+                                      cursor: "grab",
+                                      display: "flex",
+                                      alignItems: "center",
+                                    }}
+                                  >
+                                    <IconDrag
+                                      size={18}
+                                      color="var(--mantine-color-dimmed)"
+                                    />
+                                  </div>
+                                  <span>{`${__("package", { defaultValue: "Package" })} ${index + 1}`}</span>
+                                </Group>
+                              }
+                              action={
+                                <ActionIcon
+                                  color="red"
+                                  variant="subtle"
+                                  onClick={() => handleRemovePackage(index)}
+                                  disabled={isLoading}
+                                >
+                                  <IconTrash size={16} />
+                                </ActionIcon>
+                              }
+                            />
+                            <Card.Content>
+                              <Grid>
+                                <Grid.Col span={{ base: 12, md: 4 }}>
+                                  <TextInput
+                                    label={__("fields.name.label")}
+                                    placeholder={__("fields.name.placeholder")}
+                                    withAsterisk
+                                    {...form.getInputProps(
+                                      `packages.${index}.name`,
+                                    )}
+                                  />
+                                </Grid.Col>
+                                <Grid.Col span={{ base: 12, md: 4 }}>
+                                  <NumberInput
+                                    label={__("fields.price.label")}
+                                    placeholder={__("fields.price.placeholder")}
+                                    withAsterisk
+                                    min={0}
+                                    decimalScale={2}
+                                    fixedDecimalScale
+                                    prefix="$"
+                                    {...form.getInputProps(
+                                      `packages.${index}.price`,
+                                    )}
+                                  />
+                                </Grid.Col>
+                                <Grid.Col span={{ base: 12, md: 4 }}>
+                                  <TextInput
+                                    label={__("fields.description.label")}
+                                    placeholder={__(
+                                      "fields.description.placeholder",
+                                    )}
+                                    {...form.getInputProps(
+                                      `packages.${index}.description`,
+                                    )}
+                                  />
+                                </Grid.Col>
+                              </Grid>
+                            </Card.Content>
+                          </Card>
+                        </Grid.Col>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </Grid>
+              )}
+            </Droppable>
+          </DragDropContext>
 
-            {/* Add Package Card Button */}
+          <Grid>
             <Grid.Col span={12}>
               <AddPackageCardButton
                 handleAddPackage={handleAddPackage}

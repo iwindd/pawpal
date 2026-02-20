@@ -12,7 +12,7 @@ const Header = ({
   action,
   ...props
 }: CardSectionProps & {
-  title: string;
+  title: React.ReactNode;
   subtitle?: string;
   action?: React.ReactNode;
 }) => (

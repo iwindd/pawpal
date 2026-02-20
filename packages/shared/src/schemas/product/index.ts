@@ -10,6 +10,7 @@ export const packageSchema = z.object({
     .max(PACKAGE_NAME_MAX_LENGTH, "package_name_too_long"),
   price: z.number().min(0, "price_must_be_positive"),
   description: z.string().optional(),
+  order: z.number().optional(),
 });
 
 const PRODUCT_NAME_MIN_LENGTH = 3;
