@@ -1,6 +1,6 @@
 "use client";
 
-import { useGetRolesQuery } from "@/features/role/roleApi";
+import RoleCombobox from "@/components/Combobox/Role";
 import { useCreateUserMutation } from "@/features/user/userApi";
 import useFormValidate from "@/hooks/useFormValidate";
 import { IconDeviceFloppy } from "@pawpal/icons";
@@ -9,7 +9,6 @@ import {
   Button,
   Card,
   Group,
-  MultiSelect,
   PasswordInput,
   Select,
   Stack,
@@ -28,10 +27,6 @@ export default function CreateUserForm({
   const __ = useTranslations("CreateUser");
   const router = useRouter();
   const [createUser, { isLoading, error }] = useCreateUserMutation();
-  const { data: roles } = useGetRolesQuery({
-    page: 1,
-    limit: 100,
-  });
 
   const form = useFormValidate({
     schema: adminCreateUserSchema,
@@ -61,11 +56,6 @@ export default function CreateUserForm({
       }
     }
   };
-
-  const roleOptions = (roles?.data ?? []).map((role) => ({
-    value: role.name,
-    label: role.name,
-  }));
 
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
@@ -131,13 +121,17 @@ export default function CreateUserForm({
               />
 
               {userType === "employee" && (
-                <MultiSelect
-                  label={__("roles.label")}
-                  placeholder={__("roles.placeholder")}
-                  data={roleOptions}
-                  searchable
-                  key={form.key("roles")}
-                  {...form.getInputProps("roles")}
+                <RoleCombobox
+                  inputProps={{
+                    label: __("roles.label"),
+                    placeholder: __("roles.placeholder"),
+                    required: true,
+                    error: form.errors.roles as string,
+                  }}
+                  value={form.values.roles[0] ?? null}
+                  onChange={(val) =>
+                    form.setFieldValue("roles", val ? [val] : [])
+                  }
                 />
               )}
             </Stack>

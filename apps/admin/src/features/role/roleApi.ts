@@ -63,7 +63,9 @@ export const roleApi = createApi({
 
 export const {
   useGetRolesQuery,
+  useLazyGetRolesQuery,
   useGetRoleQuery,
+  useLazyGetRoleQuery,
   useGetPermissionsQuery,
   useCreateRoleMutation,
   useUpdateRoleMutation,

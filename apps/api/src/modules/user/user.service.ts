@@ -40,9 +40,10 @@ export class UserService {
 
     const roleConnections =
       payload.type === 'employee' && payload.roles.length > 0
-        ? payload.roles.map((name) => ({ name }))
+        ? payload.roles.map((id) => ({ id }))
         : [{ name: 'User' }];
 
+    this.logger.debug(roleConnections);
     const user = await this.userRepo.create(
       {
         displayName: payload.displayName,
