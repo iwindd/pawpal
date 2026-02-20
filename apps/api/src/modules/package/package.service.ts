@@ -44,7 +44,11 @@ export class PackageService {
    */
   async getProductPackageDatatable(productId: string, query: DatatableQuery) {
     return this.prisma.package.getDatatable({
-      query,
+      query: {
+        ...query,
+        skip: 0,
+        take: 100,
+      },
       select: {
         id: true,
         name: true,
