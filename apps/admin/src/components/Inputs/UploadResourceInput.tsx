@@ -34,7 +34,7 @@ const UploadResourceInput = ({
   uploadImage,
 }: ResourceInputProps) => {
   return (
-    <Stack gap={"xs"}>
+    <Stack gap={"xs"} w={w} h={h}>
       {label && <Input.Label>{label}</Input.Label>}
 
       {uploadImage.previews.length <= 0 ? (

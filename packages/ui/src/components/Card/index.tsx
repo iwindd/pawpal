@@ -15,9 +15,19 @@ const Header = ({
   </BaseCard.Section>
 );
 
+const Content = ({
+  children,
+  ...props
+}: CardSectionProps & { children: React.ReactNode }) => (
+  <BaseCard.Section inheritPadding pb="md" {...props}>
+    {children}
+  </BaseCard.Section>
+);
+
 export const Card = Object.assign(BaseCard, {
   Header,
-  Section: BaseCard.Section,
+  Content,
 }) as typeof BaseCard & {
   Header: typeof Header;
+  Content: typeof Content;
 };

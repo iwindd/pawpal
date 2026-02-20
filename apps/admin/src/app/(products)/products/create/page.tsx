@@ -7,6 +7,8 @@ import { ProductInput } from "@pawpal/shared";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 
+import { Box } from "@pawpal/ui/core";
+
 export default function CreateProductPage() {
   const router = useRouter();
   const __ = useTranslations("Product");
@@ -19,12 +21,12 @@ export default function CreateProductPage() {
     router.push(
       getPath("products.packages", {
         id: product.id,
-      })
+      }),
     );
   };
 
   return (
-    <div>
+    <Box pb={80}>
       <PageHeader title={__("create.title")} />
 
       <ProductForm
@@ -32,6 +34,6 @@ export default function CreateProductPage() {
         isLoading={isLoading}
         errorMessage={error && "error"}
       />
-    </div>
+    </Box>
   );
 }

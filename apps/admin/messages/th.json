@@ -227,7 +227,10 @@
     "form": {
       "sections": {
         "information": "ข้อมูลสินค้า",
-        "packages": "แพ็คเกจ"
+        "packages": "แพ็คเกจ",
+        "general": "ข้อมูลทั่วไป",
+        "media": "รูปภาพสินค้า",
+        "organization": "การจัดหมวดหมู่"
       },
       "fields": {
         "product": {

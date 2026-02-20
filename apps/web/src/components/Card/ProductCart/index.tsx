@@ -22,6 +22,8 @@ const ProductCard = ({ product }: ProductCardProps) => {
       className={classes.card}
       padding={0}
       radius={0}
+      withBorder={false}
+      p={"xs"}
     >
       <Card.Section
         style={{
@@ -52,7 +54,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
                 product.MOST_SALE.discountType,
                 product.MOST_SALE.discount,
                 (product.MOST_SALE?.price && Number(product.MOST_SALE.price)) ||
-                  0
+                  0,
               )}
               %
             </Badge>

@@ -55,6 +55,7 @@ export {
   ThemeIcon,
   Title,
   Tooltip,
+  Transition,
   UnstyledButton,
   useCombobox,
   useComputedColorScheme,
