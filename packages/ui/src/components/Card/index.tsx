@@ -1,17 +1,33 @@
-import { Card as BaseCard, CardSectionProps, Text, Title } from "@mantine/core";
+import {
+  Card as BaseCard,
+  CardSectionProps,
+  Group,
+  Text,
+  Title,
+} from "@mantine/core";
 
 const Header = ({
   title,
   subtitle,
+  action,
   ...props
-}: CardSectionProps & { title: string; subtitle?: string }) => (
+}: CardSectionProps & {
+  title: string;
+  subtitle?: string;
+  action?: React.ReactNode;
+}) => (
   <BaseCard.Section inheritPadding py="md" {...props}>
-    <Title order={5}>{title}</Title>
-    {subtitle && (
-      <Text size="xs" c="dimmed" lh={1.2}>
-        {subtitle}
-      </Text>
-    )}
+    <Group justify="space-between" align="center" wrap="nowrap">
+      <div>
+        <Title order={5}>{title}</Title>
+        {subtitle && (
+          <Text size="xs" c="dimmed" lh={1.2}>
+            {subtitle}
+          </Text>
+        )}
+      </div>
+      {action && <div>{action}</div>}
+    </Group>
   </BaseCard.Section>
 );
 

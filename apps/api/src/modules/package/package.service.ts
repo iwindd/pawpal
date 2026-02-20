@@ -1,6 +1,6 @@
 import { DatatableQuery } from '@/common/pipes/DatatablePipe';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PackageInput, ProductField } from '@pawpal/shared';
+import { PackageBulkInput, PackageInput, ProductField } from '@pawpal/shared';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
@@ -87,6 +87,59 @@ export class PackageService {
       data: {
         ...payload,
       },
+    });
+  }
+
+  async bulkUpdatePackages(productId: string, payload: PackageBulkInput) {
+    const { packages } = payload;
+    const incomingIds = packages.filter((p) => p.id).map((p) => p.id as string);
+
+    return await this.prisma.$transaction(async (tx) => {
+      // 1. Delete packages not in the incoming list for this product
+      // We only delete if there are incoming packages, or if the list is empty we delete all.
+      await tx.package.deleteMany({
+        where: {
+          productId,
+          NOT: {
+            id: {
+              in: incomingIds,
+            },
+          },
+        },
+      });
+
+      // 2. Update existing & create new
+      const results = [];
+      let order = 0;
+      for (const pkg of packages) {
+        if (pkg.id) {
+          // Update
+          const updated = await tx.package.update({
+            where: { id: pkg.id },
+            data: {
+              name: pkg.name,
+              price: pkg.price,
+              description: pkg.description,
+            },
+          });
+          results.push(updated);
+        } else {
+          // Create
+          const created = await tx.package.create({
+            data: {
+              name: pkg.name,
+              price: pkg.price,
+              description: pkg.description,
+              product: {
+                connect: { id: productId },
+              },
+            },
+          });
+          results.push(created);
+        }
+        order++;
+      }
+      return results;
     });
   }
 }

@@ -37,3 +37,13 @@ export const productSchema = z.object({
 
 export type ProductInput = z.infer<typeof productSchema>;
 export type PackageInput = z.infer<typeof packageSchema>;
+
+export const packageBulkSchema = z.object({
+  packages: z.array(
+    packageSchema.extend({
+      id: z.string().optional(),
+    }),
+  ),
+});
+
+export type PackageBulkInput = z.infer<typeof packageBulkSchema>;

@@ -7,9 +7,15 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   Query,
 } from '@nestjs/common';
-import { PackageInput, packageSchema } from '@pawpal/shared';
+import {
+  PackageBulkInput,
+  PackageInput,
+  packageBulkSchema,
+  packageSchema,
+} from '@pawpal/shared';
 import { PackageService } from './package.service';
 
 @Controller('admin/package')
@@ -38,5 +44,13 @@ export class AdminPackageController {
     @Body(new ZodPipe(packageSchema)) data: PackageInput,
   ) {
     return this.packageService.update(id, data);
+  }
+
+  @Put('product/:id/bulk')
+  bulkUpdatePackages(
+    @Param('id') id: string,
+    @Body(new ZodPipe(packageBulkSchema)) data: PackageBulkInput,
+  ) {
+    return this.packageService.bulkUpdatePackages(id, data);
   }
 }

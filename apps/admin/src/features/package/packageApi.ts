@@ -3,6 +3,7 @@ import {
   AdminProductPackageResponse,
   DatatableInput,
   DatatableResponse,
+  PackageBulkInput,
   PackageInput,
 } from "@pawpal/shared";
 import { createApi } from "@reduxjs/toolkit/query/react";
@@ -49,6 +50,17 @@ export const packageApi = createApi({
       }),
       invalidatesTags: ["Packages"],
     }),
+    updateProductPackagesBulk: builder.mutation<
+      AdminProductPackageResponse[],
+      { productId: string; payload: PackageBulkInput }
+    >({
+      query: ({ productId, payload }) => ({
+        url: `/product/${productId}/bulk`,
+        method: "PUT",
+        body: payload,
+      }),
+      invalidatesTags: ["Packages"],
+    }),
   }),
 });
 
@@ -56,4 +68,5 @@ export const {
   useGetProductPackagesQuery,
   useCreateProductPackageMutation,
   useUpdatePackageMutation,
+  useUpdateProductPackagesBulkMutation,
 } = packageApi;
