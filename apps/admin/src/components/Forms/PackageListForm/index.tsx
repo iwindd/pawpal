@@ -89,10 +89,7 @@ const PackageListForm = ({
 
           <Grid>
             {form.getValues().packages.map((item, index) => (
-              <Grid.Col
-                key={form.key(`packages.${index}.id`)}
-                span={{ base: 12, md: 6 }}
-              >
+              <Grid.Col key={form.key(`packages.${index}.id`)} span={12}>
                 <Card>
                   <Card.Header
                     title={`${__("package", { defaultValue: "Package" })} ${index + 1}`}
@@ -148,7 +145,7 @@ const PackageListForm = ({
             ))}
 
             {/* Add Package Card Button */}
-            <Grid.Col span={{ base: 12, md: 6 }}>
+            <Grid.Col span={12}>
               <AddPackageCardButton
                 handleAddPackage={handleAddPackage}
                 isLoading={isLoading}

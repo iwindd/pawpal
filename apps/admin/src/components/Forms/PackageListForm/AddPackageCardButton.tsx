@@ -16,7 +16,7 @@ const AddPackageCardButton = ({
     <UnstyledButton
       w="100%"
       h="100%"
-      mih={200}
+      mih={150}
       onClick={handleAddPackage}
       disabled={isLoading}
       style={{
