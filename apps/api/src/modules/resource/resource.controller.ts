@@ -18,7 +18,7 @@ import { AdminResourceResponse, Session } from '@pawpal/shared';
 import { ResourceService } from './resource.service';
 
 @Controller('admin/resource')
-@UseGuards(SessionAuthGuard, JwtAuthGuard)
+@UseGuards(SessionAuthGuard, JwtAuthGuard) // TODO: Permission Guard
 export class ResourcesController {
   constructor(private readonly resourceService: ResourceService) {}
 

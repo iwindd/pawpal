@@ -1,6 +1,8 @@
+import { Permissions } from '@/common/decorators/permissions.decorator';
 import { AuthUser } from '@/common/decorators/user.decorator';
 import { JwtAuthGuard } from '@/common/guards/auth/jwt-auth.guard';
 import { SessionAuthGuard } from '@/common/guards/auth/session-auth.guard';
+import { PermissionGuard } from '@/common/guards/permission.guard';
 import { DatatablePipe, DatatableQuery } from '@/common/pipes/DatatablePipe';
 import {
   Controller,
@@ -10,11 +12,12 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { Session } from '@pawpal/shared';
+import { PermissionEnum, Session } from '@pawpal/shared';
 import { OrderService } from '../order.service';
 
 @Controller('admin/order')
-@UseGuards(SessionAuthGuard, JwtAuthGuard)
+@UseGuards(SessionAuthGuard, JwtAuthGuard, PermissionGuard)
+@Permissions(PermissionEnum.OrderManagement)
 export class AdminOrderController {
   constructor(private readonly orderService: OrderService) {}
 

@@ -1,4 +1,8 @@
+import { Permissions } from '@/common/decorators/permissions.decorator';
 import { AuthUser } from '@/common/decorators/user.decorator';
+import { JwtAuthGuard } from '@/common/guards/auth/jwt-auth.guard';
+import { SessionAuthGuard } from '@/common/guards/auth/session-auth.guard';
+import { PermissionGuard } from '@/common/guards/permission.guard';
 import { DatatablePipe, DatatableQuery } from '@/common/pipes/DatatablePipe';
 import { ZodPipe } from '@/common/pipes/ZodPipe';
 import {
@@ -9,11 +13,19 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
-import { CreateTagInput, Session, TagSchema } from '@pawpal/shared';
+import {
+  CreateTagInput,
+  PermissionEnum,
+  Session,
+  TagSchema,
+} from '@pawpal/shared';
 import { TagService } from './tag.service';
 
 @Controller('admin/tag')
+@UseGuards(SessionAuthGuard, JwtAuthGuard, PermissionGuard)
+@Permissions(PermissionEnum.TagManagement)
 export class TagController {
   constructor(private readonly tagService: TagService) {}
 

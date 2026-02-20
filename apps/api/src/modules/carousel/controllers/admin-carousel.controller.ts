@@ -1,6 +1,8 @@
+import { Permissions } from '@/common/decorators/permissions.decorator';
 import { AuthUser } from '@/common/decorators/user.decorator';
 import { JwtAuthGuard } from '@/common/guards/auth/jwt-auth.guard';
 import { SessionAuthGuard } from '@/common/guards/auth/session-auth.guard';
+import { PermissionGuard } from '@/common/guards/permission.guard';
 import { DatatablePipe, DatatableQuery } from '@/common/pipes/DatatablePipe';
 import { ZodValidationPipe } from '@/common/ZodValidationPipe';
 import {
@@ -19,12 +21,14 @@ import {
   CarouselReorderInput,
   carouselReorderSchema,
   CarouselResponse,
+  PermissionEnum,
   Session,
 } from '@pawpal/shared';
 import { CarouselService } from '../carousel.service';
 
 @Controller('admin/carousel')
-@UseGuards(SessionAuthGuard, JwtAuthGuard)
+@UseGuards(SessionAuthGuard, JwtAuthGuard, PermissionGuard)
+@Permissions(PermissionEnum.CarouselManagement)
 export class AdminCarouselController {
   constructor(private readonly carouselService: CarouselService) {}
 

@@ -1,3 +1,7 @@
+import { Permissions } from '@/common/decorators/permissions.decorator';
+import { JwtAuthGuard } from '@/common/guards/auth/jwt-auth.guard';
+import { SessionAuthGuard } from '@/common/guards/auth/session-auth.guard';
+import { PermissionGuard } from '@/common/guards/permission.guard';
 import { DatatablePipe, DatatableQuery } from '@/common/pipes/DatatablePipe';
 import {
   Body,
@@ -8,16 +12,20 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import {
   CategoryInput,
   CategoryResponse,
   CategoryUpdateInput,
   DatatableResponse,
+  PermissionEnum,
 } from '@pawpal/shared';
 import { CategoryService } from './category.service';
 
 @Controller('admin/category')
+@UseGuards(SessionAuthGuard, JwtAuthGuard, PermissionGuard)
+@Permissions(PermissionEnum.CategoryManagement)
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 

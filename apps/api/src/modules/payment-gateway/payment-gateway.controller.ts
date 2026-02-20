@@ -3,7 +3,7 @@ import { Body, Controller, Get, Param, Patch } from '@nestjs/common';
 import { PromptpayManualInput, promptpayManualSchema } from '@pawpal/shared';
 import { PaymentGatewayService } from './payment-gateway.service';
 
-@Controller('payment-gateway')
+@Controller('payment-gateway') // TODO: Permission Guard
 export class PaymentGatewayController {
   constructor(private readonly paymentGatewayService: PaymentGatewayService) {}
 

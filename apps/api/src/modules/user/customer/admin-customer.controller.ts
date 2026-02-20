@@ -1,7 +1,9 @@
 import { AuditInfo } from '@/common/decorators/audit.decorator';
+import { Permissions } from '@/common/decorators/permissions.decorator';
 import { AuthUser } from '@/common/decorators/user.decorator';
 import { JwtAuthGuard } from '@/common/guards/auth/jwt-auth.guard';
 import { SessionAuthGuard } from '@/common/guards/auth/session-auth.guard';
+import { PermissionGuard } from '@/common/guards/permission.guard';
 import { PrismaAuditInfo } from '@/common/interfaces/prisma-audit.interface';
 import { DatatablePipe, DatatableQuery } from '@/common/pipes/DatatablePipe';
 import {
@@ -17,6 +19,7 @@ import {
 import {
   ChangeEmailInput,
   ChangePasswordInput,
+  PermissionEnum,
   Session,
   UpdateProfileInput,
 } from '@pawpal/shared';
@@ -24,7 +27,8 @@ import { UserService } from '../user.service';
 import { CustomerService } from './customer.service';
 
 @Controller('admin/customer')
-@UseGuards(SessionAuthGuard, JwtAuthGuard)
+@UseGuards(SessionAuthGuard, JwtAuthGuard, PermissionGuard)
+@Permissions(PermissionEnum.CustomerManagement)
 export class AdminCustomerController {
   private readonly logger = new Logger(AdminCustomerController.name);
   constructor(

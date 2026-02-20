@@ -1,6 +1,8 @@
+import { Permissions } from '@/common/decorators/permissions.decorator';
 import { AuthUser } from '@/common/decorators/user.decorator';
 import { JwtAuthGuard } from '@/common/guards/auth/jwt-auth.guard';
 import { SessionAuthGuard } from '@/common/guards/auth/session-auth.guard';
+import { PermissionGuard } from '@/common/guards/permission.guard';
 import { DatatablePipe, DatatableQuery } from '@/common/pipes/DatatablePipe';
 import { ZodPipe } from '@/common/pipes/ZodPipe';
 import {
@@ -14,11 +16,12 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { RoleInput, Session, roleSchema } from '@pawpal/shared';
+import { PermissionEnum, RoleInput, Session, roleSchema } from '@pawpal/shared';
 import { RoleService } from './role.service';
 
 @Controller('admin/role')
-@UseGuards(SessionAuthGuard, JwtAuthGuard)
+@UseGuards(SessionAuthGuard, JwtAuthGuard, PermissionGuard)
+@Permissions(PermissionEnum.RoleManagement)
 export class AdminRoleController {
   constructor(private readonly roleService: RoleService) {}
 

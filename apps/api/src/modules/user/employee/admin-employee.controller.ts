@@ -16,16 +16,20 @@ import {
 import {
   ChangeEmailInput,
   ChangePasswordInput,
+  PermissionEnum,
   Session,
   UpdateProfileInput,
 } from '@pawpal/shared';
 
+import { Permissions } from '@/common/decorators/permissions.decorator';
+import { PermissionGuard } from '@/common/guards/permission.guard';
 import { PrismaAuditInfo } from '@/common/interfaces/prisma-audit.interface';
 import { UserService } from '../user.service';
 import { EmployeeService } from './employee.service';
 
 @Controller('admin/employee')
-@UseGuards(SessionAuthGuard, JwtAuthGuard)
+@UseGuards(SessionAuthGuard, JwtAuthGuard, PermissionGuard)
+@Permissions(PermissionEnum.EmployeeManagement)
 export class AdminEmployeeController {
   constructor(
     private readonly employeeService: EmployeeService,
