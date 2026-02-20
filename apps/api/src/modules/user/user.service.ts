@@ -1,5 +1,6 @@
 import { WalletCollection } from '@/common/collections/wallet.collection';
 import { PrismaAuditInfo } from '@/common/interfaces/prisma-audit.interface';
+import { DatatableQuery } from '@/common/pipes/DatatablePipe';
 import { SuspensionUtil } from '@/utils/suspensionUtil';
 import {
   ConflictException,
@@ -209,6 +210,33 @@ export class UserService {
         performedById: adminId,
         type: 'UNSUSPENDED',
         note,
+      },
+    });
+  }
+
+  /**
+   * Get suspension history datatable
+   * @param userId user id
+   * @param query datatable query
+   * @returns datatable response
+   */
+  async getSuspensionHistoryDatatable(userId: string, query: DatatableQuery) {
+    return this.prisma.userSuspension.getDatatable({
+      query: query,
+      where: {
+        userId,
+      },
+      select: {
+        id: true,
+        type: true,
+        note: true,
+        createdAt: true,
+        performedBy: {
+          select: {
+            id: true,
+            displayName: true,
+          },
+        },
       },
     });
   }

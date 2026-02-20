@@ -85,6 +85,14 @@ export class AdminCustomerController {
     return this.customerService.getOrderHistoryDatatable(userId, query);
   }
 
+  @Get(':userId/suspensions')
+  getSuspensionHistoryDatatable(
+    @Query(DatatablePipe) query: DatatableQuery,
+    @Param('userId') userId: string,
+  ) {
+    return this.userService.getSuspensionHistoryDatatable(userId, query);
+  }
+
   @Patch(':userId/suspend')
   suspendUser(
     @Param('userId') userId: string,

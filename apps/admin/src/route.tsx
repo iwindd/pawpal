@@ -158,6 +158,10 @@ const ROUTES = ROUTER({
             path: "/users/customers/:id/topups",
             label: "users.customer.topups",
           },
+          suspensions: {
+            path: "/users/customers/:id/suspensions",
+            label: "users.customer.suspensions",
+          },
         },
       },
       employees: {
@@ -175,6 +179,10 @@ const ROUTES = ROUTER({
           topups: {
             path: "/users/employees/:id/topups",
             label: "users.employee.topups",
+          },
+          suspensions: {
+            path: "/users/employees/:id/suspensions",
+            label: "users.employee.suspensions",
           },
         },
       },

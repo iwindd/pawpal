@@ -45,6 +45,15 @@ export const customerApi = createApi({
         params,
       }),
     }),
+    getCustomerSuspensions: builder.query<
+      DatatableResponse<any>,
+      { id: string; params: DatatableInput }
+    >({
+      query: ({ id, params }) => ({
+        url: `/${id}/suspensions`,
+        params,
+      }),
+    }),
   }),
 });
 
@@ -53,4 +62,5 @@ export const {
   useGetCustomerProfileQuery,
   useGetCustomerOrdersQuery,
   useGetCustomerTopupsQuery,
+  useGetCustomerSuspensionsQuery,
 } = customerApi;

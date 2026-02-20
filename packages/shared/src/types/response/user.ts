@@ -17,3 +17,14 @@ export interface AdminUserResponse extends Session {
 
 export interface AdminCustomerResponse extends AdminUserResponse {}
 export interface AdminEmployeeResponse extends AdminUserResponse {}
+
+export interface AdminUserSuspensionResponse {
+  id: string;
+  type: UserSuspensionType;
+  note: string | null;
+  createdAt: string;
+  performedBy: {
+    id: string;
+    displayName: string;
+  };
+}

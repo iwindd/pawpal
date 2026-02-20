@@ -45,6 +45,15 @@ export const employeeApi = createApi({
         params,
       }),
     }),
+    getEmployeeSuspensions: builder.query<
+      DatatableResponse<any>,
+      { id: string; params: DatatableInput }
+    >({
+      query: ({ id, params }) => ({
+        url: `/${id}/suspensions`,
+        params,
+      }),
+    }),
   }),
 });
 
@@ -53,4 +62,5 @@ export const {
   useGetEmployeeProfileQuery,
   useGetEmployeeOrdersQuery,
   useGetEmployeeTopupsQuery,
+  useGetEmployeeSuspensionsQuery,
 } = employeeApi;

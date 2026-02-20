@@ -32,6 +32,7 @@ const TabNavigation = () => {
         <Tab routeName={"users.employees.edit"} />
         <Tab routeName={"users.employees.orders"} />
         <Tab routeName={"users.employees.topups"} />
+        <Tab routeName={"users.employees.suspensions"} />
       </Tabs.List>
     </Tabs>
   );
