@@ -26,12 +26,11 @@ const useFormValidate = <T extends Record<string, any>>({
 
   return {
     ...form,
-    getInputProps: (path) => {
-      const props = form.getInputProps(path as any);
+    getInputProps: (path, options?: any) => {
+      const props = form.getInputProps(path as any, options);
       return {
         ...props,
-        // TODO:: Refactor error message handling in the future
-        error: props.error,
+        error: props.error ? props.error : undefined,
       };
     },
   };

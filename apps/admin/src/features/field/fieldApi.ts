@@ -56,6 +56,17 @@ export const fieldApi = createApi({
       }),
       invalidatesTags: ["Fields"],
     }),
+    updateProductFieldsBulk: builder.mutation<
+      AdminFieldResponse[], // Array response from Prisma transaction
+      { productId: string; payload: any } // any for FieldBulkInput due to shared package boundaries, typing as needed
+    >({
+      query: ({ productId, payload }) => ({
+        url: `/product/${productId}/bulk`,
+        method: "PUT",
+        body: payload,
+      }),
+      invalidatesTags: ["Fields"],
+    }),
     updateField: builder.mutation<
       AdminFieldResponse,
       { fieldId: string; payload: FieldInput }
@@ -75,4 +86,5 @@ export const {
   useReorderProductFieldMutation,
   useCreateProductFieldMutation,
   useUpdateFieldMutation,
+  useUpdateProductFieldsBulkMutation,
 } = fieldApi;

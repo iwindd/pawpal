@@ -9,9 +9,12 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   Query,
 } from '@nestjs/common';
 import {
+  FieldBulkInput,
+  fieldBulkSchema,
   FieldInput,
   FieldReorderInput,
   FieldReorderSchema,
@@ -51,5 +54,14 @@ export class AdminFieldController {
     @Body(new ZodPipe(FieldReorderSchema)) payload: FieldReorderInput,
   ) {
     return this.fieldService.reorderProductField(productId, payload);
+  }
+
+  @Put('/product/:productId/bulk')
+  bulkUpdateFields(
+    @Param('productId') productId: string,
+    @Body(new ZodPipe(fieldBulkSchema)) payload: FieldBulkInput,
+    @AuthUser() user: Session,
+  ) {
+    return this.fieldService.bulkUpdateFields(productId, payload, user);
   }
 }

@@ -26,8 +26,8 @@ const useFormValidate = <T extends Record<string, any>>({
 
   return {
     ...form,
-    getInputProps: (path) => {
-      const props = form.getInputProps(path as any);
+    getInputProps: (path, options?: any) => {
+      const props = form.getInputProps(path as any, options);
       return {
         ...props,
         error: props.error

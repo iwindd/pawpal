@@ -64,7 +64,11 @@ export class FieldService {
    */
   async getProductFieldDatatable(productId: string, query: DatatableQuery) {
     return this.prismaService.productField.getDatatable({
-      query: query,
+      query: {
+        ...query,
+        take: 100,
+        skip: 0,
+      },
       where: {
         productId: productId,
       },
@@ -112,6 +116,69 @@ export class FieldService {
         where: { id: field_id, productId: productId },
         data: { order: toIndex },
       });
+    });
+  }
+
+  async bulkUpdateFields(productId: string, payload: any, user: Session) {
+    const { fields } = payload;
+    const incomingIds = fields
+      .filter((f: any) => f.id)
+      .map((f: any) => f.id as string);
+
+    return await this.prismaService.$transaction(async (tx) => {
+      // 1. Delete fields not in the incoming list for this product
+      await tx.productField.deleteMany({
+        where: {
+          productId,
+          NOT: {
+            id: {
+              in: incomingIds,
+            },
+          },
+        },
+      });
+
+      // 2. Update existing & create new
+      const results = [];
+      let order = 0;
+      for (const field of fields) {
+        if (field.id) {
+          // Update
+          const updated = await tx.productField.update({
+            where: { id: field.id },
+            data: {
+              label: field.label,
+              placeholder: field.placeholder,
+              type: field.type as FieldType,
+              optional: field.optional,
+              metadata: this.parseMetadata(field),
+              order,
+            },
+          });
+          results.push(updated);
+        } else {
+          // Create
+          const created = await tx.productField.create({
+            data: {
+              label: field.label,
+              placeholder: field.placeholder,
+              type: field.type as FieldType,
+              optional: field.optional,
+              metadata: this.parseMetadata(field),
+              order,
+              creator: {
+                connect: { id: user.id },
+              },
+              product: {
+                connect: { id: productId },
+              },
+            },
+          });
+          results.push(created);
+        }
+        order++;
+      }
+      return results;
     });
   }
 }
