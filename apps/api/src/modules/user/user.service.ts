@@ -9,6 +9,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import {
+  AdminCreateUserInput,
   AdminUserResponse,
   ChangeEmailInput,
   UpdateProfileInput,
@@ -23,6 +24,39 @@ export class UserService {
     private readonly userRepo: UserRepository,
     private readonly prisma: PrismaService,
   ) {}
+
+  /**
+   * Admin create a new user
+   * @param payload admin create user payload
+   * @param auditInfo audit info
+   * @returns created user session
+   */
+  async adminCreateUser(
+    payload: AdminCreateUserInput,
+    auditInfo?: PrismaAuditInfo,
+  ) {
+    if (await this.userRepo.isAlreadyExist(payload.email))
+      throw new ConflictException('email_already_exists');
+
+    const roleConnections =
+      payload.type === 'employee' && payload.roles.length > 0
+        ? payload.roles.map((name) => ({ name }))
+        : [{ name: 'User' }];
+
+    const user = await this.userRepo.create(
+      {
+        displayName: payload.displayName,
+        email: payload.email,
+        password: payload.password,
+        roles: {
+          connect: roleConnections,
+        },
+      },
+      auditInfo,
+    );
+
+    return user.toJSON();
+  }
   /**
    * Change user email
    * @param userId user id

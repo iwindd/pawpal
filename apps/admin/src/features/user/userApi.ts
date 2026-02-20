@@ -1,4 +1,5 @@
 import { baseQuery } from "@/configs/api";
+import { AdminCreateUserInput } from "@pawpal/shared";
 import { createApi } from "@reduxjs/toolkit/query/react";
 
 export const userApi = createApi({
@@ -8,6 +9,14 @@ export const userApi = createApi({
     baseUrl: `/admin/`,
   }),
   endpoints: (builder) => ({
+    createUser: builder.mutation<void, AdminCreateUserInput>({
+      query: (body) => ({
+        url: `user`,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Employees", "Customers"],
+    }),
     updateUserProfile: builder.mutation<
       void,
       { id: string; profile: any; type: "customer" | "employee" }
@@ -74,6 +83,7 @@ export const userApi = createApi({
 });
 
 export const {
+  useCreateUserMutation,
   useUpdateUserProfileMutation,
   useAdminResetEmailMutation,
   useAdminResetPasswordMutation,

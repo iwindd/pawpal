@@ -179,6 +179,7 @@
     },
     "users": {
       "main": "ผู้ใช้งาน",
+      "create": "เพิ่มผู้ใช้",
       "customer": {
         "main": "ลูกค้า",
         "edit": "ข้อมูลทั่วไป",
@@ -573,7 +574,8 @@
   },
   "Customer": {
     "main": {
-      "title": "ลูกค้าทั้งหมด"
+      "title": "ลูกค้าทั้งหมด",
+      "add-btn": "เพิ่มผู้ใช้"
     },
     "profile": {
       "createdAt": "เป็นสมาชิกตั้งแต่ {date}",
@@ -603,7 +605,8 @@
   },
   "Employee": {
     "main": {
-      "title": "พนักงานทั้งหมด"
+      "title": "พนักงานทั้งหมด",
+      "add-btn": "เพิ่มผู้ใช้"
     },
     "profile": {
       "createdAt": "เป็นพนักงานตั้งแต่ {date}",
@@ -1046,6 +1049,48 @@
       "minutes": "นาที",
       "seconds": "วินาที",
       "now": "ตอนนี้"
+    }
+  },
+  "CreateUser": {
+    "main": {
+      "title": "เพิ่มผู้ใช้ใหม่"
+    },
+    "sections": {
+      "account": "ข้อมูลบัญชี",
+      "type": "ประเภทผู้ใช้",
+      "typeDescription": "เลือกประเภทผู้ใช้ที่ต้องการสร้าง"
+    },
+    "displayName": {
+      "label": "ชื่อที่แสดง",
+      "placeholder": "กรอกชื่อที่แสดง"
+    },
+    "email": {
+      "label": "อีเมล",
+      "placeholder": "กรอกอีเมล"
+    },
+    "password": {
+      "label": "รหัสผ่าน",
+      "placeholder": "กรอกรหัสผ่าน"
+    },
+    "passwordConfirmation": {
+      "label": "ยืนยันรหัสผ่าน",
+      "placeholder": "กรอกรหัสผ่านอีกครั้ง"
+    },
+    "type": {
+      "label": "ประเภทผู้ใช้",
+      "customer": "ลูกค้า",
+      "employee": "พนักงาน"
+    },
+    "roles": {
+      "label": "ตำแหน่ง",
+      "placeholder": "เลือกตำแหน่ง"
+    },
+    "actions": {
+      "save": "บันทึก"
+    },
+    "notify": {
+      "createSuccess": "สร้างผู้ใช้สำเร็จ",
+      "createError": "ไม่สามารถสร้างผู้ใช้ได้"
     }
   }
 }

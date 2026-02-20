@@ -23,6 +23,7 @@ export * from "./schemas/product";
 export * from "./schemas/resource/resource";
 export * from "./schemas/role";
 export * from "./schemas/tag";
+export * from "./schemas/user/admin-create-user";
 export * from "./schemas/user/admin-reset-email";
 export * from "./schemas/user/admin-reset-password";
 export * from "./schemas/wallet/transaction";

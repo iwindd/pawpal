@@ -159,6 +159,10 @@ const ROUTES = ROUTER({
     disabled: true,
     hiddenBreadcrumb: true,
     children: {
+      create: {
+        path: "/users/create",
+        label: "users.create",
+      },
       customers: {
         path: "/users/customers",
         label: "users.customer.main",
