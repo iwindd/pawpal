@@ -209,7 +209,9 @@
         }
       }
     },
-    "fanpage": "Fanpage"
+    "fanpage": "Fanpage",
+    "login": "เข้าสู่ระบบ",
+    "register": "สมัครสมาชิก"
   },
   "Product": {
     "main": {
