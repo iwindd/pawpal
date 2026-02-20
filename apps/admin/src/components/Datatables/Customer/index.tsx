@@ -1,7 +1,8 @@
 "use client";
 import { useGetCustomersQuery } from "@/features/customer/customerApi";
+import { useImpersonateUserMutation } from "@/features/user/userApi";
 import useDatatable from "@/hooks/useDatatable";
-import { IconEye } from "@pawpal/icons";
+import { IconEye, IconUserBolt } from "@pawpal/icons";
 import { AdminCustomerResponse } from "@pawpal/shared";
 import { Avatar, DataTable, Group, Text } from "@pawpal/ui/core";
 import { useFormatter, useTranslations } from "next-intl";
@@ -10,6 +11,8 @@ import TableAction from "../action";
 const CustomerDatatable = () => {
   const format = useFormatter();
   const __ = useTranslations("Datatable.customer");
+  const __action = useTranslations("Datatable.Action");
+  const [impersonateUser] = useImpersonateUserMutation();
   const { above, ...datatable } = useDatatable<AdminCustomerResponse>({
     sortStatus: {
       columnAccessor: "createdAt",
@@ -63,10 +66,22 @@ const CustomerDatatable = () => {
             displayType="icon"
             actions={[
               {
-                translate: "view",
+                label: __action("view"),
                 action: `/users/customers/${record.id}`,
                 icon: IconEye,
                 color: "blue",
+              },
+              {
+                label: __action("impersonate"),
+                action: async () => {
+                  const res = await impersonateUser(record.id);
+                  if (!("error" in res)) {
+                    window.location.href = "/";
+                  }
+                },
+                icon: IconUserBolt,
+                color: "red",
+                divider: true,
               },
             ]}
           />

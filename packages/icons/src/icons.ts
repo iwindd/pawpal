@@ -63,6 +63,7 @@ export {
   IconTrash,
   IconUpload,
   IconUser,
+  IconUserBolt,
   IconUserFilled,
   IconPaw as IconWork,
   IconX,

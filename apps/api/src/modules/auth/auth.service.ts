@@ -53,6 +53,20 @@ export class AuthService {
   }
 
   /**
+   * Impersonate a user
+   * @param id target user id
+   * @returns user session
+   */
+  async impersonate(id: string): Promise<Session> {
+    const user = await this.userRepo.find(id);
+
+    if (!user) throw new UnauthorizedException(`invalid_user`);
+    if (user.isSuspended) throw new UnauthorizedException('user_suspended');
+
+    return user.toJSON();
+  }
+
+  /**
    * Register a new user
    * @param userPayload user payload
    * @returns user session

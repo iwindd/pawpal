@@ -1,7 +1,8 @@
 "use client";
 import { useGetEmployeesQuery } from "@/features/employee/employeeApi";
+import { useImpersonateUserMutation } from "@/features/user/userApi";
 import useDatatable from "@/hooks/useDatatable";
-import { IconEye } from "@pawpal/icons";
+import { IconEye, IconUserBolt } from "@pawpal/icons";
 import { AdminEmployeeResponse } from "@pawpal/shared";
 import { Avatar, DataTable, Group, Text } from "@pawpal/ui/core";
 import { useFormatter, useTranslations } from "next-intl";
@@ -10,6 +11,8 @@ import TableAction from "../action";
 const EmployeeDatatable = () => {
   const format = useFormatter();
   const __ = useTranslations("Datatable.employee");
+  const __action = useTranslations("Datatable.Action");
+  const [impersonateUser] = useImpersonateUserMutation();
   const datatable = useDatatable<AdminEmployeeResponse>({
     sortStatus: {
       columnAccessor: "createdAt",
@@ -52,10 +55,22 @@ const EmployeeDatatable = () => {
             displayType="icon"
             actions={[
               {
-                translate: "view",
+                label: __action("view"),
                 action: `/users/employees/${record.id}`,
                 icon: IconEye,
                 color: "blue",
+              },
+              {
+                label: __action("impersonate"),
+                action: async () => {
+                  const res = await impersonateUser(record.id);
+                  if (!("error" in res)) {
+                    window.location.href = "/";
+                  }
+                },
+                icon: IconUserBolt,
+                color: "red",
+                divider: true,
               },
             ]}
           />

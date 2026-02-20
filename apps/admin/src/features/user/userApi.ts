@@ -17,6 +17,19 @@ export const userApi = createApi({
       }),
       invalidatesTags: ["Employees", "Customers"],
     }),
+    impersonateUser: builder.mutation<void, string>({
+      query: (id) => ({
+        url: `../auth/${id}/impersonate`,
+        method: "POST",
+      }),
+      invalidatesTags: ["Employees", "Customers"],
+      onQueryStarted: async (id, { dispatch, queryFulfilled }) => {
+        try {
+          await queryFulfilled;
+          // You might not even need this invalidation since window.location.href reloads the page.
+        } catch {}
+      },
+    }),
     updateUserProfile: builder.mutation<
       void,
       { id: string; profile: any; type: "customer" | "employee" }
@@ -84,6 +97,7 @@ export const userApi = createApi({
 
 export const {
   useCreateUserMutation,
+  useImpersonateUserMutation,
   useUpdateUserProfileMutation,
   useAdminResetEmailMutation,
   useAdminResetPasswordMutation,

@@ -1,8 +1,10 @@
 import { AuditInfo } from '@/common/decorators/audit.decorator';
+import { Permissions } from '@/common/decorators/permissions.decorator';
 import { AuthUser } from '@/common/decorators/user.decorator';
 import { JwtAuthGuard } from '@/common/guards/auth/jwt-auth.guard';
 import { LocalAuthGuard } from '@/common/guards/auth/local-auth.guard';
 import { SessionAuthGuard } from '@/common/guards/auth/session-auth.guard';
+import { PermissionGuard } from '@/common/guards/permission.guard';
 import { LogoutInterceptor } from '@/common/interceptors/logout.interceptor';
 import { TokenInterceptor } from '@/common/interceptors/token.interceptor';
 import { PrismaAuditInfo } from '@/common/interfaces/prisma-audit.interface';
@@ -13,6 +15,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Param,
   Post,
   UnauthorizedException,
   UseGuards,
@@ -21,6 +24,7 @@ import {
 import {
   type ChangePasswordInput,
   changePasswordSchema,
+  PermissionEnum,
   type RegisterInput,
   registerSchema,
   type Session,
@@ -62,6 +66,14 @@ export class AuthController {
   @UseInterceptors(LogoutInterceptor)
   async logout(@AuthUser() user: Session) {
     return null;
+  }
+
+  @Post(':id/impersonate')
+  @UseGuards(SessionAuthGuard, JwtAuthGuard, PermissionGuard)
+  @Permissions([PermissionEnum.Wildcard])
+  @UseInterceptors(TokenInterceptor)
+  impersonate(@Param('id') id: string) {
+    return this.authService.impersonate(id);
   }
 
   @Post('register')
