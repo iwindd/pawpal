@@ -1,6 +1,7 @@
 import { WalletCollection } from '@/common/collections/wallet.collection';
 import { PrismaAuditInfo } from '@/common/interfaces/prisma-audit.interface';
 import { DatatableQuery } from '@/common/pipes/DatatablePipe';
+import { UserType } from '@/generated/prisma/enums';
 import { SuspensionUtil } from '@/utils/suspensionUtil';
 import {
   ConflictException,
@@ -42,9 +43,11 @@ export class UserService {
     const roleConnections =
       payload.type === 'employee' && payload.roles.length > 0
         ? payload.roles.map((id) => ({ id }))
-        : [{ name: 'User' }];
+        : [];
 
-    this.logger.debug(roleConnections);
+    const userType =
+      payload.type == 'employee' ? UserType.EMPLOYEE : UserType.CUSTOMER;
+
     const user = await this.userRepo.create(
       {
         displayName: payload.displayName,
@@ -53,6 +56,7 @@ export class UserService {
         roles: {
           connect: roleConnections,
         },
+        userType,
       },
       auditInfo,
     );
@@ -185,6 +189,7 @@ export class UserService {
         avatar: true,
         createdAt: true,
         updatedAt: true,
+        userType: true,
         roles: {
           select: {
             id: true,
@@ -240,6 +245,7 @@ export class UserService {
             createdAt: suspensions[0]?.createdAt?.toISOString(),
           }
         : null,
+      userType: user.userType,
     };
   }
 

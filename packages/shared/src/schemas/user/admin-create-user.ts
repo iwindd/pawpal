@@ -23,6 +23,16 @@ export const adminCreateUserSchema = z
   .refine((data) => data.password === data.password_confirmation, {
     message: "password_confirmation_mismatch",
     path: ["password_confirmation"],
+  })
+  .transform((data) => {
+    if (data.type === "customer") {
+      return {
+        ...data,
+        roles: [],
+      };
+    }
+
+    return data;
   });
 
 export type AdminCreateUserInput = z.infer<typeof adminCreateUserSchema>;

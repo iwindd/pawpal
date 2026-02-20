@@ -35,6 +35,7 @@ export class UserEntity {
         },
         take: 1,
       },
+      userType: true,
     } satisfies Prisma.UserSelect;
   }
 
@@ -78,6 +79,10 @@ export class UserEntity {
     }));
   }
 
+  public get userType() {
+    return this.user.userType;
+  }
+
   public async isValidPassword(password: string) {
     return this.repo.isValidPassword(this.id, password);
   }
@@ -110,6 +115,7 @@ export class UserEntity {
       userWallet: this.userWallet,
       roles: this.roles,
       isSuspended: this.isSuspended,
+      userType: this.userType,
     };
   }
 }

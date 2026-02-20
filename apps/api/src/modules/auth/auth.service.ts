@@ -1,4 +1,5 @@
 import { PrismaAuditInfo } from '@/common/interfaces/prisma-audit.interface';
+import { UserType } from '@/generated/prisma/enums';
 import {
   ConflictException,
   Injectable,
@@ -83,11 +84,7 @@ export class AuthService {
         displayName: payload.displayName,
         email: payload.email,
         password: payload.password,
-        roles: {
-          connect: {
-            name: 'User',
-          },
-        },
+        userType: UserType.CUSTOMER,
       },
       auditInfo,
     );

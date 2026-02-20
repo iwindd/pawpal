@@ -1,6 +1,6 @@
 import { OrderResponseMapper } from '@/common/mappers/OrderResponseMapper';
 import { DatatableQuery } from '@/common/pipes/DatatablePipe';
-import { TransactionType } from '@/generated/prisma/enums';
+import { TransactionType, UserType } from '@/generated/prisma/enums';
 import { PrismaService } from '@/modules/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
 
@@ -17,11 +17,7 @@ export class EmployeeService {
     return this.prisma.user.getDatatable({
       query: query,
       where: {
-        roles: {
-          some: {
-            name: 'Admin',
-          },
-        },
+        userType: UserType.EMPLOYEE,
       },
       select: {
         id: true,

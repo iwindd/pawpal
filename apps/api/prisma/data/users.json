@@ -10,6 +10,7 @@
         "balance": 0
       }
     ],
+    "userType": "EMPLOYEE",
     "roles": [
       {
         "name": "Admin"
@@ -27,10 +28,7 @@
         "balance": 0
       }
     ],
-    "roles": [
-      {
-        "name": "User"
-      }
-    ]
+    "userType": "CUSTOMER",
+    "roles": []
   }
 ]

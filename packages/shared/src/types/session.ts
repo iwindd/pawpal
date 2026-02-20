@@ -14,4 +14,5 @@ export interface Session {
     name: string;
   }[];
   isSuspended: boolean;
+  userType: "CUSTOMER" | "EMPLOYEE";
 }

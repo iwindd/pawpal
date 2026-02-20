@@ -1,4 +1,5 @@
 import { JwtPayload } from '@/common/interfaces/jwt-payload.interface';
+import { UserType } from '@/generated/prisma/enums';
 import { AuthService } from '@/modules/auth/auth.service';
 import {
   CanActivate,
@@ -28,8 +29,8 @@ export class WsJwtAdminGuard implements CanActivate {
     try {
       const user = await this.authService.verifyPayload(payload);
 
-      if (!user.roles.some((role) => role.name === 'Admin'))
-        throw new UnauthorizedException('User is not admin');
+      if (user.userType !== UserType.EMPLOYEE)
+        throw new UnauthorizedException('User is not employee');
 
       return user;
     } catch (error) {

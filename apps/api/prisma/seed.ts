@@ -5,6 +5,7 @@ import {
   DiscountType,
   FieldType,
   PrismaClient,
+  UserType,
 } from '../src/generated/prisma/client';
 import categories from './data/categories.json';
 import paymentGateways from './data/paymentGateways.json';
@@ -73,6 +74,7 @@ async function main() {
           roles: {
             connect: user.roles.map((role) => ({ name: role.name })),
           },
+          userType: user.userType as UserType,
         },
       });
     }

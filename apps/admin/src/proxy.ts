@@ -41,12 +41,12 @@ export async function proxy(request: NextRequest) {
       if (process.env.NODE_ENV === "development") {
         return new NextResponse(
           `Middleware Error: ${error instanceof Error ? error.message : "Unknown error"}`,
-          { status: 500 }
+          { status: 500 },
         );
       }
 
       return NextResponse.next();
-    }
+    },
   );
 }
 
