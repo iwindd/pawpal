@@ -1,0 +1,30 @@
+info:
+  name: Confirm
+  type: http
+  seq: 3
+
+http:
+  method: PATCH
+  url: http://localhost:8000/topup/{{chargeId}}
+  body:
+    type: json
+    data: |-
+      {
+        "amount": 500,
+        "payment_id": "promptpay-manual"
+      }
+  auth: inherit
+
+runtime:
+  variables:
+    - name: chargeId
+      value: ""
+  scripts:
+    - type: before-request
+      code: console.log("Using chargeId:", bru.getVar("chargeId"));
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

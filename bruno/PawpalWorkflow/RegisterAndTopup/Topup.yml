@@ -1,0 +1,45 @@
+info:
+  name: Topup
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: http://localhost:8000/topup/
+  headers:
+    - name: Authorization
+      value: "{{accessToken}}"
+  body:
+    type: json
+    data: |-
+      {
+        "amount": {{amount}},
+        "payment_id": "promptpay-manual"
+      }
+  auth: inherit
+
+runtime:
+  variables:
+    - name: accessToken
+      value: ""
+  scripts:
+    - type: before-request
+      code: |-
+        const random = Math.floor(Math.random() * 1000) + 1;
+
+        bru.setVar("amount", random);
+  actions:
+    - type: set-variable
+      phase: after-response
+      selector:
+        expression: res.body.id
+        method: jsonq
+      variable:
+        name: chargeId
+        scope: runtime
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
