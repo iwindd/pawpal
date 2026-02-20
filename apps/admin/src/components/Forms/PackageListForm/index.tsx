@@ -1,6 +1,6 @@
 "use client";
 import useFormValidate from "@/hooks/useFormValidate";
-import { IconDeviceFloppy, IconPlus, IconTrash } from "@pawpal/icons";
+import { IconDeviceFloppy, IconTrash } from "@pawpal/icons";
 import {
   AdminProductPackageResponse,
   PackageBulkInput,
@@ -21,6 +21,7 @@ import {
 } from "@pawpal/ui/core";
 import { UseFormReturnType } from "@pawpal/ui/form";
 import { useTranslations } from "next-intl";
+import AddPackageCardButton from "./AddPackageCardButton";
 
 export type PackageListFormControl = UseFormReturnType<PackageBulkInput>;
 
@@ -77,14 +78,6 @@ const PackageListForm = ({
           <Text size="lg" fw={600}>
             {__("title", { defaultValue: "Packages" })}
           </Text>
-          <Button
-            leftSection={<IconPlus size={14} />}
-            variant="light"
-            onClick={handleAddPackage}
-            disabled={isLoading}
-          >
-            {__("actions.add", { defaultValue: "Add Package" })}
-          </Button>
         </Group>
 
         <Stack gap="md">
@@ -153,6 +146,15 @@ const PackageListForm = ({
                 </Card>
               </Grid.Col>
             ))}
+
+            {/* Add Package Card Button */}
+            <Grid.Col span={{ base: 12, md: 6 }}>
+              <AddPackageCardButton
+                handleAddPackage={handleAddPackage}
+                isLoading={isLoading}
+                label={__("actions.add", { defaultValue: "Add Package" })}
+              />
+            </Grid.Col>
           </Grid>
         </Stack>
       </Stack>
