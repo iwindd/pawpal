@@ -10,6 +10,7 @@ import { packageApi } from "@/features/package/packageApi";
 import { paymentGatewayApi } from "@/features/paymentGateway/paymentGatewayApi";
 import { productApi } from "@/features/productApi/productApi";
 import { resourceApi } from "@/features/resource/resourceApi";
+import { roleApi } from "@/features/role/roleApi";
 
 import { customerApi } from "@/features/customer/customerApi";
 import { employeeApi } from "@/features/employee/employeeApi";
@@ -39,6 +40,7 @@ export const makeStore = (preloadedState: { auth: AuthState }) => {
       [carouselApi.reducerPath]: carouselApi.reducer,
       [authApi.reducerPath]: authApi.reducer,
       [notificationApi.reducerPath]: notificationApi.reducer,
+      [roleApi.reducerPath]: roleApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware().concat(
@@ -57,6 +59,7 @@ export const makeStore = (preloadedState: { auth: AuthState }) => {
         carouselApi.middleware,
         authApi.middleware,
         notificationApi.middleware,
+        roleApi.middleware,
       ),
     preloadedState,
   });

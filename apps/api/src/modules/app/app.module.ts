@@ -18,6 +18,7 @@ import { PaymentGatewayModule } from '../payment-gateway/payment-gateway.module'
 import { PrismaModule } from '../prisma/prisma.module';
 import { ProductModule } from '../product/product.module';
 import { ResourceModule } from '../resource/resource.module';
+import { RoleModule } from '../role/role.module';
 import { SaleModule } from '../sale/sale.module';
 import { TagModule } from '../tag/tag.module';
 import { TopupModule } from '../topup/topup.module';
@@ -50,6 +51,7 @@ import { WalletModule } from '../wallet/wallet.module';
     ResourceModule,
     CarouselModule,
     CategoryModule,
+    RoleModule,
     NotificationModule,
     FieldModule,
   ],

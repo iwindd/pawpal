@@ -1,5 +1,17 @@
 {
-  "permissions": [{ "name": "*.*" }],
+  "permissions": [
+    { "name": "*.*" },
+    { "name": "Order.Management" },
+    { "name": "Product.Management" },
+    { "name": "Tag.Management" },
+    { "name": "Category.Management" },
+    { "name": "Customer.Management" },
+    { "name": "Employee.Management" },
+    { "name": "Role.Management" },
+    { "name": "Carousel.Management" },
+    { "name": "PaymentGateway.Management" },
+    { "name": "Resource.Management" }
+  ],
   "roles": [
     {
       "name": "Admin",

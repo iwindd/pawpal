@@ -133,6 +133,8 @@
         "carousel": "สไลด์โชว์",
         "payment": "การชำระเงิน"
       },
+
+      "roles": "ตำแหน่ง",
       "resources": "ทรัพยากร"
     }
   },
@@ -170,6 +172,11 @@
       "products": "สินค้าภายในแท็ก"
     },
     "resources": "ทรัพยากร",
+    "roles": {
+      "main": "ตำแหน่ง",
+      "create": "สร้างตำแหน่ง",
+      "edit": "แก้ไขตำแหน่ง"
+    },
     "users": {
       "main": "ผู้ใช้งาน",
       "customer": {
@@ -213,6 +220,121 @@
     "fanpage": "Fanpage",
     "login": "เข้าสู่ระบบ",
     "register": "สมัครสมาชิก"
+  },
+  "Role": {
+    "main": {
+      "title": "จัดการตำแหน่ง",
+      "add-btn": "สร้างตำแหน่ง"
+    },
+    "create": {
+      "title": "สร้างตำแหน่งใหม่"
+    },
+    "edit": {
+      "title": "แก้ไขตำแหน่ง"
+    },
+    "form": {
+      "sections": {
+        "general": "ข้อมูลทั่วไป",
+        "permissions": "สิทธิ์การเข้าถึง",
+        "permissionsDescription": "กำหนดสิทธิ์ที่ตำแหน่งนี้สามารถเข้าถึงได้"
+      },
+      "name": {
+        "label": "ชื่อตำแหน่ง",
+        "placeholder": "ระบุชื่อตำแหน่ง"
+      },
+      "description": {
+        "label": "รายละเอียด",
+        "placeholder": "ระบุรายละเอียดตำแหน่ง"
+      },
+      "actions": {
+        "save": "บันทึก"
+      }
+    },
+    "notify": {
+      "createSuccess": "สร้างตำแหน่งสำเร็จ",
+      "createError": "ไม่สามารถสร้างตำแหน่งได้",
+      "updateSuccess": "แก้ไขตำแหน่งสำเร็จ",
+      "updateError": "ไม่สามารถแก้ไขตำแหน่งได้",
+      "deleteSuccess": "ลบตำแหน่งสำเร็จ"
+    },
+    "confirm": {
+      "deleteTitle": "ยืนยันการลบตำแหน่ง",
+      "deleteMessage": "คุณแน่ใจหรือไม่ว่าต้องการลบตำแหน่งนี้?"
+    }
+  },
+  "Permission": {
+    "Order": {
+      "Management": {
+        "label": "จัดการคำสั่งซื้อ",
+        "description": "ดูและจัดการคำสั่งซื้อทั้งหมด"
+      }
+    },
+    "Product": {
+      "Management": {
+        "label": "จัดการสินค้า",
+        "description": "เพิ่ม แก้ไข และลบสินค้า"
+      }
+    },
+    "Tag": {
+      "Management": {
+        "label": "จัดการแท็ก",
+        "description": "เพิ่ม แก้ไข และลบแท็กสินค้า"
+      }
+    },
+    "Category": {
+      "Management": {
+        "label": "จัดการหมวดหมู่",
+        "description": "เพิ่ม แก้ไข และลบหมวดหมู่สินค้า"
+      }
+    },
+    "Customer": {
+      "Management": {
+        "label": "จัดการลูกค้า",
+        "description": "ดูและแก้ไขข้อมูลลูกค้า"
+      }
+    },
+    "Employee": {
+      "Management": {
+        "label": "จัดการพนักงาน",
+        "description": "ดูและแก้ไขข้อมูลพนักงาน"
+      }
+    },
+    "Role": {
+      "Management": {
+        "label": "จัดการตำแหน่ง",
+        "description": "เพิ่ม แก้ไข และลบตำแหน่ง"
+      }
+    },
+    "Carousel": {
+      "Management": {
+        "label": "จัดการสไลด์โชว์",
+        "description": "เพิ่ม แก้ไข และลบสไลด์โชว์"
+      }
+    },
+    "PaymentGatewayManagement": {
+      "Management": {
+        "label": "จัดการช่องทางชำระเงิน",
+        "description": "ตั้งค่าและจัดการช่องทางชำระเงิน"
+      }
+    },
+    "ResourceManagement": {
+      "Management": {
+        "label": "จัดการทรัพยากร",
+        "description": "อัปโหลดและจัดการไฟล์ทรัพยากร"
+      }
+    },
+    "PaymentGateway": {
+      "Management": {
+        "label": "จัดการช่องทางชำระเงิน",
+        "description": "ตั้งค่าและจัดการช่องทางชำระเงิน"
+      }
+    },
+    "Resource": {
+      "Management": {
+        "label": "จัดการทรัพยากร",
+        "description": "อัปโหลดและจัดการไฟล์ทรัพยากร"
+      }
+    }
   },
   "Product": {
     "main": {
@@ -610,6 +732,16 @@
       "note": "หมายเหตุ",
       "performedBy": "ผู้ดำเนินการ",
       "createdAt": "วันที่ดำเนินการ"
+    },
+    "role": {
+      "name": "ชื่อตำแหน่ง",
+      "description": "รายละเอียด",
+      "permissions": "สิทธิ์",
+      "permissionCount": "{count} สิทธิ์",
+      "users": "ผู้ใช้",
+      "userCount": "{count} คน",
+      "createdAt": "วันที่สร้าง",
+      "actions": "เครื่องมือ"
     }
   },
   "Order": {

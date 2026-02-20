@@ -2,6 +2,7 @@ import {
   IconFolder,
   IconHome,
   IconLogin,
+  IconRoleFilled,
   IconUser,
   IconWork,
 } from "@pawpal/icons";
@@ -126,6 +127,23 @@ const ROUTES = ROUTER({
         path: "/categories/:id/products",
         label: "categories.products",
         icon: IconWork,
+      },
+    },
+  },
+  roles: {
+    path: "/roles",
+    label: "roles.main",
+    icon: IconRoleFilled,
+    children: {
+      create: {
+        path: "/roles/create",
+        label: "roles.create",
+        icon: IconRoleFilled,
+      },
+      edit: {
+        path: "/roles/:id",
+        label: "roles.edit",
+        icon: IconRoleFilled,
       },
     },
   },

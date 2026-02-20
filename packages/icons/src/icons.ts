@@ -49,6 +49,7 @@ export {
   IconQrcode,
   IconReceiptDollarFilled,
   IconReceiptFilled,
+  IconManualGearboxFilled as IconRoleFilled,
   IconCalendarEvent as IconSchedule,
   IconSearch,
   IconSettings,

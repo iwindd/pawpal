@@ -6,6 +6,7 @@ import {
   IconFolderFilled,
   IconReceiptDollarFilled,
   IconReceiptFilled,
+  IconRoleFilled,
   IconShieldCheckFilled,
   IconShoppingCartFilled,
   IconTagsFilled,
@@ -64,5 +65,8 @@ export const navlinks: NavLink[] = [
     item("website.carousel", { icon: IconCarouselHorizontalFilled }),
     item("website.payment", { icon: IconCreditCardFilled }),
   ]),
-  folder("misc", [item("resources", { icon: IconFolderFilled })]),
+  folder("misc", [
+    item("roles", { icon: IconRoleFilled }),
+    item("resources", { icon: IconFolderFilled }),
+  ]),
 ];
