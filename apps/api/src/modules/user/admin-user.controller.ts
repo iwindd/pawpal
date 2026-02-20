@@ -5,11 +5,13 @@ import { SessionAuthGuard } from '@/common/guards/auth/session-auth.guard';
 import { PermissionGuard } from '@/common/guards/permission.guard';
 import { PrismaAuditInfo } from '@/common/interfaces/prisma-audit.interface';
 import { ZodPipe } from '@/common/pipes/ZodPipe';
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Param, Post, Put, UseGuards } from '@nestjs/common';
 import {
   AdminCreateUserInput,
+  AdminUpdateUserRoleInput,
   PermissionEnum,
   adminCreateUserSchema,
+  adminUpdateUserRoleSchema,
 } from '@pawpal/shared';
 import { UserService } from './user.service';
 
@@ -28,5 +30,15 @@ export class AdminUserController {
     @AuditInfo() auditInfo: PrismaAuditInfo,
   ) {
     return this.userService.adminCreateUser(payload, auditInfo);
+  }
+
+  @Put(':id/roles')
+  updateRoles(
+    @Param('id') id: string,
+    @Body(new ZodPipe(adminUpdateUserRoleSchema))
+    payload: AdminUpdateUserRoleInput,
+    @AuditInfo() auditInfo: PrismaAuditInfo,
+  ) {
+    return this.userService.adminUpdateUserRoles(id, payload, auditInfo);
   }
 }

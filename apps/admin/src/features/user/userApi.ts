@@ -1,5 +1,5 @@
 import { baseQuery } from "@/configs/api";
-import { AdminCreateUserInput } from "@pawpal/shared";
+import { AdminCreateUserInput, AdminUpdateUserRoleInput } from "@pawpal/shared";
 import { createApi } from "@reduxjs/toolkit/query/react";
 
 export const userApi = createApi({
@@ -29,6 +29,17 @@ export const userApi = createApi({
           // You might not even need this invalidation since window.location.href reloads the page.
         } catch {}
       },
+    }),
+    updateUserRoles: builder.mutation<
+      void,
+      { id: string; payload: AdminUpdateUserRoleInput }
+    >({
+      query: ({ id, payload }) => ({
+        url: `user/${id}/roles`,
+        method: "PUT",
+        body: payload,
+      }),
+      invalidatesTags: ["Employees", "Customers"],
     }),
     updateUserProfile: builder.mutation<
       void,
@@ -98,6 +109,7 @@ export const userApi = createApi({
 export const {
   useCreateUserMutation,
   useImpersonateUserMutation,
+  useUpdateUserRolesMutation,
   useUpdateUserProfileMutation,
   useAdminResetEmailMutation,
   useAdminResetPasswordMutation,

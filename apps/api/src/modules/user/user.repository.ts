@@ -248,6 +248,57 @@ export class UserRepository {
   }
 
   /**
+   * Update user roles
+   * @param userId target user id
+   * @param roleConnections array of role connection objects
+   * @param auditInfo audit info
+   * @returns updated user
+   */
+  public async updateUserRoles(
+    userId: string,
+    roleConnections: Prisma.RoleWhereUniqueInput[],
+    auditInfo?: PrismaAuditInfo,
+  ) {
+    return this.prisma.$transaction(async (tx) => {
+      const user = await tx.user.findUniqueOrThrow({
+        where: { id: userId },
+        select: {
+          roles: { select: { id: true, name: true } },
+        },
+      });
+
+      const updatedUser = await tx.user.update({
+        where: { id: userId },
+        data: {
+          roles: {
+            set: roleConnections,
+          },
+        },
+        select: UserRepository.DEFAULT_SELECT,
+      });
+
+      await tx.auditLog.create({
+        data: {
+          modelName: ModelName.User,
+          recordId: updatedUser.id,
+          action: AuditActionType.UPDATED,
+          oldData: {
+            roles: user.roles,
+          },
+          newData: {
+            roles: updatedUser.roles,
+          },
+          performedById: auditInfo?.performedById || updatedUser.id,
+          ipAddress: auditInfo?.ipAddress,
+          userAgent: auditInfo?.userAgent,
+        },
+      });
+
+      return this.from(updatedUser);
+    });
+  }
+
+  /**
    * Check if the email is already exist
    * @param email email to check
    * @returns true if the email is already exist, false otherwise

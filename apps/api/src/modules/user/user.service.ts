@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import {
   AdminCreateUserInput,
+  AdminUpdateUserRoleInput,
   AdminUserResponse,
   ChangeEmailInput,
   UpdateProfileInput,
@@ -53,6 +54,33 @@ export class UserService {
           connect: roleConnections,
         },
       },
+      auditInfo,
+    );
+
+    return user.toJSON();
+  }
+
+  /**
+   * Admin update a user's roles
+   * @param userId user id
+   * @param payload admin update user role payload
+   * @param auditInfo audit info
+   * @returns updated user session
+   */
+  async adminUpdateUserRoles(
+    userId: string,
+    payload: AdminUpdateUserRoleInput,
+    auditInfo?: PrismaAuditInfo,
+  ) {
+    const roleConnections =
+      payload.type === 'employee' && payload.roles.length > 0
+        ? payload.roles.map((id) => ({ id }))
+        : [{ name: 'User' }];
+
+    this.logger.debug(`Updating user roles for ${userId}:`, roleConnections);
+    const user = await this.userRepo.updateUserRoles(
+      userId,
+      roleConnections,
       auditInfo,
     );
 

@@ -1,5 +1,6 @@
 "use client";
 import UserSuspendedBadge from "@/components/Badges/UserSuspendedBadge";
+import { EditUserRoleModal } from "@/components/Modals";
 import ChangeEmailModal from "@/components/Modals/User/ChangeEmailModal";
 import ChangePasswordModal from "@/components/Modals/User/ChangePasswordModal";
 import SuspendUserModal from "@/components/Modals/User/SuspendUserModal";
@@ -45,6 +46,8 @@ export default function UserInfoCard({
   const [suspendOpened, { open: openSuspend, close: closeSuspend }] =
     useDisclosure(false);
   const [unsuspendOpened, { open: openUnsuspend, close: closeUnsuspend }] =
+    useDisclosure(false);
+  const [editRoleOpened, { open: openEditRole, close: closeEditRole }] =
     useDisclosure(false);
 
   const handleResetEmail = async (values: any) => {
@@ -149,6 +152,9 @@ export default function UserInfoCard({
                   {role.name}
                 </Text>
               ))}
+              <Anchor size="xs" onClick={openEditRole}>
+                {__("editRole")}
+              </Anchor>
             </Group>
           </Group>
           <Group justify="space-between">
@@ -205,6 +211,14 @@ export default function UserInfoCard({
         onSubmit={handleUnsuspend}
         loading={isUnsuspending}
         type="unsuspend"
+      />
+
+      <EditUserRoleModal
+        opened={editRoleOpened}
+        onClose={closeEditRole}
+        initialType={type === "session" ? "customer" : type}
+        initialRoles={user.roles.map((r: any) => r.id)}
+        userId={user.id}
       />
     </>
   );

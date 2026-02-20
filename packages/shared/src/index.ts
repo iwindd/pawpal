@@ -26,6 +26,7 @@ export * from "./schemas/tag";
 export * from "./schemas/user/admin-create-user";
 export * from "./schemas/user/admin-reset-email";
 export * from "./schemas/user/admin-reset-password";
+export * from "./schemas/user/admin-update-user-role";
 export * from "./schemas/wallet/transaction";
 export * from "./schemas/website/carousel";
 export * from "./schemas/website/carousel-reorder";

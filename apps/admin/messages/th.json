@@ -83,6 +83,32 @@
       "title": "แก้ไขอีเมล",
       "email": "อีเมล",
       "submit": "บันทึก"
+    },
+    "EditUserRoleModal": {
+      "title": "แก้ไขตำแหน่งผู้ใช้งาน",
+      "submit": "บันทึก",
+      "type": {
+        "label": "ประเภทผู้ใช้งาน",
+        "placeholder": "เลือกประเภท",
+        "options": {
+          "customer": "ลูกค้า",
+          "employee": "พนักงาน"
+        }
+      },
+      "roles": {
+        "label": "กำหนดตำแหน่ง",
+        "placeholder": "เลือกตำแหน่ง..."
+      },
+      "notify": {
+        "success": {
+          "title": "แก้ไขตำแหน่งเรียบร้อย",
+          "message": "ระบบได้ทำการปรับปรุงตำแหน่งผู้ใช้งานแล้ว"
+        },
+        "error": {
+          "title": "เกิดข้อผิดพลาด",
+          "message": "ไม่สามารถแก้ไขตำแหน่งผู้ใช้งานได้"
+        }
+      }
     }
   },
   "UserStatus": {
@@ -590,6 +616,7 @@
       "email": "อีเมล",
       "displayName": "ชื่อที่แสดง",
       "roles": "บทบาท",
+      "editRole": "แก้ไขตำแหน่ง",
       "editEmail": "แก้ไขอีเมล",
       "editPassword": "แก้ไขรหัสผ่าน",
       "suspension": "สถานะบัญชี",
@@ -621,6 +648,7 @@
       "email": "อีเมล",
       "displayName": "ชื่อที่แสดง",
       "roles": "บทบาท",
+      "editRole": "แก้ไขตำแหน่ง",
       "editEmail": "แก้ไขอีเมล",
       "editPassword": "แก้ไขรหัสผ่าน",
       "suspension": "สถานะบัญชี",
