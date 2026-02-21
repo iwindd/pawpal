@@ -1,4 +1,5 @@
 import {
+  useAssignJobTransactionMutation,
   useFailJobTransactionMutation,
   useSuccessJobTransactionMutation,
 } from "@/features/transaction/transactionApi";
@@ -13,13 +14,20 @@ export const useTransactionActions = () => {
   const [failJobTransaction, { isLoading: isFailJobTransaction }] =
     useFailJobTransactionMutation();
 
+  const [assignJobTransaction, { isLoading: isAssignJobTransaction }] =
+    useAssignJobTransactionMutation();
+
   return {
-    isLoading: isSuccessJobTransaction || isFailJobTransaction,
+    isLoading:
+      isSuccessJobTransaction || isFailJobTransaction || isAssignJobTransaction,
     successJobTransaction: confirmation<string>(successJobTransaction, {
       confirmProps: { color: "green" },
     }),
     failJobTransaction: confirmation<string>(failJobTransaction, {
       confirmProps: { color: "red" },
+    }),
+    assignJobTransaction: confirmation<string>(assignJobTransaction, {
+      confirmProps: { color: "blue" },
     }),
   };
 };

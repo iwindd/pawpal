@@ -8,17 +8,18 @@ export interface AdminTransactionResponse {
   balanceBefore: number;
   balanceAfter: number;
   status: TransactionStatus;
-  currency: string;
-  paymentGatewayId: string;
-  orderId?: string;
-  createdAt: string;
-  updatedAt: string;
-
-  // Relations
-  customer?: any; // Replace with proper type later if needed
-  wallet?: any;
-  order?: any;
-  paymentGateway?: any;
+  assigned?: {
+    id: string;
+    displayName: string;
+  };
+  assignedAt?: string;
+  customer: {
+    id: string;
+    displayName: string;
+  };
+  paymentGateway?: {
+    name: string;
+  };
 }
 
 export interface OnTopupTransactionUpdatedProps {

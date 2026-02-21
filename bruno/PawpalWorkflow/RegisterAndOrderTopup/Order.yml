@@ -18,7 +18,7 @@ http:
         "paymentMethod": "promptpay-manual",
         "includeWalletBalance": true,
         "fields": {
-            "cmlvjkv7h000z4oixnj7n98wc": "tester#{{randomId}}"
+            "cmlwhiite000z4kix1hz2i9rv": "tester#{{randomId}}"
         }
       }
   auth: inherit

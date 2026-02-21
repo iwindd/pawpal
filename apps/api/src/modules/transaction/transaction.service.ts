@@ -26,22 +26,56 @@ export class TransactionService {
    * @returns transaction detail
    */
   async getTransaction(id: string) {
-    return await this.prisma.userWalletTransaction.findUniqueOrThrow({
-      where: { id },
-      include: {
-        order: {
-          include: {
-            user: true,
+    const transaction =
+      await this.prisma.userWalletTransaction.findUniqueOrThrow({
+        where: { id },
+        select: {
+          id: true,
+          type: true,
+          amount: true,
+          balanceBefore: true,
+          balanceAfter: true,
+          status: true,
+          currency: true,
+          assigned: {
+            select: {
+              id: true,
+              displayName: true,
+            },
+          },
+          wallet: {
+            select: {
+              user: {
+                select: {
+                  id: true,
+                  displayName: true,
+                },
+              },
+            },
+          },
+          assignedAt: true,
+          payment: {
+            select: {
+              name: true,
+            },
           },
         },
-        wallet: {
-          include: {
-            user: true,
-          },
-        },
-        payment: true,
-      },
-    });
+      });
+
+    this.logger.debug(transaction);
+
+    return {
+      id: transaction.id,
+      type: transaction.type,
+      amount: transaction.amount,
+      balanceBefore: transaction.balanceBefore,
+      balanceAfter: transaction.balanceAfter,
+      status: transaction.status,
+      assigned: transaction.assigned,
+      assignedAt: transaction.assignedAt,
+      customer: transaction.wallet.user,
+      paymentGateway: transaction.payment,
+    };
   }
 
   /**
@@ -152,6 +186,35 @@ export class TransactionService {
   }
 
   /**
+   * Assign charge transaction to an admin
+   * @param transactionId transaction id
+   * @param processedBy processed by user id
+   */
+  async assignJobTransaction(transactionId: string, processedBy: string) {
+    const transaction =
+      await this.prisma.userWalletTransaction.findUniqueOrThrow({
+        where: { id: transactionId },
+      });
+
+    if (transaction.assignedId) {
+      if (transaction.assignedId === processedBy) {
+        return { success: true };
+      }
+      throw new Error('Transaction is already assigned to someone else');
+    }
+
+    await this.prisma.userWalletTransaction.update({
+      where: { id: transactionId },
+      data: {
+        assignedId: processedBy,
+        assignedAt: new Date(),
+      },
+    });
+
+    return { success: true };
+  }
+
+  /**
    * Get pending transactions datatable
    * @param query datatable query
    * @returns datatable response
@@ -174,6 +237,14 @@ export class TransactionService {
         orderId: true,
         createdAt: true,
         updatedAt: true,
+        assignedId: true,
+        assigned: {
+          select: {
+            id: true,
+            displayName: true,
+          },
+        },
+        assignedAt: true,
       },
       where: {
         OR: [

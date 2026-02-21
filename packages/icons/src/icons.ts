@@ -36,6 +36,7 @@ export {
   IconHistory,
   IconHome,
   IconInfoHexagon as IconInfo,
+  IconInfoCircle,
   IconKey,
   IconLanguage,
   IconLogin,
@@ -65,6 +66,7 @@ export {
   IconUser,
   IconUserBolt,
   IconUserFilled,
+  IconUserSearch,
   IconPaw as IconWork,
   IconX,
 } from "@tabler/icons-react";

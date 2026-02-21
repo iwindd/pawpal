@@ -1,4 +1,4 @@
-import { MantineThemeOverride } from "core";
+import { MantineThemeOverride } from "@mantine/core";
 import { lamoonMultiplier } from "../../../../fonts/lamoon";
 
 const MantineText = {

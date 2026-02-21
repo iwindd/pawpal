@@ -23,6 +23,7 @@ model User {
   completedOrders                 Order[]                 @relation("OrderCompletedBy")
   succeededUserWalletTransactions UserWalletTransaction[] @relation("UserWalletTransactionSucceededBy")
   failedUserWalletTransactions    UserWalletTransaction[] @relation("UserWalletTransactionFailedBy")
+  assignedUserWalletTransactions  UserWalletTransaction[] @relation("TransactionAssigned")
   suspensions                     UserSuspension[]        @relation("UserSuspensions")
   performedSuspensions            UserSuspension[]        @relation("PerformedSuspensions")
   userSecurityLogs                UserSecurityLog[]       @relation("UserSecurityLogs")

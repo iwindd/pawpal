@@ -44,11 +44,16 @@ model UserWalletTransaction {
   failedById String?   @map("failed_by_id")
   failedAt   DateTime? @map("failed_at")
 
+  assigned   User?     @relation("TransactionAssigned", fields: [assignedId], references: [id])
+  assignedId String?   @map("assigned_id")
+  assignedAt DateTime? @map("assigned_at")
+
   @@index([walletId])
   @@index([type])
   @@index([paymentGatewayId])
   @@index([succeededById])
   @@index([failedById])
+  @@index([assignedId])
   @@map("user_wallet_transactions")
 }
 

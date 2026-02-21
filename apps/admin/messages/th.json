@@ -1130,15 +1130,27 @@
       "paymentGateway": "ช่องทางอ้างอิง",
       "orderId": "รหัสคำสั่งซื้อ",
       "financials": "ข้อมูลการเงิน",
-      "amount": "จำนวนเงิน",
+      "amount": "จำนวนที่เติม",
       "balanceBefore": "ยอดคงเหลือก่อนหน้า",
-      "balanceAfter": "ยอดคงเหลือหลังทำรายการ"
+      "balanceAfter": "ยอดคงเหลือหลังทำรายการ",
+      "assigned": "ผู้ดูแลเคส",
+      "takeCase": "รับเคส"
     },
     "status": {
       "created": "รอยืนยันการโอน",
       "pending": "กำลังรอดำเนินการ",
       "succeeded": "สำเร็จ",
       "failed": "ไม่สำเร็จ"
+    },
+    "assignedCard": {
+      "assignedTo": "ผู้ดูแลเคส: {name}",
+      "assignedAt": "มอบหมายเมื่อ:",
+      "changeAssigned": "เปลี่ยนผู้ดูแล",
+      "notAssigned": "ยังไม่มีผู้ดูแลเคสนี้"
+    },
+    "notify": {
+      "takeCaseSuccess": "รับเคสนี้เป็นผู้ดูแลเรียบร้อยแล้ว",
+      "takeCaseError": "ไม่สามารถรับเคสได้ อาจถูกผู้ดูแลคนอื่นรับไปแล้ว"
     },
     "type": {
       "topup": "เติมเงิน",

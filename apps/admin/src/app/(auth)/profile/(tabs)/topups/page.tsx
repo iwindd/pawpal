@@ -3,7 +3,7 @@ import TopupStatusBadge from "@/components/Badges/TopupStatusBadge";
 import { useGetEmployeeTopupsQuery } from "@/features/employee/employeeApi";
 import { useAppSelector } from "@/hooks";
 import useDatatable from "@/hooks/useDatatable";
-import { AdminEmployeeResponse } from "@pawpal/shared";
+import { AdminTransactionResponse } from "@pawpal/shared";
 import { Box, DataTable } from "@pawpal/ui/core";
 import { useFormatter, useTranslations } from "next-intl";
 
@@ -11,7 +11,7 @@ const ProfileTopupHistoryPage = () => {
   const session = useAppSelector((state) => state.auth.user)!;
   const format = useFormatter();
   const __ = useTranslations("Datatable.transaction");
-  const datatable = useDatatable<AdminEmployeeResponse>({
+  const datatable = useDatatable<AdminTransactionResponse>({
     sortStatus: {
       columnAccessor: "createdAt",
       direction: "desc",

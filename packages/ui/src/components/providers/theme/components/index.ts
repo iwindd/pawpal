@@ -1,4 +1,4 @@
-import { MantineThemeOverride } from "core";
+import { MantineThemeOverride } from "@mantine/core";
 import Button from "./button";
 import Card from "./card";
 import Container from "./container";

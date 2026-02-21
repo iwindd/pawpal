@@ -23,6 +23,23 @@ class TransactionApi {
       };
     }
   }
+
+  async assign(id: string): Promise<PawApiResponse<AdminTransactionResponse>> {
+    try {
+      const response = await this.client.patch<AdminTransactionResponse>(
+        `admin/transaction/job/${id}/assign`,
+      );
+      return {
+        success: true,
+        data: response.data,
+      } as PawApiResponse<AdminTransactionResponse>;
+    } catch (error) {
+      return {
+        success: false,
+        data: error as AxiosError,
+      };
+    }
+  }
 }
 
 export default TransactionApi;

@@ -17,6 +17,7 @@ const MantineColors = {
     "#355594",
     "#284985",
   ],
+  warning: DEFAULT_THEME.colors.orange,
   success: DEFAULT_THEME.colors.teal,
 } satisfies MantineThemeOverride["colors"];
 

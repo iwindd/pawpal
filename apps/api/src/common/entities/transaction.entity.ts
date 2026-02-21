@@ -24,6 +24,14 @@ export class TransactionEntity {
       createdAt: true,
       updatedAt: true,
       paymentGatewayId: true,
+      assignedId: true,
+      assigned: {
+        select: {
+          id: true,
+          displayName: true,
+        },
+      },
+      assignedAt: true,
       order: {
         select: {
           id: true,

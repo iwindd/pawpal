@@ -1,5 +1,5 @@
+import { MantineThemeOverride } from "@mantine/core";
 import postcssConfig from "@pawpal/ui/postcss.config";
-import { MantineThemeOverride } from "core";
 
 const postcssConfigBreakpoints =
   postcssConfig.plugins["postcss-simple-vars"].variables;

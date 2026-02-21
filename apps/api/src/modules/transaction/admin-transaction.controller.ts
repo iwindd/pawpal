@@ -48,4 +48,15 @@ export class AdminTransactionController {
   ) {
     return await this.transactionService.failCharge(transactionId, user.id);
   }
+
+  @Patch('job/:transactionId/assign')
+  async assignJobTransaction(
+    @Param('transactionId') transactionId: string,
+    @AuthUser() user: Session,
+  ) {
+    return await this.transactionService.assignJobTransaction(
+      transactionId,
+      user.id,
+    );
+  }
 }

@@ -37,6 +37,13 @@ export const transactionApi = createApi({
       }),
       invalidatesTags: ["Transactions"],
     }),
+    assignJobTransaction: builder.mutation<void, string>({
+      query: (transactionId) => ({
+        url: `/job/${transactionId}/assign`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["Transactions"],
+    }),
   }),
 });
 
@@ -44,4 +51,5 @@ export const {
   useGetTransactionsQuery,
   useSuccessJobTransactionMutation,
   useFailJobTransactionMutation,
+  useAssignJobTransactionMutation,
 } = transactionApi;
