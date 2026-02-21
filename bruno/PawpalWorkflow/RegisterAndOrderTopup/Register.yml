@@ -1,0 +1,35 @@
+info:
+  name: Register
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: http://localhost:8000/auth/register
+  body:
+    type: json
+    data: |-
+      {
+        "email": "{{fakeEmail}}",
+        "displayName": "{{fakeDisplayName}}",
+        "password": "{{fakePassword}}",
+        "password_confirmation": "{{fakePassword}}",
+        "accept_conditions": true
+      }
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        const random = Math.floor(Math.random() * 1000000);
+        const timestamp = Date.now();
+
+        bru.setVar("fakeEmail", `user_${timestamp}_${random}@test.com`);
+        bru.setVar("fakeDisplayName", `User_${random}`);
+        bru.setVar("fakePassword", "password");
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

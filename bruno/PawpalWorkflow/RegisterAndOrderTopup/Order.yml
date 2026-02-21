@@ -1,0 +1,72 @@
+info:
+  name: Order
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: http://localhost:8000/order/
+  headers:
+    - name: Authorization
+      value: "{{accessToken}}"
+  body:
+    type: json
+    data: |-
+      {
+        "packageId": "{{packageId}}",
+        "amount": 1,
+        "paymentMethod": "promptpay-manual",
+        "includeWalletBalance": true,
+        "fields": {
+            "cmlvjkv7h000z4oixnj7n98wc": "tester#{{randomId}}"
+        }
+      }
+  auth: inherit
+
+runtime:
+  variables:
+    - name: packageId
+      value: ""
+    - name: randomId
+      value: ""
+  scripts:
+    - type: before-request
+      code: |-
+        const packages = [
+          "valorant-1",
+          "valorant-2",
+          "valorant-3",
+          "valorant-4",
+          "valorant-5",
+          "valorant-6",
+          "valorant-7",
+          "valorant-8",
+          "valorant-9",
+          "valorant-10",
+        ];
+
+        // สุ่ม index
+        const randomIndex = Math.floor(Math.random() * packages.length);
+
+        // เลือก 1 ตัว
+        const randomPackage = packages[randomIndex];
+        const randomId = Math.floor(Math.random() * 1000000);
+
+        // set เป็น variable
+        bru.setVar("packageId", randomPackage);
+        bru.setVar("randomId", randomId);
+  actions:
+    - type: set-variable
+      phase: after-response
+      selector:
+        expression: res.body.charge.id
+        method: jsonq
+      variable:
+        name: chargeId
+        scope: runtime
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
