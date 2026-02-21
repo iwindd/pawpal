@@ -28,6 +28,11 @@ export class AdminTransactionController {
     return this.transactionService.getJobTransactionsDatatable(query);
   }
 
+  @Get(':transactionId')
+  async getTransaction(@Param('transactionId') transactionId: string) {
+    return this.transactionService.getTransaction(transactionId);
+  }
+
   @Patch('job/:transactionId/success')
   async successJobTransaction(
     @Param('transactionId') transactionId: string,

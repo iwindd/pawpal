@@ -21,6 +21,30 @@ export class TransactionService {
   ) {}
 
   /**
+   * Get transaction detail
+   * @param id transaction id
+   * @returns transaction detail
+   */
+  async getTransaction(id: string) {
+    return await this.prisma.userWalletTransaction.findUniqueOrThrow({
+      where: { id },
+      include: {
+        order: {
+          include: {
+            user: true,
+          },
+        },
+        wallet: {
+          include: {
+            user: true,
+          },
+        },
+        payment: true,
+      },
+    });
+  }
+
+  /**
    * Success charge transaction
    * @param transactionId transaction id
    * @param processedBy processed by user id

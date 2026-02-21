@@ -6,6 +6,7 @@ import CategoryApi from "./services/Category";
 import OrderApi from "./services/Order";
 import ProductApi from "./services/Product";
 import ProductTagApi from "./services/ProductTag";
+import TransactionApi from "./services/Transaction";
 import UserApi from "./services/User";
 
 export class ServerApi extends PawApi {
@@ -15,6 +16,7 @@ export class ServerApi extends PawApi {
   public readonly product: ProductApi;
   public readonly productTag: ProductTagApi;
   public readonly order: OrderApi;
+  public readonly transaction: TransactionApi;
   public readonly user: UserApi;
 
   constructor(token?: string) {
@@ -25,6 +27,7 @@ export class ServerApi extends PawApi {
     this.product = new ProductApi(this.client);
     this.productTag = new ProductTagApi(this.client);
     this.order = new OrderApi(this.client);
+    this.transaction = new TransactionApi(this.client);
     this.user = new UserApi(this.client);
   }
 }

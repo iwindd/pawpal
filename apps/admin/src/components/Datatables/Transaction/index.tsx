@@ -3,6 +3,7 @@ import TransactionStatusBadge from "@/components/Badges/TransactionStatus";
 import TransactionTypeBadge from "@/components/Badges/TransactionType";
 import { useGetTransactionsQuery } from "@/features/transaction/transactionApi";
 import { useAppSelector } from "@/hooks";
+import { useAppRouter } from "@/hooks/useAppRouter";
 import useDatatable from "@/hooks/useDatatable";
 import { useTransactionActions } from "@/hooks/useTransactionActions";
 import {
@@ -17,6 +18,7 @@ import TableAction, { Action } from "../action";
 import { RelativeTime } from "./RelativeTime";
 
 const TransactionDatatable = () => {
+  const appRouter = useAppRouter();
   const __ = useTranslations("Datatable.transaction");
   const format = useFormatter();
   const datatable = useDatatable<AdminTransactionResponse>({
@@ -86,6 +88,13 @@ const TransactionDatatable = () => {
         title: __("actions"),
         render: (records) => {
           const actions: Action[] = [
+            {
+              label: __("action.detail"),
+              color: "blue",
+              action: appRouter.path("job.transactions.view", {
+                id: records.id,
+              }),
+            },
             {
               label: __("action.make_success"),
               color: "green",

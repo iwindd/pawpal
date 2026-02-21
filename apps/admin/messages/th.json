@@ -753,9 +753,15 @@
       "actions": "เครื่องมือ",
       "orderNone": "ไม่มีคำสั่งซื้อ",
       "action": {
+        "detail": "รายละเอียด",
         "make_fail": "ปฏิเสธ",
         "make_success": "อนุมัติ"
       }
+    },
+    "walletVoucher": {
+      "note": "หมายเหตุ",
+      "performedBy": "ผู้ดำเนินการ",
+      "createdAt": "วันที่ดำเนินการ"
     },
     "suspensionHistory": {
       "type": "การดำเนินการ",
@@ -1024,22 +1030,6 @@
       "no": "บังคับ"
     }
   },
-  "Transaction": {
-    "main": {
-      "title": "ธุรกรรม"
-    },
-    "status": {
-      "created": "รอยืนยันการโอน",
-      "pending": "กำลังรอดำเนินการ",
-      "succeeded": "สำเร็จ",
-      "failed": "ไม่สำเร็จ"
-    },
-    "type": {
-      "topup": "เติมเงิน",
-      "purchase": "ซื้อสินค้า",
-      "topup_for_purchase": "เติมเงินสำหรับซื้อสินค้า"
-    }
-  },
   "PaymentGateway": {
     "title": "ช่องทางการชำระเงิน ",
     "PromptpayManual": {
@@ -1124,6 +1114,36 @@
     "notify": {
       "createSuccess": "สร้างผู้ใช้สำเร็จ",
       "createError": "ไม่สามารถสร้างผู้ใช้ได้"
+    }
+  },
+  "Transaction": {
+    "main": {
+      "title": "ธุรกรรมทั้งหมด"
+    },
+    "detail": {
+      "title": "รายละเอียดธุรกรรม",
+      "transactionId": "รหัสธุรกรรม",
+      "customer": "ลูกค้า",
+      "type": "ประเภท",
+      "status": "สถานะ",
+      "createdAt": "วันที่ทำรายการ",
+      "paymentGateway": "ช่องทางอ้างอิง",
+      "orderId": "รหัสคำสั่งซื้อ",
+      "financials": "ข้อมูลการเงิน",
+      "amount": "จำนวนเงิน",
+      "balanceBefore": "ยอดคงเหลือก่อนหน้า",
+      "balanceAfter": "ยอดคงเหลือหลังทำรายการ"
+    },
+    "status": {
+      "created": "รอยืนยันการโอน",
+      "pending": "กำลังรอดำเนินการ",
+      "succeeded": "สำเร็จ",
+      "failed": "ไม่สำเร็จ"
+    },
+    "type": {
+      "topup": "เติมเงิน",
+      "purchase": "ซื้อสินค้า",
+      "topup_for_purchase": "เติมเงินสำหรับซื้อสินค้า"
     }
   }
 }

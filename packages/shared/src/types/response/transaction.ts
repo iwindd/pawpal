@@ -13,6 +13,12 @@ export interface AdminTransactionResponse {
   orderId?: string;
   createdAt: string;
   updatedAt: string;
+
+  // Relations
+  customer?: any; // Replace with proper type later if needed
+  wallet?: any;
+  order?: any;
+  paymentGateway?: any;
 }
 
 export interface OnTopupTransactionUpdatedProps {
