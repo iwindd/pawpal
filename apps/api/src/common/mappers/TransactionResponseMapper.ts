@@ -1,4 +1,5 @@
 import { Prisma } from '@/generated/prisma/client';
+import { AdminTransactionResponse } from '@pawpal/shared';
 
 export class TransactionResponseMapper {
   static get SELECT() {
@@ -28,8 +29,7 @@ export class TransactionResponseMapper {
     transaction: Prisma.UserWalletTransactionGetPayload<{
       select: typeof TransactionResponseMapper.SELECT;
     }>,
-  ): any {
-    // TODO: change to AdminTransactionResponse
+  ): AdminTransactionResponse {
     return {
       id: transaction.id,
       type: transaction.type,
@@ -43,7 +43,6 @@ export class TransactionResponseMapper {
       paymentGatewayId: transaction.paymentGatewayId,
       orderId: transaction.orderId,
       assigned: transaction.assigned,
-      assignedId: transaction.assignedId,
       assignedAt: transaction.assignedAt?.toISOString(),
       createdAt: transaction.createdAt.toISOString(),
       updatedAt: transaction.updatedAt.toISOString(),

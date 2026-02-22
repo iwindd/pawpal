@@ -8,12 +8,18 @@ export interface AdminTransactionResponse {
   balanceBefore: number;
   balanceAfter: number;
   status: TransactionStatus;
+  currency: string;
+  paymentGatewayId?: string;
+  orderId?: string;
+  createdAt: string;
+  updatedAt: string;
+
   assigned?: {
     id: string;
     displayName: string;
   };
   assignedAt?: string;
-  customer: {
+  customer?: {
     id: string;
     displayName: string;
   };

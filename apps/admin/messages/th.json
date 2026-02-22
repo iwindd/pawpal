@@ -1142,6 +1142,11 @@
       "succeeded": "สำเร็จ",
       "failed": "ไม่สำเร็จ"
     },
+    "footer": {
+      "warningText": "โปรดตรวจสอบข้อมูลให้ครบถ้วนก่อนอนุมัติ",
+      "reject": "ปฏิเสธ",
+      "approve": "อนุมัติ"
+    },
     "assignedCard": {
       "assignedTo": "ผู้ดูแลเคส: {name}",
       "assignedAt": "มอบหมายเมื่อ:",

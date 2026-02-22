@@ -9,7 +9,7 @@ const TransactionDetailCard = () => {
   const __ = useTranslations("Transaction");
   const format = useFormatter();
 
-  const customerName = transaction.customer.displayName;
+  const customerName = transaction.customer?.displayName || "Unknown Customer";
 
   return (
     <Card>
