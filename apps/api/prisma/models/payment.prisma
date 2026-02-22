@@ -36,6 +36,8 @@ model UserWalletTransaction {
   payment          PaymentGateway? @relation(fields: [paymentGatewayId], references: [id])
   paymentGatewayId String?         @map("payment_gateway_id")
 
+  confirmedAt DateTime? @map("confirmed_at") // ยืนยันการโอนเงิน
+
   succeededBy   User?     @relation("UserWalletTransactionSucceededBy", fields: [succeededById], references: [id])
   succeededById String?   @map("succeeded_by_id")
   succeededAt   DateTime? @map("succeeded_at")

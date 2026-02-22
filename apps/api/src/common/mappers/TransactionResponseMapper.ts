@@ -45,7 +45,7 @@ export class TransactionResponseMapper {
       assigned: transaction.assigned,
       assignedAt: transaction.assignedAt?.toISOString(),
       createdAt: transaction.createdAt.toISOString(),
-      updatedAt: transaction.updatedAt.toISOString(),
+      /*       updatedAt: transaction.updatedAt.toISOString(), */
     };
   }
 }

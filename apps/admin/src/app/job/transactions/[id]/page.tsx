@@ -4,6 +4,7 @@ import TransactionActionFooter from "./components/TransactionActionFooter";
 import TransactionAssignedCard from "./components/TransactionAssignedCard";
 import TransactionDetailCard from "./components/TransactionDetailCard";
 import TransactionFinancialCard from "./components/TransactionFinancialCard";
+import TransactionTimelineCard from "./components/TransactionTimelineCard";
 
 export default function TransactionDetailPage() {
   return (
@@ -16,6 +17,9 @@ export default function TransactionDetailPage() {
               <TransactionFinancialCard />
               <TransactionDetailCard />
             </Stack>
+          </Grid.Col>
+          <Grid.Col span={{ base: 12, md: 4 }}>
+            <TransactionTimelineCard />
           </Grid.Col>
         </Grid>
       </AppShell.Main>

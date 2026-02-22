@@ -1153,6 +1153,29 @@
       "changeAssigned": "เปลี่ยนผู้ดูแล",
       "notAssigned": "ยังไม่มีผู้ดูแลเคสนี้"
     },
+    "timeline": {
+      "title": "ความคืบหน้า",
+      "createOrder": "สร้างออเดอร์",
+      "createOrderDesc": "{name} ได้สร้างรายการเติมเงินใหม่",
+      "createOrderSuccess": "สร้างรายการสำเร็จ",
+      "confirmTransfer": "ยืนยันการโอนเงิน",
+      "confirmTransferDesc": "{name} ได้ยืนยันการโอนเงินแล้ว",
+      "unconfirmedTransferDesc": "{name} ยังไม่ได้ยืนยันการโอนเงิน",
+      "slipAttached": "แนบสลิปเรียบร้อย",
+      "takeCase": "รับเคส",
+      "takeCaseDesc": "เจ้าหน้าที่ {name} ได้รับรายการนี้แล้ว",
+      "untakenCaseDesc": "ยังไม่มีเจ้าหน้าที่รับเคส",
+      "checking": "ตรวจสอบ",
+      "checkingDesc": "ตรวจสอบการโอนเงิน",
+      "checkingBy": "กำลังตรวจสอบโดย: {name}",
+      "approveOrReject": "อนุมัติ / ปฏิเสธ",
+      "waitingForAction": "รอการดำเนินการ",
+      "lastStep": "ขั้นตอนสุดท้าย",
+      "approved": "อนุมัติสำเร็จ",
+      "rejected": "ปฏิเสธ",
+      "approvedBy": "อนุมัติโดย: {name}",
+      "rejectedBy": "ปฏิเสธโดย: {name}"
+    },
     "notify": {
       "takeCaseSuccess": "รับเคสนี้เป็นผู้ดูแลเรียบร้อยแล้ว",
       "takeCaseError": "ไม่สามารถรับเคสได้ อาจถูกผู้ดูแลคนอื่นรับไปแล้ว"

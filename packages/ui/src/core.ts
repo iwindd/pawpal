@@ -57,6 +57,7 @@ export {
   Textarea,
   TextInput,
   ThemeIcon,
+  Timeline,
   Title,
   Tooltip,
   Transition,
@@ -79,6 +80,7 @@ export {
   type SelectProps,
   type TextInputProps,
   type TextProps,
+  type TimelineItemProps,
   type TitleProps,
 } from "@mantine/core";
 

@@ -12,7 +12,7 @@ export interface AdminTransactionResponse {
   paymentGatewayId?: string;
   orderId?: string;
   createdAt: string;
-  updatedAt: string;
+  confirmedAt?: string;
   failedAt?: string;
   failedBy?: {
     id: string;

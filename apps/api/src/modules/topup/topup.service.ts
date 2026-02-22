@@ -159,6 +159,7 @@ export class TopupService {
       },
       data: {
         status: TransactionStatus.PENDING,
+        confirmedAt: new Date(),
       },
       select: TransactionResponseMapper.SELECT,
     });

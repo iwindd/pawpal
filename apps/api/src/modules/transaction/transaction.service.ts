@@ -37,6 +37,8 @@ export class TransactionService {
           balanceAfter: true,
           status: true,
           currency: true,
+          createdAt: true,
+          confirmedAt: true,
           assignedAt: true,
           assigned: {
             select: {
@@ -83,6 +85,8 @@ export class TransactionService {
       balanceBefore: transaction.balanceBefore,
       balanceAfter: transaction.balanceAfter,
       status: transaction.status,
+      createdAt: transaction.createdAt,
+      confirmedAt: transaction.confirmedAt,
       failedAt: transaction.failedAt,
       failedBy: transaction.failedBy,
       succeededAt: transaction.succeededAt,
