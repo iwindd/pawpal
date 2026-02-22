@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { AdminNotificationController } from './admin-notification.controller';
-import { NotificationService } from './notification.service';
+import { notificationProviders } from './infrastructure/notification.providers';
+import { AdminNotificationController } from './presentation/admin-notification.controller';
 
 @Module({
   controllers: [AdminNotificationController],
-  providers: [NotificationService],
+  providers: [...notificationProviders],
 })
 export class NotificationModule {}
