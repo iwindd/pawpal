@@ -1,4 +1,4 @@
-import { PackageService } from '@/modules/package/package.service';
+import { GetPackageFieldsUseCase } from '@/modules/package/application/usecases/get-package-fields.usecase';
 import { Injectable, PipeTransform } from '@nestjs/common';
 import { buildFieldSchema, purchaseSchema } from '@pawpal/shared';
 
@@ -10,11 +10,11 @@ export interface FieldAfterParse {
 @Injectable()
 export class PurchasePipe implements PipeTransform {
   private readonly basePurchaseSchema = purchaseSchema;
-  constructor(private readonly packageService: PackageService) {}
+  constructor(private readonly getPackageFields: GetPackageFieldsUseCase) {}
 
   async transform(value: any) {
     const parsedProduct = this.basePurchaseSchema.parse(value);
-    const fields = await this.packageService.getFields(parsedProduct.packageId);
+    const fields = await this.getPackageFields.execute(parsedProduct.packageId);
     const fullSchema = this.basePurchaseSchema.extend({
       fields: buildFieldSchema(fields).schema,
     });

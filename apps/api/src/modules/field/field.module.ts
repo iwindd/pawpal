@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { AdminFieldController } from './admin-field.controller';
-import { FieldService } from './field.service';
+import { fieldProviders } from './infrastructure/field.providers';
+import { AdminFieldController } from './presentation/admin-field.controller';
 
 @Module({
   controllers: [AdminFieldController],
-  providers: [FieldService],
+  providers: [...fieldProviders],
 })
 export class FieldModule {}
