@@ -26,6 +26,16 @@ export const PaymentExtension = Prisma.defineExtension((client) => {
                 },
               },
             },
+            select: {
+              status: true,
+              failedAt: true,
+              failedBy: {
+                select: {
+                  id: true,
+                  displayName: true,
+                },
+              },
+            },
           });
         },
         success: async (transactionId: string, succeededBy: string) => {
@@ -39,6 +49,16 @@ export const PaymentExtension = Prisma.defineExtension((client) => {
               succeededBy: {
                 connect: {
                   id: succeededBy,
+                },
+              },
+            },
+            select: {
+              status: true,
+              succeededAt: true,
+              succeededBy: {
+                select: {
+                  id: true,
+                  displayName: true,
                 },
               },
             },

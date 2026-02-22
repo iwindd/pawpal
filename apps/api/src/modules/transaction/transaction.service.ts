@@ -37,7 +37,22 @@ export class TransactionService {
           balanceAfter: true,
           status: true,
           currency: true,
+          assignedAt: true,
           assigned: {
+            select: {
+              id: true,
+              displayName: true,
+            },
+          },
+          failedAt: true,
+          failedBy: {
+            select: {
+              id: true,
+              displayName: true,
+            },
+          },
+          succeededAt: true,
+          succeededBy: {
             select: {
               id: true,
               displayName: true,
@@ -53,7 +68,6 @@ export class TransactionService {
               },
             },
           },
-          assignedAt: true,
           payment: {
             select: {
               name: true,
@@ -62,8 +76,6 @@ export class TransactionService {
         },
       });
 
-    this.logger.debug(transaction);
-
     return {
       id: transaction.id,
       type: transaction.type,
@@ -71,6 +83,10 @@ export class TransactionService {
       balanceBefore: transaction.balanceBefore,
       balanceAfter: transaction.balanceAfter,
       status: transaction.status,
+      failedAt: transaction.failedAt,
+      failedBy: transaction.failedBy,
+      succeededAt: transaction.succeededAt,
+      succeededBy: transaction.succeededBy,
       assigned: transaction.assigned,
       assignedAt: transaction.assignedAt,
       customer: transaction.wallet.user,
@@ -90,7 +106,10 @@ export class TransactionService {
     if (transaction.type == TransactionType.PURCHASE)
       throw new Error('Transaction is not topup transaction');
 
-    this.prisma.userWalletTransaction.success(transactionId, processedBy);
+    const updatedTransaction = await this.prisma.userWalletTransaction.success(
+      transactionId,
+      processedBy,
+    );
 
     switch (transaction.type) {
       case TransactionType.TOPUP: {
@@ -154,12 +173,7 @@ export class TransactionService {
       }
     }
 
-    return {
-      transactionId: transaction.id,
-      balanceBefore: transaction.balanceBefore,
-      balanceAfter: transaction.balanceAfter,
-      balance: transaction.balanceAfter,
-    };
+    return updatedTransaction;
   }
 
   /**
@@ -170,7 +184,10 @@ export class TransactionService {
   async failCharge(transactionId: string, processedBy: string) {
     const transaction = await this.transactionRepo.find(transactionId);
 
-    this.prisma.userWalletTransaction.failed(transactionId, processedBy);
+    const updatedTransaction = await this.prisma.userWalletTransaction.failed(
+      transactionId,
+      processedBy,
+    );
 
     // CANCELLED ORDER IF ORDER IS PENDING
     if (transaction.orderId)
@@ -183,6 +200,8 @@ export class TransactionService {
       balance: transaction.balanceBefore.toNumber(),
       walletType: transaction.walletType,
     });
+
+    return updatedTransaction;
   }
 
   /**

@@ -63,7 +63,10 @@ export const TransactionProvider = ({
       try {
         const response = await successJob(transaction.id).unwrap();
 
-        console.log(response);
+        setTransaction((prev) => ({
+          ...prev,
+          ...response,
+        }));
       } catch (error) {
         console.error(`Success Job Error: ${error}`);
       }
@@ -80,7 +83,10 @@ export const TransactionProvider = ({
       try {
         const response = await failJob(transaction.id).unwrap();
 
-        console.log(response);
+        setTransaction((prev) => ({
+          ...prev,
+          ...response,
+        }));
       } catch (error) {
         console.error(`Fail Job Error: ${error}`);
       }

@@ -13,7 +13,16 @@ export interface AdminTransactionResponse {
   orderId?: string;
   createdAt: string;
   updatedAt: string;
-
+  failedAt?: string;
+  failedBy?: {
+    id: string;
+    displayName: string;
+  };
+  succeededAt?: string;
+  succeededBy?: {
+    id: string;
+    displayName: string;
+  };
   assigned?: {
     id: string;
     displayName: string;

@@ -23,14 +23,20 @@ export const transactionApi = createApi({
       }),
       providesTags: ["Transactions"],
     }),
-    successJobTransaction: builder.mutation<void, string>({
+    successJobTransaction: builder.mutation<
+      Partial<AdminTransactionResponse>,
+      string
+    >({
       query: (transactionId) => ({
         url: `/job/${transactionId}/success`,
         method: "PATCH",
       }),
       invalidatesTags: ["Transactions"],
     }),
-    failJobTransaction: builder.mutation<void, string>({
+    failJobTransaction: builder.mutation<
+      Partial<AdminTransactionResponse>,
+      string
+    >({
       query: (transactionId) => ({
         url: `/job/${transactionId}/fail`,
         method: "PATCH",
