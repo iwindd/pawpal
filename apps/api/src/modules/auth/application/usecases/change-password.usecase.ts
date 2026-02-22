@@ -1,7 +1,7 @@
 import { PrismaAuditInfo } from '@/common/interfaces/prisma-audit.interface';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ChangePasswordInput } from '@pawpal/shared';
-import { UserRepository } from '../../../user/user.repository';
+import { UserRepository } from '../../../user/infrastructure/user.repository';
 
 @Injectable()
 export class ChangePasswordUseCase {

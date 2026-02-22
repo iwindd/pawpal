@@ -23,8 +23,16 @@ import {
   Session,
   UpdateProfileInput,
 } from '@pawpal/shared';
-import { UserService } from '../user.service';
-import { CustomerService } from './customer.service';
+import { AdminResetEmailUseCase } from '../application/usecases/admin-reset-email.usecase';
+import { AdminResetPasswordUseCase } from '../application/usecases/admin-reset-password.usecase';
+import { GetCustomerDatatableUseCase } from '../application/usecases/get-customer-datatable.usecase';
+import { GetCustomerOrderHistoryDatatableUseCase } from '../application/usecases/get-customer-order-history-datatable.usecase';
+import { GetCustomerTopupHistoryDatatableUseCase } from '../application/usecases/get-customer-topup-history-datatable.usecase';
+import { GetSuspensionHistoryDatatableUseCase } from '../application/usecases/get-suspension-history-datatable.usecase';
+import { GetUserProfileUseCase } from '../application/usecases/get-user-profile.usecase';
+import { SuspendUserUseCase } from '../application/usecases/suspend-user.usecase';
+import { UnsuspendUserUseCase } from '../application/usecases/unsuspend-user.usecase';
+import { UpdateProfileUseCase } from '../application/usecases/update-profile.usecase';
 
 @Controller('admin/customer')
 @UseGuards(SessionAuthGuard, JwtAuthGuard, PermissionGuard)
@@ -32,18 +40,26 @@ import { CustomerService } from './customer.service';
 export class AdminCustomerController {
   private readonly logger = new Logger(AdminCustomerController.name);
   constructor(
-    private readonly customerService: CustomerService,
-    private readonly userService: UserService,
+    private readonly getCustomerDatatableUseCase: GetCustomerDatatableUseCase,
+    private readonly getCustomerTopupHistoryDatatableUseCase: GetCustomerTopupHistoryDatatableUseCase,
+    private readonly getCustomerOrderHistoryDatatableUseCase: GetCustomerOrderHistoryDatatableUseCase,
+    private readonly getUserProfileUseCase: GetUserProfileUseCase,
+    private readonly updateProfileUseCase: UpdateProfileUseCase,
+    private readonly adminResetEmailUseCase: AdminResetEmailUseCase,
+    private readonly adminResetPasswordUseCase: AdminResetPasswordUseCase,
+    private readonly getSuspensionHistoryDatatableUseCase: GetSuspensionHistoryDatatableUseCase,
+    private readonly suspendUserUseCase: SuspendUserUseCase,
+    private readonly unsuspendUserUseCase: UnsuspendUserUseCase,
   ) {}
 
   @Get()
   getCustomerDatatable(@Query(DatatablePipe) query: DatatableQuery) {
-    return this.customerService.getCustomerDatatable(query);
+    return this.getCustomerDatatableUseCase.execute(query);
   }
 
   @Get(':userId/profile')
   getProfile(@Param('userId') userId: string) {
-    return this.userService.getProfile(userId);
+    return this.getUserProfileUseCase.execute(userId);
   }
 
   @Patch(':userId/profile')
@@ -52,7 +68,7 @@ export class AdminCustomerController {
     @Body() payload: UpdateProfileInput,
     @AuditInfo() auditInfo: PrismaAuditInfo,
   ) {
-    return this.userService.updateProfile(userId, payload, auditInfo);
+    return this.updateProfileUseCase.execute(userId, payload, auditInfo);
   }
 
   @Patch(':userId/email')
@@ -61,7 +77,7 @@ export class AdminCustomerController {
     @Body() { newEmail }: Pick<ChangeEmailInput, 'newEmail'>,
     @AuditInfo() auditInfo: PrismaAuditInfo,
   ) {
-    return this.userService.adminResetEmail(userId, newEmail, auditInfo);
+    return this.adminResetEmailUseCase.execute(userId, newEmail, auditInfo);
   }
 
   @Patch(':userId/password')
@@ -70,7 +86,11 @@ export class AdminCustomerController {
     @Body() { newPassword }: Pick<ChangePasswordInput, 'newPassword'>,
     @AuditInfo() auditInfo: PrismaAuditInfo,
   ) {
-    return this.userService.adminResetPassword(userId, newPassword, auditInfo);
+    return this.adminResetPasswordUseCase.execute(
+      userId,
+      newPassword,
+      auditInfo,
+    );
   }
 
   @Get(':userId/topup-history')
@@ -78,7 +98,7 @@ export class AdminCustomerController {
     @Query(DatatablePipe) query: DatatableQuery,
     @Param('userId') userId: string,
   ) {
-    return this.customerService.getTopupHistoryDatatable(userId, query);
+    return this.getCustomerTopupHistoryDatatableUseCase.execute(userId, query);
   }
 
   @Get(':userId/order-history')
@@ -86,7 +106,7 @@ export class AdminCustomerController {
     @Query(DatatablePipe) query: DatatableQuery,
     @Param('userId') userId: string,
   ) {
-    return this.customerService.getOrderHistoryDatatable(userId, query);
+    return this.getCustomerOrderHistoryDatatableUseCase.execute(userId, query);
   }
 
   @Get(':userId/suspensions')
@@ -94,7 +114,7 @@ export class AdminCustomerController {
     @Query(DatatablePipe) query: DatatableQuery,
     @Param('userId') userId: string,
   ) {
-    return this.userService.getSuspensionHistoryDatatable(userId, query);
+    return this.getSuspensionHistoryDatatableUseCase.execute(userId, query);
   }
 
   @Patch(':userId/suspend')
@@ -103,7 +123,7 @@ export class AdminCustomerController {
     @Body() payload: { note?: string },
     @AuthUser() admin: Session,
   ) {
-    return this.userService.suspendUser(userId, admin.id, payload.note);
+    return this.suspendUserUseCase.execute(userId, admin.id, payload.note);
   }
 
   @Patch(':userId/unsuspend')
@@ -112,6 +132,6 @@ export class AdminCustomerController {
     @Body() payload: { note?: string },
     @AuthUser() admin: Session,
   ) {
-    return this.userService.unsuspendUser(userId, admin.id, payload.note);
+    return this.unsuspendUserUseCase.execute(userId, admin.id, payload.note);
   }
 }

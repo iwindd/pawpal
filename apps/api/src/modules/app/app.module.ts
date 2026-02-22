@@ -22,8 +22,6 @@ import { RoleModule } from '../role/role.module';
 import { TagModule } from '../tag/tag.module';
 import { TopupModule } from '../topup/topup.module';
 import { TransactionModule } from '../transaction/transaction.module';
-import { CustomerModule } from '../user/customer/customer.module';
-import { EmployeeModule } from '../user/employee/employee.module';
 import { WalletModule } from '../wallet/wallet.module';
 @Module({
   imports: [
@@ -36,8 +34,6 @@ import { WalletModule } from '../wallet/wallet.module';
     EventModule,
     AuthModule,
     UserModule,
-    CustomerModule,
-    EmployeeModule,
     ProductModule,
     TagModule,
     PaymentGatewayModule,

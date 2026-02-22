@@ -19,30 +19,34 @@ import {
   type UpdateProfileInput,
   updateProfileSchema,
 } from '@pawpal/shared';
-import { UserService } from './user.service';
+import { ChangeEmailUseCase } from '../application/usecases/change-email.usecase';
+import { UpdateProfileUseCase } from '../application/usecases/update-profile.usecase';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly changeEmail: ChangeEmailUseCase,
+    private readonly updateProfile: UpdateProfileUseCase,
+  ) {}
 
   @Post('change-email')
   @UseGuards(SessionAuthGuard, JwtAuthGuard)
-  changeEmail(
+  changeEmailHandler(
     @AuthUser() user: Session,
     @Body(new ZodPipe(changeEmailSchema)) body: ChangeEmailInput,
     @AuditInfo() auditInfo: PrismaAuditInfo,
   ) {
-    return this.userService.changeEmail(user.id, body, auditInfo);
+    return this.changeEmail.execute(user.id, body, auditInfo);
   }
 
   @Post('update-profile')
   @UseGuards(SessionAuthGuard, JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
-  async updateProfile(
+  async updateProfileHandler(
     @AuthUser() user: Session,
     @Body(new ZodPipe(updateProfileSchema)) body: UpdateProfileInput,
     @AuditInfo() auditInfo: PrismaAuditInfo,
   ): Promise<Session> {
-    return this.userService.updateProfile(user.id, body, auditInfo);
+    return this.updateProfile.execute(user.id, body, auditInfo);
   }
 }

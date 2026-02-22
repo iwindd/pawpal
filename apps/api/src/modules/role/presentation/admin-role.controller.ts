@@ -30,27 +30,27 @@ import { UpdateRoleUseCase } from '../application/usecases/update-role.usecase';
 @Permissions(PermissionEnum.RoleManagement)
 export class AdminRoleController {
   constructor(
-    private readonly getRoleDatatable: GetRoleDatatableUseCase,
-    private readonly getRole: GetRoleUseCase,
-    private readonly getPermissions: GetPermissionsUseCase,
-    private readonly createRole: CreateRoleUseCase,
-    private readonly updateRole: UpdateRoleUseCase,
-    private readonly removeRole: RemoveRoleUseCase,
+    private readonly getDatatableUseCase: GetRoleDatatableUseCase,
+    private readonly getRoleUseCase: GetRoleUseCase,
+    private readonly createRoleUseCase: CreateRoleUseCase,
+    private readonly updateRoleUseCase: UpdateRoleUseCase,
+    private readonly removeRoleUseCase: RemoveRoleUseCase,
+    private readonly getPermissionsUseCase: GetPermissionsUseCase,
   ) {}
 
   @Get()
   getDatatable(@Query(DatatablePipe) query: DatatableQuery) {
-    return this.getRoleDatatable.execute(query);
+    return this.getDatatableUseCase.execute(query);
   }
 
   @Get('permissions')
-  permissions() {
-    return this.getPermissions.execute();
+  getPermissions() {
+    return this.getPermissionsUseCase.execute();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.getRole.execute(id);
+    return this.getRoleUseCase.execute(id);
   }
 
   @Post()
@@ -58,7 +58,7 @@ export class AdminRoleController {
     @Body(new ZodPipe(roleSchema)) payload: RoleInput,
     @AuthUser() user: Session,
   ) {
-    return this.createRole.execute(payload);
+    return this.createRoleUseCase.execute(payload);
   }
 
   @Patch(':id')
@@ -67,11 +67,11 @@ export class AdminRoleController {
     @Body(new ZodPipe(roleSchema)) payload: RoleInput,
     @AuthUser() user: Session,
   ) {
-    return this.updateRole.execute(id, payload);
+    return this.updateRoleUseCase.execute(id, payload);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.removeRole.execute(id);
+    return this.removeRoleUseCase.execute(id);
   }
 }

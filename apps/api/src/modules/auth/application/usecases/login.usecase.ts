@@ -1,6 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { Session } from '@pawpal/shared';
-import { UserRepository } from '../../../user/user.repository';
+import { UserRepository } from '../../../user/infrastructure/user.repository';
 
 @Injectable()
 export class LoginUseCase {

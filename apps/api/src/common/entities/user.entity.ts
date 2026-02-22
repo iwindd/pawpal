@@ -1,5 +1,5 @@
 import { Prisma } from '@/generated/prisma/client';
-import { UserRepository } from '@/modules/user/user.repository';
+import { UserRepository } from '@/modules/user/infrastructure/user.repository';
 import { Session, UpdateProfileInput } from '@pawpal/shared';
 // removed WalletCollection import
 import { PrismaAuditInfo } from '../interfaces/prisma-audit.interface';

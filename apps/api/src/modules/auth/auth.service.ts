@@ -8,7 +8,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { ChangePasswordInput, RegisterInput, Session } from '@pawpal/shared';
 import { JwtPayload } from '../../common/interfaces/jwt-payload.interface';
-import { UserRepository } from '../user/user.repository';
+import { UserRepository } from '../user/infrastructure/user.repository';
 
 @Injectable()
 export class AuthService {

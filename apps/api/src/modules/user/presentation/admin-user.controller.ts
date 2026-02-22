@@ -13,7 +13,8 @@ import {
   adminCreateUserSchema,
   adminUpdateUserRoleSchema,
 } from '@pawpal/shared';
-import { UserService } from './user.service';
+import { AdminCreateUserUseCase } from '../application/usecases/admin-create-user.usecase';
+import { AdminUpdateUserRolesUseCase } from '../application/usecases/admin-update-user-roles.usecase';
 
 @Controller('admin/user')
 @UseGuards(SessionAuthGuard, JwtAuthGuard, PermissionGuard)
@@ -22,14 +23,17 @@ import { UserService } from './user.service';
   PermissionEnum.CustomerManagement,
 ])
 export class AdminUserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly adminCreateUser: AdminCreateUserUseCase,
+    private readonly adminUpdateUserRoles: AdminUpdateUserRolesUseCase,
+  ) {}
 
   @Post()
   create(
     @Body(new ZodPipe(adminCreateUserSchema)) payload: AdminCreateUserInput,
     @AuditInfo() auditInfo: PrismaAuditInfo,
   ) {
-    return this.userService.adminCreateUser(payload, auditInfo);
+    return this.adminCreateUser.execute(payload, auditInfo);
   }
 
   @Put(':id/roles')
@@ -39,6 +43,6 @@ export class AdminUserController {
     payload: AdminUpdateUserRoleInput,
     @AuditInfo() auditInfo: PrismaAuditInfo,
   ) {
-    return this.userService.adminUpdateUserRoles(id, payload, auditInfo);
+    return this.adminUpdateUserRoles.execute(id, payload, auditInfo);
   }
 }
