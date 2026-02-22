@@ -5,7 +5,7 @@ import { ResourceType } from '@/generated/prisma/enums';
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { ProductInput } from '@pawpal/shared';
 import { PrismaService } from '../prisma/prisma.service';
-import { ResourceService } from '../resource/resource.service';
+import { CopyResourceToProductUseCase } from '../resource/application/usecases/copy-resource-to-product.usecase';
 import { ProductRepository } from './product.repository';
 
 @Injectable()
@@ -14,7 +14,7 @@ export class ProductService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly productRepository: ProductRepository,
-    private readonly resourceService: ResourceService,
+    private readonly copyResourceToProduct: CopyResourceToProductUseCase,
   ) {}
 
   /**
@@ -312,7 +312,7 @@ export class ProductService {
   async createProduct(payload: ProductInput, userId: string) {
     const { image_id, category_id, ...rest } = payload;
 
-    const image = await this.resourceService.copyResourceToProduct(image_id);
+    const image = await this.copyResourceToProduct.execute(image_id);
 
     const product = await this.prisma.product.create({
       data: {
@@ -364,7 +364,7 @@ export class ProductService {
     if (product.imageId !== imageId) {
       image = {
         create: {
-          url: (await this.resourceService.copyResourceToProduct(imageId)).key,
+          url: (await this.copyResourceToProduct.execute(imageId)).key,
           type: ResourceType.PRODUCT_IMAGE,
           user: {
             connect: {

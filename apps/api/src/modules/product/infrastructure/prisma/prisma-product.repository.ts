@@ -5,7 +5,7 @@ import { ResourceType } from '@/generated/prisma/enums';
 import { SaleUtil } from '@/utils/saleUtil';
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../../../prisma/prisma.service';
-import { ResourceService } from '../../../resource/resource.service';
+import { CopyResourceToProductUseCase } from '../../../resource/application/usecases/copy-resource-to-product.usecase';
 import { IProductRepository } from '../../domain/repository.port';
 
 // Inlined from the old ProductEntity.SELECT
@@ -68,7 +68,7 @@ export class PrismaProductRepository implements IProductRepository {
 
   constructor(
     private readonly prisma: PrismaService,
-    private readonly resourceService: ResourceService,
+    private readonly copyResourceToProduct: CopyResourceToProductUseCase,
   ) {}
 
   async getLatest(take = 4) {
@@ -307,7 +307,7 @@ export class PrismaProductRepository implements IProductRepository {
 
   async createProduct(payload: any, userId: string) {
     const { image_id, category_id, ...rest } = payload;
-    const image = await this.resourceService.copyResourceToProduct(image_id);
+    const image = await this.copyResourceToProduct.execute(image_id);
 
     return this.prisma.product.create({
       data: {
@@ -339,7 +339,7 @@ export class PrismaProductRepository implements IProductRepository {
     if (product.imageId !== imageId) {
       image = {
         create: {
-          url: (await this.resourceService.copyResourceToProduct(imageId)).key,
+          url: (await this.copyResourceToProduct.execute(imageId)).key,
           type: ResourceType.PRODUCT_IMAGE,
           user: { connect: { id: userId } },
         },
