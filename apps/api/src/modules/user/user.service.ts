@@ -1,4 +1,4 @@
-import { WalletCollection } from '@/common/collections/wallet.collection';
+// removed WalletCollection import
 import { PrismaAuditInfo } from '@/common/interfaces/prisma-audit.interface';
 import { DatatableQuery } from '@/common/pipes/DatatablePipe';
 import { UserType } from '@/generated/prisma/enums';
@@ -233,7 +233,13 @@ export class UserService {
 
     return {
       ...user,
-      userWallet: WalletCollection.toObject(user.userWallets),
+      userWallet: user.userWallets.reduce(
+        (acc, w) => {
+          acc[w.walletType as string] = w.balance;
+          return acc;
+        },
+        {} as Record<string, any>,
+      ),
       createdAt: user.createdAt.toISOString(),
       updatedAt: user.updatedAt.toISOString(),
       walletCount: 0, // TODO: WHAT DA HELL IS THIS?

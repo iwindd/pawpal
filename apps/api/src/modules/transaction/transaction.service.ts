@@ -3,7 +3,6 @@ import { DatatableQuery } from '@/common/pipes/DatatablePipe';
 import { TransactionStatus, TransactionType } from '@/generated/prisma/enums';
 import { BadGatewayException, Injectable, Logger } from '@nestjs/common';
 import { EventService } from '../event/event.service';
-import { OrderRepository } from '../order/order.repository';
 import { PrismaService } from '../prisma/prisma.service';
 import { WalletRepository } from '../wallet/wallet.repository';
 import { TransactionRepository } from './transaction.repository';
@@ -16,7 +15,6 @@ export class TransactionService {
     private readonly prisma: PrismaService,
     private readonly eventService: EventService,
     private readonly walletRepo: WalletRepository,
-    private readonly orderRepo: OrderRepository,
     private readonly transactionRepo: TransactionRepository,
   ) {}
 

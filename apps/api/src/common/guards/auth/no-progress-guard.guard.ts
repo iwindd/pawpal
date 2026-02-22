@@ -2,11 +2,9 @@ import { OrderStatus } from '@/generated/prisma/enums';
 import { PrismaService } from '@/modules/prisma/prisma.service';
 import {
   CanActivate,
-  ConflictException,
   ExecutionContext,
   Injectable,
   Logger,
-  UnauthorizedException,
 } from '@nestjs/common';
 
 @Injectable()
@@ -17,7 +15,7 @@ export class NoProgressGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest();
 
-    const userId = req.user?.id ?? req.session?.userId;
+    /*     const userId = req.user?.id ?? req.session?.userId;
 
     if (!userId) {
       throw new UnauthorizedException();
@@ -34,7 +32,7 @@ export class NoProgressGuard implements CanActivate {
 
       throw new ConflictException('is_in_progress');
     }
-
+ */
     return true;
   }
 

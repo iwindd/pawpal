@@ -18,7 +18,7 @@ import {
 } from '@pawpal/shared';
 import { EventService } from '../event/event.service';
 import { PrismaService } from '../prisma/prisma.service';
-import { TopupService } from '../topup/topup.service';
+import { ProcessTopupUseCase } from '../topup/application/usecases/process-topup.usecase';
 import { WalletRepository } from '../wallet/wallet.repository';
 import { OrderRepository } from './order.repository';
 
@@ -27,7 +27,7 @@ export class OrderService {
   private readonly logger = new Logger(OrderService.name);
   constructor(
     private readonly prisma: PrismaService,
-    private readonly topupService: TopupService,
+    private readonly processTopup: ProcessTopupUseCase,
     private readonly eventService: EventService,
     private readonly walletRepo: WalletRepository,
     private readonly orderRepo: OrderRepository,
@@ -86,7 +86,7 @@ export class OrderService {
     if (topupAmount.greaterThan(0)) {
       return {
         type: 'topup',
-        charge: await this.topupService.topup(
+        charge: await this.processTopup.execute(
           user,
           topupAmount,
           body.paymentMethod,

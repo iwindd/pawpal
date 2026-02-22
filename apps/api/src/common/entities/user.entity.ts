@@ -1,7 +1,7 @@
 import { Prisma } from '@/generated/prisma/client';
 import { UserRepository } from '@/modules/user/user.repository';
 import { Session, UpdateProfileInput } from '@pawpal/shared';
-import { WalletCollection } from '../collections/wallet.collection';
+// removed WalletCollection import
 import { PrismaAuditInfo } from '../interfaces/prisma-audit.interface';
 
 export type UserEntityProps = Prisma.UserGetPayload<{
@@ -69,7 +69,13 @@ export class UserEntity {
   }
 
   public get userWallet() {
-    return WalletCollection.toObject(this.user.userWallets);
+    return this.user.userWallets.reduce(
+      (acc, w) => {
+        acc[w.walletType as string] = w.balance;
+        return acc;
+      },
+      {} as Record<string, any>,
+    );
   }
 
   public get roles() {

@@ -1,0 +1,14 @@
+src/modules/auth/auth.service.spec.ts(64,50): error TS2345: Argument of type '{ sub: string; iat: number; exp: number; id: string; email: string; displayName: string; avatar: string; createdAt: string; updatedAt: string; userWallet: undefined; roles: undefined[]; isSuspended: false; }' is not assignable to parameter of type 'JwtPayload'.
+  Property 'userType' is missing in type '{ sub: string; iat: number; exp: number; id: string; email: string; displayName: string; avatar: string; createdAt: string; updatedAt: string; userWallet: undefined; roles: undefined[]; isSuspended: false; }' but required in type 'JwtPayload'.
+src/modules/auth/auth.service.spec.ts(88,31): error TS2345: Argument of type '{ sub: string; iat: number; exp: number; id: string; email: string; displayName: string; avatar: string; createdAt: string; updatedAt: string; userWallet: undefined; roles: undefined[]; isSuspended: false; }' is not assignable to parameter of type 'JwtPayload'.
+  Property 'userType' is missing in type '{ sub: string; iat: number; exp: number; id: string; email: string; displayName: string; avatar: string; createdAt: string; updatedAt: string; userWallet: undefined; roles: undefined[]; isSuspended: false; }' but required in type 'JwtPayload'.
+src/modules/auth/auth.service.spec.ts(111,31): error TS2345: Argument of type '{ sub: string; iat: number; exp: number; id: string; email: string; displayName: string; avatar: string; createdAt: string; updatedAt: string; userWallet: undefined; roles: undefined[]; isSuspended: false; }' is not assignable to parameter of type 'JwtPayload'.
+  Property 'userType' is missing in type '{ sub: string; iat: number; exp: number; id: string; email: string; displayName: string; avatar: string; createdAt: string; updatedAt: string; userWallet: undefined; roles: undefined[]; isSuspended: false; }' but required in type 'JwtPayload'.
+src/modules/category/category.service.spec.ts(54,36): error TS2554: Expected 1 arguments, but got 0.
+src/modules/category/category.service.spec.ts(62,29): error TS2345: Argument of type 'string' is not assignable to parameter of type 'DatatableQuery'.
+src/modules/event/event.service.spec.ts(38,25): error TS2339: Property 'onOrderUpdate' does not exist on type 'UserEventService'.
+test/app.e2e-spec.ts(20,12): error TS2349: This expression is not callable.
+  Type '{ default: SuperTestStatic; Test: typeof Test; agent: typeof TestAgent & ((app?: App, options?: AgentOptions) => TestAgent<Test>); }' has no call signatures.
+
+
+FAILED

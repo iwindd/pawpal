@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 import { OrderModule } from '../order/order.module';
-import { AdminTransactionController } from './admin-transaction.controller';
-import { TransactionRepository } from './transaction.repository';
-import { TransactionService } from './transaction.service';
+import { TRANSACTION_REPOSITORY } from './domain/repository.port';
+import { transactionProviders } from './infrastructure/transaction.providers';
+import { AdminTransactionController } from './presentation/admin-transaction.controller';
 
 @Module({
   controllers: [AdminTransactionController],
-  providers: [TransactionService, TransactionRepository],
-  exports: [TransactionService, TransactionRepository],
+  providers: [...transactionProviders],
+  exports: [TRANSACTION_REPOSITORY],
   imports: [OrderModule],
 })
 export class TransactionModule {}

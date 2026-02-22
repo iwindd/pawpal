@@ -14,7 +14,7 @@ import generatePayload from 'promptpay-qr';
 import { EventService } from '../event/event.service';
 import { PaymentGatewayService } from '../payment-gateway/payment-gateway.service';
 import { PrismaService } from '../prisma/prisma.service';
-import { WalletRepository } from '../wallet/wallet.repository';
+import { GetWalletUseCase } from '../wallet/application/usecases/get-wallet.usecase';
 
 @Injectable()
 export class TopupService {
@@ -23,7 +23,7 @@ export class TopupService {
     private readonly prisma: PrismaService,
     private readonly paymentGatewayService: PaymentGatewayService,
     private readonly eventService: EventService,
-    private readonly walletRepo: WalletRepository,
+    private readonly getWallet: GetWalletUseCase,
   ) {}
 
   /**
@@ -110,7 +110,7 @@ export class TopupService {
       ? TransactionType.TOPUP_FOR_PURCHASE
       : TransactionType.TOPUP;
 
-    const wallet = await this.walletRepo.find(userId, walletType);
+    const wallet = await this.getWallet.execute(userId, walletType);
     const charge = await this.prisma.userWalletTransaction.create({
       data: {
         type,
@@ -191,14 +191,14 @@ export class TopupService {
     if (!metadata.number) throw new BadGatewayException('Metadata not found');
     if (!metadata.name) throw new BadGatewayException('Metadata not found');
 
-    const wallet = await this.walletRepo.find(user.id);
+    const wallet = await this.getWallet.execute(user.id);
     const charge = await this.createCharge(
       user.id,
       amount,
       gateway.id,
       orderId,
       TransactionStatus.CREATED,
-      wallet.walletType,
+      wallet.walletType as WalletType,
     );
 
     this.eventService.admin.onNewJobTransaction(
