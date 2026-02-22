@@ -1,0 +1,18 @@
+import { DatatableQuery } from '@/common/pipes/DatatablePipe';
+
+export const PRODUCT_REPOSITORY = Symbol('PRODUCT_REPOSITORY');
+
+export interface IProductRepository {
+  getLatest(take?: number): Promise<any[]>;
+  getHasSale(take?: number): Promise<any[]>;
+  getProductBySlug(slug: string): Promise<any>;
+  getAllProductDatatable(
+    query: DatatableQuery,
+    filterCategory?: string,
+  ): Promise<any>;
+  getSaleProductDatatable(query: DatatableQuery): Promise<any>;
+  getProductDatatable(query: DatatableQuery): Promise<any>;
+  findOne(id: string): Promise<any>;
+  createProduct(payload: any, userId: string): Promise<any>;
+  updateProduct(id: string, payload: any, userId: string): Promise<any>;
+}
