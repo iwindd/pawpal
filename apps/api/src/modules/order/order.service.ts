@@ -16,7 +16,7 @@ import {
   PurchaseInput,
   Session,
 } from '@pawpal/shared';
-import { EventService } from '../event/event.service';
+import { EventService } from '../event/application/event.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { ProcessTopupUseCase } from '../topup/application/usecases/process-topup.usecase';
 import { WalletRepository } from '../wallet/wallet.repository';

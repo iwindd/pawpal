@@ -1,7 +1,7 @@
 import { OrderResponseMapper } from '@/common/mappers/OrderResponseMapper';
 import { TransactionStatus, TransactionType } from '@/generated/prisma/client';
 import { Inject, Injectable } from '@nestjs/common';
-import { EventService } from '../../../event/event.service';
+import { EventService } from '../../../event/application/event.service';
 import { UpdateWalletBalanceUseCase } from '../../../wallet/application/usecases/update-wallet-balance.usecase';
 import {
   ITransactionRepository,

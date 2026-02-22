@@ -2,7 +2,7 @@ import { TransactionResponseMapper } from '@/common/mappers/TransactionResponseM
 import { FieldAfterParse } from '@/common/pipes/PurchasePipe';
 import { Inject, Injectable } from '@nestjs/common';
 import { PurchaseInput, Session } from '@pawpal/shared';
-import { EventService } from '../../../event/event.service';
+import { EventService } from '../../../event/application/event.service';
 import { ProcessTopupUseCase } from '../../../topup/application/usecases/process-topup.usecase';
 import { GetWalletUseCase } from '../../../wallet/application/usecases/get-wallet.usecase';
 import { UpdateWalletBalanceUseCase } from '../../../wallet/application/usecases/update-wallet-balance.usecase';

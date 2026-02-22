@@ -5,7 +5,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { ENUM_ORDER_STATUS } from '@pawpal/shared';
-import { EventService } from '../../../event/event.service';
+import { EventService } from '../../../event/application/event.service';
 import {
   IOrderRepository,
   ORDER_REPOSITORY,

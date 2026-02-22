@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { EventService } from '../../../event/event.service';
+import { EventService } from '../../../event/application/event.service';
 import {
   ITopupRepository,
   TOPUP_REPOSITORY,

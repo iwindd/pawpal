@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { Session } from '@pawpal/shared';
 import generatePayload from 'promptpay-qr';
-import { EventService } from '../../../event/event.service';
+import { EventService } from '../../../event/application/event.service';
 import { PaymentGatewayService } from '../../../payment-gateway/payment-gateway.service';
 import { GetWalletUseCase } from '../../../wallet/application/usecases/get-wallet.usecase';
 import {

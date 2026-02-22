@@ -1,6 +1,6 @@
 import { TransactionStatus } from '@/generated/prisma/enums';
 import { Inject, Injectable } from '@nestjs/common';
-import { EventService } from '../../../event/event.service';
+import { EventService } from '../../../event/application/event.service';
 import { CancelOrderUseCase } from '../../../order/application/usecases/cancel-order.usecase';
 import {
   ITransactionRepository,

@@ -5,7 +5,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { ENUM_ORDER_STATUS } from '@pawpal/shared';
-import { EventService } from '../../../event/event.service';
+import { EventService } from '../../../event/application/event.service';
 import { UpdateWalletBalanceUseCase } from '../../../wallet/application/usecases/update-wallet-balance.usecase';
 import {
   IOrderRepository,

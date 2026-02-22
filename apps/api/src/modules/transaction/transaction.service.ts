@@ -2,7 +2,7 @@ import { OrderResponseMapper } from '@/common/mappers/OrderResponseMapper';
 import { DatatableQuery } from '@/common/pipes/DatatablePipe';
 import { TransactionStatus, TransactionType } from '@/generated/prisma/enums';
 import { BadGatewayException, Injectable, Logger } from '@nestjs/common';
-import { EventService } from '../event/event.service';
+import { EventService } from '../event/application/event.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { WalletRepository } from '../wallet/wallet.repository';
 import { TransactionRepository } from './transaction.repository';

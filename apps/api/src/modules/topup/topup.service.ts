@@ -11,7 +11,7 @@ import { BadGatewayException, Injectable, Logger } from '@nestjs/common';
 import { ENUM_TOPUP_STATUS, Session, TopupStatus } from '@pawpal/shared';
 import { Decimal } from '@prisma/client/runtime/client';
 import generatePayload from 'promptpay-qr';
-import { EventService } from '../event/event.service';
+import { EventService } from '../event/application/event.service';
 import { PaymentGatewayService } from '../payment-gateway/payment-gateway.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { GetWalletUseCase } from '../wallet/application/usecases/get-wallet.usecase';

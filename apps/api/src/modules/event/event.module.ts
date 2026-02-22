@@ -4,9 +4,9 @@ import { SocketAuthAdminMiddleware } from '@/common/middlewares/SocketAuthAdminM
 import { SocketAuthUserMiddleware } from '@/common/middlewares/SocketAuthUserMiddleware';
 import { Global, Module } from '@nestjs/common';
 import { AuthModule } from '../auth/auth.module';
-import { EventService } from './event.service';
-import { AdminEventGateway } from './gateways/admin-event.gateway';
-import { UserEventGateway } from './gateways/user-event.gateway';
+import { EventService } from './application/event.service';
+import { AdminEventGateway } from './presentation/admin-event.gateway';
+import { UserEventGateway } from './presentation/user-event.gateway';
 
 @Global()
 @Module({
