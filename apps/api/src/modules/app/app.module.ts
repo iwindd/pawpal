@@ -19,7 +19,6 @@ import { PrismaModule } from '../prisma/prisma.module';
 import { ProductModule } from '../product/product.module';
 import { ResourceModule } from '../resource/resource.module';
 import { RoleModule } from '../role/role.module';
-import { SaleModule } from '../sale/sale.module';
 import { TagModule } from '../tag/tag.module';
 import { TopupModule } from '../topup/topup.module';
 import { TransactionModule } from '../transaction/transaction.module';
@@ -41,7 +40,6 @@ import { WalletModule } from '../wallet/wallet.module';
     EmployeeModule,
     ProductModule,
     TagModule,
-    SaleModule,
     PaymentGatewayModule,
     TransactionModule,
     WalletModule,
