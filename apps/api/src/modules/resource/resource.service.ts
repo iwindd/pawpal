@@ -5,13 +5,15 @@ import { CloudflareUtil } from '@/utils/cloudflareUtil';
 import { Utils } from '@/utils/utils';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
-import { CloudflareService } from '../cloudflare/cloudflare.service';
+import { CopyObjectUseCase } from '../cloudflare/application/usecases/copy-object.usecase';
+import { UploadResourceImageUseCase } from '../cloudflare/application/usecases/upload-resource-image.usecase';
 import { PrismaService } from '../prisma/prisma.service';
 @Injectable()
 export class ResourceService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly storage: CloudflareService,
+    private readonly uploadResourceImage: UploadResourceImageUseCase,
+    private readonly copyObject: CopyObjectUseCase,
   ) {}
 
   /**
@@ -57,7 +59,7 @@ export class ResourceService {
    * @returns resource response
    */
   async uploadResource(file: Express.Multer.File, user_id: string) {
-    const { key } = await this.storage.uploadResourceImage(file);
+    const { key } = await this.uploadResourceImage.execute(file);
     const resource = await this.prisma.resource.create({
       data: {
         url: key,
@@ -81,7 +83,7 @@ export class ResourceService {
    */
   async uploadResources(files: Array<Express.Multer.File>, user_id: string) {
     const promises = files.map(async (file) => {
-      const { key } = await this.storage.uploadResourceImage(file);
+      const { key } = await this.uploadResourceImage.execute(file);
       return this.prisma.resource.create({
         data: {
           url: key,
@@ -122,7 +124,7 @@ export class ResourceService {
     const imageName = `${uuidv4()}.${extension}`;
     const newKey = CloudflareUtil.getR2Path('product', imageName);
 
-    await this.storage.copyObject(resource.url, newKey);
+    await this.copyObject.execute(resource.url, newKey);
 
     return {
       key: newKey,
