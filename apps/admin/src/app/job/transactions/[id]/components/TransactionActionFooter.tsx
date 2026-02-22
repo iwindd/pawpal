@@ -1,28 +1,48 @@
 "use client";
-import { useTransactionActions } from "@/hooks/useTransactionActions";
+import { useAppSelector } from "@/hooks";
 import { IconCheck, IconInfoCircle, IconX } from "@pawpal/icons";
-import { Button, Group, Paper, Text } from "@pawpal/ui/core";
+import { Button, Group, Paper, Skeleton, Text } from "@pawpal/ui/core";
 import { useTranslations } from "next-intl";
 import { useTransaction } from "../TransactionContext";
 
 const TransactionActionFooter = () => {
-  const { transaction } = useTransaction();
+  const user = useAppSelector((state) => state.auth.user);
+  const { transaction, actions, isLoading } = useTransaction();
   const __ = useTranslations("Transaction");
-  const { successJobTransaction, failJobTransaction, isLoading } =
-    useTransactionActions();
+
+  if (isLoading) {
+    return (
+      <Paper
+        p="md"
+        shadow="md"
+        w="100%"
+        style={{
+          position: "sticky",
+          bottom: 0,
+          zIndex: 10,
+        }}
+        radius={0}
+      >
+        <Group justify="space-between">
+          <Skeleton height={20} width={200} />
+          <Group>
+            <Skeleton height={36} width={100} />
+            <Skeleton height={36} width={100} />
+          </Group>
+        </Group>
+      </Paper>
+    );
+  }
 
   // Show only if status is PENDING or CREATED, adjust as necessary based on requirements
   if (transaction.status === "SUCCEEDED" || transaction.status === "FAILED") {
     return null;
   }
 
-  const handleApprove = () => {
-    successJobTransaction(transaction.id);
-  };
-
-  const handleReject = () => {
-    failJobTransaction(transaction.id);
-  };
+  // Not owner of the case
+  if (transaction.assigned?.id !== user?.id) {
+    return null;
+  }
 
   return (
     <Paper
@@ -48,7 +68,7 @@ const TransactionActionFooter = () => {
             variant="light"
             color="red"
             leftSection={<IconX size={16} />}
-            onClick={handleReject}
+            onClick={actions.fail}
             loading={isLoading}
           >
             {__("footer.reject")}
@@ -57,7 +77,7 @@ const TransactionActionFooter = () => {
             variant="filled"
             color="green"
             leftSection={<IconCheck size={16} />}
-            onClick={handleApprove}
+            onClick={actions.success}
             loading={isLoading}
           >
             {__("footer.approve")}

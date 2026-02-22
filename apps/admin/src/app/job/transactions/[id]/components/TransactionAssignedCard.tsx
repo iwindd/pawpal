@@ -1,5 +1,4 @@
 "use client";
-import { useTransactionActions } from "@/hooks/useTransactionActions";
 import { IconInfoCircle, IconUserBolt, IconUserSearch } from "@pawpal/icons";
 import {
   Box,
@@ -16,12 +15,7 @@ import { useTransaction } from "../TransactionContext";
 const TransactionAssignedCard = () => {
   const format = useFormatter();
   const __ = useTranslations("Transaction");
-  const { transaction } = useTransaction();
-  const { assignJobTransaction, isLoading } = useTransactionActions();
-
-  const handleAssign = () => {
-    assignJobTransaction(transaction.id);
-  };
+  const { transaction, actions, isLoading } = useTransaction();
 
   if (transaction.assigned) {
     return (
@@ -74,7 +68,7 @@ const TransactionAssignedCard = () => {
             leftSection={<IconUserBolt size={14} />}
             variant="filled"
             color="warning"
-            onClick={handleAssign}
+            onClick={actions.assign}
             loading={isLoading}
           >
             {__("detail.takeCase")}

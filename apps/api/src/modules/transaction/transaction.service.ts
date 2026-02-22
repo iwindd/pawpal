@@ -1,7 +1,7 @@
 import { OrderResponseMapper } from '@/common/mappers/OrderResponseMapper';
 import { DatatableQuery } from '@/common/pipes/DatatablePipe';
 import { TransactionStatus, TransactionType } from '@/generated/prisma/enums';
-import { Injectable, Logger } from '@nestjs/common';
+import { BadGatewayException, Injectable, Logger } from '@nestjs/common';
 import { EventService } from '../event/event.service';
 import { OrderRepository } from '../order/order.repository';
 import { PrismaService } from '../prisma/prisma.service';
@@ -194,24 +194,43 @@ export class TransactionService {
     const transaction =
       await this.prisma.userWalletTransaction.findUniqueOrThrow({
         where: { id: transactionId },
+        select: {
+          assignedAt: true,
+          assigned: {
+            select: {
+              id: true,
+              displayName: true,
+            },
+          },
+        },
       });
 
-    if (transaction.assignedId) {
-      if (transaction.assignedId === processedBy) {
-        return { success: true };
-      }
-      throw new Error('Transaction is already assigned to someone else');
+    if (transaction.assigned) {
+      if (transaction.assigned.id === processedBy) return transaction;
+
+      throw new BadGatewayException(
+        'Transaction is already assigned to someone else',
+      );
     }
 
-    await this.prisma.userWalletTransaction.update({
+    const updatedTransaction = await this.prisma.userWalletTransaction.update({
       where: { id: transactionId },
       data: {
         assignedId: processedBy,
         assignedAt: new Date(),
       },
+      select: {
+        assignedAt: true,
+        assigned: {
+          select: {
+            id: true,
+            displayName: true,
+          },
+        },
+      },
     });
 
-    return { success: true };
+    return updatedTransaction;
   }
 
   /**

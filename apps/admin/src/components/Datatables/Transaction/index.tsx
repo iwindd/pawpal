@@ -5,7 +5,6 @@ import { useGetTransactionsQuery } from "@/features/transaction/transactionApi";
 import { useAppSelector } from "@/hooks";
 import { useAppRouter } from "@/hooks/useAppRouter";
 import useDatatable from "@/hooks/useDatatable";
-import { useTransactionActions } from "@/hooks/useTransactionActions";
 import {
   AdminTransactionResponse,
   ENUM_TRANSACTION_STATUS,
@@ -95,16 +94,6 @@ const TransactionDatatable = () => {
                 id: records.id,
               }),
             },
-            {
-              label: __("action.make_success"),
-              color: "green",
-              action: () => successJobTransaction(records.id) as unknown,
-            },
-            {
-              label: __("action.make_fail"),
-              color: "red",
-              action: () => failJobTransaction(records.id) as unknown,
-            },
           ];
 
           return <TableAction label={__("actions")} actions={actions} />;
@@ -117,12 +106,6 @@ const TransactionDatatable = () => {
 
   const transactions = useAppSelector((state) => state.job.transactions);
   const [records, setRecords] = useState<AdminTransactionResponse[]>([]);
-
-  const {
-    successJobTransaction,
-    failJobTransaction,
-    isLoading: isTransactionLoading,
-  } = useTransactionActions();
 
   useEffect(() => {
     const data = sortBy(transactions, datatable.sortStatus.columnAccessor);
@@ -144,7 +127,7 @@ const TransactionDatatable = () => {
     <DataTable
       idAccessor="id"
       records={records}
-      fetching={isLoading || isTransactionLoading}
+      fetching={isLoading}
       totalRecords={0} /* TODO: Get total records from API */
       {...datatable.props}
     />
