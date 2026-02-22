@@ -22,28 +22,37 @@ import {
   packageBulkSchema,
   packageSchema,
 } from '@pawpal/shared';
-import { PackageService } from './package.service';
+
+import { BulkUpdatePackagesUseCase } from '../application/usecases/bulk-update-packages.usecase';
+import { CreatePackageForProductUseCase } from '../application/usecases/create-package-for-product.usecase';
+import { GetProductPackageDatatableUseCase } from '../application/usecases/get-product-package-datatable.usecase';
+import { UpdatePackageUseCase } from '../application/usecases/update-package.usecase';
 
 @Controller('admin/package')
 @UseGuards(SessionAuthGuard, JwtAuthGuard, PermissionGuard)
 @Permissions(PermissionEnum.ProductManagement)
 export class AdminPackageController {
-  constructor(private readonly packageService: PackageService) {}
+  constructor(
+    private readonly getProductPackageDatatable: GetProductPackageDatatableUseCase,
+    private readonly createPackageForProduct: CreatePackageForProductUseCase,
+    private readonly updatePackage: UpdatePackageUseCase,
+    private readonly bulkUpdatePackages: BulkUpdatePackagesUseCase,
+  ) {}
 
   @Get('product/:id')
-  getProductPackageDatatable(
+  getDatatable(
     @Param('id') id: string,
     @Query(DatatablePipe) query: DatatableQuery,
   ) {
-    return this.packageService.getProductPackageDatatable(id, query);
+    return this.getProductPackageDatatable.execute(id, query);
   }
 
   @Post('product/:id')
-  createPackageForProducts(
+  create(
     @Param('id') id: string,
     @Body(new ZodPipe(packageSchema)) data: PackageInput,
   ) {
-    return this.packageService.createPackageForProduct(id, data);
+    return this.createPackageForProduct.execute(id, data);
   }
 
   @Patch(':id')
@@ -51,14 +60,14 @@ export class AdminPackageController {
     @Param('id') id: string,
     @Body(new ZodPipe(packageSchema)) data: PackageInput,
   ) {
-    return this.packageService.update(id, data);
+    return this.updatePackage.execute(id, data);
   }
 
   @Put('product/:id/bulk')
-  bulkUpdatePackages(
+  bulkUpdate(
     @Param('id') id: string,
     @Body(new ZodPipe(packageBulkSchema)) data: PackageBulkInput,
   ) {
-    return this.packageService.bulkUpdatePackages(id, data);
+    return this.bulkUpdatePackages.execute(id, data);
   }
 }
