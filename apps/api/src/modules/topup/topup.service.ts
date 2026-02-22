@@ -12,7 +12,8 @@ import { ENUM_TOPUP_STATUS, Session, TopupStatus } from '@pawpal/shared';
 import { Decimal } from '@prisma/client/runtime/client';
 import generatePayload from 'promptpay-qr';
 import { EventService } from '../event/application/event.service';
-import { PaymentGatewayService } from '../payment-gateway/payment-gateway.service';
+import { GetGatewayUseCase } from '../payment-gateway/application/usecases/get-gateway.usecase';
+import { IsGatewayActiveUseCase } from '../payment-gateway/application/usecases/is-gateway-active.usecase';
 import { PrismaService } from '../prisma/prisma.service';
 import { GetWalletUseCase } from '../wallet/application/usecases/get-wallet.usecase';
 
@@ -21,7 +22,8 @@ export class TopupService {
   private readonly logger = new Logger(TopupService.name);
   constructor(
     private readonly prisma: PrismaService,
-    private readonly paymentGatewayService: PaymentGatewayService,
+    private readonly isGatewayActive: IsGatewayActiveUseCase,
+    private readonly getGateway2: GetGatewayUseCase,
     private readonly eventService: EventService,
     private readonly getWallet: GetWalletUseCase,
   ) {}
@@ -72,7 +74,7 @@ export class TopupService {
     topupId: string,
     orderId?: string,
   ) {
-    const isActive = await this.paymentGatewayService.isActive(topupId);
+    const isActive = await this.isGatewayActive.execute(topupId);
     if (!isActive) throw new BadGatewayException(`${topupId} is not active`);
 
     switch (topupId) {
@@ -182,8 +184,7 @@ export class TopupService {
     amount: Decimal,
     orderId?: string,
   ) {
-    const gateway =
-      await this.paymentGatewayService.getGateway('promptpay-manual');
+    const gateway = await this.getGateway2.execute('promptpay-manual');
 
     const metadata = gateway.metadata as { name?: string; number?: string };
 

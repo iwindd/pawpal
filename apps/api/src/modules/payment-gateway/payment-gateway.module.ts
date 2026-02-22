@@ -1,11 +1,11 @@
 import { Global, Module } from '@nestjs/common';
-import { PaymentGatewayController } from './payment-gateway.controller';
-import { PaymentGatewayService } from './payment-gateway.service';
+import { paymentGatewayProviders } from './infrastructure/payment-gateway.providers';
+import { PaymentGatewayController } from './presentation/payment-gateway.controller';
 
 @Global()
 @Module({
   controllers: [PaymentGatewayController],
-  providers: [PaymentGatewayService],
-  exports: [PaymentGatewayService],
+  providers: [...paymentGatewayProviders],
+  exports: [...paymentGatewayProviders],
 })
 export class PaymentGatewayModule {}
