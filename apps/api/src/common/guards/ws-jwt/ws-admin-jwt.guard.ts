@@ -1,6 +1,6 @@
 import { JwtPayload } from '@/common/interfaces/jwt-payload.interface';
 import { UserType } from '@/generated/prisma/enums';
-import { AuthService } from '@/modules/auth/auth.service';
+import { VerifyPayloadUseCase } from '@/modules/auth/application/usecases/verify-payload.usecase';
 import {
   CanActivate,
   ExecutionContext,
@@ -14,7 +14,7 @@ const logger = new Logger('WsJwtAdminGuard');
 
 @Injectable()
 export class WsJwtAdminGuard implements CanActivate {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly verifyPayloadUseCase: VerifyPayloadUseCase) {}
 
   async canActivate(context: ExecutionContext) {
     if (context.getType() !== 'ws') return true;
@@ -27,7 +27,7 @@ export class WsJwtAdminGuard implements CanActivate {
 
   async validate(payload: JwtPayload) {
     try {
-      const user = await this.authService.verifyPayload(payload);
+      const user = await this.verifyPayloadUseCase.execute(payload);
 
       if (user.userType !== UserType.EMPLOYEE)
         throw new UnauthorizedException('User is not employee');

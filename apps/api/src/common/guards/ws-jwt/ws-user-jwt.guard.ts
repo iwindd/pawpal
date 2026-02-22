@@ -1,5 +1,5 @@
 import { JwtPayload } from '@/common/interfaces/jwt-payload.interface';
-import { AuthService } from '@/modules/auth/auth.service';
+import { VerifyPayloadUseCase } from '@/modules/auth/application/usecases/verify-payload.usecase';
 import {
   CanActivate,
   ExecutionContext,
@@ -12,7 +12,7 @@ const logger = new Logger('WsJwtUserGuard');
 
 @Injectable()
 export class WsJwtUserGuard implements CanActivate {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly verifyPayloadUseCase: VerifyPayloadUseCase) {}
 
   async canActivate(context: ExecutionContext) {
     if (context.getType() !== 'ws') return true;
@@ -25,8 +25,7 @@ export class WsJwtUserGuard implements CanActivate {
 
   async validate(payload: JwtPayload) {
     try {
-      const user = await this.authService.verifyPayload(payload);
-
+      const user = await this.verifyPayloadUseCase.execute(payload);
       return user;
     } catch (error) {
       logger.error(error);

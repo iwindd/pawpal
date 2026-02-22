@@ -2,24 +2,19 @@ import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Session } from '@pawpal/shared';
 import { Strategy } from 'passport-local';
-import { AuthService } from '../../modules/auth/auth.service';
+import { LoginUseCase } from '../../modules/auth/application/usecases/login.usecase';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
-  constructor(private readonly authService: AuthService) {
+  constructor(private readonly loginUseCase: LoginUseCase) {
     super({
       usernameField: 'email',
       passwordField: 'password',
-      passReqToCallback: false, // We don't need the request object in the callback
+      passReqToCallback: false,
     });
   }
 
-  /**
-   * Validate the user and password
-   * @param email - The email of the user (extracted from the request)
-   * @param password - The password of the user (extracted from the request)
-   */
   validate(email: string, password: string): Promise<Session> {
-    return this.authService.login(email, password);
+    return this.loginUseCase.execute(email, password);
   }
 }

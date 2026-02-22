@@ -9,11 +9,11 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { Session } from '@pawpal/shared';
-import { AuthService } from '../../modules/auth/auth.service';
+import { SignTokenUseCase } from '../../modules/auth/application/usecases/sign-token.usecase';
 
 @Injectable()
 export class TokenInterceptor implements NestInterceptor {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly signTokenUseCase: SignTokenUseCase) {}
 
   intercept(
     context: ExecutionContext,
@@ -22,7 +22,7 @@ export class TokenInterceptor implements NestInterceptor {
     return next.handle().pipe(
       map((user) => {
         const response = context.switchToHttp().getResponse<Response>();
-        const token = this.authService.signToken(user);
+        const token = this.signTokenUseCase.execute(user);
 
         response.setHeader('Authorization', `Bearer ${token}`);
         response.cookie('token', token, {
