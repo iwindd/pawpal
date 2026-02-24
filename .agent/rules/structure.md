@@ -52,15 +52,19 @@ Public-facing storefront for customers.
 
 ### `apps/api` — Backend API (NestJS + Prisma)
 
-RESTful API server. No localization needed.
+RESTful API server implementing **Hexagonal Architecture (Ports and Adapters)**. No localization needed.
 
-| Directory      | Purpose                                                           |
-| -------------- | ----------------------------------------------------------------- |
-| `src/modules/` | NestJS feature modules (each with controller, service, DTO, etc.) |
-| `src/common/`  | Shared guards, decorators, interceptors, pipes, filters           |
-| `src/config/`  | App configuration (env validation, etc.)                          |
-| `src/utils/`   | Backend utility functions                                         |
-| `prisma/`      | Prisma schema, migrations, and seed files                         |
+| Directory                       | Purpose                                                                                                                  |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `src/modules/*/domain/`         | Domain layer containing abstract interfaces (`repository.port.ts`, business entities). Zero external dependencies.       |
+| `src/modules/*/application/`    | Application layer containing UseCases that orchestrate business workflows. Depends only on the Domain layer.             |
+| `src/modules/*/infrastructure/` | Infrastructure layer implementing Domain ports (e.g., `prisma-*.repository.ts`). Handles database and external services. |
+| `src/modules/*/presentation/`   | Presentation layer containing HTTP Controllers. Handles requests and delegates to UseCases.                              |
+| `src/modules/*/`                | Module definitions (`*.module.ts`) and dependency injection wiring (`*.providers.ts`).                                   |
+| `src/common/`                   | Shared guards, decorators, interceptors, pipes, filters                                                                  |
+| `src/config/`                   | App configuration (env validation, etc.)                                                                                 |
+| `src/utils/`                    | Backend utility functions                                                                                                |
+| `prisma/`                       | Prisma schema, migrations, and seed files                                                                                |
 
 ---
 
