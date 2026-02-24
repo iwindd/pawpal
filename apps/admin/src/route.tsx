@@ -178,17 +178,23 @@ const ROUTES = ROUTER({
             label: "users.customer.edit",
             children: {},
           },
-          orders: {
-            path: "/users/customers/:id/orders",
-            label: "users.customer.orders",
-          },
-          topups: {
-            path: "/users/customers/:id/topups",
-            label: "users.customer.topups",
-          },
-          suspensions: {
-            path: "/users/customers/:id/suspensions",
-            label: "users.customer.suspensions",
+          histories: {
+            path: "/users/customers/:id/histories",
+            label: "users.customer.histories.main",
+            children: {
+              orders: {
+                path: "/users/customers/:id/histories/orders",
+                label: "users.customer.histories.orders",
+              },
+              topups: {
+                path: "/users/customers/:id/histories/topups",
+                label: "users.customer.histories.topups",
+              },
+              suspensions: {
+                path: "/users/customers/:id/histories/suspensions",
+                label: "users.customer.histories.suspensions",
+              },
+            },
           },
         },
       },

@@ -1,7 +1,6 @@
-import PageHeader from "@/components/Pages/PageHeader";
 import APISession from "@/libs/api/server";
+import { Stack } from "@pawpal/ui/core";
 import { notFound } from "next/navigation";
-import { CustomerProvider } from "./CustomerContext";
 import TabNavigation from "./TabNavigation";
 
 const CustomerLayout = async ({
@@ -17,13 +16,13 @@ const CustomerLayout = async ({
 
   if (!response.success) return notFound();
 
-  const customer = response.data;
-
   return (
-    <CustomerProvider defaultValue={customer}>
-      <PageHeader title={customer.displayName} />
-      <TabNavigation>{children}</TabNavigation>
-    </CustomerProvider>
+    <Stack gap="xs">
+      <div>
+        <TabNavigation />
+      </div>
+      {children}
+    </Stack>
   );
 };
 

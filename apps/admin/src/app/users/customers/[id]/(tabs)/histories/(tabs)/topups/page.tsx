@@ -2,9 +2,9 @@
 import TopupStatusBadge from "@/components/Badges/TopupStatusBadge";
 import { useGetCustomerTopupsQuery } from "@/features/customer/customerApi";
 import useDatatable from "@/hooks/useDatatable";
-import { Box, DataTable } from "@pawpal/ui/core";
+import { DataTable } from "@pawpal/ui/core";
 import { useFormatter, useTranslations } from "next-intl";
-import { useCustomer } from "../../CustomerContext";
+import { useCustomer } from "../../../../CustomerContext";
 
 const CustomerTopupsPage = () => {
   const { customer } = useCustomer();
@@ -54,15 +54,13 @@ const CustomerTopupsPage = () => {
   });
 
   return (
-    <Box py="md">
-      <DataTable
-        idAccessor="id"
-        records={data?.data || []}
-        totalRecords={data?.total || 0}
-        fetching={isLoading}
-        {...datatable.props}
-      />
-    </Box>
+    <DataTable
+      idAccessor="id"
+      records={data?.data || []}
+      totalRecords={data?.total || 0}
+      fetching={isLoading}
+      {...datatable.props}
+    />
   );
 };
 

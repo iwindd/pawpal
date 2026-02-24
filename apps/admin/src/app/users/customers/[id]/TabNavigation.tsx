@@ -4,6 +4,7 @@ import { useActiveRouteConfig } from "@/hooks/useActiveRouteConfig";
 import { Tabs } from "@pawpal/ui/core";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
+import React, { useState } from "react";
 import { useCustomer } from "./CustomerContext";
 
 const Tab = ({ routeName }: { routeName: string }) => {
@@ -23,17 +24,38 @@ const Tab = ({ routeName }: { routeName: string }) => {
   );
 };
 
-const TabNavigation = () => {
+const TabNavigation = ({ children }: { children: React.ReactNode }) => {
   const activeRoute = useActiveRouteConfig();
 
+  const [tabs] = useState([
+    getRoute("users.customers.edit"),
+    getRoute("users.customers.histories"),
+  ]);
+
+  const [activeTabNested] = useState([
+    [getRoute("users.customers.edit")],
+    [
+      getRoute("users.customers.histories"),
+      getRoute("users.customers.histories.orders"),
+      getRoute("users.customers.histories.topups"),
+      getRoute("users.customers.histories.suspensions"),
+    ],
+  ]);
+
+  const activeTab = activeTabNested.find((tab) =>
+    tab.some((r) => r.name === activeRoute?.name),
+  )?.[0]?.name!;
+
   return (
-    <Tabs mb="xs" value={activeRoute?.name}>
+    <Tabs mb="xs" value={activeTab} orientation="vertical" keepMounted>
       <Tabs.List>
-        <Tab routeName={"users.customers.edit"} />
-        <Tab routeName={"users.customers.orders"} />
-        <Tab routeName={"users.customers.topups"} />
-        <Tab routeName={"users.customers.suspensions"} />
+        {tabs.map((tab) => (
+          <Tab key={tab.name} routeName={tab.name} />
+        ))}
       </Tabs.List>
+      <Tabs.Panel value={activeTab} px="md">
+        {children}
+      </Tabs.Panel>
     </Tabs>
   );
 };
