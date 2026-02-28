@@ -26,6 +26,7 @@ import {
 
 import { CreateProductUseCase } from '../application/usecases/create-product.usecase';
 import { GetProductDatatableUseCase } from '../application/usecases/get-product-datatable.usecase';
+import { GetProductStockMovementsDatatableUseCase } from '../application/usecases/get-product-stock-movements-datatable.usecase';
 import { GetProductStockUseCase } from '../application/usecases/get-product-stock.usecase';
 import { GetProductUseCase } from '../application/usecases/get-product.usecase';
 import { UpdateProductStockUseCase } from '../application/usecases/update-product-stock.usecase';
@@ -42,6 +43,7 @@ export class AdminProductController {
     private readonly updateProduct: UpdateProductUseCase,
     private readonly updateProductStock: UpdateProductStockUseCase,
     private readonly getProductStock: GetProductStockUseCase,
+    private readonly getProductStockMovementsDatatable: GetProductStockMovementsDatatableUseCase,
   ) {}
 
   @Get()
@@ -83,5 +85,13 @@ export class AdminProductController {
   @Get(':id/stock')
   getStock(@Param('id') id: string) {
     return this.getProductStock.execute(id);
+  }
+
+  @Get(':id/stock-movements')
+  getStockMovements(
+    @Param('id') id: string,
+    @Query(new DatatablePipe()) query: DatatableQuery,
+  ) {
+    return this.getProductStockMovementsDatatable.execute(id, query);
   }
 }

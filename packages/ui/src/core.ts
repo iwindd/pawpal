@@ -95,3 +95,5 @@ export {
   default as LoadingTrigger,
   type LoadingTriggerProps,
 } from "./components/LoadingTrigger";
+
+export { default as RelativeTime } from "./components/RelativeTime";

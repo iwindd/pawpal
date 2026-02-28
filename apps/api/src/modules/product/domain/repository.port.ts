@@ -17,4 +17,8 @@ export interface IProductRepository {
   updateProduct(id: string, payload: any, userId: string): Promise<any>;
   updateProductStock(id: string, payload: any, userId: string): Promise<any>;
   getProductStock(id: string): Promise<any>;
+  getProductStockMovementsDatatable(
+    id: string,
+    query: DatatableQuery,
+  ): Promise<any>;
 }

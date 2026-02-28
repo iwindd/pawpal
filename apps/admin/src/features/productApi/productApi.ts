@@ -5,6 +5,7 @@ import {
   DatatableResponse,
   ProductInput,
   ProductStockInput,
+  StockMovementListItem,
 } from "@pawpal/shared";
 import { createApi } from "@reduxjs/toolkit/query/react";
 
@@ -47,6 +48,18 @@ export const productApi = createApi({
         { type: "Product", id: `${id}-stock` },
       ],
     }),
+    getProductStockMovements: builder.query<
+      DatatableResponse<StockMovementListItem>,
+      DatatableInput & { productId: string }
+    >({
+      query: ({ productId, ...params }) => ({
+        url: `/${productId}/stock-movements`,
+        params,
+      }),
+      providesTags: (result, error, { productId }) => [
+        { type: "Product", id: `${productId}-stock-movements` },
+      ],
+    }),
     updateProduct: builder.mutation<
       AdminProductResponse,
       { id: string; product: ProductInput }
@@ -74,6 +87,7 @@ export const productApi = createApi({
         "Products",
         { type: "Product", id },
         { type: "Product", id: `${id}-stock` },
+        { type: "Product", id: `${id}-stock-movements` },
       ],
     }),
   }),
@@ -81,9 +95,11 @@ export const productApi = createApi({
 
 export const {
   useLazyGetProductsQuery,
+  useLazyGetProductQuery,
   useGetProductsQuery,
   useGetProductQuery,
   useGetProductStockQuery,
+  useGetProductStockMovementsQuery,
   useCreateProductMutation,
   useUpdateProductMutation,
   useUpdateProductStockMutation,

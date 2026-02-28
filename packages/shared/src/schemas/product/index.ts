@@ -55,3 +55,5 @@ export const packageBulkSchema = z.object({
 });
 
 export type PackageBulkInput = z.infer<typeof packageBulkSchema>;
+
+export * from "./stock-movement";

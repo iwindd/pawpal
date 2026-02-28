@@ -497,4 +497,37 @@ export class PrismaProductRepository implements IProductRepository {
       stock: product.stock?.quantity || 0,
     };
   }
+
+  async getProductStockMovementsDatatable(id: string, query: DatatableQuery) {
+    const product = await this.prisma.product.findUnique({
+      where: { id },
+      select: { stock: { select: { id: true } } },
+    });
+
+    if (!product?.stock) {
+      return {
+        data: [],
+        total: 0,
+      };
+    }
+
+    return this.prisma.stockMovement.getDatatable({
+      query,
+      where: { stockId: product.stock.id },
+      select: {
+        id: true,
+        type: true,
+        quantity: true,
+        note: true,
+        createdAt: true,
+        user: { select: { id: true, displayName: true } },
+        order: { select: { id: true } },
+      },
+      searchable: {
+        note: { mode: 'insensitive' },
+        user: { displayName: { mode: 'insensitive' } },
+        order: { id: { mode: 'insensitive' } },
+      },
+    });
+  }
 }
