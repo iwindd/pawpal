@@ -4,6 +4,7 @@ import { Prisma } from '@/generated/prisma/client';
 import { ResourceType } from '@/generated/prisma/enums';
 import { SaleUtil } from '@/utils/saleUtil';
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import { ProductInput } from '@pawpal/shared';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { CopyResourceToProductUseCase } from '../../../resource/application/usecases/copy-resource-to-product.usecase';
 import { IProductRepository } from '../../domain/repository.port';
@@ -342,7 +343,7 @@ export class PrismaProductRepository implements IProductRepository {
     });
   }
 
-  async updateProduct(id: string, payload: any, userId: string) {
+  async updateProduct(id: string, payload: ProductInput, userId: string) {
     const product = await this.prisma.product.findUnique({
       where: { id },
       select: {
@@ -354,14 +355,7 @@ export class PrismaProductRepository implements IProductRepository {
 
     if (!product) throw new BadRequestException('product_not_found');
 
-    const {
-      image_id: imageId,
-      category_id: categoryId,
-      isStockTracked,
-      stock,
-      stockNote,
-      ...rest
-    } = payload;
+    const { image_id: imageId, category_id: categoryId, ...rest } = payload;
 
     let image: Prisma.ProductUpdateInput['image'] = {};
 
@@ -375,41 +369,10 @@ export class PrismaProductRepository implements IProductRepository {
       };
     }
 
-    const stockDiff = stock - (product.stock?.quantity || 0);
-
     const updatedProduct = await this.prisma.product.update({
       where: { id },
       data: {
         ...rest,
-        isStockTracked,
-        stock: {
-          upsert: {
-            create: {
-              quantity: stock,
-              movements: {
-                create: {
-                  type: 'ADJUST',
-                  quantity: stock,
-                  note: stockNote,
-                  user: { connect: { id: userId } },
-                },
-              },
-            },
-            update: {
-              quantity: stock,
-              ...(stockDiff !== 0 && {
-                movements: {
-                  create: {
-                    type: 'ADJUST',
-                    quantity: stockDiff,
-                    note: stockNote,
-                    user: { connect: { id: userId } },
-                  },
-                },
-              }),
-            },
-          },
-        },
         image: image,
         category: { connect: { id: categoryId } },
       },

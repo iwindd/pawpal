@@ -1,4 +1,5 @@
 import { DatatableQuery } from '@/common/pipes/DatatablePipe';
+import { ProductInput } from '@pawpal/shared';
 
 export const PRODUCT_REPOSITORY = Symbol('PRODUCT_REPOSITORY');
 
@@ -14,7 +15,11 @@ export interface IProductRepository {
   getProductDatatable(query: DatatableQuery): Promise<any>;
   findOne(id: string): Promise<any>;
   createProduct(payload: any, userId: string): Promise<any>;
-  updateProduct(id: string, payload: any, userId: string): Promise<any>;
+  updateProduct(
+    id: string,
+    payload: ProductInput,
+    userId: string,
+  ): Promise<any>;
   updateProductStock(id: string, payload: any, userId: string): Promise<any>;
   getProductStock(id: string): Promise<any>;
   getProductStockMovementsDatatable(

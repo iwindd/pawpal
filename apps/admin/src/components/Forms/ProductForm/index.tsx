@@ -72,29 +72,47 @@ const ProductForm = ({
         <Grid>
           {/* Left Column - General Information */}
           <Grid.Col span={{ base: 12, md: 8 }}>
-            <Card>
-              <Card.Header title={__("sections.general")} />
-              <Card.Section inheritPadding pb="md">
-                <Stack gap="md">
-                  <TextInput
-                    label={__("fields.product.name.label")}
-                    placeholder={__("fields.product.name.placeholder")}
-                    withAsterisk
-                    key={form.key("name")}
-                    {...form.getInputProps("name")}
-                  />
+            <Stack>
+              <Card>
+                <Card.Header title={__("sections.general")} />
+                <Card.Section inheritPadding pb="md">
+                  <Stack gap="md">
+                    <TextInput
+                      label={__("fields.product.name.label")}
+                      placeholder={__("fields.product.name.placeholder")}
+                      withAsterisk
+                      key={form.key("name")}
+                      {...form.getInputProps("name")}
+                    />
 
-                  <Textarea
-                    label={__("fields.product.description.label")}
-                    placeholder={__("fields.product.description.placeholder")}
-                    minRows={6}
-                    autosize
-                    key={form.key("description")}
-                    {...form.getInputProps("description")}
-                  />
-                </Stack>
-              </Card.Section>
-            </Card>
+                    <Textarea
+                      label={__("fields.product.description.label")}
+                      placeholder={__("fields.product.description.placeholder")}
+                      minRows={6}
+                      autosize
+                      key={form.key("description")}
+                      {...form.getInputProps("description")}
+                    />
+                  </Stack>
+                </Card.Section>
+              </Card>
+              <Card>
+                <Card.Header title={__("sections.organization")} />
+                <Card.Content>
+                  <Stack>
+                    <CategoryCombobox
+                      inputProps={{
+                        label: __("fields.product.category.label"),
+                        placeholder: __("fields.product.category.placeholder"),
+                        withAsterisk: true,
+                      }}
+                      key={form.key("category_id")}
+                      {...form.getInputProps("category_id")}
+                    />
+                  </Stack>
+                </Card.Content>
+              </Card>
+            </Stack>
           </Grid.Col>
 
           {/* Right Column - Media & Organization */}
@@ -125,19 +143,8 @@ const ProductForm = ({
               </Card>
 
               <Card>
-                <Card.Header title={__("sections.organization")} />
-                <Card.Content>
+                <Card.Section inheritPadding py="md">
                   <Stack>
-                    <CategoryCombobox
-                      inputProps={{
-                        label: __("fields.product.category.label"),
-                        placeholder: __("fields.product.category.placeholder"),
-                        withAsterisk: true,
-                      }}
-                      key={form.key("category_id")}
-                      {...form.getInputProps("category_id")}
-                    />
-
                     <TextInput
                       label={__("fields.product.slug.label")}
                       placeholder={__("fields.product.slug.placeholder")}
@@ -146,7 +153,7 @@ const ProductForm = ({
                       {...form.getInputProps("slug")}
                     />
                   </Stack>
-                </Card.Content>
+                </Card.Section>
               </Card>
             </Stack>
           </Grid.Col>
