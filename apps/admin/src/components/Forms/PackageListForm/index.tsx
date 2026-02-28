@@ -94,12 +94,6 @@ const PackageListForm = ({
         </Group>
 
         <Stack gap="md">
-          {form.getValues().packages.length === 0 && (
-            <Text c="dimmed" ta="center" py="xl">
-              {__("empty", { defaultValue: "No packages added yet." })}
-            </Text>
-          )}
-
           <DragDropContext onDragEnd={handleDragEnd}>
             <Droppable droppableId="packages-droppable">
               {(provided) => (

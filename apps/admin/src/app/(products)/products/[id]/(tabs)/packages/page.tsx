@@ -5,7 +5,7 @@ import {
   useUpdateProductPackagesBulkMutation,
 } from "@/features/package/packageApi";
 import { PackageBulkInput } from "@pawpal/shared";
-import { Box, Text } from "@pawpal/ui/core";
+import { Box, Card, Grid, Skeleton, Stack } from "@pawpal/ui/core";
 import { notify } from "@pawpal/ui/notifications";
 import { useTranslations } from "next-intl";
 import { useProduct } from "../../ProductContext";
@@ -48,10 +48,30 @@ const PackagePage = () => {
 
   if (isFetching) {
     return (
-      <Box p="xl" ta="center">
-        <Text c="dimmed">
-          {__("loading", { defaultValue: "Loading packages..." })}
-        </Text>
+      <Box mb="md">
+        <Stack pb={80}>
+          <Skeleton height={24} width={100} mb="md" />
+          <Stack gap="md">
+            {[1, 2, 3].map((i) => (
+              <Card key={i}>
+                <Card.Header title={<Skeleton height={20} width={100} />} />
+                <Card.Content>
+                  <Grid>
+                    <Grid.Col span={{ base: 12, md: 4 }}>
+                      <Skeleton height={36} radius="sm" />
+                    </Grid.Col>
+                    <Grid.Col span={{ base: 12, md: 4 }}>
+                      <Skeleton height={36} radius="sm" />
+                    </Grid.Col>
+                    <Grid.Col span={{ base: 12, md: 4 }}>
+                      <Skeleton height={36} radius="sm" />
+                    </Grid.Col>
+                  </Grid>
+                </Card.Content>
+              </Card>
+            ))}
+          </Stack>
+        </Stack>
       </Box>
     );
   }

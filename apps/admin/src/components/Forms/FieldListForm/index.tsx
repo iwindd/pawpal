@@ -116,12 +116,6 @@ const FieldListForm = ({ fields, onSubmit, isLoading }: FieldListFormProps) => {
         </Group>
 
         <Stack gap="md">
-          {form.getValues().fields.length === 0 && (
-            <Text c="dimmed" ta="center" py="xl">
-              {__("empty", { defaultValue: "No fields added yet." })}
-            </Text>
-          )}
-
           <DragDropContext onDragEnd={handleDragEnd}>
             <Droppable droppableId="fields-droppable">
               {(provided) => (
