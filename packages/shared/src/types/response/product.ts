@@ -39,6 +39,7 @@ export interface ProductField {
 }
 
 export interface ProductResponse {
+  id: string;
   slug: string;
   name: string;
   description?: string;
@@ -47,6 +48,8 @@ export interface ProductResponse {
   packages: ProductPackage[];
   fields: ProductField[];
   MOST_SALE: ProductSaleValue | null;
+  isStockTracked: boolean;
+  stock: number;
 }
 
 export interface AdminProductResponse {
@@ -68,4 +71,6 @@ export interface AdminProductResponse {
     url: string;
   };
   createdAt: string;
+  isStockTracked?: boolean;
+  stock?: number;
 }

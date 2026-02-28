@@ -106,9 +106,12 @@ export class PrismaProductRepository implements IProductRepository {
     const product = await this.prisma.product.findUnique({
       where: { slug },
       select: {
+        id: true,
         slug: true,
         name: true,
         description: true,
+        isStockTracked: true,
+        stock: { select: { quantity: true } },
         createdAt: true,
         category: { select: { id: true, name: true, slug: true } },
         productTags: { select: { slug: true, name: true } },
@@ -306,12 +309,27 @@ export class PrismaProductRepository implements IProductRepository {
   }
 
   async createProduct(payload: any, userId: string) {
-    const { image_id, category_id, ...rest } = payload;
+    const { image_id, category_id, isStockTracked, stock, stockNote, ...rest } =
+      payload;
     const image = await this.copyResourceToProduct.execute(image_id);
 
     return this.prisma.product.create({
       data: {
         ...rest,
+        isStockTracked,
+        stock: {
+          create: {
+            quantity: stock,
+            movements: {
+              create: {
+                type: 'ADJUST',
+                quantity: stock,
+                note: stockNote || 'Initial stock',
+                user: { connect: { id: userId } },
+              },
+            },
+          },
+        },
         image: {
           create: {
             url: image.key,
@@ -327,12 +345,23 @@ export class PrismaProductRepository implements IProductRepository {
   async updateProduct(id: string, payload: any, userId: string) {
     const product = await this.prisma.product.findUnique({
       where: { id },
-      select: { imageId: true, categoryId: true },
+      select: {
+        imageId: true,
+        categoryId: true,
+        stock: { select: { quantity: true } },
+      },
     });
 
     if (!product) throw new BadRequestException('product_not_found');
 
-    const { image_id: imageId, category_id: categoryId, ...rest } = payload;
+    const {
+      image_id: imageId,
+      category_id: categoryId,
+      isStockTracked,
+      stock,
+      stockNote,
+      ...rest
+    } = payload;
 
     let image: Prisma.ProductUpdateInput['image'] = {};
 
@@ -346,10 +375,41 @@ export class PrismaProductRepository implements IProductRepository {
       };
     }
 
+    const stockDiff = stock - (product.stock?.quantity || 0);
+
     const updatedProduct = await this.prisma.product.update({
       where: { id },
       data: {
         ...rest,
+        isStockTracked,
+        stock: {
+          upsert: {
+            create: {
+              quantity: stock,
+              movements: {
+                create: {
+                  type: 'ADJUST',
+                  quantity: stock,
+                  note: stockNote,
+                  user: { connect: { id: userId } },
+                },
+              },
+            },
+            update: {
+              quantity: stock,
+              ...(stockDiff !== 0 && {
+                movements: {
+                  create: {
+                    type: 'ADJUST',
+                    quantity: stockDiff,
+                    note: stockNote,
+                    user: { connect: { id: userId } },
+                  },
+                },
+              }),
+            },
+          },
+        },
         image: image,
         category: { connect: { id: categoryId } },
       },
@@ -357,5 +417,84 @@ export class PrismaProductRepository implements IProductRepository {
     });
 
     return ProductResponseMapper.fromQuery(updatedProduct);
+  }
+
+  async updateProductStock(id: string, payload: any, userId: string) {
+    const product = await this.prisma.product.findUnique({
+      where: { id },
+      select: {
+        stock: { select: { quantity: true } },
+      },
+    });
+
+    if (!product) throw new BadRequestException('product_not_found');
+
+    const { isStockTracked, stock, stockNote } = payload;
+    const stockDiff = stock - (product.stock?.quantity || 0);
+
+    const updatedProduct = await this.prisma.product.update({
+      where: { id },
+      data: {
+        isStockTracked,
+        stock: {
+          upsert: {
+            create: {
+              quantity: stock,
+              movements: {
+                create: {
+                  type: 'ADJUST',
+                  quantity: stock,
+                  note: stockNote,
+                  user: { connect: { id: userId } },
+                },
+              },
+            },
+            update: {
+              quantity: stock,
+              ...(stockDiff !== 0 && {
+                movements: {
+                  create: {
+                    type: 'ADJUST',
+                    quantity: stockDiff,
+                    note: stockNote,
+                    user: { connect: { id: userId } },
+                  },
+                },
+              }),
+            },
+          },
+        },
+      },
+      select: {
+        isStockTracked: true,
+        stock: {
+          select: {
+            quantity: true,
+          },
+        },
+      },
+    });
+
+    return {
+      isStockTracked: updatedProduct.isStockTracked,
+      stock: updatedProduct.stock?.quantity || 0,
+    };
+  }
+
+  async getProductStock(id: string) {
+    const product = await this.prisma.product.findUnique({
+      where: { id },
+      select: {
+        isStockTracked: true,
+        stock: { select: { quantity: true } },
+      },
+    });
+
+    if (!product) throw new BadRequestException('product_not_found');
+
+    return {
+      isStockTracked: product.isStockTracked,
+      stock: product.stock?.quantity || 0,
+    };
   }
 }

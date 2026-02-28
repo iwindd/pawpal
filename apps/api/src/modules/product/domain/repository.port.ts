@@ -15,4 +15,6 @@ export interface IProductRepository {
   findOne(id: string): Promise<any>;
   createProduct(payload: any, userId: string): Promise<any>;
   updateProduct(id: string, payload: any, userId: string): Promise<any>;
+  updateProductStock(id: string, payload: any, userId: string): Promise<any>;
+  getProductStock(id: string): Promise<any>;
 }

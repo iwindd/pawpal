@@ -19,6 +19,12 @@ const PRODUCT_SLUG_MIN_LENGTH = 3;
 const PRODUCT_SLUG_MAX_LENGTH = 20;
 const PRODUCT_DESCRIPTION_MAX_LENGTH = 150;
 
+export const productStockSchema = z.object({
+  isStockTracked: z.boolean().default(false),
+  stock: z.number().int().min(0).default(0),
+  stockNote: z.string().optional(),
+});
+
 export const productSchema = z.object({
   name: z
     .string()
@@ -37,6 +43,7 @@ export const productSchema = z.object({
 });
 
 export type ProductInput = z.infer<typeof productSchema>;
+export type ProductStockInput = z.infer<typeof productStockSchema>;
 export type PackageInput = z.infer<typeof packageSchema>;
 
 export const packageBulkSchema = z.object({

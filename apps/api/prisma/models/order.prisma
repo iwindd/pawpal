@@ -19,6 +19,8 @@ model Order {
   completedById String?   @map("completed_by_id")
   completedAt   DateTime? @map("completed_at")
 
+  stockMovements StockMovement[] @relation("StockMovementOrder")
+
   @@map("orders")
 }
 

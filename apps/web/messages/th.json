@@ -3,7 +3,9 @@
     "title": "ยืนยันการดำเนินการ",
     "message": "คุณแน่ใจหรือไม่ว่าต้องการดำเนินการต่อ?",
     "confirm": "ตกลง",
-    "cancel": "ยกเลิก"
+    "cancel": "ยกเลิก",
+    "noteLabel": "หมายเหตุ",
+    "notePlaceholder": "ระบุหมายเหตุที่นี่..."
   },
   "_comment": "Updated to fix rich text rendering",
   "Home": {

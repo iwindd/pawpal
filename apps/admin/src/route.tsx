@@ -95,6 +95,12 @@ const ROUTES = ROUTER({
         name: "products.fields",
         icon: IconWork,
       },
+      stock: {
+        path: "/products/:id/stock",
+        label: "products.stock",
+        name: "products.stock",
+        icon: IconWork,
+      },
     },
   },
   tags: {

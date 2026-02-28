@@ -45,6 +45,7 @@ export {
   Radio,
   rem,
   ScrollArea,
+  SegmentedControl,
   Select,
   Skeleton,
   Space,

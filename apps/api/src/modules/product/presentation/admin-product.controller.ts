@@ -19,12 +19,16 @@ import {
   PermissionEnum,
   ProductInput,
   productSchema,
+  ProductStockInput,
+  productStockSchema,
   Session,
 } from '@pawpal/shared';
 
 import { CreateProductUseCase } from '../application/usecases/create-product.usecase';
 import { GetProductDatatableUseCase } from '../application/usecases/get-product-datatable.usecase';
+import { GetProductStockUseCase } from '../application/usecases/get-product-stock.usecase';
 import { GetProductUseCase } from '../application/usecases/get-product.usecase';
+import { UpdateProductStockUseCase } from '../application/usecases/update-product-stock.usecase';
 import { UpdateProductUseCase } from '../application/usecases/update-product.usecase';
 
 @Controller('admin/product')
@@ -36,6 +40,8 @@ export class AdminProductController {
     private readonly getProduct: GetProductUseCase,
     private readonly createProduct: CreateProductUseCase,
     private readonly updateProduct: UpdateProductUseCase,
+    private readonly updateProductStock: UpdateProductStockUseCase,
+    private readonly getProductStock: GetProductStockUseCase,
   ) {}
 
   @Get()
@@ -63,5 +69,19 @@ export class AdminProductController {
     @AuthUser() user: Session,
   ) {
     return this.updateProduct.execute(id, payload, user.id);
+  }
+
+  @Patch(':id/stock')
+  updateStock(
+    @Param('id') id: string,
+    @Body(new ZodPipe(productStockSchema)) payload: ProductStockInput,
+    @AuthUser() user: Session,
+  ) {
+    return this.updateProductStock.execute(id, payload, user.id);
+  }
+
+  @Get(':id/stock')
+  getStock(@Param('id') id: string) {
+    return this.getProductStock.execute(id);
   }
 }

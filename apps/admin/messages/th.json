@@ -3,7 +3,9 @@
     "title": "ยืนยันการดำเนินการ",
     "message": "คุณแน่ใจหรือไม่ว่าต้องการดำเนินการต่อ?",
     "confirm": "ตกลง",
-    "cancel": "ยกเลิก"
+    "cancel": "ยกเลิก",
+    "noteLabel": "หมายเหตุ",
+    "notePlaceholder": "ระบุหมายเหตุที่นี่..."
   },
   "title": "Pawpal Admin",
   "Auth": {
@@ -184,7 +186,8 @@
       "create": "สินค้าใหม่",
       "edit": "รายละเอียด",
       "packages": "แพ็คเกจ",
-      "fields": "ฟิลด์"
+      "fields": "ฟิลด์",
+      "stock": "สต๊อก"
     },
     "categories": {
       "main": "หมวดหมู่",
@@ -377,7 +380,8 @@
     "tabs": {
       "information": "รายละเอียด",
       "packages": "แพ็คเกจ",
-      "fields": "ฟิลด์"
+      "fields": "ฟิลด์",
+      "stock": "สต๊อก จำกัดสินค้า"
     },
     "form": {
       "sections": {
@@ -427,6 +431,18 @@
       "actions": {
         "addPackage": "เพิ่มแพ็คเกจ",
         "save": "บันทึก"
+      }
+    },
+    "stock": {
+      "title": "จัดการสต๊อก",
+      "limitStockLabel": "จำกัดสต๊อก",
+      "limitStockDescription": "ปิดเพื่อไม่จำกัดจำนวนสต๊อก เปิดเพื่อระบุจำนวนสินค้าที่มีอยู่",
+      "amountLabel": "จำนวนสต๊อก",
+      "confirmTitle": "ยืนยันจัดการสต๊อก",
+      "confirmMessage": "คุณยืนยันที่จะแก้ไขข้อมูลสต๊อกหรือไม่?",
+      "notify": {
+        "title": "สำเร็จ",
+        "message": "บันทึกข้อมูลสต๊อกเรียบร้อยแล้ว"
       }
     },
     "notify": {

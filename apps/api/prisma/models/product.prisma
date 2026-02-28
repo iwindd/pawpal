@@ -19,12 +19,16 @@ model Package {
 }
 
 model Product {
-  id          String   @id @default(cuid())
-  slug        String   @unique
+  id          String  @id @default(cuid())
+  slug        String  @unique
   name        String
   description String?
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  isStockTracked Boolean @default(false) @map("is_stock_tracked")
+  stock          Stock?  @relation("ProductStock")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   category   Category @relation("ProductCategory", fields: [categoryId], references: [id])
   categoryId String   @map("category_id")
@@ -106,4 +110,45 @@ enum FieldType {
   EMAIL
   SELECT
   PASSWORD
+}
+
+model Stock {
+  id        String  @id @default(cuid())
+  productId String  @unique @map("product_id")
+  product   Product @relation("ProductStock", fields: [productId], references: [id], onDelete: Cascade)
+  quantity  Int     @default(0)
+
+  movements StockMovement[] @relation("StockMovements")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("stocks")
+}
+
+model StockMovement {
+  id       String            @id @default(cuid())
+  stockId  String            @map("stock_id")
+  stock    Stock             @relation("StockMovements", fields: [stockId], references: [id], onDelete: Cascade)
+  type     StockMovementType
+  quantity Int
+  note     String?
+
+  orderId String? @map("order_id")
+  order   Order?  @relation("StockMovementOrder", fields: [orderId], references: [id], onDelete: SetNull)
+
+  adjustBy String? @map("adjust_by")
+  user     User?   @relation("StockAdjustedBy", fields: [adjustBy], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([stockId])
+  @@index([orderId])
+  @@index([adjustBy])
+  @@map("stock_movements")
+}
+
+enum StockMovementType {
+  ORDER
+  ADJUST
 }

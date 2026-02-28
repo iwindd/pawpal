@@ -34,6 +34,7 @@ const TabNavigation = () => {
         <Tab routeName={"products.product"} />
         <Tab routeName={"products.packages"} />
         <Tab routeName={"products.fields"} />
+        <Tab routeName={"products.stock"} />
       </Tabs.List>
     </Tabs>
   );

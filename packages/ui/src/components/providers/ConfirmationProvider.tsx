@@ -1,5 +1,12 @@
 "use client";
-import { Button, ButtonProps, Group, Modal, Text } from "@mantine/core";
+import {
+  Button,
+  ButtonProps,
+  Group,
+  Modal,
+  Text,
+  Textarea,
+} from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useTranslations } from "next-intl";
 import { createContext, ReactNode, useContext, useMemo, useState } from "react";
@@ -11,13 +18,17 @@ type ConfirmOptions = {
   cancelLabel?: string;
   confirmProps?: Omit<ButtonProps, "onClick">;
   cancelProps?: Omit<ButtonProps, "onClick">;
+  variant?: "default" | "withNote";
 };
+
+export type ConfirmWithNoteResult = { confirmed: boolean; note: string };
 
 type ConfirmationContextType = {
   confirm: (options: ConfirmOptions) => Promise<boolean>;
+  confirmWithNote: (options: ConfirmOptions) => Promise<ConfirmWithNoteResult>;
   confirmation: <T>(
     callback: (arg: T) => any | Promise<any>,
-    options: ConfirmOptions
+    options: ConfirmOptions,
   ) => (arg: T) => Promise<any>;
 };
 
@@ -29,19 +40,28 @@ export function ConfirmationProvider({
   const __ = useTranslations("__ConfirmationProvider");
   const [opened, { open, close }] = useDisclosure(false);
   const [options, setOptions] = useState<ConfirmOptions>({});
-  const [resolver, setResolver] = useState<((value: boolean) => void) | null>(
-    null
-  );
+  const [resolver, setResolver] = useState<((value: any) => void) | null>(null);
+  const [note, setNote] = useState("");
 
   const confirm = (opts: ConfirmOptions) => {
-    setOptions(opts);
+    setOptions({ ...opts, variant: "default" });
+    setNote("");
     open();
     return new Promise<boolean>((resolve) => setResolver(() => resolve));
   };
 
+  const confirmWithNote = (opts: ConfirmOptions) => {
+    setOptions({ ...opts, variant: "withNote" });
+    setNote("");
+    open();
+    return new Promise<ConfirmWithNoteResult>((resolve) =>
+      setResolver(() => resolve),
+    );
+  };
+
   const confirmation = <T,>(
     callback: (arg: T) => any | Promise<any>,
-    opts: ConfirmOptions
+    opts: ConfirmOptions,
   ) => {
     return async (arg: T) => {
       const result = await confirm(opts);
@@ -54,15 +74,23 @@ export function ConfirmationProvider({
 
   const handleConfirm = () => {
     close();
-    resolver?.(true);
+    if (options.variant === "withNote") {
+      resolver?.({ confirmed: true, note });
+    } else {
+      resolver?.(true);
+    }
   };
 
   const handleCancel = () => {
     close();
-    resolver?.(false);
+    if (options.variant === "withNote") {
+      resolver?.({ confirmed: false, note: "" });
+    } else {
+      resolver?.(false);
+    }
   };
 
-  const obj = useMemo(() => ({ confirm, confirmation }), []);
+  const obj = useMemo(() => ({ confirm, confirmWithNote, confirmation }), []);
 
   return (
     <ConfirmationContext.Provider value={obj}>
@@ -73,6 +101,16 @@ export function ConfirmationProvider({
         title={options.title || __("title")}
       >
         <Text>{options.message || __("message")}</Text>
+
+        {options.variant === "withNote" && (
+          <Textarea
+            mt="md"
+            placeholder={__("notePlaceholder") || "Enter note here..."}
+            value={note}
+            onChange={(e) => setNote(e.currentTarget.value)}
+            data-autofocus
+          />
+        )}
 
         <Group mt="lg" justify="flex-end">
           <Button
