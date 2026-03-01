@@ -4,7 +4,7 @@ import { useActiveRouteConfig } from "@/hooks/useActiveRouteConfig";
 import { Tabs } from "@pawpal/ui/core";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useCustomer } from "./CustomerContext";
 
 const Tab = ({ routeName }: { routeName: string }) => {
@@ -24,7 +24,7 @@ const Tab = ({ routeName }: { routeName: string }) => {
   );
 };
 
-const TabNavigation = ({ children }: { children: React.ReactNode }) => {
+const TabNavigation = () => {
   const activeRoute = useActiveRouteConfig();
 
   const [tabs] = useState([
@@ -47,15 +47,12 @@ const TabNavigation = ({ children }: { children: React.ReactNode }) => {
   )?.[0]?.name!;
 
   return (
-    <Tabs mb="xs" value={activeTab} orientation="vertical" keepMounted>
+    <Tabs value={activeTab}>
       <Tabs.List>
         {tabs.map((tab) => (
           <Tab key={tab.name} routeName={tab.name} />
         ))}
       </Tabs.List>
-      <Tabs.Panel value={activeTab} px="md">
-        {children}
-      </Tabs.Panel>
     </Tabs>
   );
 };
