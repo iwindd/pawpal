@@ -12,18 +12,16 @@ const CardCarousel = ({ alt, src }: Readonly<CardCarouselProps>) => {
   const __ = useTranslations("Home.CardCarousel");
 
   return (
-    <Paper shadow="md" p="xl" radius={0} className={classes.card}>
+    <Paper className={classes.card}>
       <div className={classes.imageContainer}>
         <ResourceImage
           alt={alt}
-          height={530}
           width={1920}
+          height={500}
           className={classes.image}
-          preload={true}
           src={src}
           fallbackSrc="/assets/images/fallback-carousel.jpg"
         />
-        <div className={classes.overlay} />
       </div>
     </Paper>
   );

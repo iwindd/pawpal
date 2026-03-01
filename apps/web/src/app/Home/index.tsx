@@ -14,8 +14,8 @@ export default async function HomePage() {
 
   return (
     <>
-      <Carousel carousels={carousels} />
       <Container size="xl" my="lg">
+        <Carousel carousels={carousels} />
         <Stack gap="xl">
           <SaleProductRow />
           <NewProductRow />
