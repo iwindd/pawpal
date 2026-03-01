@@ -4,6 +4,7 @@ import { useActiveRouteConfig } from "@/hooks/useActiveRouteConfig";
 import { Tabs } from "@pawpal/ui/core";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
+import { useState } from "react";
 import { useEmployee } from "./EmployeeContext";
 
 const Tab = ({ routeName }: { routeName: string }) => {
@@ -26,13 +27,31 @@ const Tab = ({ routeName }: { routeName: string }) => {
 const TabNavigation = () => {
   const activeRoute = useActiveRouteConfig();
 
+  const [tabs] = useState([
+    getRoute("users.employees.edit"),
+    getRoute("users.employees.histories"),
+  ]);
+
+  const [activeTabNested] = useState([
+    [getRoute("users.employees.edit")],
+    [
+      getRoute("users.employees.histories"),
+      getRoute("users.employees.histories.orders"),
+      getRoute("users.employees.histories.topups"),
+      getRoute("users.employees.histories.suspensions"),
+    ],
+  ]);
+
+  const activeTab = activeTabNested.find((tab) =>
+    tab.some((r) => r.name === activeRoute?.name),
+  )?.[0]?.name!;
+
   return (
-    <Tabs mb="xs" value={activeRoute?.name}>
+    <Tabs value={activeTab}>
       <Tabs.List>
-        <Tab routeName={"users.employees.edit"} />
-        <Tab routeName={"users.employees.orders"} />
-        <Tab routeName={"users.employees.topups"} />
-        <Tab routeName={"users.employees.suspensions"} />
+        {tabs.map((tab) => (
+          <Tab key={tab.name} routeName={tab.name} />
+        ))}
       </Tabs.List>
     </Tabs>
   );

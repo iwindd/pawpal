@@ -212,17 +212,23 @@ const ROUTES = ROUTER({
             path: "/users/employees/:id",
             label: "users.employee.edit",
           },
-          orders: {
-            path: "/users/employees/:id/orders",
-            label: "users.employee.orders",
-          },
-          topups: {
-            path: "/users/employees/:id/topups",
-            label: "users.employee.topups",
-          },
-          suspensions: {
-            path: "/users/employees/:id/suspensions",
-            label: "users.employee.suspensions",
+          histories: {
+            path: "/users/employees/:id/histories",
+            label: "users.employee.histories.main",
+            children: {
+              orders: {
+                path: "/users/employees/:id/histories/orders",
+                label: "users.employee.histories.orders",
+              },
+              topups: {
+                path: "/users/employees/:id/histories/topups",
+                label: "users.employee.histories.topups",
+              },
+              suspensions: {
+                path: "/users/employees/:id/histories/suspensions",
+                label: "users.employee.histories.suspensions",
+              },
+            },
           },
         },
       },

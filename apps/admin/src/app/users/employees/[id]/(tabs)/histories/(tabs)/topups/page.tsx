@@ -2,9 +2,9 @@
 import TopupStatusBadge from "@/components/Badges/TopupStatusBadge";
 import { useGetEmployeeTopupsQuery } from "@/features/employee/employeeApi";
 import useDatatable from "@/hooks/useDatatable";
-import { Box, DataTable } from "@pawpal/ui/core";
+import { DataTable } from "@pawpal/ui/core";
 import { useFormatter, useTranslations } from "next-intl";
-import { useEmployee } from "../../EmployeeContext";
+import { useEmployee } from "../../../../EmployeeContext";
 
 const EmployeeTopupsPage = () => {
   const { employee } = useEmployee();
@@ -54,15 +54,13 @@ const EmployeeTopupsPage = () => {
   });
 
   return (
-    <Box py="md">
-      <DataTable
-        idAccessor="id"
-        records={data?.data || []}
-        totalRecords={data?.total || 0}
-        fetching={isLoading}
-        {...datatable.props}
-      />
-    </Box>
+    <DataTable
+      idAccessor="id"
+      records={data?.data || []}
+      totalRecords={data?.total || 0}
+      fetching={isLoading}
+      {...datatable.props}
+    />
   );
 };
 
