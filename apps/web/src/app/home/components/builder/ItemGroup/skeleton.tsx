@@ -1,3 +1,4 @@
+"use client";
 import { Card, Grid, Group, Skeleton } from "@pawpal/ui/core";
 
 const ItemGroupSkeleton = () => {

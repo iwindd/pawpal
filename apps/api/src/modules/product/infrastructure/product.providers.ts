@@ -11,6 +11,8 @@ import { GetProductDatatableUseCase } from '../application/usecases/get-product-
 import { GetProductStockMovementsDatatableUseCase } from '../application/usecases/get-product-stock-movements-datatable.usecase';
 import { GetProductStockUseCase } from '../application/usecases/get-product-stock.usecase';
 import { GetProductUseCase } from '../application/usecases/get-product.usecase';
+import { GetProductsByCategoryUseCase } from '../application/usecases/get-products-by-category.usecase';
+import { GetProductsByTagUseCase } from '../application/usecases/get-products-by-tag.usecase';
 import { GetSaleProductDatatableUseCase } from '../application/usecases/get-sale-product-datatable.usecase';
 import { GetSaleProductsUseCase } from '../application/usecases/get-sale-products.usecase';
 import { UpdateProductStockUseCase } from '../application/usecases/update-product-stock.usecase';
@@ -33,4 +35,6 @@ export const productProviders: Provider[] = [
   UpdateProductStockUseCase,
   GetProductStockUseCase,
   GetProductStockMovementsDatatableUseCase,
+  GetProductsByTagUseCase,
+  GetProductsByCategoryUseCase,
 ];

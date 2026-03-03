@@ -1,36 +1,44 @@
 import { ServerApi } from "@/libs/api/server";
-import { getSectionIcon } from "@/utils/productUtils";
 import { ProductResponse } from "@pawpal/shared";
 
-export const homeProductSections = [
-  {
-    key: "flashsale",
-    label: "Flashsale",
-    icon: getSectionIcon("flashsale"),
-    onLoad: async (API: ServerApi): Promise<ProductResponse[]> => {
-      try {
-        const { success, data } = await API.product.getSaleProducts();
-        if (!success) return [];
-        return data;
-      } catch (error) {
-        console.error(error);
-        return [];
+export type BuilderLoader =
+  | { type: "system"; name: "sale" | "new" }
+  | { type: "tag"; name: string }
+  | { type: "category"; name: string };
+
+export async function loadBuilderProducts(
+  API: ServerApi,
+  loader: BuilderLoader,
+): Promise<ProductResponse[]> {
+  try {
+    switch (loader.type) {
+      case "system": {
+        const { success, data } =
+          loader.name === "sale"
+            ? await API.product.getSaleProducts()
+            : await API.product.getNewProducts();
+
+        return success ? data : [];
       }
-    },
-  },
-  {
-    key: "new",
-    label: "New",
-    icon: getSectionIcon("new"),
-    onLoad: async (API: ServerApi): Promise<ProductResponse[]> => {
-      try {
-        const { success, data } = await API.product.getNewProducts();
-        if (!success) return [];
-        return data;
-      } catch (error) {
-        console.error(error);
-        return [];
+      case "tag": {
+        const { success, data } = await API.product.getProductsByTag(
+          loader.name,
+          { limit: 12 },
+        );
+        return success ? data.data : [];
       }
-    },
-  },
-];
+      case "category": {
+        const { success, data } = await API.product.getProductsByCategory(
+          loader.name,
+          { limit: 12 },
+        );
+        return success ? data.data : [];
+      }
+      default:
+        return [];
+    }
+  } catch (error) {
+    console.error("[loadBuilderProducts]", error);
+    return [];
+  }
+}

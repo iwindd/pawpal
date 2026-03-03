@@ -1,4 +1,4 @@
-import { ProductResponse } from "@pawpal/shared";
+import { DatatableInput, ProductResponse } from "@pawpal/shared";
 import { AxiosError, AxiosInstance } from "axios";
 import { PawApiResponse } from "../../api";
 
@@ -12,6 +12,26 @@ class ProductApi {
 
   async getSaleProducts(): Promise<PawApiResponse<ProductResponse[]>> {
     const response = await this.client.get("/product/sale");
+    return { success: true, data: response.data.data };
+  }
+
+  async getProductsByTag(
+    slug: string,
+    query?: DatatableInput,
+  ): Promise<PawApiResponse<any>> {
+    const response = await this.client.get(`/product/tag/${slug}`, {
+      params: query,
+    });
+    return { success: true, data: response.data };
+  }
+
+  async getProductsByCategory(
+    slug: string,
+    query?: DatatableInput,
+  ): Promise<PawApiResponse<any>> {
+    const response = await this.client.get(`/product/category/${slug}`, {
+      params: query,
+    });
     return { success: true, data: response.data };
   }
 

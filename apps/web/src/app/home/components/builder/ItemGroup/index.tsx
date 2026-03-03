@@ -1,18 +1,19 @@
 "use client";
 
-import ResourceImage from "@/components/ResourceImage";
 import { Anchor, Box, Card, Grid, Group, Text, Title } from "@pawpal/ui/core";
 import Link from "next/link";
 import classes from "./style.module.css";
 
+export type ItemGroupItem = {
+  id: string;
+  title: string;
+  subtitle: string;
+  href: string;
+  image: string;
+};
+
 interface ItemGroupProps {
-  items: {
-    id: string;
-    title: string;
-    subtitle: string;
-    href: string;
-    image: string;
-  }[];
+  items: ItemGroupItem[];
 }
 
 const ItemGroup = ({ items }: ItemGroupProps) => {
@@ -25,12 +26,12 @@ const ItemGroup = ({ items }: ItemGroupProps) => {
               <Card.Section inheritPadding py="sm">
                 <Group justify="space-between" gap={"lg"}>
                   <Box h={64} w={64} style={{ overflow: "hidden" }}>
-                    <ResourceImage
+                    {/* <ResourceImage
                       src={item.image}
                       alt={item.title}
                       h={64}
                       w={64}
-                    />
+                    /> */}
                   </Box>
                   <Group flex={1}>
                     <div>

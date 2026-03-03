@@ -6,6 +6,8 @@ export const PRODUCT_REPOSITORY = Symbol('PRODUCT_REPOSITORY');
 export interface IProductRepository {
   getLatest(take?: number): Promise<any[]>;
   getHasSale(take?: number): Promise<any[]>;
+  getByTagSlug(slug: string, query: DatatableQuery): Promise<any>;
+  getByCategorySlug(slug: string, query: DatatableQuery): Promise<any>;
   getProductBySlug(slug: string): Promise<any>;
   getAllProductDatatable(
     query: DatatableQuery,
