@@ -1,12 +1,18 @@
 .card {
   width: 100%;
-  aspect-ratio: 2058/474;
+  aspect-ratio: 1200/500;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-start;
   position: relative;
   overflow: hidden;
+}
+
+@media (max-width: 48em) {
+  .card {
+    aspect-ratio: 4/3;
+  }
 }
 
 .imageContainer {

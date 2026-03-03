@@ -16,7 +16,7 @@ const CardCarousel = ({ alt, src }: Readonly<CardCarouselProps>) => {
       <div className={classes.imageContainer}>
         <ResourceImage
           alt={alt}
-          width={1920}
+          width={1200}
           height={500}
           className={classes.image}
           src={src}
