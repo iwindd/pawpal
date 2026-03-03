@@ -1,5 +1,6 @@
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
+import ProductSpotlight from "@/components/ProductSpotlight";
 import APISession from "@/libs/api/server";
 import StoreProvider from "@/providers/StoreProvider";
 import { WebSocketProvider } from "@/providers/WebSocketProvider";
@@ -58,6 +59,7 @@ export default async function RootLayout({
             <WebSocketProvider>
               <UIProvider locale={currentLocale}>
                 <Navbar />
+                <ProductSpotlight />
                 {children}
                 <Footer />
               </UIProvider>

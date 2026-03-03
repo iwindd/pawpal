@@ -59,10 +59,21 @@ export const productApi = createApi({
       }),
       providesTags: ["SaleProducts"],
     }),
+    searchProducts: builder.query<
+      DatatableResponse<ProductResponse>,
+      DatatableInput
+    >({
+      query: (params) => ({
+        url: "/",
+        params,
+      }),
+      providesTags: ["Products"],
+    }),
   }),
 });
 
 export const {
   useGetInfiniteProductsInfiniteQuery,
   useGetInfiniteSaleProductsInfiniteQuery,
+  useLazySearchProductsQuery,
 } = productApi;

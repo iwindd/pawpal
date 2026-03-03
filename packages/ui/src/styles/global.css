@@ -4,6 +4,7 @@
 @import "@mantine/dropzone/styles.css";
 @import "@mantine/dates/styles.css";
 @import "mantine-datatable/styles.css";
+@import "@mantine/spotlight/styles.css";
 
 @layer mantine, mantine-datatable;
 
