@@ -1,0 +1,12 @@
+.control {
+  margin-left: -2em;
+  margin-right: -2em;
+  background-color: transparent;
+  border: none;
+  color: var(--mantine-colors-gray-1);
+
+  &[data-inactive] {
+    opacity: 0;
+    cursor: default;
+  }
+}

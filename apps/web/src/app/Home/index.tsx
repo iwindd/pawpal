@@ -13,17 +13,15 @@ export default async function HomePage() {
   const carousels = carouselResponse.success ? carouselResponse.data : [];
 
   return (
-    <>
-      <Container size="xl" my="lg">
-        <Carousel carousels={carousels} />
-        <Stack gap="xl">
-          <SaleProductRow />
-          <NewProductRow />
-        </Stack>
-        <Center mt="lg">
-          <ShowMore />
-        </Center>
-      </Container>
-    </>
+    <Container size="xl" my="lg">
+      <Carousel carousels={carousels} />
+      <Stack gap="xl" py="lg">
+        <SaleProductRow />
+        <NewProductRow />
+      </Stack>
+      <Center mt="lg">
+        <ShowMore />
+      </Center>
+    </Container>
   );
 }
