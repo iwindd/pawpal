@@ -241,6 +241,22 @@ const ROUTES = ROUTER({
     disabled: true,
     hiddenBreadcrumb: true,
     children: {
+      home: {
+        path: "/website/home",
+        label: "website.home.main",
+        children: {
+          create: {
+            path: "/website/home/create",
+            label: "website.home.create",
+            icon: IconWork,
+          },
+          edit: {
+            path: "/website/home/:id",
+            label: "website.home.edit",
+            icon: IconWork,
+          },
+        },
+      },
       carousel: {
         path: "/website/carousel",
         label: "website.carousel.main",

@@ -3,6 +3,7 @@ import authReducer, { AuthState } from "@/features/auth/authSlice";
 import { carouselApi } from "@/features/carousel/carouselApi";
 import { categoryApi } from "@/features/category/categoryApi";
 import { fieldApi } from "@/features/field/fieldApi";
+import { homeLayoutApi } from "@/features/home-layout/homeLayoutApi";
 import jobReducer from "@/features/job/jobSlice";
 import { notificationApi } from "@/features/notification/notificationApi";
 import { orderApi } from "@/features/order/orderApi";
@@ -38,6 +39,7 @@ export const makeStore = (preloadedState: { auth: AuthState }) => {
       [fieldApi.reducerPath]: fieldApi.reducer,
       [categoryApi.reducerPath]: categoryApi.reducer,
       [carouselApi.reducerPath]: carouselApi.reducer,
+      [homeLayoutApi.reducerPath]: homeLayoutApi.reducer,
       [authApi.reducerPath]: authApi.reducer,
       [notificationApi.reducerPath]: notificationApi.reducer,
       [roleApi.reducerPath]: roleApi.reducer,
@@ -57,6 +59,7 @@ export const makeStore = (preloadedState: { auth: AuthState }) => {
         fieldApi.middleware,
         categoryApi.middleware,
         carouselApi.middleware,
+        homeLayoutApi.middleware,
         authApi.middleware,
         notificationApi.middleware,
         roleApi.middleware,

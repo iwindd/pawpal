@@ -35,6 +35,7 @@ export {
   IconFolder,
   IconFolderFilled,
   IconPacman as IconGames,
+  IconGripVertical,
   IconHelp,
   IconHistory,
   IconHome,
