@@ -6,5 +6,13 @@
   {
     "slug": "streaming",
     "name": "สตรีมมิ่ง"
+  },
+  {
+    "slug": "card",
+    "name": "บัตรเติมเงิน"
+  },
+  {
+    "slug": "other",
+    "name": "อื่นๆ"
   }
 ]

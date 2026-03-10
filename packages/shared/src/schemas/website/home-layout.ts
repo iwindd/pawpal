@@ -7,11 +7,12 @@ import {
 } from "../../enums/home-layout";
 
 const itemGroupItemSchema = z.object({
-  id: z.string().min(1),
+  id: z.string(),
   title: z.string().min(1, { message: "title_required" }),
-  description: z.string().min(1, { message: "description_required" }),
+  subtitle: z.string().min(1, { message: "subtitle_required" }),
   href: z.string().min(1, { message: "href_required" }),
-  image: z.string().min(1, { message: "image_required" }),
+  resource_id: z.string().min(1, { message: "image_required" }),
+  image_url: z.string().optional(),
 });
 
 const loaderSystemSchema = z.object({
@@ -34,6 +35,10 @@ const loaderCategorySchema = z.object({
 const baseSectionItemSchema = z.object({
   id: z.string(),
   title: z.string().min(3),
+});
+
+const baseSectionGroupSchema = z.object({
+  id: z.string(),
 });
 
 type SectionValidationType =
@@ -70,13 +75,14 @@ const sectionItemSchema = z
       return val;
     },
     z.discriminatedUnion("_validationType", [
-      baseSectionItemSchema.extend({
+      baseSectionGroupSchema.extend({
         _validationType: z.literal("ITEM_GROUP"),
         type: z.literal(ENUM_HOME_SECTION_TYPE.ITEM_GROUP),
         config: z.object({
           items: z
             .array(itemGroupItemSchema)
-            .min(1, { message: "items_required" }),
+            .min(4, { message: "items_required_4" })
+            .max(4, { message: "items_required_4" }),
         }),
       }),
       baseSectionItemSchema.extend({

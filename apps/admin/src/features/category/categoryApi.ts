@@ -78,6 +78,7 @@ export const categoryApi = createApi({
 export const {
   useLazyGetCategoriesQuery,
   useGetCategoriesQuery,
+  useGetCategoryQuery,
   useLazyGetCategoryQuery,
   useCreateCategoryMutation,
   useUpdateCategoryMutation,

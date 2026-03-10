@@ -110,15 +110,14 @@ const HomeLayoutForm = ({
                       >
                         {t("add-slider")}
                       </Button>
-                      {/*                     
-                      <Button TODO: Add group section
+                      <Button
                         variant="light"
                         color="teal"
                         leftSection={<IconPlus size={16} />}
                         onClick={addGroupSection}
                       >
                         {t("add-group")}
-                      </Button> */}
+                      </Button>
                     </Group>
                   }
                 />

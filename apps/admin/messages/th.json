@@ -1319,5 +1319,17 @@
       "add-group-item": "เพิ่มรายการย่อย",
       "save-btn": "บันทึกข้อมูล"
     }
+  },
+  "LinkSelector": {
+    "addLink": "เพิ่มลิ้งค์",
+    "searchPlaceholder": "ค้นหาสินค้า, หมวดหมู่ หรือใส่ลิ้งค์...",
+    "currentValue": "รายการปัจจุบัน",
+    "useCustomLink": "ใช้ลิ้งค์: {link}",
+    "productSection": "สินค้า",
+    "categorySection": "หมวดหมู่",
+    "productPrefix": "สินค้า:",
+    "categoryPrefix": "หมวดหมู่:",
+    "notFound": "ไม่พบข้อมูล",
+    "loading": "..."
   }
 }
