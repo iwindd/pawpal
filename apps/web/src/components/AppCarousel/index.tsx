@@ -8,18 +8,21 @@ import { useRef, useState } from "react";
 import CardCarousel from "./components/CardCarousel";
 import classes from "./style.module.css";
 
-interface CarouselProps {
+interface AppCarouselProps {
   carousels: CarouselResponse[];
 }
 
-const getCarouselItems = (carousels: CarouselResponse[]) => {
+const getAppCarouselItems = (carousels: CarouselResponse[]) => {
   if (carousels.length == 2) {
+    const firstCarousel = carousels[0]!;
+    const secondCarousel = carousels[1]!;
+
     return [
-      carousels[0]!,
-      carousels[1]!,
+      firstCarousel,
+      secondCarousel,
       {
-        ...carousels[0]!,
-        id: carousels[0]!.id + "-clone",
+        ...firstCarousel,
+        id: firstCarousel.id + "-clone",
       },
     ];
   }
@@ -27,9 +30,9 @@ const getCarouselItems = (carousels: CarouselResponse[]) => {
   return carousels;
 };
 
-const Carousel = ({ carousels }: CarouselProps) => {
+const AppCarousel = ({ carousels }: AppCarouselProps) => {
   const autoplay = useRef(Autoplay({ delay: 7000 }));
-  const [items] = useState(getCarouselItems(carousels));
+  const [items] = useState(getAppCarouselItems(carousels));
   const [activeIndex, setActiveIndex] = useState(0);
   const __ = useTranslations("Home.CardCarousel");
 
@@ -68,4 +71,4 @@ const Carousel = ({ carousels }: CarouselProps) => {
   );
 };
 
-export default Carousel;
+export default AppCarousel;

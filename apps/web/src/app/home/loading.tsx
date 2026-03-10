@@ -1,5 +1,5 @@
 "use client";
-import AppCarouselSkeleton from "@/components/Carousel/skeleton";
+import AppCarouselSkeleton from "@/components/AppCarousel/skeleton";
 import { Container, Stack } from "@pawpal/ui/core";
 import ItemGroupSkeleton from "./components/builder/ItemGroup/skeleton";
 import ItemSliderSkeleton from "./components/builder/ItemSlider/skeleton";
