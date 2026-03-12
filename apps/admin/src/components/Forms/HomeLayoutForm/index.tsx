@@ -86,7 +86,7 @@ const HomeLayoutForm = ({
           title: "",
           subtitle: "",
           href: "",
-          image: "",
+          resource_id: "",
         })),
       },
     });
