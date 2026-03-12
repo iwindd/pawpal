@@ -77,9 +77,22 @@ export class PrismaHomeLayoutRepository implements IHomeLayoutRepository {
       return section;
     });
 
+    // Safely serialize hydrated sections to prevent database corruption
+    let serializedSections: Prisma.JsonValue;
+    try {
+      // Validate the structure can be safely serialized
+      const serialized = JSON.stringify(hydratedSections);
+      JSON.parse(serialized); // Verify it's valid JSON
+      serializedSections = hydratedSections as Prisma.JsonValue;
+    } catch (error) {
+      // If serialization fails, return original sections to prevent data loss
+      console.error('Failed to serialize hydrated sections:', error);
+      return homeLayout;
+    }
+
     return {
       ...homeLayout,
-      sections: hydratedSections as unknown as Prisma.JsonValue,
+      sections: serializedSections,
     };
   }
 
