@@ -55,6 +55,14 @@ const ROUTES = ROUTER({
     label: "products",
     icon: IconShoppingBag,
     children: {
+      games: {
+        path: "/products/games",
+        label: "games",
+      },
+      "prepaid-card": {
+        path: "/products/prepaid-card",
+        label: "prepaidCard",
+      },
       detail: {
         path: "/products/:slug", // dynamic route
         label: "productDetail",

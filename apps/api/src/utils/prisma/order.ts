@@ -16,7 +16,7 @@ export const OrderExtension = {
             include: {
               product: {
                 include: {
-                  category: {
+                  categories: {
                     select: {
                       id: true,
                       name: true,

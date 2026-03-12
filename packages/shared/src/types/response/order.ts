@@ -31,10 +31,10 @@ export interface AdminOrderResponse {
       id: string;
       name: string;
     };
-    category: {
+    categories: {
       id: string;
       name: string;
-    };
+    }[];
   }[];
   fields: {
     label: string;

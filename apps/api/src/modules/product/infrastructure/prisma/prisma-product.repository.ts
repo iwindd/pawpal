@@ -69,7 +69,7 @@ const PRODUCT_DATATABLE_SELECT = {
   name: true,
   description: true,
   createdAt: true,
-  category: { select: { name: true, slug: true } },
+  categories: { select: { name: true, slug: true } },
   productTags: { select: { slug: true, name: true } },
   packages: {
     select: {
@@ -97,9 +97,11 @@ const PRODUCT_DATATABLE_SEARCHABLE = {
   name: { mode: 'insensitive' },
   slug: { mode: 'insensitive' },
   description: { mode: 'insensitive' },
-  category: {
-    name: { mode: 'insensitive' },
-    slug: { mode: 'insensitive' },
+  categories: {
+    some: {
+      name: { mode: 'insensitive' },
+      slug: { mode: 'insensitive' },
+    },
   },
   productTags: {
     some: {
@@ -174,7 +176,11 @@ export class PrismaProductRepository implements IProductRepository {
       select: PRODUCT_DATATABLE_SELECT,
       searchable: PRODUCT_DATATABLE_SEARCHABLE,
       where: {
-        category: { slug },
+        categories: {
+          some: {
+            slug,
+          },
+        },
       },
     });
   }
@@ -190,7 +196,7 @@ export class PrismaProductRepository implements IProductRepository {
         isStockTracked: true,
         stock: { select: { quantity: true } },
         createdAt: true,
-        category: { select: { id: true, name: true, slug: true } },
+        categories: { select: { id: true, name: true, slug: true } },
         productTags: { select: { slug: true, name: true } },
         packages: {
           select: {
@@ -240,7 +246,9 @@ export class PrismaProductRepository implements IProductRepository {
       query,
       select: PRODUCT_DATATABLE_SELECT,
       searchable: PRODUCT_DATATABLE_SEARCHABLE,
-      ...(filterCategory && { where: { category: { slug: filterCategory } } }),
+      ...(filterCategory && {
+        where: { categories: { some: { slug: filterCategory } } },
+      }),
     });
   }
 
@@ -326,7 +334,7 @@ export class PrismaProductRepository implements IProductRepository {
       where: { id },
       select: {
         imageId: true,
-        categoryId: true,
+        categories: true,
         stock: { select: { quantity: true } },
       },
     });
@@ -352,7 +360,9 @@ export class PrismaProductRepository implements IProductRepository {
       data: {
         ...rest,
         image: image,
-        category: { connect: { id: categoryId } },
+        categories: {
+          connect: [{ id: categoryId }],
+        },
       },
       select: ProductResponseMapper.SELECT,
     });

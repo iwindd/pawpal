@@ -19,10 +19,11 @@ model Package {
 }
 
 model Product {
-  id          String  @id @default(cuid())
-  slug        String  @unique
+  id          String      @id @default(cuid())
+  slug        String      @unique
   name        String
   description String?
+  type        ProductType @default(GAME)
 
   isStockTracked Boolean @default(false) @map("is_stock_tracked")
   stock          Stock?  @relation("ProductStock")
@@ -30,8 +31,7 @@ model Product {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  category   Category @relation("ProductCategory", fields: [categoryId], references: [id])
-  categoryId String   @map("category_id")
+  categories  Category[]
 
   productTags ProductTag[]   @relation("ProductTags")
   packages    Package[]      @relation("ProductPackages")
@@ -39,21 +39,26 @@ model Product {
   fields      ProductField[] @relation("ProductFields")
   image       Resource?      @relation("ProductImage", fields: [imageId], references: [id])
   imageId     String?        @map("image_id")
+  platforms   Platform[]     @relation("ProductPlatforms")
 
   @@index([slug])
-  @@index([categoryId])
   @@index([createdAt])
   @@map("products")
 }
 
-model Category {
-  id        String   @id @default(cuid())
-  slug      String   @unique
-  name      String
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+enum ProductType {
+  GAME
+  CARD
+}
 
-  products Product[] @relation("ProductCategory")
+model Category {
+  id        String      @id @default(cuid())
+  slug      String      @unique
+  name      String
+  type      ProductType @default(GAME)
+  createdAt DateTime    @default(now()) @map("created_at")
+  updatedAt DateTime    @updatedAt      @map("updated_at")
+  products Product[]
 
   @@index([slug])
   @@index([name])
@@ -151,4 +156,17 @@ model StockMovement {
 enum StockMovementType {
   ORDER
   ADJUST
+}
+
+model Platform {
+  id   String @id @default(cuid())
+  name String @unique
+  slug String @unique
+
+  products Product[] @relation("ProductPlatforms")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("platforms")
 }

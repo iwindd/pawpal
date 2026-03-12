@@ -119,7 +119,13 @@ export class PrismaCategoryRepository implements ICategoryRepository {
     if (!existing) throw new BadRequestException('Category not found');
 
     const productsCount = await this.prisma.product.count({
-      where: { categoryId: id },
+      where: {
+        categories: {
+          some: {
+            id,
+          },
+        },
+      },
     });
     if (productsCount > 0)
       throw new BadRequestException('Cannot delete category that has products');
@@ -165,9 +171,11 @@ export class PrismaCategoryRepository implements ICategoryRepository {
         name: { mode: 'insensitive' },
         slug: { mode: 'insensitive' },
         description: { mode: 'insensitive' },
-        category: {
-          name: { mode: 'insensitive' },
-          slug: { mode: 'insensitive' },
+        categories: {
+          some: {
+            name: { mode: 'insensitive' },
+            slug: { mode: 'insensitive' },
+          },
         },
         productTags: {
           some: {
@@ -182,7 +190,13 @@ export class PrismaCategoryRepository implements ICategoryRepository {
           },
         },
       },
-      where: { categoryId: id },
+      where: {
+        categories: {
+          some: {
+            id,
+          },
+        },
+      },
     });
   }
 }

@@ -246,7 +246,9 @@ export class PrismaOrderRepository implements IOrderRepository {
             package: {
               product: {
                 name: { mode: 'insensitive' },
-                category: { name: { mode: 'insensitive' } },
+                categories: {
+                  some: { name: { mode: 'insensitive' } },
+                },
               },
             },
           },

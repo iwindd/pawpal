@@ -9,10 +9,12 @@ import {
 } from '../src/generated/prisma/client';
 import categories from './data/categories.json';
 import paymentGateways from './data/paymentGateways.json';
+import platforms from './data/platforms.json';
 import products from './data/products.json';
 import productTags from './data/productTags.json';
 import roles from './data/roles.json';
 import sales from './data/sales.json';
+import tags from './data/tags.json';
 import users from './data/users.json';
 
 const adapter = new PrismaPg({
@@ -87,15 +89,43 @@ async function main() {
         where: { slug: category.slug },
         update: {},
         create: {
-          ...category,
+          slug: category.slug,
+          name: category.name,
+          type: category.type as any, // Cast to any to bypass type check
         },
       });
     }
   });
 
-  // Seed Product Tags
+  // Seed platforms
+  await prisma.$transaction(async () => {
+    for (const platform of platforms) {
+      await prisma.platform.upsert({
+        where: { slug: platform.slug },
+        update: {},
+        create: {
+          ...platform,
+        },
+      });
+    }
+  });
+
+  // Seed Product Tags (includes both tags and productTags data)
   await prisma.$transaction(async () => {
     for (const tag of productTags) {
+      await prisma.productTag.upsert({
+        where: { slug: tag.slug },
+        update: {},
+        create: {
+          ...tag,
+        },
+      });
+    }
+  });
+
+  // Seed additional tags from tags.json
+  await prisma.$transaction(async () => {
+    for (const tag of tags) {
       await prisma.productTag.upsert({
         where: { slug: tag.slug },
         update: {},
@@ -116,11 +146,21 @@ async function main() {
         create: {
           slug: product.slug,
           name: product.name,
-          category: {
-            connect: { slug: product.category },
+          type: product.type as any, // Cast to any to bypass type check
+          categories: {
+            connect: (product.categories || []).map((category) => ({
+              slug: category,
+            })),
           },
           productTags: {
-            connect: product.productTags.map((tag) => ({ slug: tag })),
+            connect: (product.tags || []).map((tag) => ({
+              slug: tag,
+            })),
+          },
+          platforms: {
+            connect: (product.platforms || []).map((platform) => ({
+              slug: platform,
+            })),
           },
           packages: {
             create: product.packages.map((pkg) => ({ ...pkg })),
@@ -180,6 +220,7 @@ async function main() {
     `Created ${await prisma.permission.count()} permissions\n`,
     `Created ${await prisma.role.count()} roles\n`,
     `Created ${await prisma.user.count()} users (hashed passwords: base on 12 rounds) \n`,
+    `Created ${await prisma.platform.count()} platforms\n`,
     `Created ${await prisma.product.count()} products\n`,
     `Created ${await prisma.category.count()} categories\n`,
     `Created ${await prisma.productTag.count()} product tags\n`,
