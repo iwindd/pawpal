@@ -1,15 +1,10 @@
 "use client";
 
 import ProductCard from "@/components/Card/ProductCart";
-import { useGetInfiniteProductsInfiniteQuery } from "@/features/product/productApi";
-import { useAppSelector } from "@/hooks";
-import { IconFilters } from "@pawpal/icons";
 import {
-  ActionIcon,
   Center,
   Container,
   Grid,
-  Group,
   Loader,
   LoadingTrigger,
   Stack,
@@ -17,21 +12,16 @@ import {
 } from "@pawpal/ui/core";
 import { useTranslations } from "next-intl";
 import { useMemo } from "react";
-import AdvancedFilters from "./components/AdvancedFilters";
-import SearchBar from "./components/SearchBar";
+import { useProductContext } from "./context/ProductContext";
 import { useInfiniteScroll } from "./hooks/useInfiniteScroll";
-import { useProductState } from "./hooks/useProductState";
 
 export default function ProductsPage() {
   const __ = useTranslations("Products");
 
-  // Get product filters from Redux store (preloaded from server-side)
-  const filtersData = useAppSelector((state) => state.product.filters);
+  // Use context for state management and query
+  const { productsQuery } = useProductContext();
 
-  // Use organized hooks for state management
-  const { state, handlers } = useProductState();
-
-  // Fetch products with infinite query
+  // Extract data from context query
   const {
     data,
     isLoading,
@@ -39,52 +29,23 @@ export default function ProductsPage() {
     hasNextPage,
     isFetchingNextPage,
     error,
-  } = useGetInfiniteProductsInfiniteQuery({
-    limit: 6 * 4,
-    search: state.search,
-    categories: state.category === "all" ? undefined : [state.category],
-    types: state.productType ? [state.productType] : undefined,
-    platforms: state.platforms.length > 0 ? state.platforms : undefined,
-    tags: state.tags.length > 0 ? state.tags : undefined,
-  });
+  } = productsQuery;
 
   // Use organized hook for infinite scroll
   const { handleEndReached } = useInfiniteScroll(
-    hasNextPage,
+    hasNextPage ?? false,
     isFetchingNextPage,
     fetchNextPage,
   );
 
   // Flatten all products from all pages
   const allProducts = useMemo(() => {
-    return data?.pages.flatMap((page) => page.data) ?? [];
+    return data?.pages.flatMap((page: any) => page.data) ?? [];
   }, [data]);
 
   return (
     <Container mih={"100vh"}>
       <Stack>
-        <Group>
-          <SearchBar
-            search={state.search}
-            onSearchChange={handlers.handleSearch}
-          />
-          <ActionIcon variant="light" color="secondary" size="lg">
-            <IconFilters style={{ width: "70%", height: "70%" }} stroke={1.5} />
-          </ActionIcon>
-        </Group>
-
-        <AdvancedFilters
-          filtersData={filtersData || undefined}
-          productType={state.productType}
-          platforms={state.platforms}
-          tags={state.tags}
-          categories={state.categories}
-          onProductTypeChange={handlers.handleProductType}
-          onPlatformsChange={handlers.handlePlatforms}
-          onTagsChange={handlers.handleTags}
-          onCategoriesChange={handlers.handleCategories}
-        />
-
         {/* Products Grid */}
         <Stack pb="lg">
           {(() => {
@@ -125,7 +86,7 @@ export default function ProductsPage() {
           {/* Loading trigger for infinite scroll */}
           <LoadingTrigger
             onLoadMore={handleEndReached}
-            hasNextPage={hasNextPage}
+            hasNextPage={hasNextPage ?? false}
             isFetchingNextPage={isFetchingNextPage}
             manualFallbackText={__("loadMore")}
             h="20"

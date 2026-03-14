@@ -1,16 +1,16 @@
 "use client";
 import ProductForm from "@/components/Form/ProductForm";
 import PromptPayManualModal from "@/components/Modals/PromptPayManualModal";
-import {useCreateOrderMutation} from "@/features/order/orderApi";
+import { useCreateOrderMutation } from "@/features/order/orderApi";
 import {
   PaymentChargeCreatedResponse,
   ProductResponse,
   PurchaseInput,
 } from "@pawpal/shared";
-import {backdrop} from "@pawpal/ui/backdrop";
-import {Container} from "@pawpal/ui/core";
-import {Notifications} from "@pawpal/ui/notifications";
-import {useTranslations} from "next-intl";
+import { backdrop } from "@pawpal/ui/backdrop";
+import { Container } from "@pawpal/ui/core";
+import { Notifications } from "@pawpal/ui/notifications";
+import { useTranslations } from "next-intl";
 
 interface ProductViewProps {
   product: ProductResponse;

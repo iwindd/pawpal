@@ -339,6 +339,9 @@
     }
   },
   "Products": {
+    "title": "สินค้า",
+    "count": "{count} รายการ",
+    "loading": "กำลังโหลด...",
     "searchPlaceholder": "ค้นหาสินค้า...",
     "filters": {
       "all": "ทั้งหมด",

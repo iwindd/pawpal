@@ -24,7 +24,7 @@ const InfoPartial = ({ product }: InfoPartialProps) => {
         <Stack gap="xs">
           <Title order={1}>{product.name}</Title>
           <Text c="dimmed" size="sm">
-            {product.category.name}
+            {/*  {product.category.name} */}
           </Text>
         </Stack>
       </Group>
