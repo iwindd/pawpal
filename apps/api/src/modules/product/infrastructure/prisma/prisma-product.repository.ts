@@ -1,10 +1,14 @@
 import { ProductResponseMapper } from '@/common/mappers/ProductResponseMapper';
 import { DatatableQuery } from '@/common/pipes/DatatablePipe';
+import { FindProductFiltersQuery } from '@/common/pipes/FindProductFiltersPipe';
 import { Prisma } from '@/generated/prisma/client';
-import { ResourceType } from '@/generated/prisma/enums';
+import {
+  ProductType as PrismaProductType,
+  ResourceType,
+} from '@/generated/prisma/enums';
 import { SaleUtil } from '@/utils/saleUtil';
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
-import { ProductInput } from '@pawpal/shared';
+import { ProductFiltersResponse, ProductInput } from '@pawpal/shared';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { CopyResourceToProductUseCase } from '../../../resource/application/usecases/copy-resource-to-product.usecase';
 import { IProductRepository } from '../../domain/repository.port';
@@ -68,9 +72,11 @@ const PRODUCT_DATATABLE_SELECT = {
   slug: true,
   name: true,
   description: true,
+  type: true,
   createdAt: true,
-  categories: { select: { name: true, slug: true } },
+  categories: { select: { id: true, name: true, slug: true } },
   productTags: { select: { slug: true, name: true } },
+  platforms: { select: { id: true, name: true, slug: true } },
   packages: {
     select: {
       id: true,
@@ -117,6 +123,17 @@ const PRODUCT_DATATABLE_SEARCHABLE = {
   },
 } satisfies Prisma.ProductWhereInput;
 
+function mapProductDatatableItem(
+  product: Prisma.ProductGetPayload<{
+    select: typeof PRODUCT_DATATABLE_SELECT;
+  }>,
+) {
+  return {
+    ...product,
+    category: product.categories[0] ?? null,
+  };
+}
+
 @Injectable()
 export class PrismaProductRepository implements IProductRepository {
   private readonly logger = new Logger(PrismaProductRepository.name);
@@ -158,7 +175,7 @@ export class PrismaProductRepository implements IProductRepository {
   }
 
   async getByTagSlug(slug: string, query: DatatableQuery) {
-    return this.prisma.product.getDatatable({
+    const result = await this.prisma.product.getDatatable({
       query,
       select: PRODUCT_DATATABLE_SELECT,
       searchable: PRODUCT_DATATABLE_SEARCHABLE,
@@ -168,10 +185,15 @@ export class PrismaProductRepository implements IProductRepository {
         },
       },
     });
+
+    return {
+      ...result,
+      data: result.data.map(mapProductDatatableItem),
+    };
   }
 
   async getByCategorySlug(slug: string, query: DatatableQuery) {
-    return this.prisma.product.getDatatable({
+    const result = await this.prisma.product.getDatatable({
       query,
       select: PRODUCT_DATATABLE_SELECT,
       searchable: PRODUCT_DATATABLE_SEARCHABLE,
@@ -237,24 +259,116 @@ export class PrismaProductRepository implements IProductRepository {
 
     return {
       ...product,
+      category: product.categories[0] ?? null,
       MOST_SALE: await this.prisma.package.findMostSaleByProduct(slug),
     };
   }
 
-  async getAllProductDatatable(query: DatatableQuery, filterCategory?: string) {
-    return this.prisma.product.getDatatable({
+  async getProductFilters(): Promise<ProductFiltersResponse> {
+    const [categories, tags, platforms] = await Promise.all([
+      this.prisma.category.findMany({
+        orderBy: { name: 'asc' },
+        select: { name: true, slug: true },
+      }),
+      this.prisma.productTag.findMany({
+        orderBy: { name: 'asc' },
+        select: { name: true, slug: true },
+      }),
+      this.prisma.platform.findMany({
+        orderBy: { name: 'asc' },
+        select: { name: true, slug: true },
+      }),
+    ]);
+
+    return {
+      types: Object.values(PrismaProductType).map((type) => ({
+        value: type,
+        label: type,
+      })),
+      platforms: platforms.map((platform) => ({
+        value: platform.slug,
+        label: platform.name,
+      })),
+      categories: categories.map((category) => ({
+        value: category.slug,
+        label: category.name,
+      })),
+      tags: tags.map((tag) => ({
+        value: tag.slug,
+        label: tag.name,
+      })),
+    };
+  }
+
+  async getAllProductDatatable(query: FindProductFiltersQuery) {
+    const where: Prisma.ProductWhereInput = {
+      ...(query.filter && query.filter !== 'all' && !query.categories?.length
+        ? {
+            categories: {
+              some: {
+                slug: query.filter,
+              },
+            },
+          }
+        : {}),
+      ...(query.types?.length
+        ? {
+            type: {
+              in: query.types as PrismaProductType[],
+            },
+          }
+        : {}),
+      ...(query.platforms?.length
+        ? {
+            platforms: {
+              some: {
+                slug: {
+                  in: query.platforms,
+                },
+              },
+            },
+          }
+        : {}),
+      ...(query.categories?.length
+        ? {
+            categories: {
+              some: {
+                slug: {
+                  in: query.categories,
+                },
+              },
+            },
+          }
+        : {}),
+      ...(query.tags?.length
+        ? {
+            productTags: {
+              some: {
+                slug: {
+                  in: query.tags,
+                },
+              },
+            },
+          }
+        : {}),
+    };
+
+    const result = await this.prisma.product.getDatatable({
       query,
       select: PRODUCT_DATATABLE_SELECT,
       searchable: PRODUCT_DATATABLE_SEARCHABLE,
-      ...(filterCategory && {
-        where: { categories: { some: { slug: filterCategory } } },
-      }),
+      where,
     });
+
+    return {
+      ...result,
+      data: result.data.map(mapProductDatatableItem),
+    };
   }
 
   async getSaleProductDatatable(query: DatatableQuery) {
     const now = new Date();
-    return this.prisma.product.getDatatable({
+    const result = await this.prisma.product.getDatatable({
       query,
       select: PRODUCT_DATATABLE_SELECT,
       searchable: PRODUCT_DATATABLE_SEARCHABLE,

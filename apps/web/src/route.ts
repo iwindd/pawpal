@@ -57,11 +57,11 @@ const ROUTES = ROUTER({
     children: {
       games: {
         path: "/products/games",
-        label: "games",
+        label: "products-games",
       },
       "prepaid-card": {
         path: "/products/prepaid-card",
-        label: "prepaidCard",
+        label: "products-prepaid-card",
       },
       detail: {
         path: "/products/:slug", // dynamic route

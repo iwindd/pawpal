@@ -2,20 +2,21 @@ import { baseQuery } from "@/configs/api";
 import {
   DatatableInput,
   DatatableResponse,
+  ProductDatatableInput,
   ProductResponse,
 } from "@pawpal/shared";
 import { createApi } from "@reduxjs/toolkit/query/react";
 
 export const productApi = createApi({
   reducerPath: "productApi",
-  tagTypes: ["Products", "SaleProducts"],
+  tagTypes: ["Products", "ProductFilters", "SaleProducts"],
   baseQuery: baseQuery({
     baseUrl: `/product`,
   }),
   endpoints: (builder) => ({
     getInfiniteProducts: builder.infiniteQuery<
       DatatableResponse<ProductResponse>,
-      DatatableInput,
+      ProductDatatableInput,
       number
     >({
       infiniteQueryOptions: {

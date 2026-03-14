@@ -2,40 +2,34 @@
 
 import ProductCard from "@/components/Card/ProductCart";
 import { useGetInfiniteProductsInfiniteQuery } from "@/features/product/productApi";
-import { IconSearch } from "@pawpal/icons";
+import { useAppSelector } from "@/hooks";
+import { IconFilters } from "@pawpal/icons";
 import {
+  ActionIcon,
   Center,
   Container,
-  Divider,
   Grid,
   Group,
   Loader,
   LoadingTrigger,
   Stack,
   Text,
-  TextInput,
 } from "@pawpal/ui/core";
 import { useTranslations } from "next-intl";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useMemo, useState } from "react";
-import Categories, { CategoryKey } from "./components/Categories";
-
-interface ProductsPageState {
-  search: string;
-  showFilters: boolean;
-  category: CategoryKey;
-}
+import { useMemo } from "react";
+import AdvancedFilters from "./components/AdvancedFilters";
+import SearchBar from "./components/SearchBar";
+import { useInfiniteScroll } from "./hooks/useInfiniteScroll";
+import { useProductState } from "./hooks/useProductState";
 
 export default function ProductsPage() {
-  const searchParams = useSearchParams();
-  const router = useRouter();
   const __ = useTranslations("Products");
 
-  const [state, setState] = useState<ProductsPageState>({
-    search: searchParams.get("search") || "",
-    category: (searchParams.get("games") as CategoryKey) || "all",
-    showFilters: false,
-  });
+  // Get product filters from Redux store (preloaded from server-side)
+  const filtersData = useAppSelector((state) => state.product.filters);
+
+  // Use organized hooks for state management
+  const { state, handlers } = useProductState();
 
   // Fetch products with infinite query
   const {
@@ -48,61 +42,48 @@ export default function ProductsPage() {
   } = useGetInfiniteProductsInfiniteQuery({
     limit: 6 * 4,
     search: state.search,
-    filter: state.category,
+    categories: state.category === "all" ? undefined : [state.category],
+    types: state.productType ? [state.productType] : undefined,
+    platforms: state.platforms.length > 0 ? state.platforms : undefined,
+    tags: state.tags.length > 0 ? state.tags : undefined,
   });
+
+  // Use organized hook for infinite scroll
+  const { handleEndReached } = useInfiniteScroll(
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  );
 
   // Flatten all products from all pages
   const allProducts = useMemo(() => {
     return data?.pages.flatMap((page) => page.data) ?? [];
   }, [data]);
 
-  const handleSearch = useCallback((search: string) => {
-    setState((prev) => ({ ...prev, search }));
-    updateURL({ search, category: state.category });
-  }, []);
-
-  const handleCategory = useCallback((category: CategoryKey) => {
-    setState((prev) => ({ ...prev, category }));
-    updateURL({ search: state.search, category });
-  }, []);
-
-  const updateURL = useCallback(
-    (params: { search?: string; category?: CategoryKey }) => {
-      const newSearchParams = new URLSearchParams();
-
-      if (params.search) newSearchParams.set("search", params.search);
-      if (params.category) newSearchParams.set("category", params.category);
-
-      const newURL = newSearchParams.toString()
-        ? `/products?${newSearchParams.toString()}`
-        : "/products";
-
-      router.push(newURL);
-    },
-    [router]
-  );
-
-  // Handle end reached for infinite scroll
-  const handleEndReached = useCallback(() => {
-    if (hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
-    }
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
-
   return (
     <Container mih={"100vh"}>
       <Stack>
-        <Group mt="lg">
-          <TextInput
-            value={state.search}
-            onChange={(e) => handleSearch(e.target.value)}
-            placeholder={__("searchPlaceholder")}
-            rightSection={<IconSearch size={16} />}
+        <Group>
+          <SearchBar
+            search={state.search}
+            onSearchChange={handlers.handleSearch}
           />
-          <Divider orientation="vertical" />
-          <Categories onFilter={handleCategory} value={state.category} />
+          <ActionIcon variant="light" color="secondary" size="lg">
+            <IconFilters style={{ width: "70%", height: "70%" }} stroke={1.5} />
+          </ActionIcon>
         </Group>
-        <Divider />
+
+        <AdvancedFilters
+          filtersData={filtersData || undefined}
+          productType={state.productType}
+          platforms={state.platforms}
+          tags={state.tags}
+          categories={state.categories}
+          onProductTypeChange={handlers.handleProductType}
+          onPlatformsChange={handlers.handlePlatforms}
+          onTagsChange={handlers.handleTags}
+          onCategoriesChange={handlers.handleCategories}
+        />
 
         {/* Products Grid */}
         <Stack pb="lg">

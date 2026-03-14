@@ -1,9 +1,18 @@
-import { DatatableInput, ProductResponse } from "@pawpal/shared";
+import {
+  DatatableInput,
+  ProductFiltersResponse,
+  ProductResponse,
+} from "@pawpal/shared";
 import { AxiosError, AxiosInstance } from "axios";
 import { PawApiResponse } from "../../api";
 
 class ProductApi {
   constructor(private readonly client: AxiosInstance) {}
+
+  async getFilters(): Promise<PawApiResponse<ProductFiltersResponse>> {
+    const response = await this.client.get("/product/filters");
+    return { success: true, data: response.data };
+  }
 
   async getNewProducts(): Promise<PawApiResponse<ProductResponse[]>> {
     const response = await this.client.get("/product/new");

@@ -33,6 +33,7 @@ export * from "./schemas/website/carousel";
 export * from "./schemas/website/carousel-reorder";
 export * from "./schemas/website/home-layout";
 export * from "./types/dto/DatatableQueryParam";
+export * from "./types/dto/ProductDatatableQueryParam";
 export * from "./types/response/carousel";
 export * from "./types/response/category";
 export * from "./types/response/datatable";

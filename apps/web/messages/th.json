@@ -55,7 +55,9 @@
   "Routes": {
     "home": "หน้าหลัก",
     "products": "สินค้า",
-    "topup": "เติมเงิน",
+    "products-games": "เกม",
+    "products-prepaid-card": "การ์ด",
+    "topup": "เติมเงินเข้าระบบ",
     "help": "ช่วยเหลือ",
     "user": {
       "main": "บัญชี",
@@ -345,7 +347,17 @@
       "other": "อื่นๆ"
     },
     "loadMore": "ดูเพิ่มเติม",
-    "error": "กรุณาลองใหม่อีกครั้งภายหลัง!"
+    "error": "กรุณาลองใหม่อีกครั้งภายหลัง!",
+    "advancedFilters": "ตัวกรองขั้นสูง",
+    "productType": "ประเภทสินค้า",
+    "allTypes": "ทุกประเภท",
+    "selectProductType": "เลือกประเภทสินค้า",
+    "platforms": "แพลตฟอร์ม",
+    "selectPlatforms": "เลือกแพลตฟอร์ม",
+    "tags": "แท็ก",
+    "selectTags": "เลือกแท็ก",
+    "categories": "หมวดหมู่",
+    "selectCategories": "เลือกหมวดหมู่"
   },
 
   "ProductDetail": {

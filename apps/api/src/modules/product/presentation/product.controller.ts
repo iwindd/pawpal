@@ -1,4 +1,8 @@
 import {
+  FindProductFiltersPipe,
+  FindProductFiltersQuery,
+} from '@/common/pipes/FindProductFiltersPipe';
+import {
   FindProductPipe,
   FindProductQuery,
 } from '@/common/pipes/FindProductPipe';
@@ -7,6 +11,7 @@ import { Controller, Get, Param, Query } from '@nestjs/common';
 import { GetAllProductDatatableUseCase } from '../application/usecases/get-all-product-datatable.usecase';
 import { GetNewProductsUseCase } from '../application/usecases/get-new-products.usecase';
 import { GetProductBySlugUseCase } from '../application/usecases/get-product-by-slug.usecase';
+import { GetProductFiltersUseCase } from '../application/usecases/get-product-filters.usecase';
 import { GetProductsByCategoryUseCase } from '../application/usecases/get-products-by-category.usecase';
 import { GetProductsByTagUseCase } from '../application/usecases/get-products-by-tag.usecase';
 import { GetSaleProductDatatableUseCase } from '../application/usecases/get-sale-product-datatable.usecase';
@@ -18,6 +23,7 @@ export class ProductController {
     private readonly getAllProductDatatable: GetAllProductDatatableUseCase,
     private readonly getSaleProductDatatable: GetSaleProductDatatableUseCase,
     private readonly getProductBySlug: GetProductBySlugUseCase,
+    private readonly getProductFilters: GetProductFiltersUseCase,
     private readonly getNewProducts: GetNewProductsUseCase,
     private readonly getSaleProducts: GetSaleProductsUseCase,
     private readonly getProductsByTag: GetProductsByTagUseCase,
@@ -50,8 +56,15 @@ export class ProductController {
     return this.getProductsByCategory.execute(slug, query);
   }
 
+  @Get('/filters')
+  getFilters() {
+    return this.getProductFilters.execute();
+  }
+
   @Get()
-  getAllDatatable(@Query(FindProductPipe) query: FindProductQuery) {
+  getAllDatatable(
+    @Query(FindProductFiltersPipe) query: FindProductFiltersQuery,
+  ) {
     return this.getAllProductDatatable.execute(query);
   }
 

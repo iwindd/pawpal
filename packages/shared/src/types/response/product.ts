@@ -1,6 +1,11 @@
 import { FieldType } from "../../enums/field";
 import { DiscountType } from "../../enums/sale";
 
+export enum ProductType {
+  GAME = "GAME",
+  CARD = "CARD",
+}
+
 export interface ProductSaleValue {
   discount: number;
   discountType: DiscountType;
@@ -21,6 +26,30 @@ export interface ProductCategory {
   id: string;
   name: string;
   slug: string;
+}
+
+export interface ProductTag {
+  id?: string;
+  name: string;
+  slug: string;
+}
+
+export interface ProductPlatform {
+  id: string;
+  name: string;
+  slug: string;
+}
+
+export interface ProductFilterOption {
+  label: string;
+  value: string;
+}
+
+export interface ProductFiltersResponse {
+  types: ProductFilterOption[];
+  platforms: ProductFilterOption[];
+  categories: ProductFilterOption[];
+  tags: ProductFilterOption[];
 }
 
 export interface ProductListItem {
@@ -44,7 +73,11 @@ export interface ProductResponse {
   name: string;
   description?: string;
   createdAt: string | Date;
+  type?: ProductType;
   category: ProductCategory;
+  categories?: ProductCategory[];
+  productTags?: ProductTag[];
+  platforms?: ProductPlatform[];
   packages: ProductPackage[];
   fields: ProductField[];
   MOST_SALE: ProductSaleValue | null;

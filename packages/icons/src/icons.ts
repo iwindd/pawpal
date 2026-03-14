@@ -34,6 +34,7 @@ export {
   IconPencil as IconEdit,
   IconExternalLink,
   IconEye,
+  IconAdjustments as IconFilters,
   IconBolt as IconFlashsale,
   IconFolder,
   IconFolderFilled,

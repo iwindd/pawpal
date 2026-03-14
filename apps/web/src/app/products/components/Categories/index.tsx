@@ -2,7 +2,7 @@ import { IconAll, IconGames, IconOther } from "@pawpal/icons";
 import { Button, Group } from "@pawpal/ui/core";
 import { useTranslations } from "next-intl";
 
-export type CategoryKey = "all" | "games" | "other";
+export type CategoryKey = "all" | "games" | "streaming";
 
 const CATEGORIES = [
   {

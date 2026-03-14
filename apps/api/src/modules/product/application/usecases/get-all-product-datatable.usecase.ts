@@ -1,4 +1,4 @@
-import { DatatableQuery } from '@/common/pipes/DatatablePipe';
+import { FindProductFiltersQuery } from '@/common/pipes/FindProductFiltersPipe';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import {
   IProductRepository,
@@ -14,14 +14,8 @@ export class GetAllProductDatatableUseCase {
     private readonly productRepo: IProductRepository,
   ) {}
 
-  async execute(query: DatatableQuery) {
+  async execute(query: FindProductFiltersQuery) {
     this.logger.debug(query);
-    const filterCategory =
-      query.filter || query.filter != 'all' ? null : query.filter;
-
-    return this.productRepo.getAllProductDatatable(
-      query,
-      filterCategory ?? undefined,
-    );
+    return this.productRepo.getAllProductDatatable(query);
   }
 }
