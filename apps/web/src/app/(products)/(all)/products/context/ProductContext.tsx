@@ -9,12 +9,11 @@ import {
   useState,
 } from "react";
 import { useGetInfiniteProductsInfiniteQuery } from "../../../../../features/product/productApi";
-import { CategoryKey } from "../components/Categories";
 
 interface ProductsPageState {
   search: string;
   showFilters: boolean;
-  category: CategoryKey;
+  category: string;
   productType: string | null;
   platforms: string[];
   tags: string[];
@@ -34,7 +33,7 @@ interface ProductContextType {
   };
   handlers: {
     handleSearch: (search: string) => void;
-    handleCategory: (category: CategoryKey) => void;
+    handleCategory: (category: string) => void;
     handleProductType: (productType: string | null) => void;
     handlePlatforms: (platforms: string[]) => void;
     handleTags: (tags: string[]) => void;
@@ -63,7 +62,7 @@ export function ProductProvider({ children }: ProductProviderProps) {
 
   const initialState: ProductsPageState = {
     search: searchParams.get("search") || "",
-    category: (searchParams.get("category") as CategoryKey) || "all",
+    category: (searchParams.get("category") as string) || "all",
     showFilters: false,
     productType: searchParams.get("type") || null,
     platforms: searchParams.get("platforms")?.split(",").filter(Boolean) || [],
@@ -90,7 +89,7 @@ export function ProductProvider({ children }: ProductProviderProps) {
   const updateURL = useCallback(
     (params: {
       search?: string;
-      category?: CategoryKey;
+      category?: string;
       type?: string | null;
       platforms?: string[];
       tags?: string[];
@@ -129,7 +128,7 @@ export function ProductProvider({ children }: ProductProviderProps) {
   );
 
   const handleCategory = useCallback(
-    (category: CategoryKey) => {
+    (category: string) => {
       setState((prev) => ({ ...prev, category }));
       updateURL({ category });
     },
