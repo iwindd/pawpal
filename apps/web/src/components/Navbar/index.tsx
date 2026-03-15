@@ -1,5 +1,5 @@
 "use client";
-import navbarLinks from "@/configs/navbar";
+import navbarLinks, { HOME_PAGE } from "@/configs/navbar";
 import { getPath } from "@/configs/route";
 import { useAppSelector } from "@/hooks";
 import { useActiveRouteConfig } from "@/hooks/useActiveRouteConfig";
@@ -56,7 +56,10 @@ const Navbar = () => {
       <header className={classes.header}>
         <Container size="xl" className={classes.inner}>
           <Group h="100%" flex={1}>
-            <Logo size={64} />
+            <Link href={HOME_PAGE.path}>
+              <Logo size={64} />
+            </Link>
+
             <Group h={"100%"} flex={1} gap={5} visibleFrom="sm" ms={1}>
               {items}
             </Group>
