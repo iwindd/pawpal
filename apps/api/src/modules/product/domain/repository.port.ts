@@ -1,4 +1,5 @@
 import { DatatableQuery } from '@/common/pipes/DatatablePipe';
+import { FindProductFiltersQuery } from '@/common/pipes/FindProductFiltersPipe';
 import { ProductInput } from '@pawpal/shared';
 
 export const PRODUCT_REPOSITORY = Symbol('PRODUCT_REPOSITORY');
@@ -6,11 +7,11 @@ export const PRODUCT_REPOSITORY = Symbol('PRODUCT_REPOSITORY');
 export interface IProductRepository {
   getLatest(take?: number): Promise<any[]>;
   getHasSale(take?: number): Promise<any[]>;
+  getByTagSlug(slug: string, query: DatatableQuery): Promise<any>;
+  getByCategorySlug(slug: string, query: DatatableQuery): Promise<any>;
   getProductBySlug(slug: string): Promise<any>;
-  getAllProductDatatable(
-    query: DatatableQuery,
-    filterCategory?: string,
-  ): Promise<any>;
+  getAllProductDatatable(query: FindProductFiltersQuery): Promise<any>;
+  getProductFilters(): Promise<any>;
   getSaleProductDatatable(query: DatatableQuery): Promise<any>;
   getProductDatatable(query: DatatableQuery): Promise<any>;
   findOne(id: string): Promise<any>;

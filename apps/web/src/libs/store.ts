@@ -1,5 +1,6 @@
 import { authApi } from "@/features/auth/authApi";
 import authReducer, { AuthState } from "@/features/auth/authSlice";
+import productReducer, { ProductState } from "@/features/product/productSlice";
 
 import { orderApi } from "@/features/order/orderApi";
 import { paymentGatewayApi } from "@/features/paymentGateway/paymentGatewayApi";
@@ -10,10 +11,14 @@ import { userApi } from "@/features/user/userApi";
 import { Action, configureStore, ThunkAction } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query";
 
-export const makeStore = (preloadedState: { auth: AuthState }) => {
+export const makeStore = (preloadedState: {
+  auth: AuthState;
+  product: ProductState;
+}) => {
   const _store = configureStore({
     reducer: {
       auth: authReducer,
+      product: productReducer,
       topup: topupReducer,
       [authApi.reducerPath]: authApi.reducer,
       [userApi.reducerPath]: userApi.reducer,
@@ -29,7 +34,7 @@ export const makeStore = (preloadedState: { auth: AuthState }) => {
         orderApi.middleware,
         productApi.middleware,
         paymentGatewayApi.middleware,
-        topupApi.middleware
+        topupApi.middleware,
       ),
     preloadedState,
   });

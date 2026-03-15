@@ -22,7 +22,8 @@ const CustomerLayout = async ({
   return (
     <CustomerProvider defaultValue={customer}>
       <PageHeader title={customer.displayName} />
-      <TabNavigation>{children}</TabNavigation>
+      <TabNavigation />
+      {children}
     </CustomerProvider>
   );
 };

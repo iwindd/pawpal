@@ -69,9 +69,11 @@ export class PrismaTagRepository implements ITagRepository {
         name: { mode: 'insensitive' },
         slug: { mode: 'insensitive' },
         description: { mode: 'insensitive' },
-        category: {
-          name: { mode: 'insensitive' },
-          slug: { mode: 'insensitive' },
+        categories: {
+          some: {
+            name: { mode: 'insensitive' },
+            slug: { mode: 'insensitive' },
+          },
         },
         packages: {
           some: {

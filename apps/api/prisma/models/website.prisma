@@ -44,3 +44,25 @@ enum CarouselStatus {
   PUBLISHED
   ARCHIVED
 }
+
+model HomeLayout {
+  id       String           @id @default(cuid())
+  version  Int              @default(autoincrement())
+  name     String
+  status   HomeLayoutStatus @default(DRAFT)
+  sections Json
+
+  updater   User   @relation("HomeLayoutUpdatedBy", fields: [updaterId], references: [id])
+  updaterId String @map("updater_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("home_layouts")
+}
+
+enum HomeLayoutStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}

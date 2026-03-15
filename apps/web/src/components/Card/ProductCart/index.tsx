@@ -3,8 +3,17 @@ import ResourceImage from "@/components/ResourceImage";
 import { getPercentDiscount } from "@/utils/pricing";
 import { isFlashsale } from "@/utils/productUtils";
 import { ProductResponse } from "@pawpal/shared";
-import { Badge, Box, Card, Center, Group, Text } from "@pawpal/ui/core";
+import {
+  Badge,
+  Box,
+  Card,
+  Center,
+  Group,
+  Skeleton,
+  Text,
+} from "@pawpal/ui/core";
 import Link from "next/link";
+import { useState } from "react";
 import classes from "./style.module.css";
 
 interface ProductCardProps {
@@ -12,6 +21,8 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ product }: ProductCardProps) => {
+  const [imageLoaded, setImageLoaded] = useState(false);
+
   return (
     <Card
       key={product.slug}
@@ -31,6 +42,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
           position: "relative",
         }}
       >
+        {!imageLoaded && <Skeleton pos="absolute" w="100%" h="100%" />}
         <Box w="100%" h="100%" pos="absolute">
           <ResourceImage
             src={product.name}
@@ -38,7 +50,12 @@ const ProductCard = ({ product }: ProductCardProps) => {
             fill
             fit="contain"
             loading="eager"
+            style={{
+              filter: imageLoaded ? "blur(0px)" : "blur(4px)",
+              transition: "filter 0.25s ease-in-out",
+            }}
             fallbackSrc="/assets/images/fallback-product.png"
+            onLoad={() => setImageLoaded(true)}
           />
         </Box>
         {product.MOST_SALE && (

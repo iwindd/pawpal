@@ -1,5 +1,6 @@
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
+import ProductSpotlight from "@/components/ProductSpotlight";
 import APISession from "@/libs/api/server";
 import StoreProvider from "@/providers/StoreProvider";
 import { WebSocketProvider } from "@/providers/WebSocketProvider";
@@ -24,14 +25,22 @@ export default async function RootLayout({
 }>): Promise<React.JSX.Element> {
   const currentLocale = await getLocale();
   let session = null;
+  let productFilters = null;
 
   try {
     const API = await APISession();
-    const response = await API.auth.getProfile();
-    session = response?.data || null;
+
+    // Fetch user session
+    const authResponse = await API.auth.getProfile();
+    session = authResponse?.data || null;
+
+    // Fetch product filters for global use
+    const filtersResponse = await API.product.getFilters();
+    productFilters = filtersResponse?.success ? filtersResponse.data : null;
   } catch (error) {
-    console.error("Failed to load user session:", error);
+    console.error("Failed to load initial data:", error);
     session = null;
+    productFilters = null;
   }
 
   return (
@@ -53,11 +62,17 @@ export default async function RootLayout({
               auth: {
                 user: session,
               },
+              product: {
+                filters: productFilters,
+                isLoading: false,
+                error: null,
+              },
             }}
           >
             <WebSocketProvider>
               <UIProvider locale={currentLocale}>
                 <Navbar />
+                <ProductSpotlight />
                 {children}
                 <Footer />
               </UIProvider>

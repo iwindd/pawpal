@@ -16,4 +16,5 @@ export enum PermissionEnum {
   CarouselManagement = "Carousel.Management",
   PaymentGatewayManagement = "PaymentGateway.Management",
   ResourceManagement = "Resource.Management",
+  HomeSectionManagement = "HomeSection.Management",
 }

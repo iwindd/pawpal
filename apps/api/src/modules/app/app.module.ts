@@ -11,6 +11,7 @@ import { CarouselModule } from '../carousel/carousel.module';
 import { CategoryModule } from '../category/category.module';
 import { EventModule } from '../event/event.module';
 import { FieldModule } from '../field/field.module';
+import { HomeLayoutModule } from '../home-layout/home-layout.module';
 import { NotificationModule } from '../notification/notification.module';
 import { OrderModule } from '../order/order.module';
 import { PackageModule } from '../package/package.module';
@@ -48,6 +49,7 @@ import { WalletModule } from '../wallet/wallet.module';
     RoleModule,
     NotificationModule,
     FieldModule,
+    HomeLayoutModule,
   ],
   controllers: [AppController],
   providers: [

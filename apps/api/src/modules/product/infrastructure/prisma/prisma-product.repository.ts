@@ -1,10 +1,18 @@
 import { ProductResponseMapper } from '@/common/mappers/ProductResponseMapper';
 import { DatatableQuery } from '@/common/pipes/DatatablePipe';
+import { FindProductFiltersQuery } from '@/common/pipes/FindProductFiltersPipe';
 import { Prisma } from '@/generated/prisma/client';
-import { ResourceType } from '@/generated/prisma/enums';
+import {
+  ProductType as PrismaProductType,
+  ResourceType,
+} from '@/generated/prisma/enums';
 import { SaleUtil } from '@/utils/saleUtil';
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
-import { ProductInput } from '@pawpal/shared';
+import {
+  ProductFiltersResponse,
+  ProductInput,
+  ProductType,
+} from '@pawpal/shared';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { CopyResourceToProductUseCase } from '../../../resource/application/usecases/copy-resource-to-product.usecase';
 import { IProductRepository } from '../../domain/repository.port';
@@ -63,6 +71,73 @@ function mapProductToJSON(
   return { id: product.id, slug: product.slug, name: product.name, sale };
 }
 
+const PRODUCT_DATATABLE_SELECT = {
+  id: true,
+  slug: true,
+  name: true,
+  description: true,
+  type: true,
+  createdAt: true,
+  categories: { select: { id: true, name: true, slug: true } },
+  productTags: { select: { slug: true, name: true } },
+  platforms: { select: { id: true, name: true, slug: true } },
+  packages: {
+    select: {
+      id: true,
+      name: true,
+      price: true,
+      description: true,
+      sales: {
+        where: {
+          startAt: { lte: new Date() },
+          endAt: { gte: new Date() },
+        },
+        select: {
+          discount: true,
+          discountType: true,
+          startAt: true,
+          endAt: true,
+        },
+      },
+    },
+  },
+} satisfies Prisma.ProductSelect;
+
+const PRODUCT_DATATABLE_SEARCHABLE = {
+  name: { mode: 'insensitive' },
+  slug: { mode: 'insensitive' },
+  description: { mode: 'insensitive' },
+  categories: {
+    some: {
+      name: { mode: 'insensitive' },
+      slug: { mode: 'insensitive' },
+    },
+  },
+  productTags: {
+    some: {
+      name: { mode: 'insensitive' },
+      slug: { mode: 'insensitive' },
+    },
+  },
+  packages: {
+    some: {
+      name: { mode: 'insensitive' },
+      description: { mode: 'insensitive' },
+    },
+  },
+} satisfies Prisma.ProductWhereInput;
+
+function mapProductDatatableItem(
+  product: Prisma.ProductGetPayload<{
+    select: typeof PRODUCT_DATATABLE_SELECT;
+  }>,
+) {
+  return {
+    ...product,
+    category: product.categories[0] ?? null,
+  };
+}
+
 @Injectable()
 export class PrismaProductRepository implements IProductRepository {
   private readonly logger = new Logger(PrismaProductRepository.name);
@@ -103,6 +178,39 @@ export class PrismaProductRepository implements IProductRepository {
     return products.map(mapProductToJSON);
   }
 
+  async getByTagSlug(slug: string, query: DatatableQuery) {
+    const result = await this.prisma.product.getDatatable({
+      query,
+      select: PRODUCT_DATATABLE_SELECT,
+      searchable: PRODUCT_DATATABLE_SEARCHABLE,
+      where: {
+        productTags: {
+          some: { slug },
+        },
+      },
+    });
+
+    return {
+      ...result,
+      data: result.data.map(mapProductDatatableItem),
+    };
+  }
+
+  async getByCategorySlug(slug: string, query: DatatableQuery) {
+    const result = await this.prisma.product.getDatatable({
+      query,
+      select: PRODUCT_DATATABLE_SELECT,
+      searchable: PRODUCT_DATATABLE_SEARCHABLE,
+      where: {
+        categories: {
+          some: {
+            slug,
+          },
+        },
+      },
+    });
+  }
+
   async getProductBySlug(slug: string) {
     const product = await this.prisma.product.findUnique({
       where: { slug },
@@ -114,7 +222,7 @@ export class PrismaProductRepository implements IProductRepository {
         isStockTracked: true,
         stock: { select: { quantity: true } },
         createdAt: true,
-        category: { select: { id: true, name: true, slug: true } },
+        categories: { select: { id: true, name: true, slug: true } },
         productTags: { select: { slug: true, name: true } },
         packages: {
           select: {
@@ -155,123 +263,120 @@ export class PrismaProductRepository implements IProductRepository {
 
     return {
       ...product,
+      category: product.categories[0] ?? null,
       MOST_SALE: await this.prisma.package.findMostSaleByProduct(slug),
     };
   }
 
-  async getAllProductDatatable(query: DatatableQuery, filterCategory?: string) {
-    return this.prisma.product.getDatatable({
-      query,
-      select: {
-        id: true,
-        slug: true,
-        name: true,
-        description: true,
-        createdAt: true,
-        category: { select: { name: true, slug: true } },
-        productTags: { select: { slug: true, name: true } },
-        packages: {
-          select: {
-            id: true,
-            name: true,
-            price: true,
-            description: true,
-            sales: {
-              where: {
-                startAt: { lte: new Date() },
-                endAt: { gte: new Date() },
-              },
-              select: {
-                discount: true,
-                discountType: true,
-                startAt: true,
-                endAt: true,
+  async getProductFilters(): Promise<ProductFiltersResponse> {
+    const [categories, tags, platforms] = await Promise.all([
+      this.prisma.category.findMany({
+        orderBy: { name: 'asc' },
+        select: { name: true, slug: true, type: true },
+      }),
+      this.prisma.productTag.findMany({
+        orderBy: { name: 'asc' },
+        select: { name: true, slug: true },
+      }),
+      this.prisma.platform.findMany({
+        orderBy: { name: 'asc' },
+        select: { name: true, slug: true },
+      }),
+    ]);
+
+    return {
+      types: Object.values(PrismaProductType).map((type) => ({
+        value: type,
+        label: type,
+      })),
+      platforms: platforms.map((platform) => ({
+        value: platform.slug,
+        label: platform.name,
+      })),
+      categories: categories.map((category) => ({
+        value: category.slug,
+        label: category.name,
+        type: category.type as ProductType,
+      })),
+      tags: tags.map((tag) => ({
+        value: tag.slug,
+        label: tag.name,
+      })),
+    };
+  }
+
+  async getAllProductDatatable(query: FindProductFiltersQuery) {
+    const where: Prisma.ProductWhereInput = {
+      ...(query.filter && query.filter !== 'all' && !query.categories?.length
+        ? {
+            categories: {
+              some: {
+                slug: query.filter,
               },
             },
-          },
-        },
-        MOST_SALE: true,
-      },
-      searchable: {
-        name: { mode: 'insensitive' },
-        slug: { mode: 'insensitive' },
-        description: { mode: 'insensitive' },
-        category: {
-          name: { mode: 'insensitive' },
-          slug: { mode: 'insensitive' },
-        },
-        productTags: {
-          some: {
-            name: { mode: 'insensitive' },
-            slug: { mode: 'insensitive' },
-          },
-        },
-        packages: {
-          some: {
-            name: { mode: 'insensitive' },
-            description: { mode: 'insensitive' },
-          },
-        },
-      },
-      ...(filterCategory && { where: { category: { slug: filterCategory } } }),
+          }
+        : {}),
+      ...(query.types?.length
+        ? {
+            type: {
+              in: query.types as PrismaProductType[],
+            },
+          }
+        : {}),
+      ...(query.platforms?.length
+        ? {
+            platforms: {
+              some: {
+                slug: {
+                  in: query.platforms,
+                },
+              },
+            },
+          }
+        : {}),
+      ...(query.categories?.length
+        ? {
+            categories: {
+              some: {
+                slug: {
+                  in: query.categories,
+                },
+              },
+            },
+          }
+        : {}),
+      ...(query.tags?.length
+        ? {
+            productTags: {
+              some: {
+                slug: {
+                  in: query.tags,
+                },
+              },
+            },
+          }
+        : {}),
+    };
+
+    const result = await this.prisma.product.getDatatable({
+      query,
+      select: PRODUCT_DATATABLE_SELECT,
+      searchable: PRODUCT_DATATABLE_SEARCHABLE,
+      where,
     });
+
+    return {
+      ...result,
+      data: result.data.map(mapProductDatatableItem),
+    };
   }
 
   async getSaleProductDatatable(query: DatatableQuery) {
     const now = new Date();
-    return this.prisma.product.getDatatable({
+    const result = await this.prisma.product.getDatatable({
       query,
-      select: {
-        id: true,
-        slug: true,
-        name: true,
-        description: true,
-        createdAt: true,
-        category: { select: { name: true, slug: true } },
-        productTags: { select: { slug: true, name: true } },
-        packages: {
-          select: {
-            id: true,
-            name: true,
-            price: true,
-            description: true,
-            sales: {
-              where: {
-                startAt: { lte: new Date() },
-                endAt: { gte: new Date() },
-              },
-              select: {
-                discount: true,
-                discountType: true,
-                startAt: true,
-                endAt: true,
-              },
-            },
-          },
-        },
-        MOST_SALE: true,
-      },
-      searchable: {
-        name: { mode: 'insensitive' },
-        slug: { mode: 'insensitive' },
-        description: { mode: 'insensitive' },
-        category: {
-          name: { mode: 'insensitive' },
-          slug: { mode: 'insensitive' },
-        },
-        productTags: {
-          some: {
-            name: { mode: 'insensitive' },
-            slug: { mode: 'insensitive' },
-          },
-        },
-        packages: {
-          some: {
-            name: { mode: 'insensitive' },
-            description: { mode: 'insensitive' },
-          },
-        },
-      },
+      select: PRODUCT_DATATABLE_SELECT,
+      searchable: PRODUCT_DATATABLE_SEARCHABLE,
       where: {
         packages: {
           some: {
@@ -348,7 +453,7 @@ export class PrismaProductRepository implements IProductRepository {
       where: { id },
       select: {
         imageId: true,
-        categoryId: true,
+        categories: true,
         stock: { select: { quantity: true } },
       },
     });
@@ -374,7 +479,9 @@ export class PrismaProductRepository implements IProductRepository {
       data: {
         ...rest,
         image: image,
-        category: { connect: { id: categoryId } },
+        categories: {
+          connect: [{ id: categoryId }],
+        },
       },
       select: ProductResponseMapper.SELECT,
     });

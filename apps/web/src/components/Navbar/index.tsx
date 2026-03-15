@@ -1,9 +1,11 @@
 "use client";
-import navbarLinks from "@/configs/navbar";
+import navbarLinks, { HOME_PAGE } from "@/configs/navbar";
 import { getPath } from "@/configs/route";
 import { useAppSelector } from "@/hooks";
 import { useActiveRouteConfig } from "@/hooks/useActiveRouteConfig";
+import { IconSearch } from "@pawpal/icons";
 import {
+  ActionIcon,
   Box,
   Burger,
   Container,
@@ -14,6 +16,7 @@ import {
   Stack,
 } from "@pawpal/ui/core";
 import { useDisclosure } from "@pawpal/ui/hooks";
+import { spotlight } from "@pawpal/ui/spotlight";
 import { useTranslations } from "next-intl";
 import dynamic from "next/dynamic";
 import Link from "next/link";
@@ -53,7 +56,10 @@ const Navbar = () => {
       <header className={classes.header}>
         <Container size="xl" className={classes.inner}>
           <Group h="100%" flex={1}>
-            <Logo size={64} />
+            <Link href={HOME_PAGE.path}>
+              <Logo size={64} />
+            </Link>
+
             <Group h={"100%"} flex={1} gap={5} visibleFrom="sm" ms={1}>
               {items}
             </Group>
@@ -66,6 +72,14 @@ const Navbar = () => {
             />
           </Group>
           <Group w="fit">
+            <ActionIcon
+              variant="subtle"
+              size="lg"
+              onClick={spotlight.open}
+              radius="xl"
+            >
+              <IconSearch size={20} stroke={1.5} />
+            </ActionIcon>
             <LocaleSwitcher />
             <ThemeSwitcher />
             <Divider orientation="vertical" />

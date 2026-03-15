@@ -1,10 +1,57 @@
 [
   {
-    "slug": "games",
-    "name": "เกม"
+    "slug": "rpg",
+    "type": "GAME",
+    "name": "เกม MMORPG"
+  },
+  {
+    "slug": "fps",
+    "type": "GAME",
+    "name": "เกม FPS"
+  },
+  {
+    "slug": "strategy",
+    "type": "GAME",
+    "name": "เกม Stragegy"
+  },
+  {
+    "slug": "moba",
+    "type": "GAME",
+    "name": "เกม Moba"
+  },
+  {
+    "slug": "battle-royale",
+    "type": "GAME",
+    "name": "เกม BattleRoyale"
+  },
+  {
+    "slug": "gacha",
+    "type": "GAME",
+    "name": "เกม Gacha"
+  },
+  {
+    "slug": "racing",
+    "type": "GAME",
+    "name": "เกมแข่งรถ"
+  },
+  {
+    "slug": "horror",
+    "type": "GAME",
+    "name": "เกมผี"
+  },
+  {
+    "slug": "music",
+    "type": "CARD",
+    "name": "เพลง"
   },
   {
     "slug": "streaming",
+    "type": "CARD",
     "name": "สตรีมมิ่ง"
+  },
+  {
+    "slug": "survival",
+    "type": "GAME",
+    "name": "เกม Survival"
   }
 ]

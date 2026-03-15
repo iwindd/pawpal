@@ -30,6 +30,7 @@ model User {
   performedUserSecurityLogs       UserSecurityLog[]       @relation("PerformedUserSecurityLogs")
   performedAuditLogs              AuditLog[]              @relation("PerformedAuditLogs")
   stockMovements                  StockMovement[]         @relation("StockAdjustedBy")
+  homeLayouts                     HomeLayout[]            @relation("HomeLayoutUpdatedBy")
 
   @@map("users")
 }

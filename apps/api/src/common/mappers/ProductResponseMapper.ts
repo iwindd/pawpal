@@ -9,7 +9,7 @@ export class ProductResponseMapper {
       name: true,
       description: true,
       createdAt: true,
-      category: {
+      categories: {
         select: {
           id: true,
           name: true,
@@ -46,7 +46,7 @@ export class ProductResponseMapper {
       name: resource.name,
       description: resource.description,
       createdAt: resource.createdAt.toISOString(),
-      categories: [resource.category],
+      categories: resource.categories,
       tags: resource.productTags,
       image: resource.image,
       packageCount: resource._count.packages,

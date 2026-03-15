@@ -3,6 +3,7 @@ import PawApi from "../api";
 import AuthApi from "./services/Auth";
 import CarouselApi from "./services/Carousel";
 import CategoryApi from "./services/Category";
+import HomeLayoutApi from "./services/HomeLayout";
 import OrderApi from "./services/Order";
 import ProductApi from "./services/Product";
 import ProductTagApi from "./services/ProductTag";
@@ -13,6 +14,7 @@ export class ServerApi extends PawApi {
   public readonly auth: AuthApi;
   public readonly carousel: CarouselApi;
   public readonly category: CategoryApi;
+  public readonly homeLayout: HomeLayoutApi;
   public readonly product: ProductApi;
   public readonly productTag: ProductTagApi;
   public readonly order: OrderApi;
@@ -24,6 +26,7 @@ export class ServerApi extends PawApi {
     this.auth = new AuthApi(this.client);
     this.carousel = new CarouselApi(this.client);
     this.category = new CategoryApi(this.client);
+    this.homeLayout = new HomeLayoutApi(this.client);
     this.product = new ProductApi(this.client);
     this.productTag = new ProductTagApi(this.client);
     this.order = new OrderApi(this.client);

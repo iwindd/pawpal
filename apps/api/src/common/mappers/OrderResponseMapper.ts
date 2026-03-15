@@ -29,7 +29,7 @@ export class OrderResponseMapper {
                 select: {
                   id: true,
                   name: true,
-                  category: {
+                  categories: {
                     select: {
                       id: true,
                       name: true,
@@ -97,10 +97,10 @@ export class OrderResponseMapper {
           id: op.package.product.id,
           name: op.package.product.name,
         },
-        category: {
-          id: op.package.product.category.id,
-          name: op.package.product.category.name,
-        },
+        categories: op.package.product.categories.map((category) => ({
+          id: category.id,
+          name: category.name,
+        })),
       })),
       fields: order.orderFields.map((of) => ({
         label: of.field.label,

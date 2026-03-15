@@ -3,6 +3,7 @@ import OrderApi from "../../../../../admin/src/libs/api/server/services/Order";
 import PawApi from "../api";
 import AuthApi from "./services/Auth";
 import CarouselApi from "./services/Carousel";
+import HomeLayoutApi from "./services/HomeLayout";
 import ProductApi from "./services/Product";
 
 export class ServerApi extends PawApi {
@@ -10,6 +11,7 @@ export class ServerApi extends PawApi {
   public readonly product: ProductApi;
   public readonly carousel: CarouselApi;
   public readonly order: OrderApi;
+  public readonly homeLayout: HomeLayoutApi;
 
   constructor(token?: string) {
     super(token);
@@ -17,6 +19,7 @@ export class ServerApi extends PawApi {
     this.product = new ProductApi(this.client);
     this.carousel = new CarouselApi(this.client);
     this.order = new OrderApi(this.client);
+    this.homeLayout = new HomeLayoutApi(this.client);
   }
 }
 

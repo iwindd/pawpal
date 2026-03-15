@@ -62,6 +62,7 @@ export const navlinks: NavLink[] = [
     item("users.employees", { icon: IconShieldCheckFilled }),
   ]),
   folder("website", [
+    item("website.home", { icon: IconDashboardFilled }),
     item("website.carousel", { icon: IconCarouselHorizontalFilled }),
     item("website.payment", { icon: IconCreditCardFilled }),
   ]),

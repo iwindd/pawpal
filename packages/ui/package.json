@@ -17,7 +17,8 @@
     "./draggable": "./src/draggable.ts",
     "./dates": "./src/dates.ts",
     "./fonts/lamoon": "./src/fonts/lamoon.ts",
-    "./fonts/sarabun": "./src/fonts/sarabun.ts"
+    "./fonts/sarabun": "./src/fonts/sarabun.ts",
+    "./spotlight": "./src/spotlight.ts"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",
@@ -42,6 +43,7 @@
     "@mantine/form": "catalog:",
     "@mantine/hooks": "catalog:",
     "@mantine/notifications": "catalog:",
+    "@mantine/spotlight": "catalog:",
     "clsx": "catalog:",
     "embla-carousel-autoplay": "catalog:",
     "mantine-datatable": "catalog:",
