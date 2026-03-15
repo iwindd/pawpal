@@ -1,11 +1,13 @@
 "use client";
 
+import { useDebouncedValue } from "@pawpal/ui/hooks";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   createContext,
   ReactNode,
   useCallback,
   useContext,
+  useEffect,
   useState,
 } from "react";
 import { useGetInfiniteProductsInfiniteQuery } from "../../../../../features/product/productApi";
@@ -73,6 +75,14 @@ export function ProductProvider({ children }: ProductProviderProps) {
 
   const [state, setState] = useState<ProductsPageState>(initialState);
 
+  // Debounced values for URL updates (2 second delay)
+  const [debouncedSearch] = useDebouncedValue(state.search, 2000);
+  const [debouncedCategory] = useDebouncedValue(state.category, 2000);
+  const [debouncedProductType] = useDebouncedValue(state.productType, 2000);
+  const [debouncedPlatforms] = useDebouncedValue(state.platforms, 2000);
+  const [debouncedTags] = useDebouncedValue(state.tags, 2000);
+  const [debouncedCategories] = useDebouncedValue(state.categories, 2000);
+
   // Fetch products with infinite query
   const productsQuery = useGetInfiniteProductsInfiniteQuery({
     limit: 5 * 4,
@@ -119,53 +129,49 @@ export function ProductProvider({ children }: ProductProviderProps) {
     [router],
   );
 
-  const handleSearch = useCallback(
-    (search: string) => {
-      setState((prev) => ({ ...prev, search }));
-      updateURL({ search });
-    },
-    [updateURL],
-  );
+  // Update URL when debounced values change
+  useEffect(() => {
+    updateURL({
+      search: debouncedSearch,
+      category: debouncedCategory,
+      type: debouncedProductType,
+      platforms: debouncedPlatforms,
+      tags: debouncedTags,
+      categories: debouncedCategories,
+    });
+  }, [
+    debouncedSearch,
+    debouncedCategory,
+    debouncedProductType,
+    debouncedPlatforms,
+    debouncedTags,
+    debouncedCategories,
+    updateURL,
+  ]);
 
-  const handleCategory = useCallback(
-    (category: string) => {
-      setState((prev) => ({ ...prev, category }));
-      updateURL({ category });
-    },
-    [updateURL],
-  );
+  const handleSearch = useCallback((search: string) => {
+    setState((prev) => ({ ...prev, search }));
+  }, []);
 
-  const handleProductType = useCallback(
-    (productType: string | null) => {
-      setState((prev) => ({ ...prev, productType }));
-      updateURL({ type: productType });
-    },
-    [updateURL],
-  );
+  const handleCategory = useCallback((category: string) => {
+    setState((prev) => ({ ...prev, category }));
+  }, []);
 
-  const handlePlatforms = useCallback(
-    (platforms: string[]) => {
-      setState((prev) => ({ ...prev, platforms }));
-      updateURL({ platforms });
-    },
-    [updateURL],
-  );
+  const handleProductType = useCallback((productType: string | null) => {
+    setState((prev) => ({ ...prev, productType }));
+  }, []);
 
-  const handleTags = useCallback(
-    (tags: string[]) => {
-      setState((prev) => ({ ...prev, tags }));
-      updateURL({ tags });
-    },
-    [updateURL],
-  );
+  const handlePlatforms = useCallback((platforms: string[]) => {
+    setState((prev) => ({ ...prev, platforms }));
+  }, []);
 
-  const handleCategories = useCallback(
-    (categories: string[]) => {
-      setState((prev) => ({ ...prev, categories }));
-      updateURL({ categories });
-    },
-    [updateURL],
-  );
+  const handleTags = useCallback((tags: string[]) => {
+    setState((prev) => ({ ...prev, tags }));
+  }, []);
+
+  const handleCategories = useCallback((categories: string[]) => {
+    setState((prev) => ({ ...prev, categories }));
+  }, []);
 
   const toggleFilters = useCallback(() => {
     setState((prev) => ({ ...prev, showFilters: !prev.showFilters }));
