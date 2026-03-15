@@ -342,10 +342,13 @@
     "title": "สินค้า",
     "count": "{count} รายการ",
     "loading": "กำลังโหลด...",
+    "showMore": "แสดงเพิ่มเติม",
+    "showLess": "แสดงน้อยลง",
     "searchPlaceholder": "ค้นหาสินค้า...",
     "filters": {
       "all": "ทั้งหมด",
       "games": "เกม",
+      "cards": "การ์ด",
       "streaming": "สตรีมมิ่ง",
       "other": "อื่นๆ"
     },

@@ -1,14 +1,10 @@
+"use client";
 import { ProductFiltersResponse } from "@pawpal/shared";
-import {
-  Badge,
-  Box,
-  Card,
-  MultiSelect,
-  Select,
-  Stack,
-  Text,
-} from "@pawpal/ui/core";
+import { Badge, Card, Stack } from "@pawpal/ui/core";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
+import CollapsibleFilterSection from "./CollapsibleFilterSection";
+import CollapsibleProductTypeFilter from "./CollapsibleProductTypeFilter";
 
 interface AdvancedFiltersProps {
   filtersData: ProductFiltersResponse | undefined;
@@ -34,6 +30,10 @@ export default function AdvancedFilters({
   onCategoriesChange,
 }: AdvancedFiltersProps) {
   const __ = useTranslations("Products");
+  const [productTypeCollapsed, setProductTypeCollapsed] = useState(false);
+  const [platformsCollapsed, setPlatformsCollapsed] = useState(true);
+  const [tagsCollapsed, setTagsCollapsed] = useState(true);
+  const [categoriesCollapsed, setCategoriesCollapsed] = useState(true);
 
   const hasActiveFilters =
     productType ||
@@ -46,6 +46,30 @@ export default function AdvancedFilters({
     tags.length,
     categories.length,
   ].filter(Boolean).length;
+
+  const handlePlatformChange = (value: string, checked: boolean) => {
+    if (checked) {
+      onPlatformsChange([...platforms, value]);
+    } else {
+      onPlatformsChange(platforms.filter((p) => p !== value));
+    }
+  };
+
+  const handleTagChange = (value: string, checked: boolean) => {
+    if (checked) {
+      onTagsChange([...tags, value]);
+    } else {
+      onTagsChange(tags.filter((t) => t !== value));
+    }
+  };
+
+  const handleCategoryChange = (value: string, checked: boolean) => {
+    if (checked) {
+      onCategoriesChange([...categories, value]);
+    } else {
+      onCategoriesChange(categories.filter((c) => c !== value));
+    }
+  };
 
   return (
     <Card>
@@ -60,68 +84,58 @@ export default function AdvancedFilters({
         }
       />
       <Card.Content>
-        <Stack gap="md">
+        <Stack gap={"xs"}>
           {/* Product Type Filter */}
-          <Box>
-            <Text size="sm" fw={500} mb="xs">
-              {}
-            </Text>
-            <Select
-              data={[
-                { value: "", label: __("allTypes") },
-                ...(filtersData?.types || []),
-              ]}
-              value={productType || ""}
-              onChange={(value) => onProductTypeChange(value || null)}
-              placeholder={__("selectProductType")}
-              clearable
-            />
-          </Box>
+          <CollapsibleProductTypeFilter
+            title={__("productType")}
+            options={filtersData?.types || []}
+            selectedValue={productType}
+            onChange={onProductTypeChange}
+            collapsed={productTypeCollapsed}
+            onToggleCollapse={() =>
+              setProductTypeCollapsed(!productTypeCollapsed)
+            }
+            showMoreText={__("showMore")}
+            showLessText={__("showLess")}
+          />
 
           {/* Platforms Filter */}
-          <Box>
-            <Text size="sm" fw={500} mb="xs">
-              {__("platforms")}
-            </Text>
-            <MultiSelect
-              data={filtersData?.platforms || []}
-              value={platforms}
-              onChange={onPlatformsChange}
-              placeholder={__("selectPlatforms")}
-              clearable
-              searchable
-            />
-          </Box>
+          <CollapsibleFilterSection
+            title={__("platforms")}
+            options={filtersData?.platforms || []}
+            selectedValues={platforms}
+            onChange={handlePlatformChange}
+            collapsed={platformsCollapsed}
+            onToggleCollapse={() => setPlatformsCollapsed(!platformsCollapsed)}
+            showMoreText={__("showMore")}
+            showLessText={__("showLess")}
+          />
 
           {/* Tags Filter */}
-          <Box>
-            <Text size="sm" fw={500} mb="xs">
-              {__("tags")}
-            </Text>
-            <MultiSelect
-              data={filtersData?.tags || []}
-              value={tags}
-              onChange={onTagsChange}
-              placeholder={__("selectTags")}
-              clearable
-              searchable
-            />
-          </Box>
+          <CollapsibleFilterSection
+            title={__("tags")}
+            options={filtersData?.tags || []}
+            selectedValues={tags}
+            onChange={handleTagChange}
+            collapsed={tagsCollapsed}
+            onToggleCollapse={() => setTagsCollapsed(!tagsCollapsed)}
+            showMoreText={__("showMore")}
+            showLessText={__("showLess")}
+          />
 
-          {/* Categories Filter */}
-          <Box>
-            <Text size="sm" fw={500} mb="xs">
-              {__("categories")}
-            </Text>
-            <MultiSelect
-              data={filtersData?.categories || []}
-              value={categories}
-              onChange={onCategoriesChange}
-              placeholder={__("selectCategories")}
-              clearable
-              searchable
-            />
-          </Box>
+          {/* Categories Filter - Collapsible */}
+          <CollapsibleFilterSection
+            title={__("categories")}
+            options={filtersData?.categories || []}
+            selectedValues={categories}
+            onChange={handleCategoryChange}
+            collapsed={categoriesCollapsed}
+            onToggleCollapse={() =>
+              setCategoriesCollapsed(!categoriesCollapsed)
+            }
+            showMoreText={__("showMore")}
+            showLessText={__("showLess")}
+          />
         </Stack>
       </Card.Content>
     </Card>
