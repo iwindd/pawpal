@@ -11,7 +11,6 @@ import categories from './data/categories.json';
 import paymentGateways from './data/paymentGateways.json';
 import platforms from './data/platforms.json';
 import products from './data/products.json';
-import productTags from './data/productTags.json';
 import roles from './data/roles.json';
 import sales from './data/sales.json';
 import tags from './data/tags.json';
@@ -105,19 +104,6 @@ async function main() {
         update: {},
         create: {
           ...platform,
-        },
-      });
-    }
-  });
-
-  // Seed Product Tags (includes both tags and productTags data)
-  await prisma.$transaction(async () => {
-    for (const tag of productTags) {
-      await prisma.productTag.upsert({
-        where: { slug: tag.slug },
-        update: {},
-        create: {
-          ...tag,
         },
       });
     }

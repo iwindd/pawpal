@@ -45,10 +45,14 @@ export interface ProductFilterOption {
   value: string;
 }
 
+export interface ProductCategoryFilterOption extends ProductFilterOption {
+  type?: ProductType;
+}
+
 export interface ProductFiltersResponse {
   types: ProductFilterOption[];
   platforms: ProductFilterOption[];
-  categories: ProductFilterOption[];
+  categories: ProductCategoryFilterOption[];
   tags: ProductFilterOption[];
 }
 

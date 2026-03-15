@@ -8,7 +8,11 @@ import {
 } from '@/generated/prisma/enums';
 import { SaleUtil } from '@/utils/saleUtil';
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
-import { ProductFiltersResponse, ProductInput } from '@pawpal/shared';
+import {
+  ProductFiltersResponse,
+  ProductInput,
+  ProductType,
+} from '@pawpal/shared';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { CopyResourceToProductUseCase } from '../../../resource/application/usecases/copy-resource-to-product.usecase';
 import { IProductRepository } from '../../domain/repository.port';
@@ -268,7 +272,7 @@ export class PrismaProductRepository implements IProductRepository {
     const [categories, tags, platforms] = await Promise.all([
       this.prisma.category.findMany({
         orderBy: { name: 'asc' },
-        select: { name: true, slug: true },
+        select: { name: true, slug: true, type: true },
       }),
       this.prisma.productTag.findMany({
         orderBy: { name: 'asc' },
@@ -292,6 +296,7 @@ export class PrismaProductRepository implements IProductRepository {
       categories: categories.map((category) => ({
         value: category.slug,
         label: category.name,
+        type: category.type as ProductType,
       })),
       tags: tags.map((tag) => ({
         value: tag.slug,
