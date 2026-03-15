@@ -1,12 +1,13 @@
 "use client";
 
 import ProductCard from "@/components/Card/ProductCart";
+import ProductCardSkeleton from "@/components/Card/ProductCart/skeleton";
 import {
   Center,
   Container,
-  Grid,
   Loader,
   LoadingTrigger,
+  SimpleGrid,
   Stack,
   Text,
 } from "@pawpal/ui/core";
@@ -49,14 +50,6 @@ export default function ProductsPage() {
         {/* Products Grid */}
         <Stack pb="lg">
           {(() => {
-            if (isLoading) {
-              return (
-                <Center h="50vh">
-                  <Loader size="lg" />
-                </Center>
-              );
-            }
-
             if (error) {
               return (
                 <Center h="50vh">
@@ -66,20 +59,21 @@ export default function ProductsPage() {
             }
 
             return (
-              <Grid>
-                {allProducts.map((product) => (
-                  <Grid.Col
-                    key={product.slug}
-                    span={{
-                      base: 12,
-                      xs: 3,
-                      md: 2,
-                    }}
-                  >
-                    <ProductCard product={product} />
-                  </Grid.Col>
-                ))}
-              </Grid>
+              <SimpleGrid
+                cols={{
+                  base: 1, // มือถือ 1 การ์ด/แถว
+                  xs: 3, // แท็บเล็ต 3 การ์ด/แถว
+                  lg: 5, // หน้าจอ >md (เช่น lg ขึ้นไป) 5 การ์ด/แถว
+                }}
+              >
+                {isLoading
+                  ? Array.from({ length: 20 }).map((_, index) => (
+                      <ProductCardSkeleton key={index} />
+                    ))
+                  : allProducts.map((product) => (
+                      <ProductCard key={product.slug} product={product} />
+                    ))}
+              </SimpleGrid>
             );
           })()}
 

@@ -75,7 +75,7 @@ export function ProductProvider({ children }: ProductProviderProps) {
 
   // Fetch products with infinite query
   const productsQuery = useGetInfiniteProductsInfiniteQuery({
-    limit: 6 * 4,
+    limit: 5 * 4,
     search: state.search,
     categories: state.category === "all" ? undefined : [state.category],
     types: state.productType ? [state.productType] : undefined,
